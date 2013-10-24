@@ -1,0 +1,16 @@
+# Open a screen terminal to every host in the results ~ terminal,user
+#onLoaded setFeatureType screen,actOnHostsUnknown
+
+getPID Global,PID
+outNow
+triggerEvent Bastion,load
+triggerEvent Bastion,lookup
+triggerEvent Bastion,deriveCommands
+
+template screen
+cleanUnresolvedResultVars
+singleStringNow /tmp/mass-~!Global,PID!~.screen
+
+exec screen -c /tmp/mass-~!Global,PID!~.screen
+# TODO Removing the file kills the screen session. We need to remove it somehow to get rid of clutter. This needs to be solved.
+# exec rm /tmp/mass-~!Global,PID!~.screen

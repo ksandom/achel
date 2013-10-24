@@ -1,0 +1,16 @@
+# List hosts. Search using regex. --list[=regex] . eg --list=^db.* ~ user
+#onLoaded setFeatureType list,generateHosts
+
+search ~!Global,list!~
+
+if ~!Global,stray!~,!=,,
+	resultSet cmd,~!Global,stray!~
+	addSlashes cmd,cmd
+
+chooseBestInterface
+
+triggerEvent List,finished
+
+stashResults List,results
+
+howMany

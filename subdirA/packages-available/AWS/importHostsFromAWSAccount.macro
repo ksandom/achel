@@ -1,0 +1,12 @@
+# Internal to --importHostsFromAWS ~ AWS
+
+loadStoreFromData AWSCreds
+AWSSetCred ~!Result,line!~
+
+AWSCloseConnection
+clearResults
+AWSGetHosts
+
+triggerEvent AWS,importedFromAccount
+
+saveToJson ~!General,configDir!~/data/1LayerHosts/~!Result,key!~.json

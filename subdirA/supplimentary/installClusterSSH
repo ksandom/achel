@@ -1,0 +1,71 @@
+#!/bin/bash
+# Description
+#   Installs clusterSSH or the appropriate variant
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Simply install it. Boo-ya!
+#     $0
+
+requiredParms="none"
+. `dirname $0`/libs/includeLibs.sh
+
+function installClusterSSH
+{
+	if which apt-get > /dev/null; then
+		echo "Choosing apt based install"
+		sudo apt-get install clusterssh
+	elif which brew > /dev/null; then
+		echo "Choosing brew based install"
+		brew install csshX
+		csshPath=`which csshX`
+		cd `dirname $csshPath`
+		ln -s csshX cssh
+	fi
+	
+	registerWithMass
+}
+
+function getFirstExecutable
+{
+	if which cssh; then true
+	elif which csshX; then true
+	elif which csshx; then true
+	else false
+	fi
+}
+
+function query
+{
+	if isInstalled; then
+		`getFirstExecutable` --help | grep -A1 Usage | tail -n 1 | sed 's/ \[.*$//g;s/ *//g'
+	else
+		echo "none"
+	fi
+}
+
+function registerWithMass
+{
+	implementation=`query`
+	mass --setClusterSSH=$implementation
+}
+
+function isInstalled
+{
+	which `getFirstExecutable` > /dev/null
+	return $?
+}
+
+case $1 in
+	'query')
+		query
+	;;
+	'registerWithMass')
+		registerWithMass
+	;;
+	*)
+		installClusterSSH
+	;;
+esac
