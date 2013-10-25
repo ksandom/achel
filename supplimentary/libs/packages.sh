@@ -142,7 +142,7 @@ function removeBareProfile
 function enableEverythingForProfile
 {
 	name="$1"
-	repo=${2:-mass}
+	repo=${2:-achel}
 	
 	start=`pwd`
 	for thing in $things; do
