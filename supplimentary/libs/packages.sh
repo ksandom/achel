@@ -23,6 +23,8 @@ function cleanEnabled
 		echo "	profileName:	$profileName"
 		echo "	configDir:	$configDir"
 		echo
+		
+		exit 1
 	fi
 }
 
