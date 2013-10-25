@@ -1,4 +1,4 @@
-# Get mass details
+# Get achel details
 # See documentation inside includeLibs.sh to use this library
 
 function isValue
@@ -15,7 +15,7 @@ function isValue
 }
 
 if [ "$configDir" == '' ]; then
-	export configDir=`mass --get=General,configDir --singleStringNow --null`
+	export configDir=`achel --get=General,configDir --singleStringNow --null`
 fi
 
 libDir="$configDir/supplimentary/libs"
@@ -23,7 +23,7 @@ supplimentaryDir="$configDir/supplimentary"
 profileDir="$configDir/profiles"
 repoDir="$configDir/repos"
 
-managementTool="manageMass"
+managementTool="manageAchel"
 
 # TODO Does this actually need to be in a condition? I think probably not.
 if [ "$scriptName" == '' ]; then

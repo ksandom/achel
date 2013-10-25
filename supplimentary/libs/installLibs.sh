@@ -136,24 +136,25 @@ function doInstall
 	
 	# Make it executable
 	cd "$binExec"
-	rm -f "$programName" "manageMass"
+	rm -f "$programName" "manageMass" "manageAchel"
 	copyTemplatedFile "$startDir/src/exec" "$programName"
-	copyTemplatedFile "$startDir/src/manage" manageMass
-	chmod 755 "$programName" "manageMass"
+	copyTemplatedFile "$startDir/src/manage" manageAchel
+	chmod 755 "$programName" "manageAchel"
 	
 	# Set up profiles
-	createProfile mass
-	enableEverythingForProfile mass mass 
-	cleanProfile mass
-
-	createProfile massPrivateWebAPI --noExec
-	enableEverythingForProfile massPrivateWebAPI mass 
-	disableItemInProfile massPrivateWebAPI packages mass-SSH
-	cleanProfile massPrivateWebAPI
-
-	cloneProfile massPrivateWebAPI massPublicWebAPI
-	disableItemInProfile massPublicWebAPI packages mass-AWS
-	cleanProfile massPublicWebAPI
+	createProfile achel
+	enableEverythingForProfile achel achel
+	cleanProfile achel
+	
+	# TODO mass: This needs to be migrated to the new repoParms system.
+	# createProfile massPrivateWebAPI --noExec
+	# enableEverythingForProfile massPrivateWebAPI mass 
+	# disableItemInProfile massPrivateWebAPI packages mass-SSH
+	# cleanProfile massPrivateWebAPI
+	
+	# cloneProfile massPrivateWebAPI massPublicWebAPI
+	# disableItemInProfile massPublicWebAPI packages mass-AWS
+	# cleanProfile massPublicWebAPI
 	
 	# Cleanup
 	rm -f "$configDir/macros-enabled/example"*
@@ -162,12 +163,12 @@ function doInstall
 	
 	if [ ! -f "$configDir/config/Credentials.config.json" ];then
 		echo -e "First time setup"
-		mass --set=Credentials,defaultKey,id_rsa --saveStoreToConfig=Credentials
+		achel --set=Credentials,defaultKey,id_rsa --saveStoreToConfig=Credentials
 	fi
 	
 	# Run the final stage
 	echo -e "Calling the final stage"
-	mass --verbosity=2 --finalInstallStage
+	achel --verbosity=2 --finalInstallStage
 }
 
 function detectOldSettingsIfWeDontHaveThem
