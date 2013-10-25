@@ -31,3 +31,4 @@ repoAddress="$1"
 overRideRepoName="$2"
 
 installRepo "$repoAddress" "$overRideRepoName"
+achel --verbosity=2 --finalInstallStage
