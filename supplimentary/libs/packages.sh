@@ -16,7 +16,7 @@ function cleanEnabled
 		done
 	else
 		echo
-		echo "Mass install: cleanEnabled: WARNING Clean aborted since we could not sucessfully get into the directory to be cleaned. Continuing would be insanity. Please fix this.";
+		echo "Achel install: cleanEnabled: WARNING Clean aborted since we could not sucessfully get into the directory to be cleaned. Continuing would be insanity. Please fix this.";
 		echo "	pwd: 		`pwd`"
 		echo "	testDir:		$testDir"
 		echo "	testFunction:	$testFunction"
@@ -49,10 +49,10 @@ function createProfile
 	createBareProfile "$name"
 	
 	# TODO This should probably be abstracted out to an "all" profile that includes these files for all profiles.
-	enableItemInProfile "$name" 'modules' 'data.php' 'mass'
-	enableItemInProfile "$name" 'modules' 'macro.php' 'mass'
-	enableItemInProfile "$name" 'modules' 'packages.php' 'mass'
-	enableItemInProfile "$name" 'modules' 'template.php' 'mass'
+	enableItemInProfile "$name" 'modules' 'data.php' 'achel'
+	enableItemInProfile "$name" 'modules' 'macro.php' 'achel'
+	enableItemInProfile "$name" 'modules' 'packages.php' 'achel'
+	enableItemInProfile "$name" 'modules' 'template.php' 'achel'
 	
 	doExec='true'
 	for parm in "$@"; do

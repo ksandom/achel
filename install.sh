@@ -10,7 +10,7 @@
 
 # install.sh will get replaced eventually. For now it does what I need.
 
-programName='mass'
+programName='achel'
 fileThings='macros modules templates'
 directoryThings='packages'
 things="$fileThings $directoryThings"
