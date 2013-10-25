@@ -1,6 +1,6 @@
 #!/bin/bash
 # Description
-#   Brings together all the tools for managing mass
+#   Brings together all the tools for managing achel and related tools.
 #
 # Syntax:
 #   $0 scriptName [parameters]

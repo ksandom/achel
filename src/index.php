@@ -22,7 +22,7 @@ $core->set('General', 'description', $description);
 include (configDir.'/interfaces/basicWeb.php');
 $core->setRef('BasicWeb', 'arguments', $_REQUEST);
 loadModules($core, "$configDir/profiles/$profile/modules");
-$core->callFeature("registerForEvent", "Mass,finishLate,outNow");
+$core->callFeature("registerForEvent", "Achel,finishLate,outNow");
 
 $core->go();
 

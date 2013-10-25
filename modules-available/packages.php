@@ -1,7 +1,7 @@
 <?php
 # Copyright (c) 2012, Kevin Sandom under the BSD License. See LICENSE for full details.
 
-# Manage mass packages
+# Manage achel packages
 
 /* This is needed since most of the stuff in this module gets processed before the command line parameters can be processed to set the verbosity.
 Set to 0 to show debugging.

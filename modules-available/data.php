@@ -89,7 +89,7 @@ class Data extends Module
 	
 	function loadStoreEntryFromFilename($filename, $storeName=false, $variableName=false)
 	{
-		# expecting storeName.config.json or /path/to/massHome/config/storeName.config.json
+		# expecting storeName.config.json or /path/to/achelHome/config/storeName.config.json
 		
 		// Strip off any path that may be there
 		$fullFilenameParts=explode('/', $filename);
@@ -105,7 +105,7 @@ class Data extends Module
 	function saveStoreEntryToFilename($fileName, $storeName=false, $variableName=false)
 	{
 		# TODO Is it really config? Or data?
-		# expecting storeName.config.json or /path/to/massHome/config/storeName.config.json
+		# expecting storeName.config.json or /path/to/achelHome/config/storeName.config.json
 		
 		// Strip off any path that may be there
 		$fullFilenameParts=explode('/', $fileName);

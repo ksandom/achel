@@ -772,9 +772,9 @@ class core extends Module
 				# If this is the default macro, we need to run the cleanup stuff
 				if ($macroName=='default')
 				{
-					$this->callFeature('triggerEvent', 'Mass,finishEarly');
-					$this->callFeature('triggerEvent', 'Mass,finishGeneral');
-					$this->callFeature('triggerEvent', 'Mass,finishLate');
+					$this->callFeature('triggerEvent', 'Achel,finishEarly');
+					$this->callFeature('triggerEvent', 'Achel,finishGeneral');
+					$this->callFeature('triggerEvent', 'Achel,finishLate');
 				}
 				
 				return $resultSet;
