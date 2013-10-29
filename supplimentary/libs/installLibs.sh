@@ -78,6 +78,12 @@ function copyTemplatedFile
 
 function doInstall
 {
+	# Last sanity checks before begining.
+	if ! testWriteable "$storageDir" || ! testWriteable "$configDir" ; then
+		cat docs/errors/install/notWriteable.md
+		exit 1
+	fi
+	
 	# Migrate any old data changing between a unified directory structure to a split structure.
 	mkdir -p "$storageDir"
 	if [ "$configDir" != "$storageDir" ]; then

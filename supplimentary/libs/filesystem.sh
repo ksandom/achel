@@ -16,3 +16,13 @@ function getFile
 	echo "$fullPath" | sed 's#.*/##g'
 }
 
+function testWriteable
+{
+	path="$1"
+	if touch "$path"; then
+		rm "$path"
+		return 0
+	else
+		return 1
+	fi
+}

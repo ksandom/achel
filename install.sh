@@ -18,6 +18,7 @@ installTypeComments=''
 
 cd `dirname $0`
 . supplimentary/libs/installLibs.sh
+. supplimentary/libs/filesystem.sh
 . supplimentary/libs/packages.sh
 
 function userInstall
@@ -57,8 +58,7 @@ function linkedInstall
 		newBinExec="/usr/local/bin"
 		testExec="$newBinExec/canIWriteHere"
 		
-		if touch "$testExec"; then
-			rm "$testExec"
+		if testWriteable "$testExec"; then
 			binExec="$newBinExec"
 		else
 			echo "You have chosen a linked user install, but \"$binExec\" is not in \$PATH. And \"$newBinExec\" is not writeable. Installation can not continue."
