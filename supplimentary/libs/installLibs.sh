@@ -64,6 +64,7 @@ function copyTemplatedFile
 	src="$1"
 	dst="$2"
 	
+	# echo "copyTemplatedFile: $src -> $dst in `pwd`"
 	rm -f "$dst"
 	cat $src | sed '
 		s#~%configDir%~#'$configDir'#g;
@@ -128,8 +129,6 @@ function doInstall
 	ln -sf "$repoDir"/docs "$repoDir/src/core.php" "$repoDir"/interfaces "$repoDir"/supplimentary .
 	rm -f examples
 	
-	copyTemplatedFile "$startDir/src/index.php" index.php
-	
 	# Setting up remaining directory structure
 	cd "$storageDir"
 	mkdir -p config data/1LayerHosts
@@ -142,9 +141,10 @@ function doInstall
 	chmod 755 "$programName" "manageAchel"
 	
 	# Set up profiles
-	createProfile achel
+	createProfile achel --noExec
 	enableEverythingForProfile achel achel
 	cleanProfile achel
+	
 	
 	# TODO mass: This needs to be migrated to the new repoParms system.
 	# createProfile massPrivateWebAPI --noExec

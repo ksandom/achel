@@ -54,7 +54,18 @@ function linkedInstall
 	installType='ln'
 	
 	if [ "`echo $PATH|grep $binExec`" == '' ]; then # A hack for the mac
-		binExec=/usr/local/bin
+		newBinExec="/usr/local/bin"
+		testExec="$newBinExec/canIWriteHere"
+		
+		if touch "$testExec"; then
+			rm "$testExec"
+			binExec="$newBinExec"
+		else
+			echo "You have chosen a linked user install, but \"$binExec\" is not in \$PATH. And \"$newBinExec\" is not writeable. Installation can not continue."
+			
+			cat docs/errors/install/notWriteable.md
+			exit 1
+		fi
 	fi
 }
 

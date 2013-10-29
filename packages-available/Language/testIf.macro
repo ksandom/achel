@@ -7,7 +7,8 @@ defineTest ifResult - no result,
 
 
 defineTest ifResult - result,
-	list local
+	set Tmp,a,a,a
+	retrieveResults Tmp,a
 	ifResult passTest result
 	notIfResult failTest no result
 

@@ -56,6 +56,8 @@ function createProfile
 	enableItemInProfile "$name" 'modules' 'packages.php' 'achel'
 	enableItemInProfile "$name" 'modules' 'template.php' 'achel'
 	
+	# TODO revise if this should really still be the default behavior
+	echo "createProfile: TODO revise if this should really still be the default behavior"
 	doExec='true'
 	for parm in "$@"; do
 		case $parm in
