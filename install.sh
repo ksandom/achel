@@ -20,6 +20,7 @@ cd `dirname $0`
 . supplimentary/libs/installLibs.sh
 . supplimentary/libs/filesystem.sh
 . supplimentary/libs/packages.sh
+. supplimentary/libs/display.sh
 
 function userInstall
 {

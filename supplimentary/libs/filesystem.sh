@@ -18,7 +18,7 @@ function getFile
 
 function testWriteable
 {
-	path="$1"
+	path="$1/canIWriteHere"
 	if touch "$path"; then
 		rm "$path"
 		return 0

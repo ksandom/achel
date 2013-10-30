@@ -78,14 +78,15 @@ function copyTemplatedFile
 
 function doInstall
 {
+	
 	# Last sanity checks before begining.
+	mkdir -p "$storageDir" "$configDir"
 	if ! testWriteable "$storageDir" || ! testWriteable "$configDir" ; then
 		cat docs/errors/install/notWriteable.md
 		exit 1
 	fi
 	
 	# Migrate any old data changing between a unified directory structure to a split structure.
-	mkdir -p "$storageDir"
 	if [ "$configDir" != "$storageDir" ]; then
 		for dirName in "$configDir"{data,config} ~/.mass/{data,config}; do
 			if [ -e "$dirName" ]; then
@@ -194,25 +195,31 @@ function detectOldSettingsIfWeDontHaveThem
 
 function detectOldSettings
 {
-	if which mass > /dev/null; then
+	if which achel > /dev/null; then
 		echo -n "Detecting settings from previous install... "
 		
 		request=""
 		for setting in $settingNames; do
 			request="$request~!General,$setting!~	"
 		done
-		values=`mass --get=Tmp,nonExistent --toString="$request" -s`
-		let settingPosition=0
-		for setting in $settingNames; do
-			let settingPosition=$settingPosition+1
-			settingValue=`echo "$values" | cut -d\	  -f $settingPosition`
-			if [ "$settingValue" != '' ]; then
-				export $setting=$settingValue
-				export old$setting=$settingValue
-			fi
-		done
+		values=`achel --get=Tmp,nonExistent --toString="$request" -s`
 		
-		echo "Done."
+		if [ $? -gt 0 ]; then
+			cat "docs/errors/install/detectSettingsFailed.md"
+			waitSeconds 5
+		else
+			let settingPosition=0
+			for setting in $settingNames; do
+				let settingPosition=$settingPosition+1
+				settingValue=`echo "$values" | cut -d\	  -f $settingPosition`
+				if [ "$settingValue" != '' ]; then
+					export $setting=$settingValue
+					export old$setting=$settingValue
+				fi
+			done
+			
+			echo "Done."
+		fi
 	else
 		echo "detectOldSettings: No previous install found. Using defaults."
 	fi

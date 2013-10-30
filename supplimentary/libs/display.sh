@@ -62,3 +62,26 @@ function confirm
 	fi
 }
 
+function waitSeconds
+{
+	seconds="$1"
+	message=${2:-'Will continue in %s seconds...'}
+	
+	# Sanity check
+	if ! [ $seconds -gt 0 ]; then
+		echo "waitSeconds: Invalid number of seconds." &2>/dev/null
+		return 1
+	fi
+	
+	# Count down
+	let secondsPosition=$seconds
+	while [ $secondsPosition -gt 0 ];do
+		let secondsPosition=$secondsPosition-1
+		echo -ne "\r$message " | sed "s/%s/$secondsPosition/g"
+		sleep 1
+	done
+	
+	# Clean up
+	finalMessage=`echo "$message" | sed "s/%s/0/g;s/./ /g"`
+	echo -e "\r$finalMessage\rWaited $seconds seconds."
+}
