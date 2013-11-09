@@ -2,20 +2,23 @@
 # Copy a set of files and directories into a location. The intention of this is to set a program to a pre-defined state without clobbering other things.
 #
 # Input
-#   All files and directories in the current (source) directory except cpDefinitions.conf
+#   All files and directories in the current (source) directory except actionConfigFile
 #   destinationDirectory is where to put the files and directories.
-#   cpDefinitions.conf defines exceptions in how to handle the files and directories.
+#   actionConfigFile defines exceptions in how to handle the files and directories.
 #
 # Output
 #   All the files and directories in the source directory will be copies to the destinationDirectory
 #
-# cpDefinitions.conf
-#   Each line is the filename, followed by an "=", then one of the following
+# actionConfigFile
+#   Each line is the file name, followed by an "=", then one of the following
 #     skip        Will not do anything with the file/directory.
 #     noClobber   Will not do anything with the file/directory if it already exists in the destination.
-#     overwrite   (default) Will copy over the top of what ever exists. This is interesting for directories, which will get to keep any files which don't exist in the source.
+#     overwrite   Will copy over the top of what ever exists. This is interesting for directories, which will get to keep any files which don't exist in the source.
 #     replace     Will delete the destination file or directory before copying it again.
-#     recurse     This can be used on directories to specify a cpDefinitions.conf for that directory where that above isn't high enough resolution.
+#     recurse     This can be used on directories to specify a actionConfigFile for that directory where that above isn't high enough resolution.
+#
+#     The default is "defaultAction"
+#
 #
 # Example
 #   Example source data set
@@ -26,7 +29,7 @@
 #     bin/e              contains: 1
 #     bin/f              contains: 1
 #     g                  contains: 1
-#     cpDefinitions.conf contains: .blah1=absolute
+#     actionConfigFile contains: .blah1=absolute
 
 #   Example destination data set
 #     .blah1/a           contains: 2
@@ -50,21 +53,103 @@
 function showHelp
 {
 	scriptName=`echo $0 | sed 's#.*/##g'`
-	tail -n +2 $0 | grep '^#' | cut -b 3- | sed 's/$0/'$scriptName'/g'
+	tail -n +2 $0 | grep '^#' | cut -b 3- | sed 's/$0/'$scriptName'/g;s/actionConfigFile/'$configFile'/g;s/defaultAction/'$defaultAction'/g'
 }
 
+function readConfig
+{
+	if [ -f cpDefinitions.conf ]; then
+		while read configLine; do
+			fileName=`echo "$configLine" | cut -d= -f1`
+			value=`echo "$configLine" | cut -d= -f2-`
+			varName=`getFileVarName "$fileName"`
+			export $varName="$value"
+		done < cpDefinitions.conf
+	else
+		echo "No config file found. Default documented behavior will reign."
+	fi
+}
+
+function getFileVarName
+{
+	startVarName="file_$1"
+	varName=`echo "$startVarName" | sed 's/\./_/g'`
+	echo "$varName"
+}
+
+function getActionForFile
+{
+	varName=`getFileVarName "$1"`
+	if [ "${!varName}" != '' ]; then
+		echo "${!varName}"
+	else
+		echo "$defaultAction"
+	fi
+}
+
+function doCopy
+{
+	destinationDirectory="`echo $1`"
+	
+	while read fileName; do
+		action=`getActionForFile "$fileName"`
+		case "$action" in
+			'skip')
+				echo "doCopy: $fileName is set to $action. Will not do anything with this item."
+			;;
+			'noClobber')
+				if [ -e "$destinationDirectory/$fileName" ]; then
+					echo "doCopy: $fileName is set to $action and the item already exists in $destinationDirectory. Will not do anything with this item."
+				else
+					echo "doCopy: $fileName is set to $action and the item does not exist in $destinationDirectory. Will copy this item."
+					cp -Rv "$fileName" "$destinationDirectory"
+				fi
+			;;
+			'overwrite')
+				echo "doCopy: $fileName is set to $action. Will copy this item."
+				cp -Rfv "$fileName" "$destinationDirectory"
+			;;
+			'replace')
+				echo "doCopy: $fileName is set to $action. Will remove and then copy this item."
+				rm -Rfv "$destinationDirectory/$fileName"
+				cp -Rv "$fileName" "$destinationDirectory"
+			;;
+			'recurse')
+				cd "$fileName"
+				mkdir -p "$destinationDirectory/$fileName"
+				$0 "$destinationDirectory/$fileName"
+				cd ~-
+			;;
+		esac
+	done < <(ls -a1 | grep -v '^\.\+$')
+}
+
+function takeAction
+{
+	readConfig
+	doCopy "$1"
+}
+
+configFile=cpDefinitions.conf
 file_cpDefinitions_conf=skip
+defaultAction=overwrite
 
 case $1 in
-	'test')
-		echo bork
+	'rupidgeon')
+		echo 'nope'
+		exit 1
 	;;
 	'--help'|'-h')
 		showHelp
 	;;
 	*)
-		echo "Invalid options. Here's some help:"
-		showHelp
+		if [ -d "$1" ]; then
+			takeAction "$1"
+		else
+			echo "Invalid options or \"$1\" is not a directory. Here's some help:"
+			showHelp
+			exit 1
+		fi
 	;;
 esac
 
