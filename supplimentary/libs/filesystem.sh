@@ -26,3 +26,21 @@ function testWriteable
 		return 1
 	fi
 }
+
+function removeFilesIfExisting
+{
+	for filename in "$@";do
+		if [ -e "$filename" ]; then
+			rm -fv "$filename"
+		fi
+	done
+}
+
+function removeDirectiesIfExisting
+{
+	for filename in "$@";do
+		if [ -e "$filename" ]; then
+			rm -Rfv "$filename"
+		fi
+	done
+}

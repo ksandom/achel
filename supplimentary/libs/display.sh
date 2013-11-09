@@ -76,8 +76,8 @@ function waitSeconds
 	# Count down
 	let secondsPosition=$seconds
 	while [ $secondsPosition -gt 0 ];do
-		let secondsPosition=$secondsPosition-1
 		echo -ne "\r$message " | sed "s/%s/$secondsPosition/g"
+		let secondsPosition=$secondsPosition-1
 		sleep 1
 	done
 	

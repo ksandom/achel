@@ -1,0 +1,71 @@
+#/bin/bash
+# Copy a set of files and directories into a location. The intention of this is to set a program to a pre-defined state without clobbering other things.
+#
+# Input
+#   All files and directories in the current (source) directory except cpDefinitions.conf
+#   destinationDirectory is where to put the files and directories.
+#   cpDefinitions.conf defines exceptions in how to handle the files and directories.
+#
+# Output
+#   All the files and directories in the source directory will be copies to the destinationDirectory
+#
+# cpDefinitions.conf
+#   Each line is the filename, followed by an "=", then one of the following
+#     skip        Will not do anything with the file/directory.
+#     noClobber   Will not do anything with the file/directory if it already exists in the destination.
+#     overwrite   (default) Will copy over the top of what ever exists. This is interesting for directories, which will get to keep any files which don't exist in the source.
+#     replace     Will delete the destination file or directory before copying it again.
+#     recurse     This can be used on directories to specify a cpDefinitions.conf for that directory where that above isn't high enough resolution.
+#
+# Example
+#   Example source data set
+#     .blah1/a           contains: 1
+#     .blah1/b           contains: 1
+#     .blah2/c           contains: 1
+#     .blah2/d           contains: 1
+#     bin/e              contains: 1
+#     bin/f              contains: 1
+#     g                  contains: 1
+#     cpDefinitions.conf contains: .blah1=absolute
+
+#   Example destination data set
+#     .blah1/a           contains: 2
+#     .blah1/b           contains: 2
+#     .blah2/c           contains: 2
+#     .blah2/d           contains: 2
+#     bin/e              contains: 2
+#     bin/f              contains: 2
+#     bin/h              contains: 2
+#     bin/i              contains: 2
+#     g                  contains: 2
+#     j                  contains: 2
+#     k                  contains: 2
+#
+#   cpDefinitions.conf
+#     
+#   Examples in action
+#     $0 ~
+#       Will copy the files and directories in the current directory to your home directory.
+
+function showHelp
+{
+	scriptName=`echo $0 | sed 's#.*/##g'`
+	tail -n +2 $0 | grep '^#' | cut -b 3- | sed 's/$0/'$scriptName'/g'
+}
+
+file_cpDefinitions_conf=skip
+
+case $1 in
+	'test')
+		echo bork
+	;;
+	'--help'|'-h')
+		showHelp
+	;;
+	*)
+		echo "Invalid options. Here's some help:"
+		showHelp
+	;;
+esac
+
+
