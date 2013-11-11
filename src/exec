@@ -7,6 +7,7 @@ $description="A commandline tool/API for doing awesome stuff on many nodes of a 
 $profile=programName;
 
 define('configDir', '~%configDir%~');
+define('docsDir', '~%docsDir%~');
 define('storageDir', '~%storageDir%~');
 define('installType', '~%installType%~');
 define('binExec', '~%binExec%~');

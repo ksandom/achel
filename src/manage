@@ -22,6 +22,7 @@
 
  # The export saves called scripts from having to do this detection, and thus speeds up loading time.
 export configDir='~%configDir%~'
+export docsDir='~%docsDir%~'
 export storageDir='~%storageDir%~'
 export installType='~%installType%~'
 export binExec='~%binExec%~'

@@ -68,6 +68,7 @@ function copyTemplatedFile
 	rm -f "$dst"
 	cat $src | sed '
 		s#~%configDir%~#'$configDir'#g;
+		s#~%docsDir%~#'$configDir'/docs#g;
 		s#~%storageDir%~#'$storageDir'#g;
 		s#~%installType%~#'$installType'#g;
 		s#~%binExec%~#'$binExec'#g;

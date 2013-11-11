@@ -1,0 +1,29 @@
+#!/bin/bash
+# Description
+#   Uninstalls Achel and all the programs installed via it.
+#
+# Syntax:
+#   $0 uninstallAchel
+#
+# Examples:
+#   Uninstall.
+#     $0
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/display.sh
+. $libDir/filesystem.sh
+
+cat $docsDir/messages/install/uninstallAchel.md
+waitSeconds 5
+
+ # Remove achel executable
+filename="achel"
+removeFilesIfExisting ~/bin/$filename /usr/bin/$filename /usr/local/bin/$filename
+
+ # Remove manageAchel executable
+filename="manageAchel"
+removeFilesIfExisting ~/bin/$filename /usr/bin/$filename /usr/local/bin/$filename
+
+ # Remove achel home
+removeDirectiesIfExisting ~/.achel /etc/achel "$configDir" "$storageDir"
