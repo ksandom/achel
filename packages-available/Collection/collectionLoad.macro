@@ -2,7 +2,7 @@
 
 if ~!Global,collectionLoad!~,!=,,
 	registerForEvent Achel,finishGeneral,collectionSave,~!Global,collectionLoad!~
-
+	
 	load loadStoreFromData ~!Global,collectionLoad!~
 else
 	complain Collection: No collection specified.

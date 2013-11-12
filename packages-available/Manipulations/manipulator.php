@@ -235,6 +235,11 @@ class Manipulator extends Module
 	{
 		$output=array();
 		
+		if (!is_array($input))
+		{
+			$this->core->debug(3, "Manipulator->toString: Input was not an array. Quite possibly there was no input. Try using --nested to find out what data you are getting at this point.");
+			return $input;
+		}
 		foreach ($input as $line)
 		{
 			if (is_array($line))

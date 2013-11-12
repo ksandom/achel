@@ -54,6 +54,10 @@ function installRepo_get
 function installRepo_setup
 {
 	name="$1"
+	if [ ! -e "$configDir/repos/$name" ]; then
+		echo "Repo \"$name\" is not currently installed." >&2
+		return 1
+	fi
 	
 	# create profile
 	createProfile "$name"
@@ -63,8 +67,8 @@ function installRepo_setup
 	while read srcRepoName regex; do
 		enabledPacakge "$srcRepoName" "$regex" "$name"
 	done < <(repoGetParmPackages "$name")
-
-
+	
+	
 	# create executable
 	execName=`repoGetParm "$name" execName`
 	if [ ! "$execName" == '' ]; then

@@ -13,6 +13,10 @@
 requiredParms="$0"
 . `dirname $0`/libs/includeLibs.sh
 . $libDir/display.sh
+. $libDir/repoInstall.sh
+. $libDir/packages.sh
+. $libDir/repoParms.sh
+. $libDir/installLibs.sh
 
 cat $docsDir/messages/install/uninstallLegacyMass.md
 waitSeconds 5
@@ -27,3 +31,6 @@ removeFilesIfExisting ~/bin/$filename /usr/bin/$filename /usr/local/bin/$filenam
 
  # Remove mass home
 removeDirectiesIfExisting ~/.mass /etc/mass
+
+ # Re-setup mass via achel if it already exists
+installRepo_setup 'mass'

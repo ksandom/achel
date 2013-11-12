@@ -229,7 +229,12 @@ function enabledPacakge
 	repoName="$1"
 	packageRegex="$2"
 	profileNameRegex="$3"
-
+	
+	if [ "$profileNameRegex" == '' ]; then
+		echo "enabledPacakge: Insufficient input. repoName=\"$repoName\" packageRegex=\"$packageRegex\" profileNameRegex=\"$profileNameRegex\""
+		return 1
+	fi
+	
 	if [ ! -e "$configDir/repos/$repoName" ]; then
 		echo "Did not find a repo matching \"$repoName\""
 		exit 1

@@ -1,7 +1,8 @@
-# Load a specified collection from an arbitray location --collectionLoad=collectionName,fullPathToFile ~ collection
+# Load a specified collection from an arbitray location --collectionLoad=collectionName,fullPathToFile[,noSave] . If noSave is specified, no changes will be saved when Achel exits. This is useful when you are loading data from a location that shouldn't be written to. ~ collection
 
 if ~!Global,collectionLoadArbitrary-0!~,!=,,
-	registerForEvent Achel,finishGeneral,collectionSaveArbitrary,~!Global,collectionLoadArbitrary!~
+	if ~!Global,collectionLoadArbitrary-2!~,!=,noSave,
+		registerForEvent Achel,finishGeneral,collectionSaveArbitrary,~!Global,collectionLoadArbitrary!~
 
 	load loadStoreFromFile ~!Global,collectionLoadArbitrary-1!~,~!Global,collectionLoadArbitrary-0!~
 else

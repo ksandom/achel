@@ -20,7 +20,7 @@ function repoGetParm
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	
 	if [ -f "$parmFile" ]; then
-		achel --collectionLoadArbitrary=RepoParms,"$parmFile" --get="RepoParms,$parameterName" -s
+		achel --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --get="RepoParms,$parameterName" -s
 	fi
 }
 
@@ -44,7 +44,7 @@ function repoGetParms
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	
 	if [ -f "$parmFile" ]; then
-		achel --collectionLoadArbitrary=RepoParms,"$parmFile" --getCategory="RepoParms"
+		achel --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --getCategory="RepoParms"
 	fi
 }
 
@@ -55,7 +55,7 @@ function repoGetParmPackages
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	
 	if [ -f "$parmFile" ]; then
-		achel --collectionLoadArbitrary=RepoParms,"$parmFile" --retrieveResults="RepoParms,packages" --flatten --toString="~%sourceRepo%~ ~%packageRegex%~" -s
+		achel --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --retrieveResults="RepoParms,packages" --flatten --toString="~%sourceRepo%~ ~%packageRegex%~" -s
 	fi
 }
 
