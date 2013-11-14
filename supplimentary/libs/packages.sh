@@ -230,7 +230,7 @@ function enabledPacakge
 	packageRegex="$2"
 	profileNameRegex="$3"
 	
-	if [ "$profileNameRegex" == '' ]; then
+	if [ "$profileNameRegex" == '' ] || [ "$repoName" == '' ]; then
 		echo "enabledPacakge: Insufficient input. repoName=\"$repoName\" packageRegex=\"$packageRegex\" profileNameRegex=\"$profileNameRegex\""
 		return 1
 	fi
