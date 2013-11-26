@@ -1,0 +1,30 @@
+#!/bin/bash
+# Description
+#   Migrates an existing Mass installation to Achel. Will be deprecated 2014-01-01 and removed 2014-02-01
+#
+# Syntax:
+#   $0 uninstallLegacyMass
+#
+# Examples:
+#   Uninstall.
+#     $0
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+
+# Stuff for main migration
+. $libDir/migrateMass.sh
+
+# Stuff for repo management
+. $libDir/repoInstall.sh
+. $libDir/getRepo.sh
+. $libDir/repoParms.sh
+. $libDir/packages.sh
+. $libDir/installLibs.sh
+
+
+showMigratePossibilities ~/.mass "$configDir"
+uninstallAchelOrMass mass Mass obsolete obsolete
+
+listRepos | reInstallRepos
+

@@ -21,16 +21,9 @@ requiredParms="$0"
 cat $docsDir/messages/install/uninstallLegacyMass.md
 waitSeconds 5
 
- # Remove mass executable
-filename="mass"
-removeFilesIfExisting ~/bin/$filename /usr/bin/$filename /usr/local/bin/$filename
+# Uninstall everything
+uninstallAchelOrMass mass Mass
 
- # Remove manageMass executable
-filename="manageMass"
-removeFilesIfExisting ~/bin/$filename /usr/bin/$filename /usr/local/bin/$filename
-
- # Remove mass home
-removeDirectiesIfExisting ~/.mass /etc/mass
-
- # Re-setup mass via achel if it already exists
+# Re-setup mass via achel if it already exists
 installRepo_setup 'mass'
+

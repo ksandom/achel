@@ -63,8 +63,11 @@ function installRepo_setup
 	createProfile "$name"
 
 	# enable packages
-	disablePackage "$name" ".*" ".*"
+	if [ "$name" != 'achel' ]; then
+		disablePackage "$name" ".*" ".*"
+	fi
 	while read srcRepoName regex; do
+		# TODO The problem is evident here
 		enabledPacakge "$srcRepoName" "$regex" "$name"
 	done < <(repoGetParmPackages "$name")
 	
@@ -137,3 +140,24 @@ function uninstallRepo_removeBindings
 	# Remove associations with ANY profile
 	disablePackage "$repoName" ".*" ".*"
 }
+
+function reInstallRepos
+{
+	while read repo;do
+		echo "reInstallRepos: Doing \"$repo\""
+		installRepo_setup "$repo"
+	done
+}
+
+function listRepos
+{
+	refine="$1"
+	
+	if [ "$refine" == '' ]; then
+		ls -1 "$configDir"/repos
+	else
+		ls -1 "$configDir"/repos | grep "$refine"
+	fi
+}
+
+

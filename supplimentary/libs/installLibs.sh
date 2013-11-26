@@ -11,10 +11,8 @@ function removeObsoleteStuff
 	fi
 	
 	for thing in $things;do
-		mv $configDir/$thing* $configDir/obsolete 2>/dev/null
+		obsolete $configDir/$thing-enabled
 	done
-	
-	# mv $configDir/obsolete/*available $configDir
 	
 	if [ `ls $configDir/obsolete 2> /dev/null | wc -l` -lt 1 ]; then
 		rmdir $configDir/obsolete
@@ -22,7 +20,27 @@ function removeObsoleteStuff
 		echo "removeObsoleteStuff: Obsolete stuff has been put in $configDir/obsolete. It is likely that this directory can simply be deleted. But if you have done any custom work, you will want to check that it isn't here first." | tee $configDir/obsolete/readme.md
 	fi
 	
-	rm -f $configDir/config/Verbosity.config.json
+	obsolete "$configDir/config/Verbosity.config.json"
+}
+
+function uninstallAchelOrMass
+{
+	programName="$1"
+	capitalProgramName="$2"
+	fileAction=${3:-removeFilesIfExisting}
+	directoryAction=${4:-removeDirectiesIfExisting}
+	
+	# Remove program executable
+	filename="$programName"
+	$fileAction ~/bin/$filename /usr/bin/$filename /usr/local/bin/$filename
+
+	# Remove manageProgram executable
+	filename="manage$capitalProgramName"
+	$fileAction ~/bin/$filename /usr/bin/$filename /usr/local/bin/$filename
+
+	# Remove program home
+	$directoryAction ~/.mass /etc/mass
+
 }
 
 function checkPrereqs
@@ -73,7 +91,7 @@ function copyTemplatedFile
 		s#~%installType%~#'$installType'#g;
 		s#~%binExec%~#'$binExec'#g;
 		s#~%programName%~#'$programName'#g;
-		s#~%languageName%~#mass#g;
+		s#~%languageName%~#achel#g;
 		s#~%.*%~##g' > "$dst"
 }
 
@@ -149,6 +167,7 @@ function doInstall
 	chmod 755 "$programName" "manageAchel"
 	
 	# Set up profiles
+	# removeProfile achel
 	createProfile achel --noExec
 	enableEverythingForProfile achel achel
 	cleanProfile achel
@@ -213,6 +232,14 @@ function detectOldSettings
 			for setting in $settingNames; do
 				let settingPosition=$settingPosition+1
 				settingValue=`echo "$values" | cut -d\	  -f $settingPosition`
+				
+				# Protect against invalid input. Ie if a previou achel install is broken.
+				if [ "`echo \"$settingValue\" | wc -l`" -gt 1 ]; then
+					settingValue=''
+					echo "Warning: Broken install detected. Setting \"$setting\" will be ignored." >&2
+				fi
+				
+				# If we still have a value, make it available for use.
 				if [ "$settingValue" != '' ]; then
 					export $setting=$settingValue
 					export old$setting=$settingValue
@@ -270,5 +297,29 @@ function checkParameters
 				fi
 			;;
 		esac
+	done
+}
+
+function obsolete
+{
+	for thingPath in "$@";do
+		if [ -e "$thingPath" ]; then
+			if [ ! -d "$configDir" ]; then
+				echo "obsolete: \$configDir (\"$configDir\") does not appear to be set correctly. It is not sane to obsolete \"$thingPath\" without this being correct."
+				return 1
+			fi
+			
+			destination="$configDir/obsolete"
+			thingName=`echo "$thingPath" | sed 's#.*/##g'`
+			fullDestination="$destination/$thingName"
+			mkdir -p "$destination"
+			if [ -d "$fullDestination" ]; then
+				echo "obsolete: \"$fullDestination\" already exists. Removing."
+				rm -Rf "$fullDestination"
+			fi
+			mv "$thingPath" "$destination"
+			
+			echo "obsolete: \"$thingPath\" has been marked as obsolete and has been moved to \"$destination\"."
+		fi
 	done
 }
