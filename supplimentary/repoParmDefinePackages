@@ -3,7 +3,7 @@
 #   Define a set of packages to be enabled by default when a repo is installed.
 #
 # Syntax:
-#   $0 repoName shortName [sourceRepo] [packageRegex]
+#   $0 repoName profileName shortName [sourceRepo] [packageRegex]
 #     repoName is the name of the repository you'd like to define the set of packages in.
 #     profileName is the profile
 #     shortName uniquely identifies this particular set of pacakges.
@@ -15,12 +15,15 @@
 # Examples:
 #   Set the short-friendly name of the application.
 #     $0 doneIt name "doneit"
-
+#
 #   Set the execuable name of the application.
 #     $0 doneIt execName "doneit"
 #
 #   Set the description of the application.
 #     $0 doneIt description "A tool for remember where the day went. So when you are asked about your progress, you can say."
+#
+# See also:
+#   repoParmSet
 
 requiredParms="$2"
 . `dirname $0`/libs/includeLibs.sh
@@ -37,12 +40,14 @@ case "$shortName" in
 	'SELF')
 		sourceRepo="$repoName"
 		packageRegex=".*"
+		echo "$0: Assumed sourceRepo=\"$sourceRepo\" and packageRegex=\"$packageRegex\""
 	;;
 	'BASE')
 		sourceRepo="$languageName"
 		packageRegex=".*"
+		echo "$0: Assumed sourceRepo=\"$sourceRepo\" and packageRegex=\"$packageRegex\""
 	;;
 esac
 
-repoSetParm "$repoName" "packages,$shortName,sourceRepo" "$sourceRepo"
-repoSetParm "$repoName" "packages,$shortName,packageRegex" "$packageRegex"
+repoSetParm "$repoName" "$profile" "packages,$shortName,sourceRepo" "$sourceRepo"
+repoSetParm "$repoName" "$profile" "packages,$shortName,packageRegex" "$packageRegex"

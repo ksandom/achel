@@ -27,7 +27,7 @@ function installRepo_get
 
 	# get tha name
 	if [ "$overRideRepoName" == '' ]; then # detect name
-		name=`repoGetParm "$checkoutDir" name`
+		name=`repoGetParm "$checkoutDir" . name`
 	else # override name
 		echo "repoInstall: Overrode repoName. This may lead to pain. If you haven't already, read the help for repoInstall." >&2
 		name="$overRideRepoName"
@@ -59,24 +59,26 @@ function installRepo_setup
 		return 1
 	fi
 	
-	# create profile
-	createProfile "$name"
-
-	# enable packages
-	if [ "$name" != 'achel' ]; then
-		disablePackage "$name" ".*" ".*"
-	fi
-	while read srcRepoName regex; do
-		# TODO The problem is evident here
-		enabledPacakge "$srcRepoName" "$regex" "$name"
-	done < <(repoGetParmPackages "$name")
-	
-	
-	# create executable
-	execName=`repoGetParm "$name" execName`
-	if [ ! "$execName" == '' ]; then
-		createExec "$execName" "$name"
-	fi
+	while read profileName; do
+		# create profile
+		createProfile "$name"
+		
+		# enable packages
+		# TODO port this
+		if [ "$name" != 'achel' ]; then
+			disablePackage "$name" ".*" ".*"
+		fi
+		while read srcRepoName regex; do
+			enabledPacakge "$srcRepoName" "$regex" "$name"
+		done < <(repoGetParmPackages "$name")
+		
+		# create executable
+		# TODO port this
+		execName=`repoGetParm "$name" execName`
+		if [ ! "$execName" == '' ]; then
+			createExec "$execName" "$name"
+		fi
+	done < <(repoGetProfiles "$name")
 }
 
 function userUninstallRepo

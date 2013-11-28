@@ -12,5 +12,6 @@
 
 requiredParms="$1"
 . `dirname $0`/libs/includeLibs.sh
+. `dirname $0`/libs/getRepo.sh
 
 removeRepo "$1"

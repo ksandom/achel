@@ -3,8 +3,13 @@
 function repoSetParm
 {
 	repoName="$1"
-	parameterName="$2"
-	value="$3"
+	profileName="$2"
+	if [ "$profileName" == '.' ]; then
+		parameterName="$3"
+	else
+		parameterName="$profileName,$3"
+	fi
+	value="$4"
 	
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	touch "$parmFile"
@@ -15,7 +20,12 @@ function repoSetParm
 function repoGetParm
 {
 	repoName="$1"
-	parameterName="$2"
+	profileName="$2" # TODO Make sure that all code refering to this function now handle this variable correctly.
+	if [ "$profileName" == '.' ]; then
+		parameterName="$3"
+	else
+		parameterName="$profileName,$3"
+	fi
 	
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	
@@ -27,7 +37,12 @@ function repoGetParm
 function repoRemoveParm
 {
 	repoName="$1"
-	parameterName="$2"
+	profileName="$2" # TODO Make sure that all code refering to this function now handle this variable correctly.
+	if [ "$profileName" == '.' ]; then
+		parameterName="$3"
+	else
+		parameterName="$profileName,$3"
+	fi
 	
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	
@@ -38,13 +53,24 @@ function repoRemoveParm
 
 function repoGetParms
 {
-	# TODO write a data version of this
+	# TODO write a data version of this.... I don't remember what I meant this. If not remembered, remove after 2013-12-28.
 	repoName="$1"
 	
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	
 	if [ -f "$parmFile" ]; then
 		achel --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --getCategory="RepoParms"
+	fi
+}
+
+function repoGetProfiles
+{
+	repoName="$1"
+	
+	parmFile="$configDir/repos/$repoName/parameters.json"
+	
+	if [ -f "$parmFile" ]; then
+		achel --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --getCategory="RepoParms" --getKeys -s --exclude='(name|description)'
 	fi
 }
 

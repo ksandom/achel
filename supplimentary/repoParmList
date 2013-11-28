@@ -4,7 +4,7 @@
 #
 # Syntax:
 #   $0 repoName parameterName "value"
-#     repoName is the name of the repository you'd like to set the parameter in.
+#     repoName is the name of the repository you'd like to list the parameters for.
 #
 #     IMPORTANT: You can not use commas (,) in any of these parameters.
 #
