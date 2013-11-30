@@ -24,5 +24,9 @@ requiredParms="$3"
 . `dirname $0`/libs/includeLibs.sh
 . $libDir/repoParms.sh
 
-repoGetParm "$1" "$2" "$3"
+repoName="$1"
+profileName="$2"
+parameterName="$3"
+
+repoGetParm "$repoName" "$profileName" "$parameterName"
 

@@ -134,14 +134,15 @@ function uninstallRepo_removeBindings
 	
 	while read profileName; do
 		if [ "$profileName" != '' ]; then
-		# remove executable
-		execName=`repoGetParm "$repoName" "$profileName" execName`
-		
-		# TODO the input protection will likely be a curse here, so should be revised.
-		removeExec "$execName"
-		
-		# remove profile
-		removeProfile "$profileName"
+			# remove executable
+			execName=`repoGetParm "$repoName" "$profileName" execName`
+			
+			# TODO the input protection will likely be a curse here, so should be revised.
+			removeExec "$execName"
+			
+			# remove profile
+			removeProfile "$profileName"
+		fi
 	done < <(repoGetProfiles "$name")
 	
 	# Remove associations with ANY profile

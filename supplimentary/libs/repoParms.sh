@@ -37,7 +37,7 @@ function repoGetParm
 function repoRemoveParm
 {
 	repoName="$1"
-	profileName="$2" # TODO Make sure that all code refering to this function now handle this variable correctly.
+	profileName="$2"
 	if [ "$profileName" == '.' ]; then
 		parameterName="$3"
 	else
