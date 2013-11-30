@@ -68,7 +68,8 @@ class core extends Module
 				$this->registerFeature($this, array('aliasFeature'), 'aliasFeature', 'Create an alias for a feature. Eg aliasing --help to -h and -h1 would be done by --aliasFeature=help'.valueSeparator.'h'.valueSeparator.'h1');
 				$this->registerFeature($this, array('setFeatureAttribute'), 'setFeatureAttribute', 'Set a feature attribute. --setFeatureAttribute=featureName,attributeName,attributeValue');
 				# $this->registerFeature($this, array('get'), 'get', 'Get a value. --get=category'.valueSeparator.'variableName', array('storeVars'));
-				$this->registerFeature($this, array('getToResult', 'get'), 'getToResult', 'Get a value and put it in an array so we can do stuff with it. --getToResult=category'.valueSeparator.'variableName', array('storeVars'));
+				$this->registerFeature($this, array('getToResult', 'get'), 'get', 'Get a value and put it in an array so we can do stuff with it. --get=category'.valueSeparator.'variableName', array('storeVars'));
+				$this->registerFeature($this, array('getNested'), 'getNested', 'Get a value and put it in an array so we can do stuff with it. --getNested=category'.valueSeparator.'variableName', array('storeVars'));
 				$this->registerFeature($this, array('set'), 'set', 'set a value. All remaining values after the destination go into a string. --set=category'.valueSeparator.'variableName'.valueSeparator.'value', array('storeVars'));
 				$this->registerFeature($this, array('setNested'), 'setNested', 'set a value into a nested array, creating all the necessary sub arrays. The last parameter is the value. All the other parameters are the keys for each level. --setNested=StoreName'.valueSeparator.'category'.valueSeparator.'subcategory'.valueSeparator.'subsubcategory'.valueSeparator.'value. In this case an array would be created in StoreName,category that looks like this subcategory=>array(subsubcategory=>value)', array('storeVars'));
 				$this->registerFeature($this, array('setArray'), 'setArray', 'set a value. All remaining values after the destination go into an array. --set=category'.valueSeparator.'variableName'.valueSeparator.'value', array('storeVars'));
@@ -111,19 +112,23 @@ class core extends Module
 			#case 'registerTags':
 			#	break;
 			case 'aliasFeature':
-				$parms=$this->interpretParms($this->get('Global', 'aliasFeature'));
+				$parms=$this->interpretParms($this->get('Global', $event));
 				$this->aliasFeature($parms[0], $parms);
 				break;
 			case 'setFeatureAttribute':
 				$parms=$this->interpretParms($this->get('Global', $event), 2, 3, true);
 				$this->setFeatureAttribute($parms[0], $parms[1], $parms[2]);
 				break;
-			case 'getToResult':
-				$parms=$this->interpretParms($this->get('Global', 'getToResult'));
+			case 'get':
+				$parms=$this->interpretParms($this->get('Global', $event));
 				return array($this->get($parms[0], $parms[1]));
 				break;
+			case 'getNested':
+				$parms=$this->interpretParms($this->get('Global', $event));
+				return array($this->getNested($parms));
+				break;
 			case 'set':
-				$parms=$this->interpretParms($this->get('Global', 'set'), 2, 2, true);
+				$parms=$this->interpretParms($this->get('Global', $event), 2, 2, true);
 				$this->set($parms[0], $parms[1], $parms[2]);
 				break;
 			case 'setNested':
@@ -131,7 +136,7 @@ class core extends Module
 				$this->setNested($parms[0], $parms[1], $parms[2]);
 				break;
 			case 'setArray':
-				$parms=$this->interpretParms($this->get('Global', 'setArray'), 2, 2, false);
+				$parms=$this->interpretParms($this->get('Global', $event), 2, 2, false);
 				$this->set($parms[0], $parms[1], $parms[2]);
 				break;
 			case 'setIfNotSet':
@@ -151,13 +156,13 @@ class core extends Module
 				$this->doUnset($parms);
 				break;
 			case 'getCategory':
-				return $this->getCategoryModule($this->get('Global', 'getCategory'));
+				return $this->getCategoryModule($this->get('Global', $event));
 				break;
 			case 'setCategory':
-				$this->setCategoryModule($this->get('Global', 'setCategory'), $this->getResultSet());
+				$this->setCategoryModule($this->get('Global', $event), $this->getResultSet());
 				break;
 			case 'unsetCategory':
-				$this->unsetCategoryModule($this->get('Global', 'unsetCategory'));
+				$this->unsetCategoryModule($this->get('Global', $event));
 				break;
 			case 'stashResults':
 				$originalParms=$this->get('Global', 'stashResults');
@@ -172,7 +177,7 @@ class core extends Module
 				return $this->get($parms[0], $parms[1]);
 				break;
 			case 'setJson':
-				$parms=$this->interpretParms($this->get('Global', 'setJson'));
+				$parms=$this->interpretParms($this->get('Global', $event));
 				echo $this->get('Global', 'setJson')."\n";
 				$this->set($parms[0], $parms[1], json_decode($parms[2]));
 				break;
@@ -188,18 +193,18 @@ class core extends Module
 				$this->callFeature($parms[0], $parms[1]);
 				break;
 			case 'debug':
-				$parms=$this->interpretParms($this->get('Global', 'debug'), 1, 1, true);
+				$parms=$this->interpretParms($this->get('Global', $event), 1, 1, true);
 				$this->debug($parms[0], $parms[1]);
 				break;
 			case 'verbose':
-				$original=$this->get('Global', 'verbose');
+				$original=$this->get('Global', $event);
 				$this->verbosity($original);
 				break;
 			case 'V':
 				$this->verbosity('-');
 				break;
 			case 'getPID':
-				$this->getPID($this->interpretParms($this->get('Global', 'getPID')));
+				$this->getPID($this->interpretParms($this->get('Global', $event)));
 				break;
 			case 'ping':
 				echo "Pong.\n";
@@ -961,6 +966,8 @@ class core extends Module
 	
 	function getNested($values)
 	{
+		# TODO what was I trying to do here. Is it even that?
+		
 		$output=$this->store;
 		foreach ($values as $value)
 		{

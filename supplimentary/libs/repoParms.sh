@@ -30,7 +30,7 @@ function repoGetParm
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	
 	if [ -f "$parmFile" ]; then
-		achel --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --get="RepoParms,$parameterName" -s
+		achel --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --getNested="RepoParms,$parameterName" -s
 	fi
 }
 
@@ -77,11 +77,12 @@ function repoGetProfiles
 function repoGetParmPackages
 {
 	repoName="$1"
+	profileName="$2" # TODO Make sure that all code refering to this function now handle this variable correctly.
 	
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	
 	if [ -f "$parmFile" ]; then
-		achel --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --retrieveResults="RepoParms,packages" --flatten --toString="~%sourceRepo%~ ~%packageRegex%~" -s
+		achel --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --retrieveResults="RepoParms,$profileName" --takeSubResult=packages --flatten --toString="~%sourceRepo%~ ~%packageRegex%~" -s
 	fi
 }
 

@@ -60,23 +60,28 @@ function installRepo_setup
 	fi
 	
 	while read profileName; do
-		# create profile
-		createProfile "$name"
-		
-		# enable packages
-		# TODO port this
-		if [ "$name" != 'achel' ]; then
-			disablePackage "$name" ".*" ".*"
-		fi
-		while read srcRepoName regex; do
-			enabledPacakge "$srcRepoName" "$regex" "$name"
-		done < <(repoGetParmPackages "$name")
-		
-		# create executable
-		# TODO port this
-		execName=`repoGetParm "$name" execName`
-		if [ ! "$execName" == '' ]; then
-			createExec "$execName" "$name"
+		if [ "$profileName" != '' ]; then
+			# create profile
+			createProfile "$profileName"
+			
+			# enable packages
+			# TODO port this
+			if [ "$name" != 'achel' ]; then
+				disablePackage "$profileName" ".*" ".*"
+			fi
+			while read srcRepoName regex; do
+				enabledPacakge "$srcRepoName" "$regex" "$profileName"
+			done < <(repoGetParmPackages "$name" "$profileName")
+			
+			# create executable
+			# TODO port this
+			echo repoGetParm "$name"  "$profileName" execName
+			execName=`repoGetParm "$name"  "$profileName" execName`
+			if [ ! "$execName" == '' ]; then
+				createExec "$execName" "$name"
+			fi
+			
+			# TODO invoke post installation even if applicable
 		fi
 	done < <(repoGetProfiles "$name")
 }
