@@ -3,7 +3,7 @@
 #   Get a parameter for an existing repository.
 #
 # Syntax:
-#   $0 repoName parameterName profileName "value"
+#   $0 repoName parameterName profileName
 #     repoName is the name of the repository you'd like to get the parameter in.
 #     profileName is the name of the profile to use. Normally this will be the same as the repo name, but could be different if you wanted to have multiple executables per repo, which is a very likely direction for the future. If profileName is "." it deems the variable to be global.
 #     parameterName is the name of the parameter you'd like to get. It doesn't have to already exist.

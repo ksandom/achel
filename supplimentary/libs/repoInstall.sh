@@ -65,7 +65,6 @@ function installRepo_setup
 			createProfile "$profileName"
 			
 			# enable packages
-			# TODO port this
 			if [ "$name" != 'achel' ]; then
 				disablePackage "$profileName" ".*" ".*"
 			fi
@@ -74,8 +73,6 @@ function installRepo_setup
 			done < <(repoGetParmPackages "$name" "$profileName")
 			
 			# create executable
-			# TODO port this
-			echo repoGetParm "$name"  "$profileName" execName
 			execName=`repoGetParm "$name"  "$profileName" execName`
 			if [ ! "$execName" == '' ]; then
 				createExec "$execName" "$name"
@@ -135,14 +132,17 @@ function uninstallRepo_removeBindings
 {
 	repoName="$1"
 	
-	# remove executable
-	execName=`repoGetParm "$repoName" execName`
-	
-	# TODO the input protection will likely be a curse here, so should be revised.
-	removeExec "$execName"
-	
-	# remove profile
-	removeProfile "$repoName"
+	while read profileName; do
+		if [ "$profileName" != '' ]; then
+		# remove executable
+		execName=`repoGetParm "$repoName" "$profileName" execName`
+		
+		# TODO the input protection will likely be a curse here, so should be revised.
+		removeExec "$execName"
+		
+		# remove profile
+		removeProfile "$profileName"
+	done < <(repoGetProfiles "$name")
 	
 	# Remove associations with ANY profile
 	disablePackage "$repoName" ".*" ".*"
