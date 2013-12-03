@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+# Achel application starter.
 # Copyright (c) 2012, Kevin Sandom under the BSD License. See LICENSE for full details.
  
 define('programName', '~%programName%~');

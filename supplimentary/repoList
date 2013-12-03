@@ -22,7 +22,13 @@ case $1 in
 		listRepos
 	;;
 	*)
-		resolveSymlinks "$configDir"/repos | while read in;do
+		if [ "$1" == '' ]; then
+			repos=`resolveSymlinks "$configDir"/repos`
+		else
+			repos=`resolveSymlinks "$configDir"/repos | grep "$1"`
+		fi
+		
+		echo "$repos" | while read in;do
 			echo "$in" | tabsToSpacedDashes
 			name=`echo "$in" | cut -d\	 -f1`
 			repoGetParms "$name"
