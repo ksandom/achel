@@ -76,9 +76,8 @@ function installRepo_setup
 			execName=`repoGetParm "$name"  "$profileName" execName`
 			if [ ! "$execName" == '' ]; then
 				createExec "$execName" "$name"
+				$execName --verbosity=2 --finalInstallStage
 			fi
-			
-			# TODO invoke post installation even if applicable
 		fi
 	done < <(repoGetProfiles "$name")
 }
