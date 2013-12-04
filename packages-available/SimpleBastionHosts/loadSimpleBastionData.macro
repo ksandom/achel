@@ -1,5 +1,0 @@
-# Loads Bastion data ~ Bastion,load
-#onLoaded registerForEvent Bastion,load,loadSimpleBastionData
-
-loadStoreFromData Bastion
-
