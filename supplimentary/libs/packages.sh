@@ -87,7 +87,6 @@ function removeExec
 	if [ ! "$name" == '' ] && [ -e "$binExec/$name" ]; then
 		rm "$name"
 	else
-		echo "removeExec: Could not find \"$name\"" >&2
 		return 1
 	fi
 	

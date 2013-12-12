@@ -51,35 +51,64 @@ function installRepo_get
 	echo "$name"
 }
 
-function installRepo_setup
+function installRepo_clean
 {
-	name="$1"
-	if [ ! -e "$configDir/repos/$name" ]; then
-		echo "Repo \"$name\" is not currently installed." >&2
+	irs_repoName="$1"
+	if [ ! -e "$configDir/repos/$irs_repoName" ]; then
+		echo "Repo \"$irs_repoName\" is not currently installed." >&2
 		return 1
 	fi
 	
-	while read profileName; do
-		if [ "$profileName" != '' ]; then
+	while read profileRefName; do
+		if [ "$profileRefName" != '' ]; then
+			# Get the logical name of the profile
+			profileName=`repoGetParm "$irs_repoName" "$profileRefName" "name"`
+			
+			# create profile
+			createProfile "$profileName"
+			
+			# disable packages
+			if [ "$irs_repoName" != 'achel' ] ; then
+				disablePackage "$profileName" ".*" ".*"
+			fi
+		else
+			echo "installRepo_setup: profileRefName=\"$profileRefName\""
+		fi
+	done < <(repoGetProfiles "$irs_repoName")
+}
+
+function installRepo_setup
+{
+	irs_repoName="$1"
+	if [ ! -e "$configDir/repos/$irs_repoName" ]; then
+		echo "Repo \"$irs_repoName\" is not currently installed." >&2
+		return 1
+	fi
+	
+	while read profileRefName; do
+		if [ "$profileRefName" != '' ]; then
+			# Get the logical name of the profile
+			profileName=`repoGetParm "$irs_repoName" "$profileRefName" "name"`
+			execName=`repoGetParm "$irs_repoName"  "$profileName" execName`
+			
 			# create profile
 			createProfile "$profileName"
 			
 			# enable packages
-			if [ "$name" != 'achel' ]; then
-				disablePackage "$profileName" ".*" ".*"
-			fi
 			while read srcRepoName regex; do
+				echo "installRepo_setup($irs_repoName/$profileRefName): Doing enabledPacakge "$srcRepoName" "$regex" "$profileName""
 				enabledPacakge "$srcRepoName" "$regex" "$profileName"
-			done < <(repoGetParmPackages "$name" "$profileName")
+			done < <(repoGetParmPackages "$irs_repoName" "$profileRefName")
 			
 			# create executable
-			execName=`repoGetParm "$name"  "$profileName" execName`
 			if [ ! "$execName" == '' ]; then
-				createExec "$execName" "$name"
+				createExec "$execName" "$irs_repoName"
 				$execName --verbosity=2 --finalInstallStage
 			fi
+		else
+			echo "installRepo_setup: profileRefName=\"$profileRefName\""
 		fi
-	done < <(repoGetProfiles "$name")
+	done < <(repoGetProfiles "$irs_repoName")
 }
 
 function userUninstallRepo
@@ -135,6 +164,7 @@ function uninstallRepo_removeBindings
 		if [ "$profileName" != '' ]; then
 			# remove executable
 			execName=`repoGetParm "$repoName" "$profileName" execName`
+			echo "uninstallRepo_removeBindings: Will remove profile '$profileName' for repo '$repoName' with executable '$execName'"
 			
 			# TODO the input protection will likely be a curse here, so should be revised.
 			removeExec "$execName"
@@ -142,10 +172,18 @@ function uninstallRepo_removeBindings
 			# remove profile
 			removeProfile "$profileName"
 		fi
-	done < <(repoGetProfiles "$name")
+	done < <(repoGetProfiles "$repoName")
 	
 	# Remove associations with ANY profile
 	disablePackage "$repoName" ".*" ".*"
+}
+
+function cleanRepos
+{
+	while read repo;do
+		echo "cleanRepos Doing \"$repo\""
+		installRepo_clean "$repo"
+	done
 }
 
 function reInstallRepos

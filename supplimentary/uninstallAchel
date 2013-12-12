@@ -13,9 +13,23 @@ requiredParms="$0"
 . `dirname $0`/libs/includeLibs.sh
 . $libDir/display.sh
 . $libDir/filesystem.sh
+. $libDir/repoInstall.sh
+. $libDir/getRepo.sh
+. $libDir/repoParms.sh
+. $libDir/packages.sh
+. $libDir/installLibs.sh
 
+
+# Warn the user about what they are getting themselves in for
 cat $docsDir/messages/install/uninstallAchel.md
 waitSeconds 5
+
+# Uninstall all achel provided applications
+listRepos | grep -v '^achel$' | while read repoName;do
+	uninstallRepo_removeBindings "$repoName"
+	removeRepo "$repoName"
+done
+
 
  # Remove achel executable
 filename="achel"

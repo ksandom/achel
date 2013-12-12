@@ -1,0 +1,43 @@
+#!/bin/bash
+# Description
+#   Reinstalls all repos
+#
+# Syntax:
+#   $0 [--thorough]
+#
+#   --thorough remove all packages before enabling them again. This will be performed across ALL repositories so that interdependancies are fullfilled.
+#
+#   Note if you only do this on some repos, there is a chance that interdependancies will be missed. To be sure, do a reinstall of all 
+#
+# Examples:
+#   Reinstall everything.
+#     $0
+#
+#   Reinstall everything after first removing all packages.
+#     $0 --thorough
+#
+#   Reinstall all repos matching the given regex.
+#     $0 regex
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+
+# Stuff for repo management
+. $libDir/repoInstall.sh
+. $libDir/getRepo.sh
+. $libDir/repoParms.sh
+. $libDir/packages.sh
+. $libDir/installLibs.sh
+
+regex="$1"
+
+if [ "$regex" == '' ] || [ "$regex" == '--thorough' ]; then
+	repos=`listRepos`
+else
+	repos=`listRepos | grep "$regex"`
+fi
+
+if [ "$regex" == '--thorough' ]; then
+	echo "$repos"| cleanRepos
+fi
+
+echo "$repos"| reInstallRepos
