@@ -1,0 +1,69 @@
+#!/bin/bash
+# Install Achel directly from the web
+
+logFile="/tmp/achelWebInstall.log"
+haveTee="false"
+
+function out
+{
+	destination=${2:-STD}
+	
+	if [ "$haveTee" == "true" ]; then
+		echo "Achel webInstall $destination: $1" | tee -a "$logFile"
+	else
+		echo "Achel webInstall $destination: $1"
+	fi
+}
+
+function outError
+{
+	 out "$1" "ERR" >&2
+}
+
+
+
+# Early self configure
+if [ "`which tee`" == '' ]; then
+	outError "Could not find tee. Installation can continue, but it won't be logged"
+else
+	haveTee="true"
+	out "Found tee. Installation will be logged to \"$logFile\""
+fi
+
+
+
+# Basic sanity checks
+if [ "`which php`" == '' ]; then
+	outError "Could not find PHP.
+	On ubuntu you can install it with: sudo apt-get install php5
+	If I remember correctly, on a mac you can often install it with: brew install php
+	If I remember correctly, on redhat/fedora you can do it with: su -c yum install php"
+	
+	exit 1
+fi
+
+if [ "`which curl`" == '' ]; then
+	outError "Could not find curl.
+	On ubuntu you can install it with: sudo apt-get install curl
+	On a mac you can probably install it with: brew install curl
+	On redhat/fedora you can probably install it with: sudo apt-get install curl"
+	
+	exit 1
+fi
+
+if [ "`which git`" == '' ]; then
+	outError "Could not find git.
+	On ubuntu you can install it with: sudo apt-get install git
+	On a mac you can probably install it with: brew install git
+	On redhat/fedora you can probably install it with: sudo apt-get install git"
+	
+	exit 1
+fi
+
+
+
+# Summarise installation
+
+# Clone the Achel repository
+
+# If we have been asked to install another repo, do that too
