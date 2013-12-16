@@ -98,7 +98,6 @@ class Condition extends Module
 		
 		$matched=false;
 		$result=(workAroundIfBug)?$input:false; // See doc/bugs/ifBug.md
-		
 		if (is_array($input) and count($input))
 		{
 			// This is to make sure that the first value is of significance. ie not empty.
@@ -114,9 +113,12 @@ class Condition extends Module
 		*/
 		if ($matched == $match)
 		{
+			$this->core->debug(1, "ifNotEmptyResult: got here D4");
 			$this->core->incrementNesting();
 			$result=$this->takeAction($parms);
 			$this->core->decrementNesting();
+			print_r($parms);
+			$this->core->debug(1, "ifNotEmptyResult: got here D5");
 		}
 		# TODO device if this should stay or not once the problem is solved.
 		//else $result=$input;

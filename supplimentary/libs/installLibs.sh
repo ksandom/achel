@@ -257,7 +257,7 @@ function checkParameters
 {
 	derivePaths
 	
-	allowed='^--\(configDir\|storageDir\|binExec\)'
+	allowed='^--\(configDir\|storageDir\|binExec\|installType\)'
 	for parm in $1;do
 		parmAction=`echo $parm | cut -d= -f1`
 		parmValue=`echo $parm | cut -d= -f2`

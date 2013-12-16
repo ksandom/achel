@@ -1,23 +1,39 @@
 #!/bin/bash
 # Install Achel directly from the web
 
-logFile="/tmp/achelWebInstall.log"
+what='achel'
+achelSrc="https://github.com/ksandom/achel.git"
 haveTee="false"
+tmpArea="/tmp/achelInstall-$$"
+logFile="$tmpArea/achelWebInstall.log"
+
+mkdir -p "$tmpArea"
 
 function out
 {
 	destination=${2:-STD}
-	
-	if [ "$haveTee" == "true" ]; then
-		echo "Achel webInstall $destination: $1" | tee -a "$logFile"
+	if [ "$3" != '' ]; then
+		timeStamp="$3"
 	else
-		echo "Achel webInstall $destination: $1"
+		timeStamp="`date '+%Y-%m-%d--%H%M%S'`"
+	fi
+	
+	if [ "$1" != '' ]; then
+		if [ "$haveTee" == "true" ]; then
+			echo -e "$timeStamp Achel webInstall $destination: $1" | tee -a "$logFile"
+		else
+			echo -e "$timeStamp Achel webInstall $destination: $1"
+		fi
+	else
+		while read in; do 
+			out "$in" 'PIP' "$timeStamp"
+		done
 	fi
 }
 
 function outError
 {
-	 out "$1" "ERR" >&2
+	out "$1" "ERR" >&2
 }
 
 
@@ -34,28 +50,29 @@ fi
 
 # Basic sanity checks
 if [ "`which php`" == '' ]; then
-	outError "Could not find PHP.
+	echo "Could not find PHP.
 	On ubuntu you can install it with: sudo apt-get install php5
 	If I remember correctly, on a mac you can often install it with: brew install php
-	If I remember correctly, on redhat/fedora you can do it with: su -c yum install php"
+	If I remember correctly, on redhat/fedora you can do it with: su -c yum install php" | outError
 	
 	exit 1
 fi
 
-if [ "`which curl`" == '' ]; then
-	outError "Could not find curl.
-	On ubuntu you can install it with: sudo apt-get install curl
-	On a mac you can probably install it with: brew install curl
-	On redhat/fedora you can probably install it with: sudo apt-get install curl"
-	
-	exit 1
-fi
+# TODO double check. I'm pretty sure this is not needed because curl is used to start this process, not continue it. Therefore if we have got this far we don't need it any more.
+# if [ "`which curl`" == '' ]; then
+# 	echo "Could not find curl.
+# 	On ubuntu you can install it with: sudo apt-get install curl
+# 	On a mac you can probably install it with: brew install curl
+# 	On redhat/fedora you can probably install it with: sudo apt-get install curl" | outError
+# 	
+# 	exit 1
+# fi
 
 if [ "`which git`" == '' ]; then
-	outError "Could not find git.
+	echo "Could not find git.
 	On ubuntu you can install it with: sudo apt-get install git
 	On a mac you can probably install it with: brew install git
-	On redhat/fedora you can probably install it with: sudo apt-get install git"
+	On redhat/fedora you can probably install it with: sudo apt-get install git" | outError
 	
 	exit 1
 fi
@@ -63,7 +80,58 @@ fi
 
 
 # Summarise installation
+summary="# Achel installation
+			* Going to install Achel from $achelSrc"
+if [ "$extraSrc" != '' ]; then
+	for src in $extraSrc; do
+	summary="$summary
+			* Going to install an extra repository from $src"
+	done
+fi
+
+echo -e "$summary" | out
+
+
 
 # Clone the Achel repository
+cd "$tmpArea"
+
+git clone "$achelSrc" 2>&1 | out
+ln -s ~/files/develop/achel .
+if [ -d "$what" ]; then
+	out "Git reported success cloning \"$achelSrc\". Let's install it!"
+	# TODO do installation
+	
+	cd "$what"
+	./install.sh --installType='cp' 2>&1 | out
+	
+	if [ -d ~/.mass ]; then
+		manageAchel migrateMass 2>&1 | out
+	fi
+	
+	
+else
+	echo "Did not succeed cloning \"$achelSrc\". Continuing woiuld be silly. Please resolve the issue then try again. Full details can be found in $logFile" | outError
+	exit 1
+fi
+
 
 # If we have been asked to install another repo, do that too
+if [ "$extraSrc" != '' ]; then
+	out "extraSrc was soecified as \"$extraSrc\""
+	for src in $extraSrc; do
+		out "Going to install \"$src\""
+		manageAchel repoInstall "$src"
+	done
+else
+	echo "No extraSrc specified. So no extra repos will be installed at this time.\nIf you would like to do so, you can by running
+	manageAchel repoInstall "repoAddress"\n\nFor help about repoInstall run
+	manageAchel repoInstall" | out
+fi
+
+
+
+# Clean up
+cd ~-
+# rm -RF "$tmpArea"
+
