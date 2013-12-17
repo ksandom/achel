@@ -1,0 +1,13 @@
+#!/bin/bash
+# Description
+#   Get the install details of Achel. These are generally all the paths that are in use.
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   List out all the settings.
+#     $0
+requiredParms="$0"
+
+set

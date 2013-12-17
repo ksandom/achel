@@ -1,11 +1,17 @@
 #!/bin/bash
 # Install Achel directly from the web
 
+
 what='achel'
 achelSrc="https://github.com/ksandom/achel.git"
-haveTee="false"
 tmpArea="/tmp/achelInstall-$$"
-logFile="$tmpArea/achelWebInstall.log"
+logFileName='achelWebInstall.log' # NOTE Do not use this when manipulating the log. Use logFile instead.
+logFile="$tmpArea/$logFileName"
+
+# Defaults that you should not change
+haveTee="false"
+achelState="absent"
+achelStateComment="Not found."
 
 mkdir -p "$tmpArea"
 
@@ -36,102 +42,183 @@ function outError
 	out "$1" "ERR" >&2
 }
 
-
-
-# Early self configure
-if [ "`which tee`" == '' ]; then
-	outError "Could not find tee. Installation can continue, but it won't be logged"
-else
-	haveTee="true"
-	out "Found tee. Installation will be logged to \"$logFile\""
-fi
-
-
-
-# Basic sanity checks
-if [ "`which php`" == '' ]; then
-	echo "Could not find PHP.
-	On ubuntu you can install it with: sudo apt-get install php5
-	If I remember correctly, on a mac you can often install it with: brew install php
-	If I remember correctly, on redhat/fedora you can do it with: su -c yum install php" | outError
+function earlySelfConfigure
+{
+	# Check for tee, which is used to log and display output.
+	if [ "`which tee`" == '' ]; then
+		outError "Could not find tee. Installation can continue, but it won't be logged"
+	else
+		haveTee="true"
+		out "Found tee. Installation will be logged to \"$logFile\""
+	fi
 	
-	exit 1
-fi
+	# Check if there is a working installation already
+	if which achel | out && which manageAchel | out; then
+		achelState="found"
+		achelStateComment="Found but not functional."
+		
+		achelTest=`achel --set=Tmp,test,iAmOk --get=Tmp,test --singleString`
+		if [ "$achelTest" == 'iAmOk' ]; then
+			achelState="functional"
+			achelStateComment="Found and functional."
+			
+		fi
+	fi
+}
 
-# TODO double check. I'm pretty sure this is not needed because curl is used to start this process, not continue it. Therefore if we have got this far we don't need it any more.
-# if [ "`which curl`" == '' ]; then
-# 	echo "Could not find curl.
-# 	On ubuntu you can install it with: sudo apt-get install curl
-# 	On a mac you can probably install it with: brew install curl
-# 	On redhat/fedora you can probably install it with: sudo apt-get install curl" | outError
-# 	
-# 	exit 1
-# fi
+function basicSanityCheckes
+{
+	# Basic sanity checks
+	if [ "`which php`" == '' ]; then
+		echo "Could not find PHP.
+		On ubuntu you can install it with: sudo apt-get install php5
+		If I remember correctly, on a mac you can often install it with: brew install php
+		If I remember correctly, on redhat/fedora you can do it with: su -c yum install php" | outError
+		
+		exit 1
+	fi
 
-if [ "`which git`" == '' ]; then
-	echo "Could not find git.
-	On ubuntu you can install it with: sudo apt-get install git
-	On a mac you can probably install it with: brew install git
-	On redhat/fedora you can probably install it with: sudo apt-get install git" | outError
-	
-	exit 1
-fi
+	# TODO double check. I'm pretty sure this is not needed because curl is used to start this process, not continue it. Therefore if we have got this far we don't need it any more.
+	# if [ "`which curl`" == '' ]; then
+	# 	echo "Could not find curl.
+	# 	On ubuntu you can install it with: sudo apt-get install curl
+	# 	On a mac you can probably install it with: brew install curl
+	# 	On redhat/fedora you can probably install it with: sudo apt-get install curl" | outError
+	# 	
+	# 	exit 1
+	# fi
 
+	if [ "`which git`" == '' ]; then
+		echo "Could not find git.
+		On ubuntu you can install it with: sudo apt-get install git
+		On a mac you can probably install it with: brew install git
+		On redhat/fedora you can probably install it with: sudo apt-get install git" | outError
+		
+		exit 1
+	fi
+}
 
-
-# Summarise installation
-summary="# Achel installation
-			* Going to install Achel from $achelSrc"
-if [ "$extraSrc" != '' ]; then
-	for src in $extraSrc; do
-	summary="$summary
-			* Going to install an extra repository from $src"
-	done
-fi
-
-echo -e "$summary" | out
-
-
-
-# Clone the Achel repository
-cd "$tmpArea"
-
-git clone "$achelSrc" 2>&1 | out
-ln -s ~/files/develop/achel .
-if [ -d "$what" ]; then
-	out "Git reported success cloning \"$achelSrc\". Let's install it!"
-	# TODO do installation
-	
-	cd "$what"
-	./install.sh --installType='cp' 2>&1 | out
-	
-	if [ -d ~/.mass ]; then
-		manageAchel migrateMass 2>&1 | out
+function sumariseInstallation
+{
+	# Summarise installation
+	if [ "$achelState" != 'functional' ]; then
+		summary="# Achel installation
+				* Going to install Achel from $achelSrc since it is $achelStateComment"
+	else
+		summary="# Achel installation
+				* Not going to install Achel from $achelSrc since it is $achelStateComment"
 	fi
 	
 	
-else
-	echo "Did not succeed cloning \"$achelSrc\". Continuing woiuld be silly. Please resolve the issue then try again. Full details can be found in $logFile" | outError
-	exit 1
+	if [ "$extraSrc" != '' ]; then
+		for src in $extraSrc; do
+		summary="$summary
+				* Going to install an extra repository from $src"
+		done
+	fi
+
+	echo -e "$summary" | out
+}
+
+function installAchel
+{
+	# Clone the Achel repository
+	cd "$tmpArea"
+
+	git clone "$achelSrc" 2>&1 | out
+	if [ -d "$what" ]; then
+		out "Git reported success cloning \"$achelSrc\". Let's install it!"
+		# TODO do installation
+		
+		cd "$what"
+		./install.sh --installType='cp' 2>&1 | out
+		
+		if [ -d ~/.mass ]; then
+			manageAchel migrateMass 2>&1 | out
+		fi
+		
+		
+	else
+		echo "Did not succeed cloning \"$achelSrc\". Continuing woiuld be silly. Please resolve the issue then try again. Full details can be found in $logFile" | outError
+		exit 1
+	fi
+}
+
+function setAchelVersion
+{
+	if [ "$achelVersion" != '' ]; then
+		manageAchel repoInstall "git@github.com:ksandom/achel.git=$achelVersion"
+		out "The version of achel requested is \"$achelVersion\". You can change it to sommething else like so"
+		out "  manageAchel repoInstall \"git@github.com:ksandom/achel.git=master\""
+	fi
+}
+
+function installAnyExtraRepos
+{
+	# If we have been asked to install another repo, do that too
+	if [ "$extraSrc" != '' ]; then
+		out "extraSrc was soecified as \"$extraSrc\""
+		for src in $extraSrc; do
+			out "Going to install \"$src\""
+			manageAchel repoInstall "$src" 2>&1 | out
+		done
+	else
+		echo "No extraSrc specified. So no extra repos will be installed at this time.\nIf you would like to do so, you can by running
+		manageAchel repoInstall "repoAddress"\n\nFor help about repoInstall run
+		manageAchel repoInstall" | out
+	fi
+}
+
+function cleanUp
+{
+	cd ~-
+	
+	if which manageAchel | out; then
+		configDir=`manageAchel getEnv | grep '^configDir=' | cut -d= -f2-`
+		logDestination="$configDir/obsolete"
+		logDestinationFile="$logDestination/$logFileName"
+		
+		mkdir -p "$logDestination"
+		cat "$logFile" >> "$logDestinationFile"
+		rm "$logFile"
+		
+		# Any further logging will go straight to the final destination
+		logFile="$logDestinationFile"
+		
+		out "cleanUp: Appended log to \"$logDestinationFile\""
+		out "cleanUp: Removed temporary directory "$tmpArea""
+		rm -Rf "$tmpArea"
+	else
+		if [ "$debug" == 'true' ]; then
+			outError "cleanUp: It looks like the installation failed, and debug is true so I'll leave the temporary directory there so you can debug it. When you don't need it any more you can remove it like this"
+			outError "	rm -Rf \"$tmpArea\""
+		else
+			outError "cleanUp: It looks like the installation failed, but debug is false so I'll remove the temporary directory."
+			rm -Rf "$tmpArea"
+		fi
+		
+		# TODO Add note about setting debug
+	fi
+	
+	
+	# rm -RF "$tmpArea"
+}
+
+
+
+
+# Prep
+earlySelfConfigure
+basicSanityCheckes
+sumariseInstallation
+
+# Do it
+if [ "$achelState" != 'functional' ]; then
+	installAchel
 fi
 
-
-# If we have been asked to install another repo, do that too
-if [ "$extraSrc" != '' ]; then
-	out "extraSrc was soecified as \"$extraSrc\""
-	for src in $extraSrc; do
-		out "Going to install \"$src\""
-		manageAchel repoInstall "$src"
-	done
-else
-	echo "No extraSrc specified. So no extra repos will be installed at this time.\nIf you would like to do so, you can by running
-	manageAchel repoInstall "repoAddress"\n\nFor help about repoInstall run
-	manageAchel repoInstall" | out
-fi
-
-
+setAchelVersion
+installAnyExtraRepos
 
 # Clean up
-cd ~-
-# rm -RF "$tmpArea"
-
+cleanUp

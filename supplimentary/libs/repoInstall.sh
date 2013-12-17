@@ -17,29 +17,34 @@ function installRepo
 
 function installRepo_get
 {
-	repoAddress="$1"
+	repoAddress="`echo \"$1\" | sed 's/=.*//g'`"
+	repoVersion="`echo \"$1\" | sed 's/.*=//g'`"
 	overRideRepoName="$2"
 	
+	
+	# Get it
 	checkoutDir="repoInstall-$$"
 	addRepo "$repoAddress" "$checkoutDir"
-
+	
 	cd "$configDir/repos/$checkoutDir"
-
+	
+	
 	# get tha name
 	if [ "$overRideRepoName" == '' ]; then # detect name
 		name=`repoGetParm "$checkoutDir" . name`
 	else # override name
-		echo "repoInstall: Overrode repoName. This may lead to pain. If you haven't already, read the help for repoInstall." >&2
+		echo "installRepo_get: Overrode repoName. This may lead to pain. If you haven't already, read the help for repoInstall." >&2
 		name="$overRideRepoName"
 	fi
 
 	if [ "$name" == "" ]; then
 		# TODO add the option for the user to specify the parameters.
-		echo "The repository at \"$repoAddress\" does not appear to have a name set. You'll need to do this installation manually."
+		echo "installRepo_get: The repository at \"$repoAddress\" does not appear to have a name set. You'll need to do this installation manually."
 		removeRepo "$checkoutDir"
 		exit 1
 	fi
-
+	
+	
 	# detect conflict
 	if repoExists "$name"; then # clean up and warn
 		echo "$scriptName: A repo of name \"$name\" is already installed. Re-installing." >&2
@@ -47,6 +52,15 @@ function installRepo_get
 	else
 		renameRepo "$checkoutDir" "$name"
 	fi
+	
+	
+	# Choose a specific version (if requested)
+	cd "$configDir/repos/$name"
+	if [ "$repoVersion" != '' ]; then
+		echo "installRepo_get: Setting $name to $repoVersion"
+		git check out "$repoVersion"
+	fi
+	
 	
 	echo "$name"
 }

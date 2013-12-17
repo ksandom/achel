@@ -3,8 +3,9 @@
 #   Installs a repository from start to finish. **Most users will want this.**
 #
 # Syntax:
-#   $0 repoAddress [overRideRepoName]
+#   $0 repoAddress[=version] [overRideRepoName]
 #     repoAddress is where to get the repo from.
+#     version can be a tag, branch or specific commit in the git history.
 #     overRideRepoName allows you to resolve a conflict if two different repositories specify the same name. 
 #       Note that you will be in for many headaches if you need to do this.
 #       I recommend that you uninstall one of the two repos.
