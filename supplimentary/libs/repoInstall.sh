@@ -58,7 +58,7 @@ function installRepo_get
 	cd "$configDir/repos/$name"
 	if [ "$repoVersion" != '' ]; then
 		echo "installRepo_get: Setting $name to $repoVersion"
-		git check out "$repoVersion"
+		git checkout "$repoVersion"
 	fi
 	
 	
