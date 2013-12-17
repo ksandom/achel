@@ -62,6 +62,10 @@ function installRepo_get
 	fi
 	
 	
+	# Update if relevant
+	git pull
+	
+	
 	echo "$name"
 }
 
