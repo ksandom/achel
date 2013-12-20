@@ -1,6 +1,0 @@
-# Import /etc/hosts. Read importHosts.macro for more information ~ user,import
-
-importFromHostsFile
-
-# save store to data
-saveToJson ~!General,configDir!~/data/1LayerHosts/importedFromETCHosts.json

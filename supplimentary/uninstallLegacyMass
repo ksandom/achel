@@ -1,0 +1,29 @@
+#!/bin/bash
+# Description
+#   Uninstalls a legacy mass installation. Will be deprecated 2014-01-01 and removed 2014-02-01
+#   NOTE that all data and customisations contained in the mass installation will be lost.
+#
+# Syntax:
+#   $0 uninstallLegacyMass
+#
+# Examples:
+#   Uninstall.
+#     $0
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/display.sh
+. $libDir/repoInstall.sh
+. $libDir/packages.sh
+. $libDir/repoParms.sh
+. $libDir/installLibs.sh
+
+cat $docsDir/messages/install/uninstallLegacyMass.md
+waitSeconds 5
+
+# Uninstall everything
+uninstallAchelOrMass mass Mass
+
+# Re-setup mass via achel if it already exists
+installRepo_setup 'mass'
+

@@ -10,7 +10,7 @@
 
 # install.sh will get replaced eventually. For now it does what I need.
 
-programName='mass'
+programName='achel'
 fileThings='macros modules templates'
 directoryThings='packages'
 things="$fileThings $directoryThings"
@@ -18,7 +18,9 @@ installTypeComments=''
 
 cd `dirname $0`
 . supplimentary/libs/installLibs.sh
+. supplimentary/libs/filesystem.sh
 . supplimentary/libs/packages.sh
+. supplimentary/libs/display.sh
 
 function userInstall
 {
@@ -54,7 +56,17 @@ function linkedInstall
 	installType='ln'
 	
 	if [ "`echo $PATH|grep $binExec`" == '' ]; then # A hack for the mac
-		binExec=/usr/local/bin
+		newBinExec="/usr/local/bin"
+		testExec="$newBinExec/canIWriteHere"
+		
+		if testWriteable "$testExec"; then
+			binExec="$newBinExec"
+		else
+			echo "You have chosen a linked user install, but \"$binExec\" is not in \$PATH. And \"$newBinExec\" is not writeable. Installation can not continue."
+			
+			cat docs/errors/install/notWriteable.md
+			exit 1
+		fi
 	fi
 }
 

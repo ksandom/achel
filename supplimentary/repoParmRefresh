@@ -1,0 +1,28 @@
+#!/bin/bash
+# Description
+#   Refresh the installation of a repository without downloading or changing version. This is particularly useful if you suspect the installation has become broken.
+#
+# Syntax:
+#   $0 repoName
+#     repoName is the name of the repository. You can find this with repoList.
+#
+# Examples:
+#   Refresh the install of mass
+#     $0 mass
+#
+#   Refresh the install of doneIt
+#     $0 doneIt
+
+requiredParms="$1"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/repoInstall.sh
+. $libDir/getRepo.sh
+. $libDir/repoParms.sh
+. $libDir/packages.sh
+. $libDir/installLibs.sh
+
+repoName="$1"
+
+installRepo_setup "$1"
+# TODO Something equivalent to this would be useful to be complete.
+# achel --verbosity=2 --finalInstallStage

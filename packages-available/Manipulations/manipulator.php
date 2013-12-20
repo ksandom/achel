@@ -24,7 +24,7 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('requireEach', 'refine'), 'requireEach', 'Require each entry to match this regular expression. --requireEach=regex', array('array', 'result'));
 				$this->core->registerFeature($this, array('recursiveRequireEach', 'recursiveRefine'), 'recursiveRequireEach', 'Require each entry to match this regular expression somewhere in its dataset. --requireEach=regex', array('array', 'result'));
 				$this->core->registerFeature($this, array('requireItem'), 'requireItem', 'Require a named entry in each of the root entries. A regular expression can be supplied to provide a more precise match. --requireItem=entryKey[,regex]', array('array', 'result'));
-				$this->core->registerFeature($this, array('excludeEach'), 'excludeEach', 'The counterpart of --requireEach. Excludes any item that contains an entry that matches the regular expression. --requireEach=regex', array('array', 'result'));
+				$this->core->registerFeature($this, array('excludeEach', 'exclude'), 'excludeEach', 'The counterpart of --requireEach. Excludes any item that contains an entry that matches the regular expression. --requireEach=regex', array('array', 'result'));
 				$this->core->registerFeature($this, array('recursiveExcludeEach', 'recursiveExclude'), 'recursiveExcludeEach', 'The counterpart of --recursiveRequireEach. Excludes any item that contains an entry that matches the regular expression somewhere in the dataset. --requireEach=regex', array('array', 'result'));
 				$this->core->registerFeature($this, array('excludeItem'), 'excludeItem', 'The counterpart of --requireItem. Excludes any items wherre a named entry matches the specified regex. --excludeItem=entryKey[,regex]', array('array', 'result'));
 				$this->core->registerFeature($this, array('manipulateEach'), 'manipulateEach', 'Call a feature for each entry in the result set that contains an item matching this regular expression. --manipulateEach=regex,feature featureParameters', array('array', 'result'));
@@ -235,6 +235,11 @@ class Manipulator extends Module
 	{
 		$output=array();
 		
+		if (!is_array($input))
+		{
+			$this->core->debug(3, "Manipulator->toString: Input was not an array. Quite possibly there was no input. Try using --nested to find out what data you are getting at this point.");
+			return $input;
+		}
 		foreach ($input as $line)
 		{
 			if (is_array($line))
@@ -408,7 +413,9 @@ class Manipulator extends Module
 		//print_r($input);
 		$outputMatch=array();
 		$outputNoMatch=array();
-		if (!is_array($input)) return $output;
+		
+		# This could techinically be done with return array();, but would be prone to bugs if the default value of one of these arrays changes in the future.
+		if (!is_array($input)) return ($shouldMatch)?$outputMatch:$outputNoMatch;
 		
 		foreach ($input as $key=>$line)
 		{

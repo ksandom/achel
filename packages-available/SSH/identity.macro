@@ -1,3 +1,0 @@
-# Set the identity file to be used for each SSH connection. ~ SSH,auth
-
-resultSet auth,-i ~/.ssh/id_rsa

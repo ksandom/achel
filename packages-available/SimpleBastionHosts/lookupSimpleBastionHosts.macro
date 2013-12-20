@@ -1,8 +1,0 @@
-# Lookup bastion hosts for each host ~ bastion,lookup
-#onLoaded registerForEvent Bastion,lookup,lookupSimpleBastionHosts
-
-triggerEvent Bastion,load
-lookup bastion,Bastion,bastionHost
-
-# TODO This needs to check for potential conflicts
-setFromResultSet Bastion,host,bastionHost

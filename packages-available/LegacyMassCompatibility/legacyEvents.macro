@@ -1,0 +1,5 @@
+# Trigger legacy events when the equivalent ones get triggered ~ massCompatibilty,hidden
+
+#onDefine registerForEvent Achel,finishEarly,triggerEvent,Mass,finishEarly
+#onDefine registerForEvent Achel,finishGeneral,triggerEvent,Mass,finishGeneral
+#onDefine registerForEvent Achel,finishLate,triggerEvent,Mass,finishLate

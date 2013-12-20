@@ -1,0 +1,17 @@
+#!/bin/bash
+# Description
+#   List the profiles for a repository.
+#
+# Syntax:
+#   $0 repoName
+#     repoName is the name of the repository you'd like to list profiles for.
+#
+# Examples:
+#   List the profiles for the doneIt repository.
+#     $0 doneIt
+
+requiredParms="$1"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/repoParms.sh
+
+repoGetProfiles "$1"

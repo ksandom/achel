@@ -1,9 +1,5 @@
 function displayHelp
 {
-	if [ "$scriptName" == '' ]; then
-		scriptName=`echo $0|sed 's#^.*/##g'`
-	fi
-	
 	tail -n +2 $0 | grep '^#'|sed 's/^#/ /g;s/$0/'"$scriptName"'/g'
 	
 	if [ "$extraHelp" != '' ]; then

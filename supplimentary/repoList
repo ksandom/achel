@@ -13,12 +13,26 @@
 
 requiredParms="none"
 . `dirname $0`/libs/includeLibs.sh
+. $libDir/repoParms.sh
+. $libDir/repoInstall.sh
+
 
 case $1 in
 	'--short')
-		ls -1 "$configDir"/repos
+		listRepos
 	;;
 	*)
-		resolveSymlinks "$configDir"/repos | tabsToSpacedDashes
+		if [ "$1" == '' ]; then
+			repos=`resolveSymlinks "$configDir"/repos`
+		else
+			repos=`resolveSymlinks "$configDir"/repos | grep "$1"`
+		fi
+		
+		echo "$repos" | while read in;do
+			echo "$in" | tabsToSpacedDashes
+			name=`echo "$in" | cut -d\	 -f1`
+			repoGetParms "$name"
+			echo
+		done
 	;;
 esac

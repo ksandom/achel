@@ -1,5 +1,7 @@
 # Useful install libraries.
 
+settingNames="configDir storageDir installType binExec"
+
 function removeObsoleteStuff
 {
 	if ! mkdir -p $configDir/obsolete; then
@@ -9,10 +11,8 @@ function removeObsoleteStuff
 	fi
 	
 	for thing in $things;do
-		mv $configDir/$thing* $configDir/obsolete 2>/dev/null
+		obsolete $configDir/$thing-enabled
 	done
-	
-	# mv $configDir/obsolete/*available $configDir
 	
 	if [ `ls $configDir/obsolete 2> /dev/null | wc -l` -lt 1 ]; then
 		rmdir $configDir/obsolete
@@ -20,7 +20,27 @@ function removeObsoleteStuff
 		echo "removeObsoleteStuff: Obsolete stuff has been put in $configDir/obsolete. It is likely that this directory can simply be deleted. But if you have done any custom work, you will want to check that it isn't here first." | tee $configDir/obsolete/readme.md
 	fi
 	
-	rm -f $configDir/config/Verbosity.config.json
+	obsolete "$configDir/config/Verbosity.config.json"
+}
+
+function uninstallAchelOrMass
+{
+	programName="$1"
+	capitalProgramName="$2"
+	fileAction=${3:-removeFilesIfExisting}
+	directoryAction=${4:-removeDirectiesIfExisting}
+	
+	# Remove program executable
+	filename="$programName"
+	$fileAction ~/bin/$filename /usr/bin/$filename /usr/local/bin/$filename
+
+	# Remove manageProgram executable
+	filename="manage$capitalProgramName"
+	$fileAction ~/bin/$filename /usr/bin/$filename /usr/local/bin/$filename
+
+	# Remove program home
+	$directoryAction ~/.mass /etc/mass
+
 }
 
 function checkPrereqs
@@ -41,16 +61,20 @@ function derivePaths
 
 function showConfig
 {
-	echo "Install config
-	what: 		$programName
-	config: 	$configDir
-	storage: 	$storageDir
-	binExec: 	$binExec
-	installType: 	$installType
-	installNotes: 	$installTypeComments"
+	echo "Install config"
 	
-	#startDir: 	$startDir
-	# 	repoDir: $repoDir
+	for configItem in configDir storageDir installType binExec;do
+		oldConfigItem=old$configItem
+		if [ "${!oldConfigItem}" == '' ]; then
+			echo "	$configItem: 	${!configItem} **NEW**"
+		elif [ "${!configItem}" != "${!oldConfigItem}" ]; then
+			echo "	$configItem: 	${!configItem} **CHANGED FROM** ${!oldConfigItem}"
+		else
+			echo "	$configItem: 	${!configItem}"
+		fi
+	done
+	
+	echo "	installNotes: 	$installTypeComments"
 }
 
 function copyTemplatedFile
@@ -58,19 +82,30 @@ function copyTemplatedFile
 	src="$1"
 	dst="$2"
 	
+	# echo "copyTemplatedFile: $src -> $dst in `pwd`"
 	rm -f "$dst"
 	cat $src | sed '
 		s#~%configDir%~#'$configDir'#g;
+		s#~%docsDir%~#'$configDir'/docs#g;
 		s#~%storageDir%~#'$storageDir'#g;
 		s#~%installType%~#'$installType'#g;
 		s#~%binExec%~#'$binExec'#g;
+		s#~%programName%~#'$programName'#g;
+		s#~%languageName%~#achel#g;
 		s#~%.*%~##g' > "$dst"
 }
 
 function doInstall
 {
-	# Migrate any old data
-	mkdir -p "$storageDir"
+	
+	# Last sanity checks before begining.
+	mkdir -p "$storageDir" "$configDir"
+	if ! testWriteable "$storageDir" || ! testWriteable "$configDir" ; then
+		cat docs/errors/install/notWriteable.md
+		exit 1
+	fi
+	
+	# Migrate any old data changing between a unified directory structure to a split structure.
 	if [ "$configDir" != "$storageDir" ]; then
 		for dirName in "$configDir"{data,config} ~/.mass/{data,config}; do
 			if [ -e "$dirName" ]; then
@@ -117,35 +152,36 @@ function doInstall
 	
 	# Linking like there's no tomorrow.
 	cd "$configDir"
-	ln -sf "$repoDir"/docs "$repoDir/core.php" "$repoDir"/interfaces "$repoDir"/supplimentary .
+	ln -sf "$repoDir"/docs "$repoDir/src/core.php" "$repoDir"/interfaces "$repoDir"/supplimentary .
 	rm -f examples
-	
-	copyTemplatedFile "$startDir/index.php" index.php
 	
 	# Setting up remaining directory structure
 	cd "$storageDir"
 	mkdir -p config data/1LayerHosts
 	
 	# Make it executable
-	cd $binExec
-	rm -f "$programName" "manageMass"
-	copyTemplatedFile "$startDir/$programName" "$programName"
-	copyTemplatedFile "$startDir/manageMass" manageMass
-	chmod 755 "$programName" "manageMass"
+	cd "$binExec"
+	rm -f "$programName" "manageMass" "manageAchel"
+	copyTemplatedFile "$startDir/src/exec" "$programName"
+	copyTemplatedFile "$startDir/src/manage" manageAchel
+	chmod 755 "$programName" "manageAchel"
 	
 	# Set up profiles
-	createProfile commandLine
-	enableEverythingForProfile commandLine mass 
-	cleanProfile commandLine
-
-	createProfile privateWebAPI
-	enableEverythingForProfile privateWebAPI mass 
-	disableItemInProfile privateWebAPI packages mass-SSH
-	cleanProfile privateWebAPI
-
-	cloneProfile privateWebAPI publicWebAPI
-	disableItemInProfile publicWebAPI packages mass-AWS
-	cleanProfile publicWebAPI
+	# removeProfile achel
+	createProfile achel --noExec
+	enableEverythingForProfile achel achel
+	cleanProfile achel
+	
+	
+	# TODO mass: This needs to be migrated to the new repoParms system.
+	# createProfile massPrivateWebAPI --noExec
+	# enableEverythingForProfile massPrivateWebAPI mass 
+	# disableItemInProfile massPrivateWebAPI packages mass-SSH
+	# cleanProfile massPrivateWebAPI
+	
+	# cloneProfile massPrivateWebAPI massPublicWebAPI
+	# disableItemInProfile massPublicWebAPI packages mass-AWS
+	# cleanProfile massPublicWebAPI
 	
 	# Cleanup
 	rm -f "$configDir/macros-enabled/example"*
@@ -154,27 +190,64 @@ function doInstall
 	
 	if [ ! -f "$configDir/config/Credentials.config.json" ];then
 		echo -e "First time setup"
-		mass --set=Credentials,defaultKey,id_rsa --saveStoreToConfig=Credentials
+		achel --set=Credentials,defaultKey,id_rsa --saveStoreToConfig=Credentials
 	fi
 	
 	# Run the final stage
 	echo -e "Calling the final stage"
-	mass --verbosity=2 --finalInstallStage
+	achel --verbosity=2 --finalInstallStage
+}
+
+function detectOldSettingsIfWeDontHaveThem
+{
+	shouldDetect=false
+	
+	for setting in $settingNames;do
+		if [ "${!$setting}" != '' ]; then
+			shouldDetect=true
+		fi
+	done
+	
+	if [ "$shouldDetect" == 'true' ]; then
+		detectOldSettings
+	fi
 }
 
 function detectOldSettings
 {
-	if which mass > /dev/null; then
-		echo -n "Detecting settings from previous install: "
-		for setting in configDir storageDir installType binExec; do
-			echo -n "$setting "
-			settingValue=`mass --get=General,$setting -s`
-			if [ "$settingValue" != '' ]; then
-				export $setting="$settingValue"
-				export old$setting="$settingValue"
-			fi
+	if which achel > /dev/null; then
+		echo -n "Detecting settings from previous install... "
+		
+		request=""
+		for setting in $settingNames; do
+			request="$request~!General,$setting!~	"
 		done
-		echo "Done."
+		values=`achel --get=Tmp,nonExistent --toString="$request" -s`
+		
+		if [ $? -gt 0 ]; then
+			cat "docs/errors/install/detectSettingsFailed.md"
+			waitSeconds 5
+		else
+			let settingPosition=0
+			for setting in $settingNames; do
+				let settingPosition=$settingPosition+1
+				settingValue=`echo "$values" | cut -d\	  -f $settingPosition`
+				
+				# Protect against invalid input. Ie if a previou achel install is broken.
+				if [ "`echo \"$settingValue\" | wc -l`" -gt 1 ]; then
+					settingValue=''
+					echo "Warning: Broken install detected. Setting \"$setting\" will be ignored." >&2
+				fi
+				
+				# If we still have a value, make it available for use.
+				if [ "$settingValue" != '' ]; then
+					export $setting=$settingValue
+					export old$setting=$settingValue
+				fi
+			done
+			
+			echo "Done."
+		fi
 	else
 		echo "detectOldSettings: No previous install found. Using defaults."
 	fi
@@ -184,7 +257,7 @@ function checkParameters
 {
 	derivePaths
 	
-	allowed='^--\(configDir\|storageDir\|binExec\)'
+	allowed='^--\(configDir\|storageDir\|binExec\|installType\)'
 	for parm in $1;do
 		parmAction=`echo $parm | cut -d= -f1`
 		parmValue=`echo $parm | cut -d= -f2`
@@ -224,5 +297,29 @@ function checkParameters
 				fi
 			;;
 		esac
+	done
+}
+
+function obsolete
+{
+	for thingPath in "$@";do
+		if [ -e "$thingPath" ]; then
+			if [ ! -d "$configDir" ]; then
+				echo "obsolete: \$configDir (\"$configDir\") does not appear to be set correctly. It is not sane to obsolete \"$thingPath\" without this being correct."
+				return 1
+			fi
+			
+			destination="$configDir/obsolete"
+			thingName=`echo "$thingPath" | sed 's#.*/##g'`
+			fullDestination="$destination/$thingName"
+			mkdir -p "$destination"
+			if [ -d "$fullDestination" ]; then
+				echo "obsolete: \"$fullDestination\" already exists. Removing."
+				rm -Rf "$fullDestination"
+			fi
+			mv "$thingPath" "$destination"
+			
+			echo "obsolete: \"$thingPath\" has been marked as obsolete and has been moved to \"$destination\"."
+		fi
 	done
 }

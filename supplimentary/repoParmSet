@@ -1,0 +1,44 @@
+#!/bin/bash
+# Description
+#   Set a parameter for an existing repository. Use this for creating executables.
+#
+# Syntax:
+#   $0 profileName repoName parameterName "value"
+#     repoName is the name of the repository you'd like to set the parameter in.
+#     profileName is the name of the profile to use. Normally this will be the same as the repo name, but could be different if you wanted to have multiple executables per repo, which is a very likely direction for the future. If profileName is "." it deems the variable to be global.
+#     parameterName is the name of the parameter you'd like to set. It doesn't have to already exist.
+#     value is what the parameter will be set to.
+#
+#     IMPORTANT: You can not use commas (,) in any of these parameters.
+#
+# Examples:
+#   Set the short-friendly name of the application.
+#     $0 doneIt doneIt name "doneit"
+#
+#   Set the execuable name of the application.
+#     $0 doneIt doneIt execName "doneit"
+#
+#   Set the description of the application.
+#     $0 doneIt doneIt description "A tool for remember where the day went. So when you are asked about your progress, you can say."
+#
+#   Setup another application in the same repo.
+#     $0 doneIt anotherOne name "anotherOne"
+#     $0 doneIt anotherOne execName "a1"
+#     $0 doneIt anotherOne description "This is purely an example and has no frogs."
+#
+# See also:
+#   repoParmDefinePackages
+
+
+requiredParms="$4"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/repoParms.sh
+
+# TODO add support for profileName
+
+repoName="$1"
+profileName="$2"
+parameterName="$3"
+value="$4"
+
+repoSetParm "$repoName" "$profileName" "$parameterName" "$value"

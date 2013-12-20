@@ -16,3 +16,31 @@ function getFile
 	echo "$fullPath" | sed 's#.*/##g'
 }
 
+function testWriteable
+{
+	path="$1/canIWriteHere"
+	if touch "$path"; then
+		rm "$path"
+		return 0
+	else
+		return 1
+	fi
+}
+
+function removeFilesIfExisting
+{
+	for filename in "$@";do
+		if [ -e "$filename" ]; then
+			rm -fv "$filename"
+		fi
+	done
+}
+
+function removeDirectiesIfExisting
+{
+	for filename in "$@";do
+		if [ -e "$filename" ]; then
+			rm -Rfv "$filename"
+		fi
+	done
+}
