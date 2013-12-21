@@ -16,21 +16,21 @@ requiredParms="none"
 . $libDir/repoParms.sh
 . $libDir/repoInstall.sh
 
+if [ "`echo $* | grep '\--short'`" == '' ]; then
+	short="false"
+else
+	short="true"
+fi
 
 case $1 in
 	'--short')
 		listRepos
 	;;
 	*)
-		if [ "$1" == '' ]; then
-			repos=`resolveSymlinks "$configDir"/repos`
-		else
-			repos=`resolveSymlinks "$configDir"/repos | grep "$1"`
-		fi
+		repos=`listRepos "$1"`
 		
-		echo "$repos" | while read in;do
-			echo "$in" | tabsToSpacedDashes
-			name=`echo "$in" | cut -d\	 -f1`
+		echo "$repos" | while read name;do
+			echo "$name"
 			repoGetParms "$name"
 			echo
 		done

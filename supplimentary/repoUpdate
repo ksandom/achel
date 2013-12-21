@@ -1,17 +1,18 @@
 #!/bin/bash
 # Description
-#   Reinstalls all repos
+#   Update repos.
+#
+#   It will do a reinstall of that repo afterwards to make sure that any structural changes are applied.
 #
 #   Note if you only do this on some repos, there is a chance that interdependancies will be missed. To be sure, do a reinstall of all 
 #
 # Syntax:
-#   $0 [repoRegex|--thorough]
+#   $0 [repoRegex]
 #
 #   repoRegex refines the list of repositories to update.
-#   --thorough remove all packages before enabling them again. This will be performed across ALL repositories so that interdependancies are fullfilled.
 #
 # Examples:
-#   Reinstall everything.
+#   Update everything.
 #     $0
 #
 #   Reinstall everything after first removing all packages.
