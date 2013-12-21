@@ -196,6 +196,28 @@ function uninstallRepo_removeBindings
 	disablePackage "$repoName" ".*" ".*"
 }
 
+function updateRepo
+{
+	repoName="$1"
+	
+	dirName="$configDir/repos/$repoName"
+	if [ ! -e "$dirName" ]; then
+		echo "Repo \"$repoName\" is not currently installed." >&2
+		return 1
+	fi
+	
+	cd "$dirName"
+	
+	if [ ! -d .git ]; then
+		echo "Repo \"$repoName\" is not a git repo." >&2
+		return 1
+	fi
+	
+	git pull
+	
+	cd ~-
+}
+
 function cleanRepos
 {
 	while read repo;do
@@ -209,6 +231,14 @@ function reInstallRepos
 	while read repo;do
 		echo "reInstallRepos: Doing \"$repo\""
 		installRepo_setup "$repo"
+	done
+}
+
+function updateRepos
+{
+	while read repo;do
+		echo "updateRepos: Doing \"$repo\""
+		updateRepo "$repo"
 	done
 }
 

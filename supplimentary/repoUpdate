@@ -42,4 +42,4 @@ if [ "$regex" == '--thorough' ]; then
 	echo "$repos"| cleanRepos
 fi
 
-echo "$repos"| reInstallRepos
+echo "$repos"| updateRepos
