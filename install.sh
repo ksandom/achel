@@ -22,60 +22,9 @@ cd `dirname $0`
 . supplimentary/libs/packages.sh
 . supplimentary/libs/display.sh
 
-function userInstall
-{
-	# echo "Non root install chosen"
-	configDir=~/.$programName
-	storageDir=$configDir
-	binExec=~/bin
-}
 
-function rootInstall
-{
-	# echo "Root install chosen"
-	configDir="/etc/$programName"
-	storageDir=$configDir
-	binExec=/usr/bin
-	installType='cp'
-	
-	if [ -e /root/.mass ]; then
-		echo "Legacy root install exists. This will interfere with new installs."
-		mv -v /root/.mass /root/.mass.obsolete
-	fi
-}
-
-function linkedInstall
-{
-	# echo "Linked install chosen"
-	installTypeComments="This is a linked install so you need to keep the repository that you installed from in place. 
-	If you don't want to do this, you may want to consider installing as root, which will make it available to all users."
-	
-	configDir=~/.$programName
-	storageDir=$configDir
-	binExec=~/bin
-	installType='ln'
-	
-	if [ "`echo $PATH|grep $binExec`" == '' ]; then # A hack for the mac
-		newBinExec="/usr/local/bin"
-		testExec="$newBinExec/canIWriteHere"
-		
-		if testWriteable "$testExec"; then
-			binExec="$newBinExec"
-		else
-			echo "You have chosen a linked user install, but \"$binExec\" is not in \$PATH. And \"$newBinExec\" is not writeable. Installation can not continue."
-			
-			cat docs/errors/install/notWriteable.md
-			exit 1
-		fi
-	fi
-}
-
-# Choose defaults based on whether we are root or not.
-if [ `id -u` -gt 0 ];then
-	linkedInstall
-else
-	rootInstall
-fi
+# Chose our default settings
+chooseInstallSettings
 
 # Detect old settings in the right situations.
 case  "$1" in
