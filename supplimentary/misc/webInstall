@@ -78,16 +78,6 @@ function basicSanityCheckes
 		exit 1
 	fi
 
-	# TODO double check. I'm pretty sure this is not needed because curl is used to start this process, not continue it. Therefore if we have got this far we don't need it any more.
-	# if [ "`which curl`" == '' ]; then
-	# 	echo "Could not find curl.
-	# 	On ubuntu you can install it with: sudo apt-get install curl
-	# 	On a mac you can probably install it with: brew install curl
-	# 	On redhat/fedora you can probably install it with: sudo apt-get install curl" | outError
-	# 	
-	# 	exit 1
-	# fi
-
 	if [ "`which git`" == '' ]; then
 		echo "Could not find git.
 		On ubuntu you can install it with: sudo apt-get install git
@@ -128,7 +118,6 @@ function installAchel
 	git clone "$achelSrc" 2>&1 | out
 	if [ -d "$what" ]; then
 		out "Git reported success cloning \"$achelSrc\". Let's install it!"
-		# TODO do installation
 		
 		cd "$what"
 		./install.sh --installType='cp' 2>&1 | out
