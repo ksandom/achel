@@ -18,7 +18,7 @@ requiredParms="$1"
 profileName="$1"
 
 if [ "$short" != '' ]; then
-	ls -1 "$configDir"/profiles/"$profileName"/packages
+	listPackagesForProfile "$profileName"
 else
 	resolveSymlinks "$configDir"/profiles/"$profileName"/packages | while read packageName pathToPackage;do
 		repoName=`echo $pathToPackage| sed "s#^.*repos/##g;"'s#/.*$##g'`

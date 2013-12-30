@@ -288,3 +288,24 @@ function disablePackage
 		done < <($managementTool repoListPackages $repoName --short | grep "$packageRegex")
 	done < <(echo "$profiles")
 }
+
+function listPackages
+{
+	repoName="$1"
+	
+	if [ ! -e "$configDir/repos/$repoName" ]; then
+		echo "Could not find repo \"$repoName\""
+		return 1
+	elif [ ! -e "$configDir/repos/$repoName/packages-available" ]; then
+		echo "$repoName is not an achel repository. This is probably ok since it's probably a library for something eg the \"aws-sdk-for-php\""
+		return 1
+	fi
+
+	ls -1 "$configDir/repos/$repoName/packages-available"
+}
+
+function listPackagesForProfile
+{
+	profileName="$1"
+	ls -1 "$configDir"/profiles/"$profileName"/packages
+}

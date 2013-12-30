@@ -44,3 +44,14 @@ function removeDirectiesIfExisting
 		fi
 	done
 }
+
+function linkSrc
+{
+	fileName="$1"
+	asName="${2:-$1}"
+	if [ -e "$fileName" ]; then
+		ln -sf "$fileName" .
+	else
+		echo "linkSrc: \"$fileName\" not found. Please bug the Author to fix this." >&2
+	fi
+}

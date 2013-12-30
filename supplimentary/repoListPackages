@@ -14,15 +14,6 @@
 
 requiredParms="$1"
 . `dirname $0`/libs/includeLibs.sh
+. $libDir/packages.sh
 
-repoName="$1"
-
-if [ ! -e "$configDir/repos/$repoName" ]; then
-	echo "Could not find repo \"$repoName\""
-	exit 1
-elif [ ! -e "$configDir/repos/$repoName/packages-available" ]; then
-	echo "$repoName is not an achel repository. This is probably ok since it's probably a library for something eg the \"aws-sdk-for-php\""
-	exit 1
-fi
-
-ls -1 "$configDir/repos/$repoName/packages-available"
+listPackages "$1"

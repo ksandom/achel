@@ -1,7 +1,6 @@
 #!/bin/bash
 # Install Achel directly from the web
 
-
 what='achel'
 achelSrc="https://github.com/ksandom/achel.git"
 tmpArea="/tmp/achelInstall-$$"

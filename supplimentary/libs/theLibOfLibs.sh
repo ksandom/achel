@@ -15,3 +15,12 @@ function displayListOfSupplimeentaryScripts
 {
 	getListOfSupplimeentaryScripts | sed 's/	/ - /g;s/^/   /g'
 }
+
+function processParms
+{
+	for parm in "$@"; do
+		parmName=`echo "$parm" | cut -d\- 3- | sed 's/=.*$//g'`
+		parmValue=`echo "$parm" | cut -d\- 3- | sed 's/^.*=//g'`
+		export parm_$parmName=$parmValue
+	done
+}

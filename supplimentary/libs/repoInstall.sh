@@ -103,6 +103,12 @@ function installRepo_setup
 		return 1
 	fi
 	
+	
+	# Handle documentation
+	# It needs to happen here (instead of in the getRepo library) so that we have the name available.
+	documentationAddRepo "$irs_repoName"
+	
+	
 	while read profileRefName; do
 		if [ "$profileRefName" != '' ]; then
 			# Get the logical name of the profile

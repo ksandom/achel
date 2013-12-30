@@ -167,6 +167,14 @@ function doInstall
 		exit 1
 	fi
 	
+	
+	# Clean up any old structure that must be gone before the new structure can happen
+	if [ -h "$configDir"/docs ]; then
+		rm "$configDir"/docs
+	fi
+	rm -f examples
+	
+	
 	# Migrate any old data changing between a unified directory structure to a split structure.
 	if [ "$configDir" != "$storageDir" ]; then
 		for dirName in "$configDir"{data,config} ~/.mass/{data,config}; do
@@ -181,7 +189,8 @@ function doInstall
 			fi
 		done
 	fi
-
+	
+	
 	# Do initial directory structure and test write access
 	if mkdir -p "$configDir/"{externalLibraries,repos} "$binExec" "$storageDir/"{data/hosts,config,credentials}
 	then
@@ -197,11 +206,13 @@ function doInstall
 	
 	rm $configDir/canWrite
 	
+	
 	# Pre install stuff
 	checkPrereqs
 	removeObsoleteStuff
 	
 	showConfig
+	
 	
 	# Put in the main content
 	if [ "$installType" == 'cp' ]; then
@@ -212,14 +223,21 @@ function doInstall
 		ln -sf "$startDir" .
 	fi
 	
+	
+	# Compile documentation folder
+	mkdir -p "$repoDir"/docs
+	
+	
+	
 	# Linking like there's no tomorrow.
 	cd "$configDir"
-	ln -sf "$repoDir"/docs "$repoDir/src/core.php" "$repoDir"/interfaces "$repoDir"/supplimentary .
-	rm -f examples
+	ln -sf "$repoDir/src/core.php" "$repoDir"/interfaces "$repoDir"/supplimentary .
+	
 	
 	# Setting up remaining directory structure
 	cd "$storageDir"
 	mkdir -p config data/1LayerHosts
+	
 	
 	# Make it executable
 	cd "$binExec"
@@ -227,6 +245,7 @@ function doInstall
 	copyTemplatedFile "$startDir/src/exec" "$programName"
 	copyTemplatedFile "$startDir/src/manage" manageAchel
 	chmod 755 "$programName" "manageAchel"
+	
 	
 	# Set up profiles
 	# removeProfile achel
@@ -245,6 +264,7 @@ function doInstall
 	# disableItemInProfile massPublicWebAPI packages mass-AWS
 	# cleanProfile massPublicWebAPI
 	
+	
 	# Cleanup
 	rm -f "$configDir/macros-enabled/example"*
 	rm -f "$configDir/modules-enabled/example"
@@ -254,6 +274,7 @@ function doInstall
 		echo -e "First time setup"
 		achel --set=Credentials,defaultKey,id_rsa --saveStoreToConfig=Credentials
 	fi
+	
 	
 	# Run the final stage
 	echo -e "Calling the final stage"

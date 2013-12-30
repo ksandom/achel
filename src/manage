@@ -39,6 +39,8 @@ extraHelp='displayListOfSupplimeentaryScripts'
 requiredParms="$1"
 . $libDir/help.sh
 
+processParms "$@"
+
 name=`echo $0 | sed 's#.*/##g'`
 
 script="$supplimentaryDir/$1"
