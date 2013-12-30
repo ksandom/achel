@@ -19,8 +19,9 @@ function displayListOfSupplimeentaryScripts
 function processParms
 {
 	for parm in "$@"; do
-		parmName=`echo "$parm" | cut -d\- 3- | sed 's/=.*$//g'`
-		parmValue=`echo "$parm" | cut -d\- 3- | sed 's/^.*=//g'`
+		parmName=`echo "$parm" | cut -d\- -f3- | sed 's/=.*$//g'`
+		parmValue=`echo "$parm" | cut -d\- -f3- | sed 's/^.*=//g'`
+		
 		export parm_$parmName=$parmValue
 	done
 }
