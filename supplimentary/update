@@ -24,6 +24,18 @@ requiredParms="$0"
 . $libDir/installLibs.sh
 . $libDir/filesystem.sh
 . $libDir/display.sh
+. $libDir/documentation.sh
+
+programName='achel'
+fileThings='macros modules templates' # TODO Perhaps this needs to be moved now
+directoryThings='packages'
+things="$fileThings $directoryThings"
+installTypeComments=''
+
+
+echo "Sorry, update is not yet safe to use."
+exit 1
+
 
 thorough="$1"
 repos=`listRepos`
@@ -32,7 +44,11 @@ repos=`listRepos`
 echo 'achel' | updateRepos
 
 # Run through the install to make sure nothing is broken
+chooseInstallSettings
+detectOldSettings
+checkParameters "$*" $0
 doInstall
+# exit 1
 
 # Clean the other repos
 if [ "$thorough" == '--thorough' ]; then

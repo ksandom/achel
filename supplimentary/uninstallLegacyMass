@@ -17,6 +17,7 @@ requiredParms="$0"
 . $libDir/packages.sh
 . $libDir/repoParms.sh
 . $libDir/installLibs.sh
+. $libDir/documentation.sh
 
 cat $docsDir/messages/install/uninstallLegacyMass.md
 waitSeconds 5

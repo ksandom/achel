@@ -20,6 +20,7 @@ requiredParms="$1"
 . $libDir/repoParms.sh
 . $libDir/packages.sh
 . $libDir/installLibs.sh
+. $libDir/documentation.sh
 
 repoName="$1"
 

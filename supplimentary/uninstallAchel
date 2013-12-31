@@ -18,6 +18,7 @@ requiredParms="$0"
 . $libDir/repoParms.sh
 . $libDir/packages.sh
 . $libDir/installLibs.sh
+. $libDir/documentation.sh
 
 
 # Warn the user about what they are getting themselves in for

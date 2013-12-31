@@ -21,6 +21,7 @@ requiredParms="$0"
 . $libDir/repoParms.sh
 . $libDir/packages.sh
 . $libDir/installLibs.sh
+. $libDir/documentation.sh
 
 
 showMigratePossibilities ~/.mass "$configDir"

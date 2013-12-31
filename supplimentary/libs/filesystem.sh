@@ -47,10 +47,24 @@ function removeDirectiesIfExisting
 
 function linkSrc
 {
+	# Link once to a file.
 	fileName="$1"
-	asName="${2:-$1}"
+	asName="${2:-.}"
+	
+	# If asName is "." or "" the destination name is left to ln to figure out and it will therefore do it's best effort to replace the file whether it exists or not. This will lead to funny behavior if a directory already exists with that name. To prevent this, always specify the asName.
+	
+	
 	if [ -e "$fileName" ]; then
-		ln -sf "$fileName" .
+		if [ "$asName" == '.' ]; then
+			echo "linkSrc \"$fileName\" \"$asName\": asName is \".\". Therefore ln is being left to best effort placement. Strange things could happen." >&2
+			ln -sf "$fileName" .
+		else
+			if [ -e "$asName" ]; then
+				rm -Rf "$asName"
+			fi
+			
+			ln -sf "$fileName" "$asName"
+		fi
 	else
 		echo "linkSrc: \"$fileName\" not found. Please bug the Author to fix this." >&2
 	fi

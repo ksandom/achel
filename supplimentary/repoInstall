@@ -27,6 +27,7 @@ requiredParms="$1"
 . $libDir/repoParms.sh
 . $libDir/packages.sh
 . $libDir/installLibs.sh
+. $libDir/documentation.sh
 
 repoAddress="$1"
 overRideRepoName="$2"

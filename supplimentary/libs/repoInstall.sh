@@ -129,6 +129,9 @@ function installRepo_setup
 				createExec "$execName" "$irs_repoName"
 				$execName --verbosity=2 --finalInstallStage
 			fi
+			
+			# Handel documentation
+			documentationAddProfile "$profileRefName"
 		else
 			echo "installRepo_setup: profileRefName=\"$profileRefName\""
 		fi

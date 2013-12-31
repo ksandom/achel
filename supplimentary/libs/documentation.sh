@@ -7,7 +7,7 @@
 function documentationAddRepo
 {
 	repoName="$1"
-	base="$configDir/docs/$repoName"
+	base="$configDir/docs/repos/$repoName"
 	repoDir="$configDir/repos/$repoName"
 	
 	echo "documentationAddRepo: Adding repo \"$repoName\"."
@@ -15,9 +15,10 @@ function documentationAddRepo
 	cd "$base"
 	
 	# Link the overview and readme.md
-	linkSrc "$repoDir/readme.md"
+	linkSrc "$repoDir/readme.md" "readme.md"
 	linkSrc "$repoDir/docs" "overview"
 	
+	cd "$base/packages"
 	listPackages "$repoName" | while read package; do
 		linkSrc "$repoDir/packages-available/$package/docs" "$package"
 	done
@@ -39,14 +40,14 @@ function documentationAddProfile
 {
 	profileName="$1"
 	base="$configDir/docs/$profileName"
-	profileDir="$configDir/repos/$profileName"
+	profileDir="$configDir/profiles/$profileName"
 	
 	echo "documentationAddProfile: Adding profile \"$profileName\"."
 	
 	mkdir -p "$base"
 	cd "$base"
 	listPackagesForProfile "$profileName" | while read package; do
-		linkSrc "$profileDir/packages/$package/docs" .
+		linkSrc "$profileDir/packages/$package/docs" "$package"
 	done
 }
 
