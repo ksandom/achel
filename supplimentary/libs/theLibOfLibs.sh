@@ -19,9 +19,11 @@ function displayListOfSupplimeentaryScripts
 function processParms
 {
 	for parm in "$@"; do
-		parmName=`echo "$parm" | cut -d\- -f3- | sed 's/=.*$//g'`
-		parmValue=`echo "$parm" | cut -d\- -f3- | sed 's/^.*=//g'`
-		
-		export parm_$parmName=$parmValue
+		if [ "${PATH:0:2}" == '--' ]; then
+			parmName=`echo "$parm" | cut -d\- -f3- | sed 's/=.*$//g'`
+			parmValue=`echo "$parm" | cut -d\- -f3- | sed 's/^.*=//g'`
+			
+			export parm_$parmName=$parmValue
+		fi
 	done
 }

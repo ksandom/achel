@@ -11,14 +11,17 @@ function installRepo
 	repoAddress="$1"
 	overRideRepoName="$2"
 	
-	name="`installRepo_get \"$repoAddress\" \"$overRideRepoName\"`"
-	installRepo_setup "$name"
+	installRepo_get "$repoAddress" "$overRideRepoName"
+	installRepo_setup "$repoName"
 }
 
 function installRepo_get
 {
 	repoAddress="`echo \"$1\" | sed 's/=.*//g'`"
 	repoVersion="`echo \"$1\" | sed 's/.*=//g'`"
+	if [ "$repoAddress" == "$repoAddress" ]; then
+		repoVersion=''
+	fi
 	overRideRepoName="$2"
 	
 	
@@ -66,7 +69,7 @@ function installRepo_get
 	git pull
 	
 	
-	echo "$name"
+	export repoName="$name"
 }
 
 function installRepo_clean
@@ -98,6 +101,7 @@ function installRepo_clean
 function installRepo_setup
 {
 	irs_repoName="$1"
+	echo "installRepo_setup: Going to setup \"$irs_repoName\""
 	if [ ! -e "$configDir/repos/$irs_repoName" ]; then
 		echo "Repo \"$irs_repoName\" is not currently installed." >&2
 		return 1
@@ -128,6 +132,8 @@ function installRepo_setup
 			if [ ! "$execName" == '' ]; then
 				createExec "$execName" "$irs_repoName"
 				$execName --verbosity=2 --finalInstallStage
+				
+				# TODO If there is no execName, see if the profileName matches an existing repo. If so flag that repo for reInstall
 			fi
 			
 			# Handel documentation

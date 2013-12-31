@@ -6,6 +6,8 @@ function addRepo
 	repoSrc="$1"
 	dstName="$2"
 	
+	echo "addRepo: \"$repoSrc\" -> \"$dstName\""
+	
 	if [ "`echo $repoSrc | grep '\(@\|://\)'`" != '' ]; then
 		getRepo "$dstName" "$repoSrc"
 	else
