@@ -225,7 +225,7 @@ function doInstall
 	
 	
 	# Compiled documentation folder
-	mkdir -p "$repoDir"/docs
+	mkdir -p "$configDir"/docs
 	
 	
 	
