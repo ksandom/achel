@@ -234,11 +234,6 @@ function doInstall
 	ln -sf "$repoDir/src/core.php" "$repoDir"/interfaces "$repoDir"/supplimentary .
 	
 	
-	# Setting up remaining directory structure
-	cd "$storageDir"
-	mkdir -p config data/1LayerHosts
-	
-	
 	# Make it executable
 	cd "$binExec"
 	rm -f "$programName" "manageMass" "manageAchel"
