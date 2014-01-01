@@ -192,7 +192,7 @@ function doInstall
 	
 	
 	# Do initial directory structure and test write access
-	if mkdir -p "$configDir/"{externalLibraries,repos} "$binExec" "$storageDir/"{data/hosts,config,credentials}
+	if mkdir -p "$configDir/"{externalLibraries,repos} "$binExec" "$storageDir/"{data/1LayerHosts,config,credentials}
 	then
 		echo a> $configDir/canWrite
 	elif [ "`cat $configDir/canWrite`" != 'a' ]; then
