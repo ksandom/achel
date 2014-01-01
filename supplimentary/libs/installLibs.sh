@@ -224,7 +224,7 @@ function doInstall
 	fi
 	
 	
-	# Compile documentation folder
+	# Compiled documentation folder
 	mkdir -p "$repoDir"/docs
 	
 	
