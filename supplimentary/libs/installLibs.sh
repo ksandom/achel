@@ -248,6 +248,9 @@ function doInstall
 	enableEverythingForProfile achel achel
 	cleanProfile achel
 	
+	# Perform logical setup
+	# installRepo_setup "achel"
+	
 	
 	# TODO mass: This needs to be migrated to the new repoParms system.
 	# createProfile massPrivateWebAPI --noExec

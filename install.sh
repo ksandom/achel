@@ -23,6 +23,7 @@ cd `dirname $0`
 . supplimentary/libs/packages.sh
 . supplimentary/libs/display.sh
 . supplimentary/libs/repoInstall.sh
+. supplimentary/libs/repoParms.sh
 
 
 # Chose our default settings
