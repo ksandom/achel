@@ -9,10 +9,6 @@ set DefineFeatureType,description,~!Global,createFeatureType-3!~
 
 # Apply defaults if necessary
 
-# Load the collection if it has not been loaded already
-retrieveResults Semantics,featureTypes
-notIfResult loadStoreVariableFromFile loadStoreFromData Semantics
-
 # Set the details and cleanup
 setNested Semantics,featureTypes,~!DefineFeatureType,featureTypeName!~,featureTypeName,~!DefineFeatureType,featureTypeName!~
 setNested Semantics,featureTypes,~!DefineFeatureType,featureTypeName!~,inDataType,~!DefineFeatureType,inDataType!~

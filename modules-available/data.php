@@ -55,7 +55,7 @@ class Data extends Module
 				$this->loadStoreEntryFromFilename($parms[0], $parms[1]);
 				break;
 			case 'loadStoreVariableFromFile':
-				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 3);
+				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 1);
 				$this->loadStoreEntryFromFilename($parms[0], $parms[1], $parms[2]);
 				break;
 			case 'saveStoreToFile':

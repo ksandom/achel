@@ -14,10 +14,6 @@ setIfNothing DefineDataType,moreTemplate,~!DefineDataType,defaultTemplate!~
 setIfNothing DefineDataType,lessTemplate,~!DefineDataType,defaultTemplate!~
 setIfNothing DefineDataType,action,templateOut
 
-# Load the collection if it has not been loaded already
-retrieveResults Semantics,dataTypes
-notIfResult loadStoreVariableFromFile loadStoreFromData Semantics
-
 # Set the details and cleanup
 setNested Semantics,dataTypes,~!DefineDataType,dataTypeName!~,dataTypeName,~!DefineDataType,dataTypeName!~
 setNested Semantics,dataTypes,~!DefineDataType,dataTypeName!~,default,~!DefineDataType,defaultTemplate!~
