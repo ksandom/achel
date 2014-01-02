@@ -258,7 +258,7 @@ function enabledPacakge
 				ln -sf "$packagePath" .
 				mv "$package" "$repoName-$package"
 			fi
-		done < <($managementTool repoListPackages $repoName --short | grep "$packageRegex")
+		done < <(listPackages "$repoName" | grep "$packageRegex")
 	done < <(echo "$profiles")
 }
 
@@ -285,7 +285,7 @@ function disablePackage
 			elif [ -d "$packagePath" ]; then
 				echo "$packagePath is a directory. Is this your only copy of your work?! This should be a symlink."
 			fi
-		done < <($managementTool repoListPackages $repoName --short | grep "$packageRegex")
+		done < <(listPackages "$repoName" | grep "$packageRegex")
 	done < <(echo "$profiles")
 }
 
@@ -308,4 +308,9 @@ function listPackagesForProfile
 {
 	profileName="$1"
 	ls -1 "$configDir"/profiles/"$profileName"/packages
+}
+
+function profileList
+{
+	ls -1 "$configDir"/profiles
 }

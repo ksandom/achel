@@ -13,11 +13,12 @@
 
 requiredParms="none"
 . `dirname $0`/libs/includeLibs.sh
+. $libDir/packages.sh
 
 while read repo; do
 	while read package;do 
 		echo $repo	$package
-	done < <($managementTool repoListPackages $repo)
+	done < <(listPackages "$repo")
 	
-done < <($managementTool repoList --short)
+done < <(listRepos)
 

@@ -249,7 +249,7 @@ function doInstall
 	cleanProfile achel
 	
 	# Perform logical setup
-	# installRepo_setup "achel"
+	installRepo_setup "achel"
 	
 	
 	# TODO mass: This needs to be migrated to the new repoParms system.
@@ -268,15 +268,9 @@ function doInstall
 	rm -f "$configDir/modules-enabled/example"
 	rm -f "$configDir/templates-enabled/example"
 	
-	if [ ! -f "$configDir/config/Credentials.config.json" ];then
-		echo -e "First time setup"
-		achel --set=Credentials,defaultKey,id_rsa --saveStoreToConfig=Credentials
-	fi
-	
-	
 	# Run the final stage
 	echo -e "Calling the final stage"
-	achel --verbosity=2 --finalInstallStage
+	achel --verbosity=2 --setIfNotSet=Credentials,defaultKey,id_rsa --saveStoreToConfig=Credentials --finalInstallStage
 }
 
 function detectOldSettingsIfWeDontHaveThem
