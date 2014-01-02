@@ -270,7 +270,7 @@ function doInstall
 	
 	# Run the final stage
 	echo -e "Calling the final stage"
-	achel --verbosity=2 --setIfNotSet=Credentials,defaultKey,id_rsa --saveStoreToConfig=Credentials --finalInstallStage
+	achel --verbosity=2 --finalInstallStage
 }
 
 function detectOldSettingsIfWeDontHaveThem
