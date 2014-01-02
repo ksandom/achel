@@ -267,10 +267,6 @@ function doInstall
 	rm -f "$configDir/macros-enabled/example"*
 	rm -f "$configDir/modules-enabled/example"
 	rm -f "$configDir/templates-enabled/example"
-	
-	# Run the final stage
-	echo -e "Calling the final stage"
-	achel --verbosity=2 --finalInstallStage
 }
 
 function detectOldSettingsIfWeDontHaveThem
