@@ -22,7 +22,7 @@ requiredParms="$0"
 
 
 # Warn the user about what they are getting themselves in for
-cat $docsDir/messages/install/uninstallAchel.md
+cat $docsDir/repos/achel/overview/messages/install/uninstallAchel.md
 waitSeconds 5
 
 # Uninstall all achel provided applications

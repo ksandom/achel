@@ -19,7 +19,7 @@ requiredParms="$0"
 . $libDir/installLibs.sh
 . $libDir/documentation.sh
 
-cat $docsDir/messages/install/uninstallLegacyMass.md
+cat $docsDir/repos/achel/overview/messages/install/uninstallLegacyMass.md
 waitSeconds 5
 
 # Uninstall everything
