@@ -6,6 +6,8 @@ Data-disk interaction is an important consideration for the performance of an ap
 
 ### Collection
 
+Features
+
 * `collectionLoad`
 
 This is the recommened way of manipulating data when you want it to be persistent and to be able to load it easily.
@@ -18,6 +20,8 @@ It's stored in ACHELHOME/data .
 
 ### Data
 
+Features
+
 * `loadStoreFromData`
 * `saveStoreToData`
 
@@ -28,6 +32,8 @@ It's stored in ACHELHOME/data .
 [Read more](https://github.com/ksandom/achel/blob/master/packages-available/Data/docs/readme.md)
 
 ### Data in an arbitrary location
+
+Features
 
 * `loadStoreFromFile`
 * `saveStoreToFile`
