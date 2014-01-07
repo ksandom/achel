@@ -17,7 +17,7 @@ The recommended way for most situations is to use [Collection](https://github.co
 
 Note that coding in this way is *not thread safe* and will lead to nasty bugs in future versions of Achel. Please consider using a [Collection](https://github.com/ksandom/achel/blob/master/packages-available/Collection/docs/readme.md).
 
-iHaverun.macro would contain
+iHaveRun.macro would contain
 
     # Display how often this function has been loaded. --iHaveRun don't take no arguments from no one. ~ example
     
