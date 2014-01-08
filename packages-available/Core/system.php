@@ -1,7 +1,7 @@
 <?php
 # Copyright (c) 2013, Kevin Sandom under the BSD License. See LICENSE for full details.
 
-# Manage hosts
+# Extra functionality that doesn't need to be in the core at startup.
 
 class System extends Module
 {
@@ -17,6 +17,7 @@ class System extends Module
 		switch ($event)
 		{
 			case 'init':
+				# TODO This may be obsolete.
 				$this->core->registerFeature($this, array('internalExec'), 'internalExec', 'Call a feature. This is useful if you want to execute a variable. You should think very carefully before using this as poorly written code would allow an attacker to executre arbitrary code.', array('feature'));
 				break;
 			case 'followup':
