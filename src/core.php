@@ -685,19 +685,19 @@ class core extends Module
 		if (is_numeric($level))
 		{
 			$this->verbosity=intval($level);
-			$verbosityName=$this->get('VerbosityLevel', $this->verbosity);
+			$verbosityName=$this->get('VerbosityLevels', $this->verbosity);
 			if ($announce) $this->core->debug($this->verbosity, "verbosity: Set verbosity to \"$verbosityName\" ({$this->verbosity})");
 		}
 		elseif ($level=='-')
 		{
 			$this->verbosity=$this->verbosity-1;
-			$verbosityName=$this->get('VerbosityLevel', $this->verbosity);
+			$verbosityName=$this->get('VerbosityLevels', $this->verbosity);
 			if ($announce) $this->core->debug($this->verbosity, "verbosity: Decremented verbosity to \"$verbosityName\" ({$this->verbosity})");
 		}
 		else
 		{
 			$this->verbosity=$this->verbosity+1;
-			$verbosityName=$this->get('VerbosityLevel', $this->verbosity, false);
+			$verbosityName=$this->get('VerbosityLevels', $this->verbosity, false);
 			if ($announce) $this->core->debug($this->verbosity, "verbosity: Incremented verbosity to \"$verbosityName\" ({$this->verbosity})");
 		}
 		
