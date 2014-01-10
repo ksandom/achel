@@ -23,7 +23,7 @@ class GetThing extends Module
 		switch ($event)
 		{
 			case 'init':
-				$this->core->registerFeature($this, array('getHTTP'), 'getHTTP', "Get a specific URI for each host. --getHTTP=resultField,URI[,indexField[,timeout]] . eg --getHTTP=testResult,/status,IP,5 . indexField defaults to IP and timeout defaults to 5.", array('credentials'));
+				$this->core->registerFeature($this, array('getHTTP'), 'getHTTP', "Get a specific URI for each host. --getHTTP=resultField,URI[,indexField[,timeout]] . eg --getHTTP=status,/status,IP,5 . indexField defaults to IP and timeout defaults to 5.", array('credentials'));
 				break;
 			case 'getHTTP':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 4, 2);
