@@ -15,11 +15,9 @@ exec touch "~!Import,file!~"
 
 debug 2,safeImportFromURL: get
 exec curl "~!Import,URL!~" > ~!Import,tmpFile!~ 2> /dev/null
-# exec cp ~!General,configDir!~/data/1LayerHosts/live.json ~!Import,tmpFile!~
 
 debug 2,safeImportFromURL: load
-# loadStoreVariableFromFile ~!Import,tmpFile!~,Import,data
-loadStoreVariableFromFile ~!General,configDir!~/data/1LayerHosts/live.json,Import,data
+loadStoreVariableFromFile ~!Import,tmpFile!~,Import,data
 loadStoreFromFile ~!Import,tmpFile!~
 getCategory SafeImportFromURL
 
