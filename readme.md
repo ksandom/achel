@@ -10,7 +10,8 @@ This is a tiny percentage of the final vision, so there's a lot more to come!
 
 # Important updates
 
-As a general rule, when ever you update, you should re-run install.sh to apply any structural changes as the internals are regularly being refactored.
+* As a general rule, when ever you update, you should re-run install.sh to apply any structural changes as the internals are regularly being refactored.
+* The method for adding unknown terminal types has changed. Documentation for this will be in packages-available/Terminal/docs
 
 # Install
 

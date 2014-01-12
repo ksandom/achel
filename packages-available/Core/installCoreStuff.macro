@@ -1,10 +1,5 @@
-# Setup default values ~ setup
-#onDefine registerForEvent Install,general,createDefaultValues
-
-# Clean up after the loadStoreEntryFromFilename duplicate $storeName bug
-unset Terminal,Terminal
-
-
+# Setup core stuff ~ setup
+#onDefine registerForEvent Install,general,installCoreStuff
 
 debug 2,Creating Verbosity levels
 # Set verbosity names
@@ -19,9 +14,3 @@ set VerbosityLevels,7,Atoms in the universe
 set VerbosityLevels,8,Words can not describe how verbose this is
 
 saveStoreToConfig VerbosityLevels
-
-
-# Set default settings
-setDefault Settings,backgroundTasks,&
-setDefault Settings,nullOutput,2>/dev/null 1>/dev/null
-saveStoreToConfig Settings

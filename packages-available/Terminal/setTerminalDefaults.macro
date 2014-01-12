@@ -1,0 +1,11 @@
+# Set the terminal defaults ~ install,terminal
+#onDefine registerForEvent Install,general,setTerminalDefaults
+
+# Clean up after the loadStoreEntryFromFilename duplicate $storeName bug
+unset Terminal,Terminal
+
+debug 2,Set terminal defaults
+# Set default settings
+setDefault Settings,backgroundTasks,&
+setDefault Settings,nullOutput,2>/dev/null 1>/dev/null
+saveStoreToConfig Settings
