@@ -4,6 +4,8 @@ Provides functionality to support the install.
 
 The average user will rarely need to know about anything in here. It could however be useful to developers wanting to know how to hook the setup of their applications into the install.
 
+For information about how to install Achel and other applications, please start at the [Achel readme](https://github.com/ksandom/achel/blob/master/readme.md)
+
 ## Using it
 
 * Make sure `Get` is included via [repoParms](https://github.com/ksandom/achel/blob/master/docs/programming/creatingARepositoryWithProfiles.md#use-repoparmdefinepackages-to-create-a-profile). If BASE is included, it should be fine.
