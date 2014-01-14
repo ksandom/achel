@@ -42,13 +42,13 @@ In this example we
 borkSet.macro would contain
 
     # Saves a setting for the Bork application. --borkSet=settingName,settingValue ~ bork,user,example
-    collectionLoad Bork
+    load collectionLoad Bork
     
     set Bork,settings,~!Global,borkSet-0!~,~!Global,borkSet-1!~
 
 In this example we
 
-* Make sure the `Bork` Collection is loaded.
+* Make sure the `Bork` Collection is loaded by calling `borkLoad` with `load` so that it only happens once.
 * Make the requested changes to the settings.
 * `Bork` will be saved to disk when Achel terminates.
 

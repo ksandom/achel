@@ -13,3 +13,15 @@ The average user will rarely need to know about anything in here. It could howev
  * Install,general
  * Install,late
 
+## The install events
+
+*`Install,general` should be used for pretty much everything.*
+`Install,early` and `Install,late` are only to be used in the rare situation where there are dependancies on one package being installed to be able to install another.
+
+## A worked example
+
+    # Sets aValue to 1 during install ~ install,example
+    #onDefine registerForEvent Install,general,setAValueToOne
+    
+    load collectionLoad Example
+    set Example,aValue,1
