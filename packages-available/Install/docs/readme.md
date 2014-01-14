@@ -2,8 +2,14 @@
 
 Provides functionality to support the install.
 
-The average user will rarely need to know about anything in here. It could however be useful to developers, however the install process is getting sufficiently good that even this is unlikely to be needed.
+The average user will rarely need to know about anything in here. It could however be useful to developers wanting to know how to hook the setup of their applications into the install.
 
 ## Using it
 
+* Make sure `Get` is included via [repoParms](https://github.com/ksandom/achel/blob/master/docs/programming/creatingARepositoryWithProfiles.md#use-repoparmdefinepackages-to-create-a-profile). If BASE is included, it should be fine.
+* Near the end of the install process `--finalInstallStage` will be called.
+* This is turn triggers three events
+ * Install,early
+ * Install,general
+ * Install,late
 
