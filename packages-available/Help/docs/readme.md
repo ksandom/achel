@@ -31,9 +31,9 @@ lazy.macro could contain
 
 ### Searching help
 
-This example is entirely on the command line
+This example is on the command line
 
-    $ achel --help=--lazy
+    $ achel --help=lazy
     Available features:
     --lazy, --reallyLazy ~ nothing,example (Macro)
       This example does absolutely nothing. --lazy takes no parameters.
