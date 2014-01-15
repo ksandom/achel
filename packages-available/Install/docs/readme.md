@@ -8,7 +8,7 @@ For information about how to install Achel and other applications, please start 
 
 ## Using it
 
-* Make sure `Get` is included via [repoParms](https://github.com/ksandom/achel/blob/master/docs/programming/creatingARepositoryWithProfiles.md#use-repoparmdefinepackages-to-create-a-profile). If BASE is included, it should be fine.
+* Make sure `Install` is included via [repoParms](https://github.com/ksandom/achel/blob/master/docs/programming/creatingARepositoryWithProfiles.md#use-repoparmdefinepackages-to-create-a-profile). If BASE is included, it should be fine.
 * Near the end of the install process `--finalInstallStage` will be called.
 * This is turn triggers three events
  * Install,early
