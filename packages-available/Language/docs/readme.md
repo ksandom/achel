@@ -13,6 +13,8 @@ Provides the language constructs that don't need to be in the core.
 
 Choose different branches of code based on the result of a test.
 
+Note that indentation (a TAB character) works really well with indentation. Just make sure the origin line ends with a comma.
+
 #### A worked example
 
 Here are the contents of isBork.macro
@@ -59,7 +61,6 @@ Recognise different logical data types that a string can represent.
     $ achel --getType=Example,type,0 --get=Example,type
     
       0: number
-    
-    $ achel --getType=Example,type,blah --get=Example,type
-    
-      0: string
+
+* In both examples we test a value ("blah" and 0 respectively) and stick the result into Example,type.
+* Then we get that value into the resultSet.
