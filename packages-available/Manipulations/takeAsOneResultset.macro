@@ -1,4 +1,4 @@
-# Take a single key from every result and make it one result set ~ Manipulator
+# Take a single key from every result and make it one result set. --takeAsOneResultset=key where key is a key in each result in the resultSet. ~ Manipulator
 
 take ~!Global,takeAsOneResultset!~
 flatten
