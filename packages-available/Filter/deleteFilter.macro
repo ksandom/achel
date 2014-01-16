@@ -4,7 +4,5 @@ collectionLoad Filter
 
 if ~!Global,deleteFilter!~,!=,,
 	unset Filter,filters,~!Global,deleteFilter!~
-elseIf ~!Global,filter!~,!=,,
-	unset Filter,filters,~!Global,filter!~
 else
 	complain deleteFilter: Y u no specify filter???
