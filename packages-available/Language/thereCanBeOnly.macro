@@ -1,4 +1,4 @@
-# There must be exactly this many results. --thereCanBeOnly number,contextDescription, . contextDescription will be prepended to the error message if the number of results is not correct. It should be short but meaningful. This feature is expected to be called with code nested after it. ~ language
+# There must be exactly this many results. --thereCanBeOnly number,contextDescription, . contextDescription will be prepended to the error message if the number of results is not correct. It should be short but meaningful. This feature is expected to be called with code nested after it. ~ condition,Condition,language
 
 countToVar Tmp,thereCanBeOnly
 if ~!Global,thereCanBeOnly-2!~,!=,,

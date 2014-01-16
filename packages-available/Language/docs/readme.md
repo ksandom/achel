@@ -15,12 +15,51 @@ Choose different branches of code based on the result of a test.
 
 #### A worked example
 
+Here are the contents of isBork.macro
+
+    # Be really happy if "bork" is specified. --isBork=input where input is a string ~ Condition,example
+    
+    if ~!Global,isBork!~,==,bork,
+    	debug 1,BOOOOOORK bork! bork! bork! bork!
+    elseIf ~!Global,isBork!~,>,0,
+    	debug 1,~!Global,isBork!~ bork!.... bork! bork! bork!
+    else
+    	debug 1,No bork. So saaad.
+
+Then we call it
+
+    $ achel -v --isBork=blah
+    [debug1]: verbosity: Incremented verbosity to "Information" (1)
+    [debug1]: No bork. So saaad.
+    
+    $ achel -v --isBork=2
+    [debug1]: verbosity: Incremented verbosity to "Information" (1)
+    [debug1]: 2  bork!.... bork! bork! bork!
+    
+    $ achel -v --isBork=bork
+    [debug1]: verbosity: Incremented verbosity to "Information" (1)
+    [debug1]: 2  BOOOOOORK bork! bork! bork! bork!
+
+#### More information
+
+There's lots more you can do. All of it works the same way. You can find out about it like so
+
+    $ achel --help=Condition
+
 ### Types
 
 Recognise different logical data types that a string can represent.
 
 #### A worked example
 
-### Misc
-
-#### A worked example
+    $ achel --getType=Example,type,blah --get=Example,type
+    
+      0: string
+    
+    $ achel --getType=Example,type,0 --get=Example,type
+    
+      0: number
+    
+    $ achel --getType=Example,type,blah --get=Example,type
+    
+      0: string
