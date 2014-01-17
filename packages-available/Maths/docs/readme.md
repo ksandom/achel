@@ -38,9 +38,12 @@ And then we run it like this
     # Say hi to the user. --sayHi takes no parameters. ~ base,example
     
     intToHex Example,result,30516,5
-    getExample,result
+    get Example,result
 
-I've leave it to you to work out what this does ;)
+* Here we convert 30516 into hex, while asserting that the length of the hex result is 5 characters.
+* Then we get the result so it will be displayed on exit.
+
+I've leave it to you to work out what the result is ;)
 In the mean time, if you'd like to find out without having to write a macro, the way you'd do it on the command line is like this
 
     $ achel --intToHex=Example,result,30516,5 --get=Example,result
