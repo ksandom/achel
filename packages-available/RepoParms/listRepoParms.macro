@@ -1,4 +1,4 @@
-# List parameters for repo --listRepoParms=repoName
+# List parameters for repo --listRepoParms=repoName ~ RepoParms
 
 loadRepoParms ~!Global,listRepoParms!~
 
