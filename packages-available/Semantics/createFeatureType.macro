@@ -1,4 +1,4 @@
-# Create a feature type. --createFeatureType=typeName,inDataType,outDataType,,description ~ feature,definition,semantics
+# Create a feature type. --createFeatureType=typeName,inDataType,outDataType,description ~ feature,definition,semantics
 
 # TODO Document this further.
 
