@@ -807,6 +807,8 @@ class Manipulator extends Module
 	function findPoint($resultSet, $method, $valueName, $value)
 	{ // Divide and conquer to find an approximate value.
 		
+		if (!is_array($resultSet)) return $resultSet;
+		
 		$keys=array_keys($resultSet);
 		$min=0;
 		$total=count($keys);
@@ -856,6 +858,8 @@ class Manipulator extends Module
 	
 	function getRange($resultSet, $start, $stop)
 	{
+		if (!is_array($resultSet)) return $resultSet;
+		
 		if (!$stop) $stop=count($resultSet)-1;
 		$keys=array_keys($resultSet);
 		$output=array();
