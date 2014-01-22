@@ -50,13 +50,14 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('firstResult', 'firstResults', 'first'), 'firstResult', "Take the first x results, where x is one if not specified. --firstResult[=x]", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('lastResult', 'lastResults', 'last'), 'lastResult', "Take the last x results, where x is one if not specified. --lastResult=x", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('offsetResult', 'offsetResults'), 'offsetResult', "After x results, take the first y results. --offsetResult=x,y . If y is negative, The results will be taken from the end rather than the beginning. In this case x therefore is an offset from the end, not the beginning.", array('result', 'Manipulations'));
-				$this->core->registerFeature($this, array('keyOn'), 'keyOn', "Key items in the resultSet using a named value from each item in the resultSet. --keyOn=valueName", array('result', 'Manipulations'));
+				$this->core->registerFeature($this, array('keyOn'), 'keyOn', "Key items in the resultSet using a named value from each item in the resultSet. --keyOn=itemKey1[,itemKey2[,itemKey3[,...]]]", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('keyValueOn'), 'keyValueOn', "Key items in the value of each item in the resultSet using a named value from each item inside that item in the resultSet. If this sounds confusing, just think of it as running --keyOn inside a value inside each item in the result set. --keyValueOn=valueName,subValueName", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('lessThan'), 'lessThan', "Restrict the resultset to items where a named result value is less than a specified value. --lessThan=valueName,valueToTest", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('greaterThan'), 'greaterThan', "Restrict the resultset to items where a named result value is greater than a specified value. --greaterThan=valueName,valueToTest", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('between'), 'between', "Restrict the resultset to items where a named result value is between two specified values. --between=valueName,smallValue,largeValue", array('result', 'Manipulations'));
 				
-				$this->core->registerFeature($this, array('sortOnKey'), 'sortOnKey', "Sort items by key.", array('result', 'sort', 'Manipulations'));
+				$this->core->registerFeature($this, array('sortOnKey'), 'sortOnKey', "Sort items by the key of each result in the result set. This is not to be confused with --sortOnItemKey which is slower, but probably what you want.", array('result', 'sort', 'Manipulations'));
+				$this->core->registerFeature($this, array('sortOnItemKey'), 'sortOnItemKey', "Sort items by a named item. You can sort on multiple fields. --sortOnItemKey=itemKey1[,itemKey2[,itemKey3[,...]]]", array('result', 'sort', 'Manipulations'));
 				
 				#$this->core->registerFeature($this, array('cleanUnresolvedStoreVars'), 'cleanUnresolvedStoreVars', 'Clean out any store variables that have not been resolved. This is important when a default should be blank.', array('array', 'escaping', 'result'));
 				
@@ -196,7 +197,7 @@ class Manipulator extends Module
 				break;
 			case 'keyOn':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 1, 1);
-				return $this->keyOn($this->core->getResultSet(), $parms[0]);
+				return $this->keyOn($this->core->getResultSet(), $parms);
 				break;
 			case 'keyValueOn':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 2, 2);
@@ -204,6 +205,9 @@ class Manipulator extends Module
 				break;
 			case 'sortOnKey':
 				return ksort($this->core->getResultSet());
+				break;
+			case 'sortOnItemKey':
+				return $this->sortOnItemKey($this->core->getResultSet(), $this->core->interpretParms($this->core->get('Global', $event)));
 				break;
 			case 'lessThan':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 2, 2);
@@ -778,13 +782,19 @@ class Manipulator extends Module
 		return $output;
 	}
 	
-	function keyOn($resultSet, $valueName)
+	function keyOn($resultSet, $keysToKeyOn)
 	{
 		$output=array();
+		$separator='_';
 		
 		foreach ($resultSet as $oldKey=>$item)
 		{
-			$key=(isset($item[$valueName]))?$item[$valueName]:$oldKey;
+			$key='';
+			foreach ($keysToKeyOn as $keyPart)
+			{
+				$key.=(isset($item[$keyPart]))?$separator.$item[$keyPart]:$separator.$oldKey;
+			}
+			$this->core->debug(3, "keyOn: Derived key $key");
 			$output[$key]=$item;
 		}
 		
@@ -802,6 +812,16 @@ class Manipulator extends Module
 		}
 		
 		return $resultSet;
+	}
+	
+	function sortOnItemKey($resultSet, $keysToKeyOn)
+	{
+		# Key on keys
+		$output=$this->keyOn($resultSet, $keysToKeyOn);
+		
+		# Sort
+		ksort($output);
+		return $output;
 	}
 	
 	function findPoint($resultSet, $method, $valueName, $value)
@@ -826,14 +846,51 @@ class Manipulator extends Module
 			if ($iterationValue == $value and $method == '==') return $half;
 			elseif ($max==$min or $max==$half) # TODO potentially we don't need $max==$min
 			{
-				switch ($method) # TODO is this really right? It seems simpler than I imagined...
+				switch ($method)
 				{
 					case '==':
 						return $half;
 					case '>':
-						return $half;
+						if ($iterationValue<=$value)
+						{
+							$nextIndex=$half+1;
+							if (isset($keys[$nextIndex]))
+							{
+								$this->core->debug(3, "findPoint: $iterationValue<=$value and method is $method so returning previous value {$keys[$nextIndex]}($nextIndex).");
+								return $nextIndex;
+							}
+							else
+							{
+								$this->core->debug(3, "findPoint: $iterationValue<=$value, method is $method and we don't have anything less to return.");
+								return null;
+							}
+						}
+						else
+						{
+							$this->core->debug(3, "findPoint: Normal exit with method $method and half $half and iterationValue $iterationValue.");
+							return $half;
+						}
 					case '<':
-						return $half;
+						# This is some protection to make sure the value actually is less than the specified value. This code can almost certainly be optimised further.
+						if ($iterationValue>=$value)
+						{
+							$previousIndex=$half-1;
+							if (isset($keys[$previousIndex]))
+							{
+								$this->core->debug(3, "findPoint: $iterationValue>=$value and method is $method so returning previous value {$keys[$previousIndex]}($previousIndex).");
+								return $previousIndex;
+							}
+							else
+							{
+								$this->core->debug(3, "findPoint: $iterationValue>=$value, method is $method and we don't have anything less to return.");
+								return null;
+							}
+						}
+						else
+						{
+							$this->core->debug(3, "findPoint: Normal exit with method $method and half $half and iterationValue $iterationValue.");
+							return $half;
+						}
 				}
 			}
 			elseif ($iterationValue>$value)
@@ -858,16 +915,39 @@ class Manipulator extends Module
 	
 	function getRange($resultSet, $start, $stop)
 	{
+		if ($start===null or $stop===null)
+		{
+			if ($start===null)
+			{
+				$end='start';
+				$ending='starting';
+			}
+			else
+			{
+				$end='stop';
+				$ending='stopping';
+			}
+			$this->core->debug(3, "getRange: $end is false. This suggests that a valid $ending point was not found. This is completely healthy if findPoint was unable to find a point that fullfilled the request (ie no results for the search).");
+			return array();
+		}
 		if (!is_array($resultSet)) return $resultSet;
 		
-		if (!$stop) $stop=count($resultSet)-1;
+		if ($stop=='' and !is_numeric($stop))
+		{
+			$stop=count($resultSet)-1;
+			$this->core->debug(3, "getRange: Guessed absent stop value to be $stop.");
+		}
+		
 		$keys=array_keys($resultSet);
 		$output=array();
 		$this->core->debug(3, "getRange(---, $start, $stop)");
 		
-		for ($i=$start;$i<=$stop;$i++)
+		if (count($resultSet))
 		{
-			$output[$keys[$i]]=$resultSet[$keys[$i]];
+			for ($i=$start;$i<=$stop;$i++)
+			{
+				$output[$keys[$i]]=$resultSet[$keys[$i]];
+			}
 		}
 		
 		return $output;
