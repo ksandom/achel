@@ -1,0 +1,20 @@
+# Create some data to demonstrate TimeThing ~ timething,example
+
+# Let's make our time stamps.
+now Example,now
+tsToday Example,todayMidnight
+strToTime Example,yesterday,-1 day,~!Example,todayMidnight!~
+strToTime Example,lastWeek,-1 week,~!Example,todayMidnight!~
+strToTime Example,nextWeek,+1 week,~!Example,todayMidnight!~
+getCategory Example
+
+# Let's manipulate it slightly to make the format more useful for searching
+loop
+	set Result,name,~!Result,key!~
+	set Result,ts,~!Result,line!~
+	fuzzyTime Result,fuzzyTime,~!Result,line!~
+	unset Result,key
+	unset Result,line
+
+# This line is really important. If the data is not in order, incorrect results will come back and it simply won't make any sense.
+sortOnItemKey ts
