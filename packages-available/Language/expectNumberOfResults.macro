@@ -15,12 +15,12 @@ if ~!Global,expectNumberOfResults-4!~,!=,,
 			debug 4,~!Global,expectNumberOfResults-1!~: Exactly ~!Global,expectNumberOfResults-0!~ results were required, and recieved.
 			callFeature ~!Global,expectNumberOfResults-4!~
 		else
-			debug 1,~!Global,expectNumberOfResults-1!~: Exactly ~!Global,expectNumberOfResults-0!~ results were required, but ~!Tmp,expectNumberOfResults-before!~ were recieved before refining the resultSet and ~!Tmp,expectNumberOfResults-after!~ after.
+			debug 1,~!Global,expectNumberOfResults-1!~: Exactly ~!Global,expectNumberOfResults-0!~ results were required, but ~!Tmp,expectNumberOfResults-before!~ were recieved before refining the resultSet to ~!Global,expectNumberOfResults-2!~="~!Global,expectNumberOfResults-3!~" and ~!Tmp,expectNumberOfResults-after!~ after.
 			if ~!Verbosity,level!~,>=,2,
 				nested
 				outNow
 	else
-		debug 1,~!Global,expectNumberOfResults-1!~: Exactly ~!Global,expectNumberOfResults-0!~ results were required, but ~!Tmp,expectNumberOfResults-before!~ were recieved before refining the resultSet and ~!Tmp,expectNumberOfResults-after!~ after.
+		debug 1,~!Global,expectNumberOfResults-1!~: Exactly ~!Global,expectNumberOfResults-0!~ results were required, but ~!Tmp,expectNumberOfResults-before!~ were recieved before refining the resultSet to ~!Global,expectNumberOfResults-2!~="~!Global,expectNumberOfResults-3!~" and ~!Tmp,expectNumberOfResults-after!~ after.
 		if ~!Verbosity,level!~,>=,2,
 			nested
 			outNow

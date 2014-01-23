@@ -1,4 +1,4 @@
-# Run unitTests. This is any feature that includes unitTest in its tags. ~ unit
+# Run unitTests. This is any feature that includes unitTest in its tags. --unitTests[=regex] regex can be used to run just a subset of tests. ~ unit
 
 unsetCategory UnitResults
 
@@ -17,6 +17,9 @@ requireItem tagString,unitTest
 excludeItem name,--
 
 set Tmp,wrongNumberMessage,Wrong number of results. Use -v  (eg achel -v --unitTests) to see what went wrong and -vv to see the actual results that came back. Look for
+
+if ~!Global,unitTests-0!~,!=,,
+	refine ~!Global,unitTests-0!~
 
 loop
 	callFeatureNoReturn ~!Result,name!~
