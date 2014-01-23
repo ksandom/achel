@@ -23,26 +23,30 @@
 #    fuzzyTime: 2014-01-30--0:00:00
 
 
-defineTest TimeThing - today,
-	failTest There should be exactly 2 results. Run the test again with -v to see what went wrong.
+defineTest TimeThing - tsDay/today,
+	failTest ~!Tmp,wrongNumberMessage!~ "~!Tmp,defineTest-description!~".
 	getTSDemoData
 	tsDay 0,,ts
-	thereCanBeOnly 2,TimeThing - today,
+	expectNumberOfResults 2,~!Tmp,defineTest-description!~,name,(today|now),
 		passTest yay
 
-defineTest TimeThing - yesterday,
-	failTest There should be exactly 2 results. Run the test again with -v to see what went wrong.
+defineTest TimeThing - tsDay/yesterday,
+	failTest ~!Tmp,wrongNumberMessage!~ "~!Tmp,defineTest-description!~".
 	getTSDemoData
 	tsDay 1,,ts
-	thereCanBeOnly 1,TimeThing - yesterday,
+	expectNumberOfResults 1,~!Tmp,defineTest-description!~,name,yesterday,
 		passTest yay
-		failTest This should actually fail, but currently passes. This is because we need to check that we are getting the *right* result.
-		
 
-defineTest TimeThing - tomorrow,
-	failTest There should be exactly 2 results. Run the test again with -v to see what went wrong.
+defineTest TimeThing - tsDay/tomorrow,
+	failTest ~!Tmp,wrongNumberMessage!~ "~!Tmp,defineTest-description!~".
 	getTSDemoData
 	tsDay -1,,ts
-	thereCanBeOnly 0,TimeThing - tomorrow,
+	expectNumberOfResults 0,~!Tmp,defineTest-description!~,name,tomorrow,
 		passTest yay
 
+defineTest TimeThing - tsDay/yesterday and today,
+	failTest ~!Tmp,wrongNumberMessage!~ "~!Tmp,defineTest-description!~".
+	getTSDemoData
+	tsDay 1,2,ts
+	expectNumberOfResults 3,~!Tmp,defineTest-description!~,name,(yesterday|today|now),
+		passTest yay
