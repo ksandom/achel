@@ -117,7 +117,6 @@ class Condition extends Module
 			$this->core->incrementNesting();
 			$result=$this->takeAction($parms);
 			$this->core->decrementNesting();
-			print_r($parms);
 			$this->core->debug(1, "ifNotEmptyResult: got here D5");
 		}
 		# TODO device if this should stay or not once the problem is solved.
