@@ -1,0 +1,48 @@
+# Run unit tests for TimeThing ~ timething,unitTest
+
+# # Sample data set
+#  _1389830400: 
+#    name: lastWeek
+#    ts: 1389830400
+#    fuzzyTime: 2014-01-16--0:00:00
+#  _1390348800: 
+#    name: yesterday
+#    ts: 1390348800
+#    fuzzyTime: 2014-01-22--0:00:00
+#  _1390435200: 
+#    name: todayMidnight
+#    ts: 1390435200
+#    fuzzyTime: 2014-01-23--0:00:00
+#  _1390488283: 
+#    name: now
+#    ts: 1390488283
+#    fuzzyTime: 2014-01-23--14:44:43
+#  _1391040000: 
+#    name: nextWeek
+#    ts: 1391040000
+#    fuzzyTime: 2014-01-30--0:00:00
+
+
+defineTest TimeThing - today,
+	failTest There should be exactly 2 results. Run the test again with -v to see what went wrong.
+	getTSDemoData
+	tsDay 0,,ts
+	thereCanBeOnly 2,TimeThing - today,
+		passTest yay
+
+defineTest TimeThing - yesterday,
+	failTest There should be exactly 2 results. Run the test again with -v to see what went wrong.
+	getTSDemoData
+	tsDay 1,,ts
+	thereCanBeOnly 1,TimeThing - yesterday,
+		passTest yay
+		failTest This should actually fail, but currently passes. This is because we need to check that we are getting the *right* result.
+		
+
+defineTest TimeThing - tomorrow,
+	failTest There should be exactly 2 results. Run the test again with -v to see what went wrong.
+	getTSDemoData
+	tsDay -1,,ts
+	thereCanBeOnly 0,TimeThing - tomorrow,
+		passTest yay
+
