@@ -113,11 +113,11 @@ class Condition extends Module
 		*/
 		if ($matched == $match)
 		{
-			$this->core->debug(1, "ifNotEmptyResult: got here D4");
+			$this->core->debug(4, "ifNotEmptyResult: got here D4");
 			$this->core->incrementNesting();
 			$result=$this->takeAction($parms);
 			$this->core->decrementNesting();
-			$this->core->debug(1, "ifNotEmptyResult: got here D5");
+			$this->core->debug(4, "ifNotEmptyResult: got here D5");
 		}
 		# TODO device if this should stay or not once the problem is solved.
 		//else $result=$input;
