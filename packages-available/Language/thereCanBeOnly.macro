@@ -6,7 +6,7 @@ if ~!Global,thereCanBeOnly-2!~,!=,,
 		debug 4,~!Global,thereCanBeOnly-1!~: Exactly ~!Global,thereCanBeOnly-0!~ results were required, and recieved.
 		callFeature ~!Global,thereCanBeOnly-2!~
 	else
-		debug 0,~!Global,thereCanBeOnly-1!~: Exactly ~!Global,thereCanBeOnly-0!~ results were required, but ~!Tmp,thereCanBeOnly!~ were recieved.
+		debug 1,~!Global,thereCanBeOnly-1!~: Exactly ~!Global,thereCanBeOnly-0!~ results were required, but ~!Tmp,thereCanBeOnly!~ were recieved.
 else
 	debug 0,~!Global,thereCanBeOnly-1!~: thereCanBeOnly is expected to have indented code after it, but this doesn't appear to be the case. If it is, make sure it has the trailing comma at the end.
 
