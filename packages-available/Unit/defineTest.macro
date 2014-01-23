@@ -12,6 +12,8 @@ else
 	set UnitResults,currentResult,unknown
 	set UnitResults,currentComment,The test either did not return a result using --passTest, --failTest or --warnTest. Or it returned an unexpected result.
 
+basicMaths UnitResults,~!UnitResults,currentResult!~,~!UnitResults,~!UnitResults,currentResult!~!~,+,1
+
 setNested UnitResults,results,~!Global,defineTest-0!~,description,~!Global,defineTest-0!~
 setNested UnitResults,results,~!Global,defineTest-0!~,result,~!UnitResults,currentResult!~
 setNested UnitResults,results,~!Global,defineTest-0!~,resultComment,~!UnitResults,currentComment!~
