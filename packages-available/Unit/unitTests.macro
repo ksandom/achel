@@ -16,8 +16,12 @@ searchFeatures unitTest
 requireItem tagString,unitTest
 excludeItem name,--
 
+set Tmp,wrongNumberMessage,Wrong number of results. Use -v  (eg achel -v --unitTests) to see what went wrong and -vv to see the actual results that came back. Look for
+
 loop
 	callFeatureNoReturn ~!Result,name!~
 
 retrieveResults UnitResults,results
 templateOut unitTestResults
+
+unset Tmp,wrongNumberMessage

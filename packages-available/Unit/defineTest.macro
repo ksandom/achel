@@ -1,5 +1,7 @@
 # Define a unit test. --defineTest=description . Code to be tested should be nested and --passTest, --failTest or --warnTest should be included in that logic. Description MUST be unique to the test. ~ unit
 
+set Tmp,defineTest-description,~!Global,defineTest-0!~
+
 callFeatureNoReturn ~!Global,defineTest-1!~
 
 if ~!UnitResults,currentResult!~,==,pass,
@@ -22,3 +24,4 @@ setNested UnitResults,results,~!Global,defineTest-0!~,resultColor,~!UnitResults,
 
 # TODO the problem is here
 resetTest
+unset Tmp,defineTest-description
