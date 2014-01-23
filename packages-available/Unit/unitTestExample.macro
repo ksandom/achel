@@ -11,3 +11,9 @@ defineTest Unit example test2,
 		passTest Wheee
 	else
 		failTest Hmmmm. Why you no like me. PS: Check the Condition module.
+
+defineTest Unit example duplication,
+	failTest First entry looses.
+	warnTest Anything that is not the last entry looses.
+	passTest Last entry wins.
+
