@@ -21,8 +21,12 @@ if ~!Tmp,unit!~,==,day,
 if ~!Tmp,unit!~,==,week,
 	strToTime Tmp,base,last monday,~!Tmp,base!~
 
+
 # Start the results
 strToTime Tmp,start,-~!Global,tsUnit-0!~ ~!Tmp,unit!~,~!Tmp,base!~
+
+# We need to subtract one so that we include midnight
+basicMaths Tmp,start,~!Tmp,start!~,-,1
 fullTimeStamp Tmp,tsStart,~!Tmp,start!~
 newer ~!Tmp,timeField!~,~!Tmp,start!~
 
