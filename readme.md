@@ -21,8 +21,10 @@ This is a tiny percentage of the final vision, so there's a lot more to come!
 
 ## Traditional way
 
-* Close the repository
+* Clone the repository
 * Use install.sh.
+
+Eg
 
     git clone git@github.com:ksandom/achel.git
     cd achel
