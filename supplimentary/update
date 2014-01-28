@@ -27,9 +27,6 @@ requiredParms="$0"
 . $libDir/documentation.sh
 
 programName='achel'
-fileThings='macros modules templates' # TODO Perhaps this needs to be moved now
-directoryThings='packages'
-things="$fileThings $directoryThings"
 installTypeComments=''
 
 

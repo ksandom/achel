@@ -128,6 +128,9 @@ function installRepo_setup
 				enabledPacakge "$srcRepoName" "$regex" "$profileName"
 			done < <(repoGetParmPackages "$irs_repoName" "$profileRefName")
 			
+			# Make sure all broken stuff is gone
+			cleanProfile "$profileName"
+			
 			# create executable
 			if [ ! "$execName" == '' ]; then
 				createExec "$execName" "$irs_repoName"

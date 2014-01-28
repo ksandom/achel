@@ -7,13 +7,15 @@ function cleanEnabled
 	profileName="$3"
 	
 	if cd "$testDir"; then
-		for item in *;do
-			if ! $testFunction "$item"; then
-				echo "$item is no longer present. Disabling in profile \"$profileName\"."
-				rm "$item"
-			fi
-			cd "$testDir"
-		done
+		if [ `ls -1 | wc -l` -gt 0 ]; then
+			for item in *;do
+				if ! $testFunction "$item"; then
+					echo "$item is no longer present. Disabling in profile \"$profileName\"."
+					rm "$item"
+				fi
+				cd "$testDir"
+			done
+		fi
 	else
 		echo
 		echo "Achel install: cleanEnabled: WARNING Clean aborted since we could not sucessfully get into the directory to be cleaned. Continuing would be insanity. Please fix this.";

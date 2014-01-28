@@ -13,7 +13,12 @@
 # . $libDir/getRepo
 
 
+# Let's set some stuff which is needed in many places.
 startDir=`pwd`
+fileThings='macros modules templates'
+directoryThings='packages'
+things="$fileThings $directoryThings"
+
 
 
  # Do stuff. If you want to add something that will get included in all the supplimentary scripts, this is the place to do it.
