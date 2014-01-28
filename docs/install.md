@@ -26,7 +26,7 @@ Eg
     cd achel
     ./install.sh
 
-[More info](/ksandom/achel/blob/docs/install.md)
+[More info](/ksandom/achel/blob/docs/install.md).
 
 ## Other install variations
 
