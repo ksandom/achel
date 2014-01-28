@@ -15,9 +15,21 @@ This is a tiny percentage of the final vision, so there's a lot more to come!
 
 # Install
 
-See [docs/install.md](mass/tree/master/docs/install.md)
+## Easy way
 
-Use install.sh.
+    curl https://raw.github.com/ksandom/achel/master/supplimentary/misc/webInstall | bash
+
+## Traditional way
+
+* Close the repository
+* Use install.sh.
+
+    git clone git@github.com:ksandom/achel.git
+    cd achel
+    ./install.sh
+
+[More info](mass/tree/master/docs/install.md)
+
 
 # Contributing
 
