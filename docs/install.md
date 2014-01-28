@@ -26,7 +26,7 @@ Eg
     cd achel
     ./install.sh
 
-[More info](blob/master/docs/install.md)
+[More info](docs/install.md)
 
 ## Other install variations
 
