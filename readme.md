@@ -30,7 +30,7 @@ Eg
     cd achel
     ./install.sh
 
-[More info](blob/master/docs/install.md)
+[More info](http://github.com/ksandom/achel/blob/master/docs/install.md)
 
 
 # Contributing
