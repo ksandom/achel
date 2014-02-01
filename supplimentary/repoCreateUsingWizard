@@ -1,0 +1,21 @@
+#!/bin/bash
+# Description
+#   An interactive wizard to create a repository
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Start running through the wizard
+#     $0 http://github.com/ksandom/something
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/repoInstall.sh
+. $libDir/getRepo.sh
+. $libDir/repoParms.sh
+. $libDir/packages.sh
+. $libDir/installLibs.sh
+. $libDir/documentation.sh
+
+wizard_createRepo

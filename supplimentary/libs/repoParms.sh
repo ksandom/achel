@@ -94,3 +94,55 @@ function showReposWithParms
 		fi
 	done
 }
+
+
+
+
+function wizard_createRepo
+{
+	displayMessage "achel/overview/messages/repo/create/repoCreate-welcome.md"
+	
+	while ! wizard_createRepo_passTests; do
+		wizard_createRepo_getAnswers
+		wizard_createRepo_displayAnswers
+		
+		getAnswer "confirm" "achel/overview/messages/repo/create/repoCreate-confirm.md" "no"
+		export subsequent=true
+	done
+	
+	wizard_createRepo_takeAction
+}
+
+function wizard_createRepo_passTests
+{
+	result=0
+	
+	# TODO add tests
+	
+	if [ "$wizard_confirm" != 'yes' ]; then
+		result=1
+		message="User did not approve the answers."
+	fi
+	
+	if [ "$result" == '1' ] && [ "$subsequent" != '' ]; then
+		echo "One or more of the tests did not pass. The questions will cycle again with your previous answers as defaults. You can press CTRL+C at any time."
+	fi
+	
+	return $result
+}
+
+function wizard_createRepo_displayAnswers
+{
+	true
+}
+
+function wizard_createRepo_getAnswers
+{
+	true
+}
+
+function wizard_createRepo_takeAction
+{
+	echo "Got to action."
+	true
+}

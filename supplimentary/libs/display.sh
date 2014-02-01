@@ -85,3 +85,49 @@ function waitSeconds
 	finalMessage=`echo "$message" | sed "s/%s/0/g;s/./ /g"`
 	echo -e "\r$finalMessage\rWaited $seconds seconds."
 }
+
+function displayMessage
+{
+	messageFile="$1"
+	
+	fullFilePath="$configDir/docs/repos/$messageFile"
+	
+	# Default to a slightly helpful error message if the description file can't be found.
+	if [ -e "$fullFilePath" ]; then
+		cat "$fullFilePath"
+	else
+		echo "getAnswer: Could not find \"$fullFilePath\" so I can't give you a description. The name of the value being set is \"$name\". Good luck."
+	fi
+}
+
+function getAnswer
+{
+	displayName="$1"
+	name="wizard_$displayName"
+	descriptionFile="$2"
+	default="$3"
+	
+	displayMessage "$descriptionFile"
+	
+	# Choose the default value
+	if [ "$default" != '' ]; then
+		defaultToUse="$default"
+	else
+		defaultToUse="${!name}"
+	fi
+	
+	# Ask for input
+	if [ "$defaultToUse" == '' ]; then
+		promptText="$displayName "
+	else
+		promptText="$displayName [$defaultToUse]: "
+	fi
+	tmpName="tmp_$name"
+	read -p "$promptText" "$tmpName"
+	
+	# Export
+	if [ "${!tmpName}" != '' ]; then
+		export $name="${!tmpName}"
+		echo "Set \"$name\" to ${!name}"
+	fi
+}
