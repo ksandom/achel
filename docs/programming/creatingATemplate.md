@@ -1,3 +1,5 @@
+**TODO: This article needs to be updated, but should still be better than nothing in the mean time.**
+
 # The basics
 It's really easy! There are now two ways to create a template.
 

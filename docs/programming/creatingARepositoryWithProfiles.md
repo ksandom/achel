@@ -1,3 +1,5 @@
+**TODO: This article needs to be updated, but should still be better than nothing in the mean time.**
+
 # Introduction
 
 When you create a repo, you will likely want profiles to be automatically configured when the repo is installed. This document describes how to do it.
