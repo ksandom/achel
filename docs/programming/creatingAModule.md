@@ -4,5 +4,5 @@ Creating a module is really easy. I'll have full details here soon for how it al
 
 See examples/example.php for a working example.
 
-For more information on the directory structure, see [paths.md](paths.md).
+For more information on the directory structure, see [paths.md](../paths.md).
 
