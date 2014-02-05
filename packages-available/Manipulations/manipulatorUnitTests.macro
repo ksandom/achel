@@ -1,0 +1,9 @@
+# Unit tests for manipulator ~ unitTest,manipulator
+
+defineTest Manipulator - Fatal error in --toString,
+	failTest Default to fail. Although the unit tests will probably bomb out if we strike this.
+	help howMany
+	first
+	toString tagString
+	passTest No fatal error.
+	

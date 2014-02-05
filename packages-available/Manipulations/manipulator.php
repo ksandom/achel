@@ -230,6 +230,7 @@ class Manipulator extends Module
 	
 	function replace($input, $search, $replace)
 	{
+		if (is_object($search) or is_object($replace)) return $input;
 		$output=implode($replace, explode($search, $input));;
 		$this->core->debug(4, "replace: Search=$search Replace=$replace Input=\"$input\" Output=\"$output\"");
 		return $output;
