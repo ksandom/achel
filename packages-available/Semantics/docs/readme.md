@@ -124,6 +124,19 @@ This is what `installFeatureTypesForSemantics.macro` contains
  * The outDataType is `dataType`. This means that a feature of this type will produce data of type `dataType`.
  * The description is `Generates a list of dataTypes.`
 
+Here's the macro that lists the features types for semantics
+
+    # List feature types. --listFeatureTypes=regex ~ semantics,featureTypes
+    #onDefine aliasFeature listFeatureTypes,listFT
+    #onLoaded setFeatureType listFeatureTypes,generateFeatureTypes
+    
+    retrieveResults Semantics,featureTypes
+    requireEach ~!Global,listFeatureTypes!~
+
+* The `#onDefine aliasFeature` line simply makes the feature available as `--listFT` as well as `--listFeatureTypes`.
+* The `#onLoaded setFeatureType` **is the important line** that tells achel what type of feature this is.
+* The rest is just performing the actions.
+
 ## More info
 
 `$ achel --help=Semantics`
