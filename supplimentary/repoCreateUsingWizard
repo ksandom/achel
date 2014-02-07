@@ -17,5 +17,6 @@ requiredParms="$0"
 . $libDir/packages.sh
 . $libDir/installLibs.sh
 . $libDir/documentation.sh
+. $libDir/wizard.sh
 
 wizard_createRepo

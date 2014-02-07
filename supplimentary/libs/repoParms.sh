@@ -102,12 +102,15 @@ function wizard_createRepo
 {
 	displayMessage "achel/overview/messages/repo/create/repoCreate-welcome.md"
 	
-	while ! wizard_createRepo_passTests; do
+	while ! wizard_createRepo_passTests > /dev/null || [ "$wizard_confirm" != 'yes' ] ; do
 		wizard_createRepo_getAnswers
 		wizard_createRepo_displayAnswers
 		
-		getAnswer "confirm" "achel/overview/messages/repo/create/repoCreate-confirm.md" "no"
-		export subsequent=true
+		export subsequent='true'
+		
+		if wizard_createRepo_passTests; then
+			getAnswer "confirm" "achel/overview/messages/repo/create/repoCreate-confirm.md" "no"
+		fi
 	done
 	
 	wizard_createRepo_takeAction
@@ -115,17 +118,45 @@ function wizard_createRepo
 
 function wizard_createRepo_passTests
 {
-	result=0
+	wizardPrefix='wizard_'
 	
-	# TODO add tests
-	
-	if [ "$wizard_confirm" != 'yes' ]; then
-		result=1
-		message="User did not approve the answers."
+	if [ "$subsequent" == '' ]; then
+		echo "wizard: First time round. Let's get some answers :)"
+		return 1
 	fi
 	
+	result=0
+	
+	# Some basic input testing
+	# I originally played with joining these tests together with && or ||. The problem I struck was that once one of the commands returned false, no others would be executed, which means that the user would not get a complete list of failures.
+	if ! inputValidation_groupRegex 'name description repoURL' '^$' "The field is required. No input was entered." "$wizardPrefix"; then
+		result=1
+	fi
+	
+	if ! inputValidation_groupRegex 'name execName repoURL' ' ' "No spaces." "$wizardPrefix" ; then
+		result=1
+	fi
+	
+	if ! inputValidation_groupRegex 'name execName description' ',' "No commas (\",\")." "$wizardPrefix" ; then
+		result=1
+	fi
+	
+	if ! inputValidation_expectLines 'name execName description repoURL' 1 'No new lines. You might have a backslash at the end of the line.' "$wizardPrefix" ; then
+		result=1
+	fi
+	
+	
+	# devFolder
+	if [ ! -d $wizard_devFolder ] && [ ! -h $wizard_devFolder ]; then
+		displayMessage "achel/overview/messages/repo/create/repoCreate-devFolderNotFound.md"
+		result=1
+		export wizard_devFolder=`pwd`
+	fi
+	
+	
+	
 	if [ "$result" == '1' ] && [ "$subsequent" != '' ]; then
-		echo "One or more of the tests did not pass. The questions will cycle again with your previous answers as defaults. You can press CTRL+C at any time."
+		echo -e "\nOne or more of the tests did not pass. The questions will cycle again with your previous answers as defaults. You can press CTRL+C at any time."
 	fi
 	
 	return $result
@@ -133,12 +164,19 @@ function wizard_createRepo_passTests
 
 function wizard_createRepo_displayAnswers
 {
-	true
+	
+	echo -e "\n\n\nWizard summary:"
+	set | grep '^wizard_' | grep -v '()' | sed 's/^wizard_//g;s/=/ = /'
+	echo
 }
 
 function wizard_createRepo_getAnswers
 {
-	true
+	getAnswer "name" "achel/overview/messages/repo/create/repoCreate-name.md" ""
+	getAnswer "description" "achel/overview/messages/repo/create/repoCreate-description.md" ""
+	getAnswer "execName" "achel/overview/messages/repo/create/repoCreate-execName.md" "$wizard_name"
+	getAnswer "repoURL" "achel/overview/messages/repo/create/repoCreate-repoURL.md" "git@github.com:`whoami`/$wizard_name.git"
+	getAnswer "devFolder" "achel/overview/messages/repo/create/repoCreate-devFolder.md" "`pwd`"
 }
 
 function wizard_createRepo_takeAction

@@ -94,7 +94,8 @@ function displayMessage
 	
 	# Default to a slightly helpful error message if the description file can't be found.
 	if [ -e "$fullFilePath" ]; then
-		cat "$fullFilePath"
+		echo -e "\n"
+		cat "$fullFilePath" | fold -s
 	else
 		echo "getAnswer: Could not find \"$fullFilePath\" so I can't give you a description. The name of the value being set is \"$name\". Good luck."
 	fi
@@ -110,7 +111,7 @@ function getAnswer
 	displayMessage "$descriptionFile"
 	
 	# Choose the default value
-	if [ "$default" != '' ]; then
+	if [ "${!name}" == '' ]; then
 		defaultToUse="$default"
 	else
 		defaultToUse="${!name}"
@@ -118,7 +119,7 @@ function getAnswer
 	
 	# Ask for input
 	if [ "$defaultToUse" == '' ]; then
-		promptText="$displayName "
+		promptText="$displayName: "
 	else
 		promptText="$displayName [$defaultToUse]: "
 	fi
@@ -128,6 +129,8 @@ function getAnswer
 	# Export
 	if [ "${!tmpName}" != '' ]; then
 		export $name="${!tmpName}"
-		echo "Set \"$name\" to ${!name}"
+		# echo "Set \"$name\" to ${!name}"
+	else
+		export $name="$defaultToUse"
 	fi
 }
