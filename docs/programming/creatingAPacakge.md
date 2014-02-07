@@ -1,3 +1,5 @@
+**TODO: This article needs to be updated, but should still be better than nothing in the mean time.**
+
 Creating a package is really easy. It's a directory that goes in _MASS_/repos/mass/packages-available.
 
 Quite simply all you need to do is put any macros, templates, modules and documentation in the folder. 
@@ -22,4 +24,4 @@ By convention I put documentation in a folder called docs within the package. Do
     ./importFromAWS.macro
     ./ELB.macro
 
-For more information on the directory structure, see [paths.md](paths.md).
+For more information on the directory structure, see [paths.md](../paths.md).
