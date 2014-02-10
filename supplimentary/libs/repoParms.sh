@@ -129,15 +129,15 @@ function wizard_createRepo_passTests
 	
 	# Some basic input testing
 	# I originally played with joining these tests together with && or ||. The problem I struck was that once one of the commands returned false, no others would be executed, which means that the user would not get a complete list of failures.
-	if ! inputValidation_groupRegex 'name description repoURL' '^$' "The field is required. No input was entered." "$wizardPrefix"; then
+	if ! inputValidation_groupNotRegex 'name description repoURL' '^$' "The field is required. No input was entered." "$wizardPrefix"; then
 		result=1
 	fi
 	
-	if ! inputValidation_groupRegex 'name execName repoURL' ' ' "No spaces." "$wizardPrefix" ; then
+	if ! inputValidation_groupNotRegex 'name execName repoURL' ' ' "No spaces." "$wizardPrefix" ; then
 		result=1
 	fi
 	
-	if ! inputValidation_groupRegex 'name execName description' ',' "No commas (\",\")." "$wizardPrefix" ; then
+	if ! inputValidation_groupNotRegex 'name execName description' ',' "No commas (\",\")." "$wizardPrefix" ; then
 		result=1
 	fi
 	
@@ -181,6 +181,20 @@ function wizard_createRepo_getAnswers
 
 function wizard_createRepo_takeAction
 {
-	echo "Got to action."
-	true
+	echo -e "\n\nAction time!"
+	
+	# Get into development directory and clone it
+	
+	# Last minute sanity checks
+		# readme
+		# repoParms
+	
+	# Create readme
+	# repoParms
+	# commit back to the repo
+	
+	# display information about next steps
+		# push the repo back
+		# repoParms
+		# getting further help
 }

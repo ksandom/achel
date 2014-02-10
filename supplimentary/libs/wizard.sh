@@ -1,6 +1,6 @@
 # Functionality for creating a wizard
 
-function inputValidation_groupRegex
+function inputValidation_groupNotRegex
 {
 	fields="$1"
 	regex="$2"
@@ -12,6 +12,26 @@ function inputValidation_groupRegex
 	for field in $fields; do
 		fieldName="$prefix$field"
 		if echo "${!fieldName}" | grep -q "$regex" ; then
+			echo "Field \"$field\" fails (matches) regex \"$regex\". Comment: $comment"
+			result=1
+		fi
+	done
+	
+	return $result;
+}
+
+function inputValidation_groupRegex
+{
+	fields="$1"
+	regex="$2"
+	comment="$3"
+	prefix="$4"
+	
+	result=0
+	
+	for field in $fields; do
+		fieldName="$prefix$field"
+		if [ "`echo \"${!fieldName}\" | grep \"$regex\"`" == '' ] ; then
 			echo "Field \"$field\" fails (matches) regex \"$regex\". Comment: $comment"
 			result=1
 		fi
