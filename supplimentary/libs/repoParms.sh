@@ -239,6 +239,8 @@ function wizard_createRepo_takeAction
 	echo -e "\n\nAction time! Last chance to abort with CTRL+C"
 	waitSeconds 5
 	
+	installFolder="$wizard_devFolder/$wizard_name"
+	
 	# Get into development directory and clone the repo
 	cd "$wizard_devFolder"
 	
@@ -259,7 +261,7 @@ function wizard_createRepo_takeAction
 		export wizard_confirm='no'
 		return 1
 	fi
-	cd "$wizard_name"
+	cd "$installFolder"
 	
 	
 	# Backup existing files
@@ -282,14 +284,18 @@ function wizard_createRepo_takeAction
 	
 	
 	# Add the repo into Achel but do not install it yet
-	addRepo `pwd`
+	addRepo `pwd` "$wizard_name"
 	
 	
 	# Create readme
+	cd "$installFolder"
 	createDefaultRepoReadme "$wizard_name" "$wizard_description" "$wizard_repoURL" "$wizard_execName" > readme.md
 	
 	# repoParms
 	createDefaultRepoParms "$wizard_name" "$wizard_description" "$wizard_repoURL" "$wizard_execName"
+	
+	# Create important directory structure
+	mkdir -p docs packages-available
 	
 	# commit back to the repo
 	git add readme.md parameters.json
@@ -302,7 +308,7 @@ function wizard_createRepo_takeAction
 			fi
 		done
 		
-		git commit -m "InitialSetup: Backed up .old files. Check if these can be removed."
+		git commit -am "InitialSetup: Backed up .old files. Check if these can be removed."
 	fi
 	
 	

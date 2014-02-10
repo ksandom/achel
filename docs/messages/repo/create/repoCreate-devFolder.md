@@ -6,4 +6,4 @@ It is strongly recommended that all development is done outside of where Achel i
 
 This defaults to your current directory, so if you are having trouble setting it as desired, you can simply make sure you are in the correct folder before starting the wizard.
 
-Let's say you have chosen a name earlier of "bobsWigets". A sensible path could be /home/user/Documents/development/bobsWigets.
+Let's say you have earlier chosen a name of "bobsWigets". A sensible path could be /home/user/Documents/development/bobsWigets.
