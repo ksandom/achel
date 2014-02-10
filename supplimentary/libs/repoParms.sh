@@ -98,22 +98,71 @@ function showReposWithParms
 
 
 
+function createDefaultRepoReadme
+{
+	name="$1"
+	description="$2"
+	repoURL="$3"
+	execName="$4"
+	
+	rules=''
+	for item in name description repoURL execName; do
+		
+		newRule="s#~!Repo,$item!~#${!item}#g"
+		
+		if [ "$rules" == '' ]; then
+			rules="$newRule"
+		else
+			rules="$rules;$newRule"
+		fi
+	done
+	
+	cat "$configDir/docs/repos/achel/overview/messages/repo/create/repoCreate-defaultReadme.md" | sed "$rules"
+}
+
+function createDefaultRepoParms
+{
+	name="$1"
+	profile="$name"
+	description="$2"
+	repoURL="$3"
+	execName="$4"
+	
+	# Set the name of the repo
+	repoSetParm "$name" "." "name" "$name"
+	
+	# Define a profile
+	repoSetParm "$name" "$profile" "name" "$name"
+	repoSetParm "$name" "$profile" "description" "$description"
+	repoSetParm "$name" "$profile" "execName" "$execName"
+	
+	# Define what packages should be in the repo's profile
+	repoSetParm "$name" "$profile" "packages,BASE,sourceRepo" "achel"
+	repoSetParm "$name" "$profile" "packages,BASE,packageRegex" ".*"
+	
+	repoSetParm "$name" "$profile" "packages,SELF,sourceRepo" "$name"
+	repoSetParm "$name" "$profile" "packages,SELF,packageRegex" ".*"
+}
+
+
+
+
 function wizard_createRepo
 {
 	displayMessage "achel/overview/messages/repo/create/repoCreate-welcome.md"
 	
-	while ! wizard_createRepo_passTests > /dev/null || [ "$wizard_confirm" != 'yes' ] ; do
-		wizard_createRepo_getAnswers
-		wizard_createRepo_displayAnswers
-		
-		export subsequent='true'
-		
-		if wizard_createRepo_passTests; then
-			getAnswer "confirm" "achel/overview/messages/repo/create/repoCreate-confirm.md" "no"
-		fi
+	while [ "$wizard_confirm" != 'yes' ] || ! wizard_createRepo_takeAction; do
+		while ! wizard_createRepo_passTests > /dev/null || [ "$wizard_confirm" != 'yes' ] ; do
+			wizard_createRepo_getAnswers
+			wizard_createRepo_displayAnswers
+			
+			export subsequent='true'
+			
+			if wizard_createRepo_passTests; then
+				getAnswer "confirm" "achel/overview/messages/repo/create/repoCreate-confirm.md" "no"
+			fi
+		done
 	done
-	
-	wizard_createRepo_takeAction
 }
 
 function wizard_createRepo_passTests
@@ -145,6 +194,12 @@ function wizard_createRepo_passTests
 		result=1
 	fi
 	
+	
+	# repoName should not exist
+	if [ -e "$configDir/repos/$wizard_name" ]; then
+		displayMessage "achel/overview/messages/repo/create/repoCreate-repoAlreadyInstalled.md"
+		result=1
+	fi
 	
 	# devFolder
 	if [ ! -d $wizard_devFolder ] && [ ! -h $wizard_devFolder ]; then
@@ -181,20 +236,88 @@ function wizard_createRepo_getAnswers
 
 function wizard_createRepo_takeAction
 {
-	echo -e "\n\nAction time!"
+	echo -e "\n\nAction time! Last chance to abort with CTRL+C"
+	waitSeconds 5
 	
-	# Get into development directory and clone it
+	# Get into development directory and clone the repo
+	cd "$wizard_devFolder"
 	
-	# Last minute sanity checks
-		# readme
-		# repoParms
+	if [ -e "$wizard_name" ]; then
+		echo "\"$wizard_name\" already exists in \"$wizard_devFolder\""
+		displayMessage "achel/overview/messages/repo/create/repoCreate-repoAlreadyExists.md"
+		
+		# Make sure we don't automatically resume without first revising the answers.
+		export wizard_confirm='no'
+		return 1
+	fi
+	git clone "$wizard_repoURL"
+	
+	if [ ! -e "$wizard_name" ]; then
+		displayMessage "achel/overview/messages/repo/create/repoCreate-cloneUnsuccessful.md"
+		
+		# Make sure we don't automatically resume without first revising the answers.
+		export wizard_confirm='no'
+		return 1
+	fi
+	cd "$wizard_name"
+	
+	
+	# Backup existing files
+	if [ -e "README.md" ]; then
+		mv -v "README.md" "README.md.old"
+		backedUpOldFiles="true"
+	fi
+	if [ -e "readme.md" ]; then
+		mv -v "readme.md" "readme.md.old"
+		backedUpOldFiles="true"
+	fi
+	if [ -e "parameters.json" ]; then
+		mv -v "parameters.json" "parameters.json.old"
+		backedUpOldFiles="true"
+	fi
+	
+	if [ "$backedUpOldFiles" == 'true' ]; then
+		displayMessage "achel/overview/messages/repo/create/repoCreate-backedUpOldFiles.md"
+	fi
+	
+	
+	# Add the repo into Achel but do not install it yet
+	addRepo `pwd`
+	
 	
 	# Create readme
-	# repoParms
-	# commit back to the repo
+	createDefaultRepoReadme "$wizard_name" "$wizard_description" "$wizard_repoURL" "$wizard_execName" > readme.md
 	
-	# display information about next steps
-		# push the repo back
-		# repoParms
-		# getting further help
+	# repoParms
+	createDefaultRepoParms "$wizard_name" "$wizard_description" "$wizard_repoURL" "$wizard_execName"
+	
+	# commit back to the repo
+	git add readme.md parameters.json
+	git commit -m "InitialSetup: Created readme.md and parameters.json using manageAchel repoCreateUsingWizard."
+	
+	if [ "$backedUpOldFiles" == 'true' ]; then
+		for oldFile in README.md parameters.json readme.md; do
+			if [ -e "$oldFile.old" ]; then
+				git add "$oldFile.old"
+			fi
+		done
+		
+		git commit -m "InitialSetup: Backed up .old files. Check if these can be removed."
+	fi
+	
+	
+	# Install the repo
+	installRepo_setup "$wizard_name"
+	
+	
+	# Display information about next steps
+	displayMessage "achel/overview/messages/repo/create/repoCreate-complete.md"
+	
+	if [ "$backedUpOldFiles" == 'true' ]; then
+		echo ".old files HAVE been created."
+	else
+		echo ".old files have NOT been created."
+	fi
+	
+	return 0
 }
