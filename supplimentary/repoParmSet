@@ -9,8 +9,6 @@
 #     parameterName is the name of the parameter you'd like to set. It doesn't have to already exist.
 #     value is what the parameter will be set to.
 #
-#     IMPORTANT: You can not use commas (,) in any of these parameters.
-#
 # Examples:
 #   Set the short-friendly name of the application.
 #     $0 doneIt doneIt name "doneit"
