@@ -32,8 +32,6 @@ requiredParms="$4"
 . `dirname $0`/libs/includeLibs.sh
 . $libDir/repoParms.sh
 
-# TODO add support for profileName
-
 repoName="$1"
 profileName="$2"
 parameterName="$3"
