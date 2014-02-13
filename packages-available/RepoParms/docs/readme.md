@@ -2,7 +2,9 @@
 
 Tracks parameters for repositories such as name, description and what packages to use in each profile it provides.
 
-This is primarily meant to be used by `manageAchel` although it could be developed to help applications intellegently determine what functionality is available to them.
+This is primarily meant to be used by `manageAchel` although it could be developed to help applications intellegently determine what functionality is available to them. 
+
+*If you are looking for day-to-day repoParms usage, see [docs/programming/creatingARepositoryWithProfiles.md](https://github.com/ksandom/achel/blob/master/docs/programming/creatingARepositoryWithProfiles.md)*
 
 ## Using it
 

@@ -1,115 +1,120 @@
-**TODO: This article needs to be updated, but should still be better than nothing in the mean time.**
-
 # Introduction
 
 When you create a repo, you will likely want profiles to be automatically configured when the repo is installed. This document describes how to do it.
 
-# TLDR
-
-## Stuff to run
-
-* Create/clone a git repository
-* manageAchel repoInstall /path/to/exampleRepo
-* manageAchel repoParmSet exampleRepo . name exampleRepo
-* manageAchel repoParmSet exampleRepo profileName name profileName
-* manageAchel repoParmSet exampleRepo profileName description "An example tool"
-* manageAchel repoParmSet exampleRepo profileName execName example
-* manageAchel repoParmDefinePackages exampleRepo profileName SELF
-* manageAchel repoParmDefinePackages exampleRepo profileName BASE
-
-What is what
-
-* /path/to/exampleRepo - Where you created/cloned a git repository.
-* exampleRepo - should be substituded with the shortName (no spaces) which the repository will be referred to as.
-* profileName - should normally be the same as the shortName. If you think you need an exception, please read "Use repoParmSet to define a profile." if you think it needs to be different.
-* "An example tool" - The description of the application what will appear when you run --help on the application.
-* example - The name of the executable that will be created for the application.
+In most situations, your easiest way of defining the parameters is to use `manageAchel repoCreateUsingWizard` which will run you through creating the repository and setting the parameters accordingly.
 
 # Detail
 
-## Outline
+## Every day scenario
 
-* Create a repository.
-* Use repoInstall to install the repository.
-* Give the repository a name.
-* Use repoParmSet to define a profile.
-* Use repoParmDefinePackages to create a profile.
-* Use repoList 
+Use `manageAchel repoCreateUsingWizard` to create/setup a repository. It will guide you and take care of the chicken & egg scenario for you :)
 
-## Create a repository.
+Most of this document relies on you having used the wizard to get set up since you need a repository to be installed to use repoParms, but you need repoParms to be defined to install the repository.
 
-* Create/clone a normal git repository.
-* Make the directory packages-available in the root of that repository.
+It will explain everything you need to do and walk you through any problems.
 
-## Use repoInstall to install the repository.
+## Pulling in packages from another repository
 
-From the help
+The most common case where you'll want to do this is including the Achel libraries. The wizard will have done this for you. But if you want some functionality from another repository, this is how you go about it.
 
-    Syntax:
-      manageAchel repoInstall repoAddress [overRideRepoName]
+This example works with the kevtest2345 repo.
 
-So
+Let's see what repositories we could pull from?
 
-    manageAchel repoInstall /path/to/your/repository
+    $ manageAchel repoList --short
+    achel
+    colouredWeb
+    doneIt
+    mass
+    tui
+    kevtest2345
 
-This could also be a github or similar address.
+Let's pull from doneIt
 
-## Give the repository a name.
+    $ manageAchel repoParmDefinePackages kevtest2345 profiles123 pacakgeSetName123 doneIt '.*'
 
-This is the short name, which should be the same as the repository name on github or similar service. When someone installs this repository at a later date, it will be used to choose the name that the repository is referred to as. In this example we set the name to `doneIt`.
+And it looks like this
 
-    manageAchel repoParmSet doneIt . name doneIt
-
-## Use repoParmSet to define a profile.
-
-You need one profile per application. If you want to create multiple applications in one repository, you will need to create a profile for each one.
-
-If you're unsure, profileName should probably be set the same as the repoName.
-TODO tidy up how repoName is documented. At the moment it is reffered to as `exampleRepo` above.
-
-To define a profile we need to set a
-
-* name - The shortName that has been used above.
-* description - A short description of what the app does/is.
-* execName (optional) - The name of the executable to be created. If this is omitted, the executable simple won't be created.
-
-    manageAchel repoParmSet doneIt doneIt name doneIt
-    manageAchel repoParmSet doneIt doneIt description "A tool for tracking time based on a notation I've been using on paper for the last few years."
-    manageAchel repoParmSet doneIt doneIt execName doneit
-
-## Use repoParmDefinePackages to create a profile.
-
-In most situations that I have thought of so far, you will only need BASE and SELF which are presets. You can add them like this
-
-    manageAchel repoParmDefinePackages doneIt doneIt SELF
-    manageAchel repoParmDefinePackages doneIt doneIt BASE
-
-There may be cases where you want to enable functionality from another repo.
-
-    manageAchel repoParmDefinePackages doneIt doneIt todoLibs todo '.*'
-
-In this example, we are saying
-* call this group of packages `todoLibs`. This is to make it easy to admin the requirement later.
-* the source repo is `todo`.
-* match all (`.*`) packages in the `todo` repo.
-
-## Use repoList to confirm
-
-So if all has gone well, you should end up with something like this.
-
-    ksandom@zelappy:/usr/files/develop/achel/docs$ manageAchel repoList doneIt
-    doneIt - /home/ksandom/files/develop/mass-experimental/
+    $ manageAchel repoList kev
+    kevtest2345
     
-      name: doneIt
-      doneIt: 
-        name: doneIt
-        description: A tool for tracking time based on a notation I've been using on paper for the last few years.
-        execName: doneit
+      name: kevtest2345
+      profile123: 
+        name: profile123
+        description: A made up application for the documentation.
+        execName: application123
+      profiles123: 
         packages: 
           SELF: 
-            sourceRepo: doneIt
+            sourceRepo: kevtest2345
             packageRegex: .*
           BASE: 
             sourceRepo: achel
             packageRegex: .*
+          pacakgeSetName123: 
+            sourceRepo: doneIt
+            packageRegex: .*
+
+Let's apply these changes
+
+    $ manageAchel repoReinstall kevtest2345
+
+* Here we've specified we wanted all packages (`.*`) from `doneIt`. We could restrict this down by replacing the `.*` with a more restrictive regex.
+ * If you want to specify several packages, rather than making a nasty regex with lots of logical ORs, use multiple entries instead. The only requirement is that the packageSetName (`pacakgeSetName123`) is unique.
+
+## Pushing to another profile
+
+Here we are going to push to the `doneIt` profile from `kevtest2345`. You would do this when you want to extend the functionality of another application.
+
+First we need to set a name and description. In the future these will not be needed any more for this purpose, however currerently they are still needed for sanity checks to pass.
+
+    $ manageAchel repoParmSet kevtest2345 doneIt name doneIt
+    $ manageAchel repoParmSet kevtest2345 doneIt description 'Send functionality to doneIt'
+
+Now let's say that we want the packages to be sent over.
+
+    $ manageAchel repoParmDefinePackages kevtest2345 doneIt SELF
+    /home/ksandom/.achel/supplimentary/repoParmDefinePackages: Assumed sourceRepo="kevtest2345" and packageRegex=".*"
+
+And it looks like this
+
+    $ manageAchel repoList kev
+    kevtest2345
+    
+      name: kevtest2345
+      profile123: 
+        name: profile123
+        description: A made up application for the documentation.
+        execName: application123
+      profiles123: 
+        packages: 
+          SELF: 
+            sourceRepo: kevtest2345
+            packageRegex: .*
+          BASE: 
+            sourceRepo: achel
+            packageRegex: .*
+      doneIt: 
+        packages: 
+          SELF: 
+            sourceRepo: kevtest2345
+            packageRegex: .*
+        name: doneIt
+        description: Send functionality to doneIt
+
+Let's apply these changes
+
+    $ manageAchel repoReinstall kevtest2345
+
+* Here we've specified we want all to send all packages (`.*`) from `kevtest2345` to the `doneIt` profile. We could restrict this down by replacing the `.*` with a more restrictive regex.
+ * If you want to specify several packages, rather than making a nasty regex with lots of logical ORs, use multiple entries instead. The only requirement is that the packageSetName (`pacakgeSetName123`) is unique.
+
+# Stuff explained a little more
+
+## Profiles
+
+You need one profile per application. If you want to create multiple applications in one repository, you will need to create a profile for each one.
+
+If you're unsure, profileName should probably be set the same as the repoName.
 
