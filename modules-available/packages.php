@@ -40,6 +40,8 @@ class Packages extends Module
 		$profile=$this->core->get('General', 'profile');
 		$packageEnabledDir=$this->core->get('General', 'configDir')."/profiles/$profile/packages";
 		$list=$this->core->getFileList($packageEnabledDir);
+		asort($list);
+		
 		foreach ($list as $filename)
 		{
 			# TODO The paths need to be taken into account so that enabled/avaiable will be able to co-exist without duplicates
@@ -54,6 +56,7 @@ class Packages extends Module
 		{
 			# TODO when the path is altered, this will need to be updated
 			$packageParts=$this->core->getFileList($packageName);
+			asort($packageParts);
 			
 			foreach ($packageParts as $filename=>$fullPath)
 			{
