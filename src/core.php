@@ -964,7 +964,7 @@ class core extends Module
 		}
 	}
 	
-	function getNested($values)
+	function &getNested($values)
 	{
 		# TODO what was I trying to do here. Is it even that?
 		
@@ -973,17 +973,25 @@ class core extends Module
 		{
 			if (isset($output[$value]))
 			{
-				$output=$output[$value];
+				$output=&$output[$value];
 				# print_r($output);
 			}
 			else
 			{
 				$this->core->debug(4, "getNested: Could not find \"$value\" using key ".implode(',', $values));
-				return false;
+				$output=false;
+				return $output;
 			}
 		}
 		
 		return $output;
+	}
+	
+	function setNestedJFDI($path, $value)
+	{
+		/* setNested has a funny input structure which it has inherited from the historical strictly 2 layer Store/variable structure. Eventually this will be removed. In the mean time setNestedJFDI removes that complication. */
+		
+		# TODO write this.
 	}
 	
 	function setNested($store, $category, $values)
