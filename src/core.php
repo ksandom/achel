@@ -987,11 +987,18 @@ class core extends Module
 		return $output;
 	}
 	
-	function setNestedJFDI($path, $value)
+	function setNestedJFDI($path, $value=null)
 	{
-		/* setNested has a funny input structure which it has inherited from the historical strictly 2 layer Store/variable structure. Eventually this will be removed. In the mean time setNestedJFDI removes that complication. */
+		/* 
+		setNested has a funny input structure which it has inherited from the historical strictly 2 layer Store/variable structure. Eventually this will be removed. In the mean time setNestedJFDI removes that complication.
 		
-		# TODO write this.
+		If $value is absent, it will be assumed to be part of $path. If there are fewer than 2 total parameters between $path and $value, interpretParms will complain.
+		*/
+		
+		$fullInput=($value!==null)?"$path,$value":$path;
+		
+		$parms=$this->interpretParms($fullInput, 2, 3, false);
+		$this->setNested($parms[0], $parms[1], $parms[2]);
 	}
 	
 	function setNested($store, $category, $values)

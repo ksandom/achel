@@ -113,6 +113,7 @@ class Macro extends Module
 			switch ($argument)
 			{
 				case '#':
+					break;
 				case '':
 					break;
 				case '#onDefine':
@@ -149,7 +150,8 @@ class Macro extends Module
 		$lastRootKey=null;
 		foreach($inputArray as $key=>$action)
 		{
-			if (substr($action['argument'], 0, 1) == '	')
+			$firstCharacter=substr($action['argument'], 0, 1);
+			if ($firstCharacter == '	')
 			{
 				if (!is_null($lastRootKey))
 				{ // We have indentation. Remove 1 layer of indentation, and nest the argument.
@@ -162,6 +164,9 @@ class Macro extends Module
 					$this->core->debug(0, "compileFromArray($macroName:${action['lineNumber']}): Syntax error: Indentation without any features beforehand. The derived line was \"${action['argument']} ${action['value']}\"");
 					# TODO implement atomic failure.
 				}
+			}
+			elseif ($firstCharacter=='#')
+			{
 			}
 			else
 			{
