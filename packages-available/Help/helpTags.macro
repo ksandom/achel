@@ -1,4 +1,4 @@
-# Display this help ~ user,help
+# Display this help. ~ help
 
 templateOut help
 searchHelp ~!Global,helpTags!~
