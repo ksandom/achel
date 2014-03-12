@@ -3,7 +3,7 @@
 
 templateOut help
 searchHelp all
-if ~!Global,help!~,!=,,
+if ~!Global,help-0!~,!=,,
 	requireEach ~!Global,help!~
 else
 	requireEach ~!Help,default!~
