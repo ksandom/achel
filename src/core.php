@@ -968,7 +968,7 @@ class core extends Module
 	{
 		# TODO what was I trying to do here. Is it even that?
 		
-		$output=$this->store;
+		$output=&$this->store;
 		foreach ($values as $value)
 		{
 			if (isset($output[$value]))
