@@ -670,7 +670,9 @@ class core extends Module
 			$code=$this->get('Codes', $title, false);
 			$default=$this->get('Codes', 'default', false);
 			$eol=$this->get('General', 'EOL', false); # TODO This can be improved
-			echo "[$code$title$default]: $output$eol";
+			$serial=$this->get('Core', 'serial');
+			
+			echo "[$code$title-$serial$default]: $output$eol";
 			# return false;
 		}
 	}
@@ -964,16 +966,16 @@ class core extends Module
 		}
 	}
 	
-	function &getNested($values)
+	function getNested($values)
 	{
 		# TODO what was I trying to do here. Is it even that?
 		
-		$output=&$this->store;
+		$output=$this->store;
 		foreach ($values as $value)
 		{
 			if (isset($output[$value]))
 			{
-				$output=&$output[$value];
+				$output=$output[$value];
 				# print_r($output);
 			}
 			else
