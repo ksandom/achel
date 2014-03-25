@@ -670,9 +670,8 @@ class core extends Module
 			$code=$this->get('Codes', $title, false);
 			$default=$this->get('Codes', 'default', false);
 			$eol=$this->get('General', 'EOL', false); # TODO This can be improved
-			$serial=$this->get('Core', 'serial');
 			
-			echo "[$code$title-$serial$default]: $output$eol";
+			echo "[$code$title$default]: $output$eol";
 			# return false;
 		}
 	}
