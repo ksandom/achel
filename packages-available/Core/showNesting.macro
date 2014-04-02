@@ -1,0 +1,3 @@
+# Show the current nesting level ~ core,debug
+
+debug 1,Current nesting level is ~!Core,nesting!~

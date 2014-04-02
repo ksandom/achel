@@ -752,19 +752,19 @@ class core extends Module
 				foreach ($this->store['Macros'][$macroName] as $actionItem)
 				{
 					$nesting=$this->get('Core', 'nesting');
-					$this->debug(5, "ITER $macroName/$nesting - {$actionItem['name']}: Result count before invoking=".count($this->getResultSet()));
+					$this->debug(4, "ITER $macroName/$nesting - {$actionItem['name']}: Result count before invoking=".count($this->getResultSet()));
 					# $this->debugResultSet("$macroName - {$actionItem['name']}");
 					
 					# TODO The problem happens somewhere between here...
 					$returnedValue1=$this->callFeature($actionItem['name'], $actionItem['value']);
 					if (is_array($returnedValue1)) $returnedValue=$returnedValue1;
 					# and here
-					$this->debug(5,"GOT HERE ALSO");
+					# $this->debug(5,"GOT HERE ALSO");
 					
 					# $this->debugResultSet("$macroName - {$actionItem['name']}");
 					
 					$nesting=$this->get('Core', 'nesting');
-					$this->debug(5, "ITER $macroName/$nesting - {$actionItem['name']}: Restult count before set=".count($this->getResultSet()));
+					# $this->debug(5, "ITER $macroName/$nesting - {$actionItem['name']}: Restult count before set=".count($this->getResultSet()));
 					$this->setResultSet($returnedValue);
 					$this->debug(5, "ITER $macroName/$nesting - {$actionItem['name']}: Result count after set=".count($this->getResultSet()));
 					#echo "$macroName\n";
@@ -1036,6 +1036,11 @@ class core extends Module
 		else
 		{
 			# $this->debug(0, "setNestedRecursively(".json_encode($existingArray).", ".json_encode($values).", $valueCount, $progress=0) - final");
+			if (!isset($values[$progress]))
+			{
+				$this->debug(2, "Something has sent an empty address to setNested.");
+				return false;
+			}
 			return $values[$progress];
 		}
 	}
