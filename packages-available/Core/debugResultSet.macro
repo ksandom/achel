@@ -1,0 +1,13 @@
+# Dump the resultSet stack. This is intended for debugging unexpected stack behavior. ~ debug,core
+
+getCategory Core
+
+loop
+	if ~!Result,key!~,==,macrosToLoad,
+		unsetCategory Result
+	elseIf ~!Result,key!~,==,templatesToLoad,
+		unsetCategory Result
+
+nested
+outNow
+clearResultset
