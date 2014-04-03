@@ -725,11 +725,12 @@ class core extends Module
 		$srcNesting=$this->get('Core', 'nesting');
 		
 		$this->delete(nestedPrivateVarsName, $srcNesting);
+		# $this->delete('Core', 'shared'.$srcNesting);
 		
 		$nesting=(is_numeric($srcNesting))?$srcNesting-1:1;
 		if ($nesting<1) $nesting=1;
 		$this->set('Core', 'nesting', $nesting);
-		$this->debug(5, "Decremented nesting to $nesting count=".$this->getResultSetCount());
+		$this->debug(5, "Decremented nesting to $nesting count=*disabled for performance*"); //.$this->getResultSetCount());
 		return $nesting;
 	}
 	
@@ -1062,7 +1063,7 @@ class core extends Module
 			if (isset($this->store[$category][$valueName])) 
 			{
 				unset($this->store[$category][$valueName]);
-				$this->debug(5,"delete($category, $valueName) - deleted");
+				$this->debug(4,"delete($category, $valueName) - deleted");
 			}
 			else  $this->debug(5,"delete($category, $valueName) - valueName not found");
 		}
