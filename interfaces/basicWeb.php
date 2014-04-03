@@ -93,7 +93,7 @@ class BasicWeb extends Module
 			}
 			else
 			{
-				$this->core->echoOut("$indent{$this->codes['red']}{$prefix}{$this->codes['default']}: {$this->codes['brightBlack']}I can't display this data type yet.{$this->codes['default']}");
+				$this->core->echoOut("$indent{$this->codes['red']}{$prefix}{$this->codes['default']}: {$this->codes['brightBlack']}I can't display this data type yet. Yo!{$this->codes['default']}");
 			}
 			
 			$this->core->echoOut("{$this->codes['default']}");

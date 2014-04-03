@@ -164,9 +164,15 @@ class CommandLine extends Module
 				$display=($output)?'True':'False';
 				$this->core->echoOut("$indent{$this->codes['purple']}{$derivedPrefix}$display{$this->codes['default']}");
 			}
+			elseif (is_object($output))
+			{
+				$display=get_class($output).' (Object)';
+				$this->core->echoOut("$indent{$this->codes['yellow']}{$derivedPrefix}$display{$this->codes['default']}");
+			}
 			else
 			{
-				$this->core->echoOut("$indent{$this->codes['red']}{$prefix}{$this->codes['default']}: {$this->codes['brightBlack']}I can't display this data type yet.{$this->codes['default']}");
+				$type=gettype($output);
+				$this->core->echoOut("$indent{$this->codes['red']}{$prefix}{$this->codes['default']}: {$this->codes['brightBlack']}I can't display this data type ($type) yet.{$this->codes['default']}");
 			}
 		}
 	}

@@ -22,8 +22,6 @@ class Help extends Module
 				$this->core->registerFeature($this, array('oldHelp'), 'oldHelp', 'Deprecated. Display this help. --oldHelp[=searchForTag]', array('deprecated'));
 				$this->core->registerFeature($this, array('searchHelp'), 'searchHelp', 'Search tags for help. Will return an array that can be used in a template. --searchHelp[=searchForTag] eg --help=debug .', array('help'));
 				$this->core->registerFeature($this, array('getTags'), 'getTags', 'List available tags', array('help'));
-				
-				$this->core->setRef('General', 'outputObject', $this);
 				break;
 			case 'followup':
 				break;
