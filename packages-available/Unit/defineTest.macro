@@ -2,7 +2,10 @@
 
 set Tmp,defineTest-description,~!Global,defineTest-0!~
 
-callFeatureNoReturn ~!Global,defineTest-1!~
+if ~!Global,defineTest-1!~,!=,,
+	callFeatureNoReturn ~!Global,defineTest-1!~
+else
+	failTest There doesn't appear to be any code for this test. Check that the defineTest line ends in a comma.
 
 if ~!UnitResults,currentResult!~,==,pass,
 	pass
@@ -25,3 +28,4 @@ setNested UnitResults,results,~!Global,defineTest-0!~,resultColor,~!UnitResults,
 # TODO the problem is here
 resetTest
 unset Tmp,defineTest-description
+unset Global,defineTest-1

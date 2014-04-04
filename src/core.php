@@ -342,6 +342,11 @@ class core extends Module
 		return $this->getFileList($path);
 	}
 	
+	function setResultSetNoRef($value, $src='unknown')
+	{
+		$this->setResultSet($value, 'setResultSetNoRef: '.$src);
+	}
+	
 	function setResultSet(&$value, $src='unknown')
 	{
 		$valueText=(is_string($value))?$value:'Type='.gettype($value);
@@ -352,7 +357,7 @@ class core extends Module
 			if ($this->isVerboseEnough(5))
 			{
 				$numberOfEntries=count($value);
-				$this->debug(5, "setResultSet(value=$value($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET");
+				$this->debug(5, "setResultSet(value=$valueText($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET");
 				if ($this->isVerboseEnough(6)) 
 				{
 					print_r($value);
