@@ -1,0 +1,67 @@
+# Test for bugs in the resultSet ~ unitTest,resultSet
+
+unsetCategory unitResultSet
+
+defineTest Expected nesting matches,
+	failTest default fail.
+	set unitResultSet,var1,1
+	
+	getCategory unitResultSet
+	if ~!Core,shared~!Core,nesting!~,var1!~,==,1,
+		passTest Got expected value.
+
+defineTest Inherit earlier nesting,
+	failTest default fail.
+	set unitResultSet,var1,2
+	
+	getCategory unitResultSet
+	callFeature
+		callFeature
+			callFeature
+				if ~!Core,shared~!Core,nesting!~,var1!~,==,2,
+					passTest Inherited expected value.
+				else
+					debug 1,Inherit earlier nesting: nesting=~!Core,nesting!~ 
+					
+
+
+
+
+defineTest Pollution from earlier higher nesting - clear,
+	failTest default fail.
+	set unitResultSet,var1,3
+	
+	callFeature
+		callFeature
+			callFeature
+				getCategory unitResultSet
+	
+	clear
+	
+	callFeature
+		callFeature
+			callFeature
+				if ~!Core,shared~!Core,nesting!~,var1!~,==,3,
+					failTest Inherited polluted value.
+				else
+					passTest Did not inherit polluted value.
+
+defineTest Pollution from earlier higher nesting - intermediate results,
+	failTest default fail.
+	set unitResultSet,var1,4
+	
+	callFeature
+		callFeature
+			callFeature
+				getCategory unitResultSet
+	
+	set unitResultSet,var1,4-intermediate
+	getCategory unitResultSet
+	
+	callFeature
+		callFeature
+			callFeature
+				if ~!Core,shared~!Core,nesting!~,var1!~,==,4,
+					failTest Inherited polluted value.
+				else
+					passTest Did not inherit polluted value.
