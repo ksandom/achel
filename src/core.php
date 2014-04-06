@@ -353,11 +353,23 @@ class core extends Module
 		$this->debug(5, "setResultSet(value=$valueText, src=$src)");
 		if (is_array($value)) # ($value!=null and $value!==false)
 		{
-			$nesting=$this->get('Core', 'nesting');
-			if ($this->isVerboseEnough(5))
+			$numberOfEntries=count($value);
+			if ($numberOfEntries==1)
 			{
-				$numberOfEntries=count($value);
-				$this->debug(5, "setResultSet(value=$valueText($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET");
+				$keys=array_keys($value);
+				$firstValue=$value[$keys[0]];
+				if (!$firstValue)
+				{
+					$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": resultSet is an array with a single empty value. Not setting.");
+					# return false;
+				}
+			}
+			
+			$nesting=$this->get('Core', 'nesting');
+			if ($this->isVerboseEnough(1))
+			{
+				$arrayString=($numberOfEntries==1)?json_encode($value):'NA';
+				$this->debug(1, "setResultSet(value=$valueText($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET json=$arrayString");
 				if ($this->isVerboseEnough(6)) 
 				{
 					print_r($value);
