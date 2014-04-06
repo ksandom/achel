@@ -378,7 +378,7 @@ class core extends Module
 				$serial=$this->get('Core', 'serial');
 				$this->debugResultSet("setResultSet $src/$serial");
 			}
-			$this->setRef('Core', 'shared'.$nesting, $value);
+			$this->set('Core', 'shared'.$nesting, $value);
 			return true;
 		}
 		else return false;
