@@ -378,7 +378,8 @@ class core extends Module
 				$serial=$this->get('Core', 'serial');
 				$this->debugResultSet("setResultSet $src/$serial");
 			}
-			$this->setNested('Core', "resultSet,$nesting", $value);
+			$this->setNestedViaPath(array('Core', 'resultSet', $nesting), $value);
+			
 			return true;
 		}
 		else return false;
@@ -1006,8 +1007,48 @@ class core extends Module
 		return $output;
 	}
 	
-	function setNestedJFDI($path, $value=null)
+	
+	
+	
+	/*
+		setNested traditionaly has quite a messey input structure as it was a transition from the two level addressing to the multi-layer addressing.
+		
+		Therefore, there needs to be a little mess to tidy everything up.
+		
+		Short term
+			setNestedViaPath
+				The new, future-proof way of doing it. Any new code should use this, and old code should be ported to this.
+			setNested
+				The behavior is DEPRECATED. This function will be repurposed. For quickly getting things working without a debug0, use setNestedOldWay. But please update the code to use setNestedViaPath as soon as possible.
+			setNestedJFDI - DEPRECATED
+				This was a stop-gap to get past the limitatons of the old way and is therefore no longer needed. Please port to setNestedViaPath.
+			setNestedFromInterpreter
+				This is potentially short term and should not be relied on. It's intended for taking input directly from the interpreter.
+			setNestedOldWay - DEPRECATED
+				This takes input using the old way and converts it to input for the new way. It is _HEAVY_. Please consider this a very short term fix to get rid of the debug0. You should port to setNestedViaPath.
+		
+		Long term
+			setNestedViaPath
+				As above.
+			setNested
+				Will point to setNestedViaPath.
+			setNestedFromInterpreter
+				May still be in use.
+		
+	*/
+	
+	
+	function setNested($store, $category, $values)
 	{
+		# TODO This currently points to the old way of doing it, which is deprecated. Once the old way is removed it will point to setNestedViaPath.
+		$this->debug(0, "DEPRECATED: This code is using a deprecated version of setNested() which will soon be removed. Please update the code to point to setNestedViaPath() (which will point to setNested once the old version is removed.)");
+		$this->setNestedOldWay($store, $category, $values);
+	}
+	
+	function setNestedJFDI($path, $value=null) # DEPRECATED
+	{
+		# TODO port this to the new setNested.
+		
 		/* 
 		setNested has a funny input structure which it has inherited from the historical strictly 2 layer Store/variable structure. Eventually this will be removed. In the mean time setNestedJFDI removes that complication.
 		
@@ -1021,19 +1062,46 @@ class core extends Module
 	}
 	
 	
-	function setNestedFromInterpreter($allValues)
+	function setNestedViaPath($path, $value)
 	{
-		
+		$this->setNestedStart($path, $value);
 	}
 	
-	function setNestedStart($path, $value)
+	private function setNestedFromInterpreter($allValues)
+	{
+		$path=explode(',', $allValues);
+		$lastPosition=count($path)-1;
+		$value=$path[$lastPosition];
+		unset($path[$lastPosition]);
+		
+		$this->setNestedStart($path, $value);
+	}
+	
+	function setNestedOldWay($store, $category, $values) # DEPRECATED
+	{
+		$this->debug(1, "DEPRECATED: This code is using a deprecated version of setNested() which will soon be removed. Please update the code to point to setNestedViaPath() (which will point to setNested once the old version is removed.)");
+		
+		$traditionalAddress=array($store, $category);
+		$remainingStuff=(is_array($values))?$values:explode(',', $values);
+		
+		$lastPosition=count($remainingStuff)-1;
+		$value=$remainingStuff[$lastPosition];
+		
+		unset($remainingStuff[$lastPosition]);
+		
+		$fullAddress=array_merge($traditionalAddress, $remainingStuff);
+		
+		$this->setNestedViaPath($fullAddress, $value);
+	}
+	
+	private function setNestedStart($path, $value)
 	{
 		/*
 		path can be either a string like Example,folder1,folder2 or an array like ('Example', 'folder1', 'folder2')
 		value is what ever you want to set at the end.
 		*/
 		
-		$initialValue=$this->store;
+		$initialValue=&$this->store;
 		$pathParts=(is_array($path))?$path:explode(',', $path);
 		
 		$this->setNestedWorker($initialValue, $pathParts, $value, count($pathParts));
@@ -1041,65 +1109,32 @@ class core extends Module
 	
 	private function setNestedWorker(&$initialValue, $path, &$value, $count=0, $position=0)
 	{
-		if ($position<$count)
+		if ($position<$count-1)
 		{
-			# TODO check for the key
-			# TODO recurse
+			$this->debug(1, "setNestedWorker: processing $position/$count {$path[$position]}");
+			
+			if (!isset($initialValue[$path[$position]]))
+			{
+				$initialValue[$path[$position]]=array();
+			}
+			elseif (!is_array($initialValue[$path[$position]]))
+			{
+				$initialValue[$path[$position]]=array();
+			}
+			
+			$this->setNestedWorker($initialValue[$path[$position]], $path, $value, $count, $position+1);
 		}
 		else
 		{
-			# TODO set the value
+			# set the value
+			$this->debug(1, "setNestedWorker: Setting value $position/$count {$path[$position]}");
+			$initialValue[$path[$position]]=$value;
 		}
 	}
 	
-	function setNested($store, $category, $values)
-	{
-		$initialValue=$this->get($store, $category);
-		if (!is_array($initialValue)) $initialValue=array();
-		
-		# $this->debug(0, "setNested($store, $category, ".json_encode($values).")");
-		
-		$this->set($store, $category, $this->setNestedRecursively($initialValue, $values, count($values)));
-	}
 	
-	function setNestedRecursively($existingArray, $values, $valueCount, $progress=0)
-	{
-		if ($progress<$valueCount-1)
-		{
-			# TODO I suspect the problem of the extra empty array is with this.
-			if (!isset($existingArray[$values[$progress]])) $existingArray[$values[$progress]]=array();
-			if (!is_array($existingArray[$values[$progress]])) $existingArray[$values[$progress]]=array();
-			
-			if ($values[$progress] != '' or is_numeric($values[$progress]))
-			{
-				$existingArray[$values[$progress]]=$this->setNestedRecursively($existingArray[$values[$progress]], $values, $valueCount, $progress+1);
-				if (is_array($values[$progress]))
-				{
-					$this->debug(0, "setNestedRecursively(".json_encode($existingArray).", ".json_encode($values).", valueCount=$valueCount, progress=$progress) - keyed ($values[$progress])");
-					# print_r(array_keys($values));
-					print_r($values[$progress+1]);
-					sleep(10);
-				}
-			}
-			else
-			{
-				# $this->debug(0, "setNestedRecursively(".json_encode($existingArray).", ".json_encode($values).", $valueCount, $progress=0) - incremeted ($values[$progress])");
-				$existingArray[]=$this->setNestedRecursively($existingArray[$values[$progress]], $values, $valueCount, $progress+1);
-			}
-			
-			return $existingArray;
-		}
-		else
-		{
-			# $this->debug(0, "setNestedRecursively(".json_encode($existingArray).", ".json_encode($values).", $valueCount, $progress=0) - final");
-			if (!isset($values[$progress]))
-			{
-				$this->debug(2, "Something has sent an empty address to setNested.");
-				return false;
-			}
-			return $values[$progress];
-		}
-	}
+	
+	
 	
 	function addItemsToAnArray($category, $valueName, $items)
 	{
