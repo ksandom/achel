@@ -378,7 +378,7 @@ class core extends Module
 				$serial=$this->get('Core', 'serial');
 				$this->debugResultSet("setResultSet $src/$serial");
 			}
-			$this->set('Core', 'shared'.$nesting, $value);
+			$this->setNested('Core', "resultSet,$nesting", $value);
 			return true;
 		}
 		else return false;
@@ -387,14 +387,15 @@ class core extends Module
 	function &getResultSet()
 	{
 		$nesting=$this->get('Core', 'nesting');
-		$resultSetDiag=count($this->get('Core', 'shared'.$nesting));
+		$resultSet=$this->getNested(array('Core', 'resultSet', $nesting));
+		$resultSetDiag=count($resultSet);
 		if ($this->isVerboseEnough(5))
 		{
 			$serial=$this->get('Core', 'serial');
 			$this->debug(5, "getResultSet/$nesting count=$resultSetDiag serial=$serial");
-			#print_r($this->get('Core', 'shared'.$nesting));
+			#print_r($resultSet);
 		}
-		return $this->get('Core', 'shared'.$nesting);
+		return $resultSet;
 	}
 	
 	function &getParentResultSet()
@@ -402,7 +403,7 @@ class core extends Module
 		$nesting=$this->get('Core', 'nesting');
 		$nestingSrc=$nesting-1;
 		if ($nestingSrc<1 or !is_numeric($nestingSrc)) $nestingSrc = 1; # TODO check this
-		$resultSet=&$this->get('Core', 'shared'.$nestingSrc);
+		$resultSet=$this->getNested(array('Core', 'resultSet', $nesting));
 		
 		if ($this->isVerboseEnough(5))
 		{
@@ -672,7 +673,7 @@ class core extends Module
 			$serial=$this->get('Core', 'serial');
 			for ($i=$nesting;$i>-1;$i--)
 			{
-				$resultSet=$this->get('Core', 'shared'.$i);
+				$resultSet=$this->getNested(array('Core', 'resultSet', $i));
 				$this->debug(4, "debugResultSet $label/$i count=".count($resultSet)." serial=$serial");
 			}
 		}
@@ -742,7 +743,6 @@ class core extends Module
 		$srcNesting=$this->get('Core', 'nesting');
 		
 		$this->delete(nestedPrivateVarsName, $srcNesting);
-		# $this->delete('Core', 'shared'.$srcNesting);
 		
 		$nesting=(is_numeric($srcNesting))?$srcNesting-1:1;
 		if ($nesting<1) $nesting=1;
@@ -1020,6 +1020,38 @@ class core extends Module
 		$this->setNested($parms[0], $parms[1], $parms[2]);
 	}
 	
+	
+	function setNestedFromInterpreter($allValues)
+	{
+		
+	}
+	
+	function setNestedStart($path, $value)
+	{
+		/*
+		path can be either a string like Example,folder1,folder2 or an array like ('Example', 'folder1', 'folder2')
+		value is what ever you want to set at the end.
+		*/
+		
+		$initialValue=$this->store;
+		$pathParts=(is_array($path))?$path:explode(',', $path);
+		
+		$this->setNestedWorker($initialValue, $pathParts, $value, count($pathParts));
+	}
+	
+	private function setNestedWorker(&$initialValue, $path, &$value, $count=0, $position=0)
+	{
+		if ($position<$count)
+		{
+			# TODO check for the key
+			# TODO recurse
+		}
+		else
+		{
+			# TODO set the value
+		}
+	}
+	
 	function setNested($store, $category, $values)
 	{
 		$initialValue=$this->get($store, $category);
@@ -1040,8 +1072,14 @@ class core extends Module
 			
 			if ($values[$progress] != '' or is_numeric($values[$progress]))
 			{
-				# $this->debug(0, "setNestedRecursively(".json_encode($existingArray).", ".json_encode($values).", $valueCount, $progress=0) - keyed ($values[$progress])");
 				$existingArray[$values[$progress]]=$this->setNestedRecursively($existingArray[$values[$progress]], $values, $valueCount, $progress+1);
+				if (is_array($values[$progress]))
+				{
+					$this->debug(0, "setNestedRecursively(".json_encode($existingArray).", ".json_encode($values).", valueCount=$valueCount, progress=$progress) - keyed ($values[$progress])");
+					# print_r(array_keys($values));
+					print_r($values[$progress+1]);
+					sleep(10);
+				}
 			}
 			else
 			{
