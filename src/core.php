@@ -360,16 +360,16 @@ class core extends Module
 				$firstValue=$value[$keys[0]];
 				if (!$firstValue)
 				{
-					$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": resultSet is an array with a single empty value. Not setting.");
+					$this->core->debug(5, __CLASS__.'->'.__FUNCTION__.": resultSet is an array with a single empty value. Not setting.");
 					# return false;
 				}
 			}
 			
 			$nesting=$this->get('Core', 'nesting');
-			if ($this->isVerboseEnough(1))
+			if ($this->isVerboseEnough(4))
 			{
 				$arrayString=($numberOfEntries==1)?json_encode($value):'NA';
-				$this->debug(1, "setResultSet(value=$valueText($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET json=$arrayString");
+				$this->debug(4, "setResultSet(value=$valueText($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET json=$arrayString");
 				if ($this->isVerboseEnough(6)) 
 				{
 					print_r($value);
