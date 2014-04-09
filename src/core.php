@@ -132,8 +132,7 @@ class core extends Module
 				$this->set($parms[0], $parms[1], $parms[2]);
 				break;
 			case 'setNested':
-				$parms=$this->interpretParms($this->get('Global', $event), 2, 3, false);
-				$this->setNested($parms[0], $parms[1], $parms[2]);
+				$this->setNestedFromInterpreter($this->get('Global', $event));
 				break;
 			case 'setArray':
 				$parms=$this->interpretParms($this->get('Global', $event), 2, 2, false);
@@ -1101,18 +1100,20 @@ class core extends Module
 		value is what ever you want to set at the end.
 		*/
 		
-		$initialValue=&$this->store;
 		$pathParts=(is_array($path))?$path:explode(',', $path);
 		
-		$this->setNestedWorker($initialValue, $pathParts, $value, count($pathParts));
+		# TODO Add shortcuts
+		
+		$this->setNestedWorker($this->store, $pathParts, $value, count($pathParts));
 	}
 	
 	private function setNestedWorker(&$initialValue, $path, &$value, $count=0, $position=0)
 	{
 		if ($position<$count-1)
 		{
-			$this->debug(1, "setNestedWorker: processing $position/$count {$path[$position]}");
+			$this->debug(5, "setNestedWorker: processing $position/$count {$path[$position]}");
 			
+			# Make sure we have a sane place to continue
 			if (!isset($initialValue[$path[$position]]))
 			{
 				$initialValue[$path[$position]]=array();
@@ -1127,8 +1128,15 @@ class core extends Module
 		else
 		{
 			# set the value
-			$this->debug(1, "setNestedWorker: Setting value $position/$count {$path[$position]}");
 			$initialValue[$path[$position]]=$value;
+			
+			$tmpValue=$this->getNested($path);
+			$vcount=count($value);
+			$tcount=count($tmpValue);
+			
+			$destination=implode(',', $path);
+			
+			$this->debug(1, "setNestedWorker: Setting value $position/$count {$path[$position]}. vcount=$vcount tcount=$tcount destination=$destination");
 		}
 	}
 	

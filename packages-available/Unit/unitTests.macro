@@ -13,18 +13,19 @@ set UnitResults,warnColor,~!Color,yellow!~
 debug 3,unitTests: Set colours ~!UnitResults,passColor!~pass~!Color,brightBlack!~, ~!UnitResults,failColor!~fail~!Color,brightBlack!~, ~!UnitResults,warnColor!~warn~!Color,default!~.
 
 searchFeatures unitTest
-requireItem tagString,unitTest
-excludeItem name,--
-
-set Tmp,wrongNumberMessage,Wrong number of results. Use -v  (eg achel -v --unitTests) to see what went wrong and -vv to see the actual results that came back. Look for
-
-if ~!Global,unitTests-0!~,!=,,
-	refine ~!Global,unitTests-0!~
-
-loop
-	callFeatureNoReturn ~!Result,name!~
-
-retrieveResults UnitResults,results
-templateOut unitTestResults
-
-unset Tmp,wrongNumberMessage
+pass
+	requireItem tagString,unitTest
+	excludeItem name,--
+	
+	set Tmp,wrongNumberMessage,Wrong number of results. Use -v  (eg achel -v --unitTests) to see what went wrong and -vv to see the actual results that came back. Look for
+	
+	if ~!Global,unitTests-0!~,!=,,
+		refine ~!Global,unitTests-0!~
+	
+	loop
+		callFeatureNoReturn ~!Result,name!~
+	
+	retrieveResults UnitResults,results
+	templateOut unitTestResults
+	
+	unset Tmp,wrongNumberMessage
