@@ -918,8 +918,11 @@ class core extends Module
 	
 	function set($category, $valueName, $args)
 	{ // set a variable for a module
-		$argsDisplay=(is_array($args))?'Array':$args;
-		$this->debug(5,"set($category, $valueName, $argsDisplay)");
+		if ($this->isVerboseEnough(5))
+		{
+			$argsDisplay=(is_numeric($args) or is_string($args))?$args:gettype($args);
+			$this->debug(5,"set($category, $valueName, $argsDisplay)");
+		}
 		
 		if (!isset($this->store[$category])) $this->store[$category]=array();
 		
