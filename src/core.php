@@ -377,7 +377,8 @@ class core extends Module
 				$serial=$this->get('Core', 'serial');
 				$this->debugResultSet("setResultSet $src/$serial");
 			}
-			$this->setNestedViaPath(array('Core', 'resultSet', $nesting), $value);
+			#$this->setNestedViaPath(array('Core', 'resultSet', $nesting), $value);
+			$this->set('Core', 'shared'.$nesting, $value);
 			
 			return true;
 		}
@@ -387,15 +388,16 @@ class core extends Module
 	function &getResultSet()
 	{
 		$nesting=$this->get('Core', 'nesting');
-		$resultSet=$this->getNested(array('Core', 'resultSet', $nesting));
+		/*$resultSet=$this->getNested(array('Core', 'resultSet', $nesting));
 		$resultSetDiag=count($resultSet);
 		if ($this->isVerboseEnough(5))
 		{
 			$serial=$this->get('Core', 'serial');
 			$this->debug(5, "getResultSet/$nesting count=$resultSetDiag serial=$serial");
 			#print_r($resultSet);
-		}
-		return $resultSet;
+		}*/
+		# return $resultSet;
+		return $this->get('Core', 'shared'.$nesting);
 	}
 	
 	function &getParentResultSet()
@@ -403,7 +405,8 @@ class core extends Module
 		$nesting=$this->get('Core', 'nesting');
 		$nestingSrc=$nesting-1;
 		if ($nestingSrc<1 or !is_numeric($nestingSrc)) $nestingSrc = 1; # TODO check this
-		$resultSet=$this->getNested(array('Core', 'resultSet', $nesting));
+		#$resultSet=$this->getNested(array('Core', 'resultSet', $nesting));
+		$resultSet=&$this->get('Core', 'shared'.$nestingSrc);
 		
 		if ($this->isVerboseEnough(5))
 		{
