@@ -359,16 +359,16 @@ class core extends Module
 				$firstValue=$value[$keys[0]];
 				if (!$firstValue)
 				{
-					$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": resultSet is an array with a single empty value. Not setting.");
+					$this->core->debug(5, __CLASS__.'->'.__FUNCTION__.": resultSet is an array with a single empty value. Not setting.");
 					# return false;
 				}
 			}
 			
 			$nesting=$this->get('Core', 'nesting');
-			if ($this->isVerboseEnough(1))
+			if ($this->isVerboseEnough(4))
 			{
 				$arrayString=($numberOfEntries==1)?json_encode($value):'NA';
-				$this->debug(1, "setResultSet(value=$valueText($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET json=$arrayString");
+				$this->debug(4, "setResultSet(value=$valueText($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET json=$arrayString");
 				if ($this->isVerboseEnough(6)) 
 				{
 					print_r($value);
@@ -1194,6 +1194,22 @@ class core extends Module
 		return true;
 	}
 	
+	function registerSubModule(&$obj)
+	{
+		$obj->setCore($this);
+		
+		$subModule=array(
+			'name'=>$obj->getName(),
+			'description'=>$obj->getDescription(),
+			'category'=>$obj->getCategory(),
+			'obj'=>&$obj,
+			);
+		
+		$this->debug(4, "registerSubModule: name={$subModule['name']} category={$subModule['category']}");
+		$this->setRef($subModule['category'], $subModule['name'], $subModule);
+	}
+	
+	
 	function registerFeature(&$obj, $flags, $name, $description, $tags=false,$isMacro=false, $source='unknown')
 	{
 		$this->core->debug(4, "registerFeature name=$name");
@@ -1428,6 +1444,15 @@ class Module
 	private $category=''; 
 	protected $core=null;
 	
+	/*
+		A note about name vs category
+			For a module it makes sense that these are the same thing, because a module's memory space is reporesented by the name of that module. Therefore the variables are mapped like this
+			
+				getName		$this->category
+	*/
+	
+	# TODO consider refactoring the name/category relationship in Module. This is likely to have a lot of stuff refering to it, and probably isn't worth while.
+	
 	function __construct($name)
 	{
 		$this->category=$name;
@@ -1441,6 +1466,50 @@ class Module
 	function setCore(&$core)
 	{
 		$this->core=&$core;
+	}
+}
+
+class SubModule extends Module
+{
+	protected $name='unknown';
+	protected $description='Who am I?';
+	protected $category='Unknown';
+	
+	/*
+		A note about name vs category
+			For a module it makes sense that these are the same thing, because a module's memory space is reporesented by the name of that module.
+			
+			For a submodule this doesn't make sense anymore because it doesn't currently have its own designated memory space and name is needed as well as category. Therefore the variables are mapped like this
+			
+				getName		$this->name
+				getDescription	$this->description
+				getCategory	$this->category
+	*/
+	
+	function __construct($category)
+	{
+		$this->category=$category;
+	}
+	
+	function getName()
+	{
+		return $this->name;
+	}
+	
+	function getDescription()
+	{
+		return $this->description;
+	}
+	
+	function getCategory()
+	{
+		return $this->category;
+	}
+	
+	function setIdentity($name, $description)
+	{
+		$this->name=$name;
+		$this->description=$description;
 	}
 }
  
