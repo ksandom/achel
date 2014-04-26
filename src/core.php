@@ -232,6 +232,8 @@ class core extends Module
 	
 	function interpretParms($parms, $limit=0, $require=null, $reassemble=true)
 	{
+		if (is_array($parms)) return $parms;
+		
 		if (strlen($parms)<1)
 		{ // No parms$require
 			# TODO Potentially some detection could happen here to allow atomic failure.
@@ -1074,7 +1076,7 @@ class core extends Module
 	
 	private function setNestedFromInterpreter($allValues)
 	{
-		$path=explode(',', $allValues);
+		$path=$this->interpretParms($allValues);
 		$lastPosition=count($path)-1;
 		$value=$path[$lastPosition];
 		unset($path[$lastPosition]);
@@ -1142,7 +1144,7 @@ class core extends Module
 			
 			$destination=implode(',', $path);
 			
-			$this->debug(1, "setNestedWorker: Setting value $position/$count {$path[$position]}. vcount=$vcount tcount=$tcount destination=$destination");
+			$this->debug(4, "setNestedWorker: Setting value $position/$count {$path[$position]}. vcount=$vcount tcount=$tcount destination=$destination");
 		}
 	}
 	
