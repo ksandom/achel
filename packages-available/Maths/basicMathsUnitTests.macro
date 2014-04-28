@@ -1,0 +1,94 @@
+# Unit tests for basicMaths features ~ unitTest,hidden,maths
+
+defineTest Round 1 - 0,
+	round Tmp,roundTest,1,0
+	if ~!Tmp,roundTest!~,==,1,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+defineTest Round 1 - 1,
+	round Tmp,roundTest,1,1
+	if ~!Tmp,roundTest!~,==,1,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+defineTest Round 5 - 1,
+	round Tmp,roundTest,5,1
+	if ~!Tmp,roundTest!~,==,5,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+defineTest Round 5 - -1,
+	round Tmp,roundTest,5,-1
+	if ~!Tmp,roundTest!~,==,10,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+defineTest Round 123 - -1,
+	round Tmp,roundTest,123,-1
+	if ~!Tmp,roundTest!~,==,120,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+defineTest Round 153 - -2,
+	round Tmp,roundTest,153,-2
+	if ~!Tmp,roundTest!~,==,200,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+defineTest Round 0.1 - 1,
+	round Tmp,roundTest,0.1,1
+	if ~!Tmp,roundTest!~,==,0.1,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+defineTest Round 0.1 - 0,
+	round Tmp,roundTest,0.1,0
+	if ~!Tmp,roundTest!~,==,0,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+defineTest Round 0.5 - 0,
+	round Tmp,roundTest,0.5,0
+	if ~!Tmp,roundTest!~,==,1,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+defineTest Round 0.005 - 0,
+	round Tmp,roundTest,0.005,0
+	if ~!Tmp,roundTest!~,==,0,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+defineTest Round 0.005 - 1,
+	round Tmp,roundTest,0.005,1
+	if ~!Tmp,roundTest!~,==,0,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+defineTest Round 0.005 - 2,
+	round Tmp,roundTest,0.005,2
+	if ~!Tmp,roundTest!~,==,0.01,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+defineTest Round 0.005 - 3,
+	round Tmp,roundTest,0.005,3
+	if ~!Tmp,roundTest!~,==,0.005,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,roundTest!~.
+
+unset Tmp,roundTest

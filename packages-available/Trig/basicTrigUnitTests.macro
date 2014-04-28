@@ -1,0 +1,256 @@
+# Unit tests for the basic trig features ~ trig,basic,unitTest,hidden
+
+defineTest Sine 1,
+	sin Tmp,trig,1
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,0.84,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Sine 0,
+	sin Tmp,trig,0
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,0,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Sine -1,
+	sin Tmp,trig,-1
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,-0.84,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Arc Sine 1,
+	asin Tmp,trig,1
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,1.57,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Arc Sine 0,
+	asin Tmp,trig,0
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,0,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Arc Sine -1,
+	asin Tmp,trig,-1
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,-1.57,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+
+
+
+defineTest CoSine 1,
+	cos Tmp,trig,1
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,0.54,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest CoSine 0,
+	cos Tmp,trig,0
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,1,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest CoSine -1,
+	cos Tmp,trig,-1
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,0.54,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Arc CoSine 1,
+	acos Tmp,trig,1
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,0,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Arc CoSine 0,
+	acos Tmp,trig,0
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,1.57,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Arc CoSine -1,
+	acos Tmp,trig,-1
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,3.14,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+
+
+
+
+defineTest Tangent 1,
+	tan Tmp,trig,1
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,1.56,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Tangent 0,
+	tan Tmp,trig,0
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,0,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Tangent -1,
+	tan Tmp,trig,-1
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,-1.56,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Arc Tangent 1,
+	atan Tmp,trig,1
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,0.79,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Arc Tangent 0,
+	atan Tmp,trig,0
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,0,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Arc Tangent -1,
+	atan Tmp,trig,-1
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,-0.79,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+
+
+
+
+defineTest Degrees to Radians 90,
+	degreesToRadians Tmp,trig,90
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,1.57,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Degrees to Radians 0,
+	degreesToRadians Tmp,trig,0
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,0,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Degrees to Radians -90,
+	degreesToRadians Tmp,trig,-90
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,-1.57,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Radians to Degrees 1.570796,
+	radiansToDegrees Tmp,trig,1.570796
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,90,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Radians to Degrees 0,
+	radiansToDegrees Tmp,trig,0
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,0,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+defineTest Radians to Degrees -1.570796,
+	radiansToDegrees Tmp,trig,-1.570796
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,-90,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+
+
+
+
+
+defineTest Pi,
+	pi Tmp,trig
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,3.14,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+
+
+defineTest Right angle triangle - opposite angle,
+	rightTriangleGetOppositeAngle Tmp,trig,2,3
+	round Tmp,trig,~!Tmp,trig!~,2
+	if ~!Tmp,trig!~,==,33.69,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trig!~.
+unset Tmp,trig
+
+
+

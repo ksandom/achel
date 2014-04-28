@@ -1,0 +1,3 @@
+# Generate Pi. --pi=Category,variable ~ maths
+
+acos ~!Global,pi!~,-1
