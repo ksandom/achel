@@ -245,6 +245,7 @@ unset Tmp,trig
 
 defineTest Right angle triangle - opposite angle,
 	rightTriangleGetOppositeAngle Tmp,trig,2,3
+	radiansToDegrees Tmp,trig,~!Tmp,trig!~
 	round Tmp,trig,~!Tmp,trig!~,2
 	if ~!Tmp,trig!~,==,33.69,
 		passTest got expected value.

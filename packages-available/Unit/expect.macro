@@ -1,0 +1,6 @@
+# Expect a particular value. --expect=expectedValue,actualValue ~ unit,result
+
+if ~!Global,expect-0!~,==,~!Global,expect-1!~,
+	passTest Got expected result ("~!Global,expect-1!~").
+else
+	failTest Expected "~!Global,expect-0!~" but got "~!Global,expect-1!~".

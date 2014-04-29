@@ -4,8 +4,7 @@ set Tmp,oppositeLength,~!Global,rightTriangleGetOppositeAngle-2!~
 set Tmp,adjacentLength,~!Global,rightTriangleGetOppositeAngle-3!~
 
 basicMaths Tmp,input,~!Tmp,oppositeLength!~,/,~!Tmp,adjacentLength!~
-atan Tmp,radianAngle,~!Tmp,input!~
-radiansToDegrees ~!Global,rightTriangleGetOppositeAngle-0!~,~!Global,rightTriangleGetOppositeAngle-1!~,~!Tmp,radianAngle!~
+atan ~!Global,rightTriangleGetOppositeAngle-0!~,~!Global,rightTriangleGetOppositeAngle-1!~,~!Tmp,input!~
 
 unset Tmp,oppositeLength
 unset Tmp,adjacentLength
