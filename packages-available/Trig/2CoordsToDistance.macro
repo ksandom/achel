@@ -1,0 +1,5 @@
+# Calculate the distance between two co-ordinates. The returned distance is in the same unit as the co-ordinates. --2CoordsToDistance=Category,variable,originX,originY,destinationX,destinationY  ~ trig,coord,distance
+
+2CoordsTo1Coord Tmp,ctd,~!Global,2CoordsToDistance-2!~,~!Global,2CoordsToDistance-3!~,~!Global,2CoordsToDistance-4!~,~!Global,2CoordsToDistance-5!~
+
+# TODO finish this

@@ -92,3 +92,13 @@ defineTest Round 0.005 - 3,
 		failTest got ~!Tmp,roundTest!~.
 
 unset Tmp,roundTest
+
+
+
+defineTest 2 squared,
+	basicMaths Tmp,square,2,^,2
+	expect 4,~!Tmp,square!~
+
+defineTest square root of 4,
+	basicMaths Tmp,square,4,sr,2
+	expect 2,~!Tmp,square!~

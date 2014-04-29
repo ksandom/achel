@@ -15,7 +15,7 @@ class Maths extends Module
 		switch ($event)
 		{
 			case 'init':
-				$this->core->registerFeature($this, array('basicMaths'), 'basicMaths', 'Apply a mathematical operator on two numbers and put the results into a store variable. --basicMaths=Category,variableName,value1,operator,value2', array('maths','calculations'));
+				$this->core->registerFeature($this, array('basicMaths'), 'basicMaths', 'Apply a mathematical operator on two numbers and put the results into a store variable. --basicMaths=Category,variableName,value1,operator,value2 . Current accepted operators are +, -, *, /, %, ^, sr, /!, /<, />. sr is square root. /! is assume false on divide by 0. /< is assume the left value on divide by zero, and /> assumes right.', array('maths','calculations'));
 				$this->core->registerFeature($this, array('round'), 'round', 'Round a value to a certain precision. --round=Category,variableName,value,precision . precision  is how many decimal places to round to.', array('maths'));
 				break;
 			case 'followup':
@@ -26,7 +26,8 @@ class Maths extends Module
 			case 'basicMaths':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event));
 				$this->core->requireNumParms($this, 5, $event, $originalParms, $parms);
-				$this->core->set($parms[0], $parms[1], $this->basicMaths($parms[2], $parms[3], $parms[4]));
+				$returnValue=$this->basicMaths($parms[2], $parms[3], $parms[4]);
+				$this->core->set($parms[0], $parms[1], $returnValue);
 				break;
 			case 'round':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 4, 4);
@@ -88,7 +89,9 @@ class Maths extends Module
 				return $value1%$value2;
 				break;
 			case '^': # Exponent
-				return $value1^$value2;
+				return pow($value1,$value2);
+			case 'sr': # Square Root
+				return sqrt($value1);
 				break;
 		}
 	}

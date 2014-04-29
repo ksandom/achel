@@ -255,3 +255,39 @@ unset Tmp,trig
 
 
 
+defineTest getHypotenuse 2 2,
+	getHypotenuse Tmp,h,2,2
+	round Tmp,h,~!Tmp,h!~,2
+	expect 2.83,~!Tmp,h!~
+
+defineTest getHypotenuse 3.4 6.8,
+	getHypotenuse Tmp,h,3.4,6.8
+	round Tmp,h,~!Tmp,h!~,2
+	expect 7.6,~!Tmp,h!~
+
+
+
+pi Tmp,pi
+basicMaths Tmp,0.25Pi,~!Tmp,pi!~,*,0.25
+
+defineTest co-ordinates to angle and distance 180,
+	angleAndDistanceToCoordinates Tmp,aadtc,~!Tmp,pi!~,5
+	
+	expect 0-5,~!Tmp,aadtc,x!~~!Tmp,aadtc,y!~
+	
+	unset Tmp,aadtc
+
+defineTest co-ordinates to angle and distance 45,
+	angleAndDistanceToCoordinates Tmp,aadtc,~!Tmp,0.25Pi!~,5
+	
+	round Tmp,x,~!Tmp,aadtc,x!~
+	round Tmp,y,~!Tmp,aadtc,y!~
+	
+	expect 3.543.54,~!Tmp,x!~~!Tmp,y!~
+	
+	unset Tmp,x
+	unset Tmp,y
+	unset Tmp,aadtc
+
+
+unset Tmp,pi

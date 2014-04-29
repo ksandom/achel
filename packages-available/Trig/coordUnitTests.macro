@@ -72,6 +72,9 @@ defineTest coordToAngle -3 0,
 
 
 
+
+
+
 # Origin and destination co-ordinate stuff
 setNested ["Tmp", "pointData", "0", {"x":0, "y":"0"}]
 setNested ["Tmp", "pointData", "1", {"x":10, "y":"10"}]
@@ -198,7 +201,5 @@ defineTest 2CoordsTo1Coord x,
 defineTest 2CoordsTo1Coord y,
 	expect 3,~!Tmp,2To1,y!~
 unset Tmp,2To1
-
-
 
 

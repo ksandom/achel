@@ -1,0 +1,46 @@
+# Take an angle (in radians) and a distance and calcuate the x,y co-ordinates from 0,0. --angleAndDistranceFromCoord=Category,variable,angle,distance
+
+pi Tmp,pi
+piBy Tmp,0.5Pi,0.5
+piBy Tmp,1.5Pi,1.5
+
+# TODO finish this
+
+if ~!Global,angleAndDistranceFromCoord-3!~,==,0,
+	setNested ~!Global,angleAndDistranceFromCoord-0!~,~!Global,angleAndDistranceFromCoord-1!~,x,0
+	setNested ~!Global,angleAndDistranceFromCoord-0!~,~!Global,angleAndDistranceFromCoord-1!~,y,0
+elseIf ~!Global,angleAndDistranceFromCoord-3!~,<,0,
+	setNested ~!Global,angleAndDistranceFromCoord-0!~,~!Global,angleAndDistranceFromCoord-1!~,x,undef
+	setNested ~!Global,angleAndDistranceFromCoord-0!~,~!Global,angleAndDistranceFromCoord-1!~,y,undef
+else
+	if ~!Global,angleAndDistranceFromCoord-2!~,==,0,
+		# up
+		setNested ~!Global,angleAndDistranceFromCoord-0!~,~!Global,angleAndDistranceFromCoord-1!~,x,0
+		setNested ~!Global,angleAndDistranceFromCoord-0!~,~!Global,angleAndDistranceFromCoord-1!~,y,~!Global,angleAndDistranceFromCoord-3!~
+		
+	elseIf ~!Global,angleAndDistranceFromCoord-2!~,==,0.5Pi,
+		# right
+		setNested ~!Global,angleAndDistranceFromCoord-0!~,~!Global,angleAndDistranceFromCoord-1!~,x,~!Global,angleAndDistranceFromCoord-3!~
+		setNested ~!Global,angleAndDistranceFromCoord-0!~,~!Global,angleAndDistranceFromCoord-1!~,y,0
+		
+	elseIf ~!Global,angleAndDistranceFromCoord-2!~,==,pi,
+		# down
+		basicMaths Tmp,flipped,~!Global,angleAndDistranceFromCoord-3!~,*,-1
+		setNested ~!Global,angleAndDistranceFromCoord-0!~,~!Global,angleAndDistranceFromCoord-1!~,x,0
+		setNested ~!Global,angleAndDistranceFromCoord-0!~,~!Global,angleAndDistranceFromCoord-1!~,y,~!Tmp,flipped!~
+		
+	elseIf ~!Global,angleAndDistranceFromCoord-2!~,==,1.5Pi,
+		# left
+		basicMaths Tmp,flipped,~!Global,angleAndDistranceFromCoord-3!~,*,-1
+		setNested ~!Global,angleAndDistranceFromCoord-0!~,~!Global,angleAndDistranceFromCoord-1!~,x,~!Tmp,flipped!~
+		setNested ~!Global,angleAndDistranceFromCoord-0!~,~!Global,angleAndDistranceFromCoord-1!~,y,0
+		
+	elseIf ~!Global,angleAndDistranceFromCoord-2!~,<,0.5Pi,
+		# top right
+	elseIf ~!Global,angleAndDistranceFromCoord-2!~,<,pi,
+		# bottom right
+	elseIf ~!Global,angleAndDistranceFromCoord-2!~,<,1.5Pi,
+		# bottom left
+	else
+		# top left
+
