@@ -1,6 +1,6 @@
 # Unit tests for coordinates based features. ~ unitTest,hidden,trig,coord
 
-
+# Basic single co-ordinate stuff
 unset Tmp,angle
 defineTest coordToAngle 0 0,
 	coordToAngle Tmp,angle,0,0
@@ -72,7 +72,7 @@ defineTest coordToAngle -3 0,
 
 
 
-
+# Origin and destination co-ordinate stuff
 setNested ["Tmp", "pointData", "0", {"x":0, "y":"0"}]
 setNested ["Tmp", "pointData", "1", {"x":10, "y":"10"}]
 setNested ["Tmp", "pointData", "2", {"x":10, "y":"-10"}]
@@ -89,8 +89,8 @@ loop
 	set Tmp,yOrigin,~!Tmp,yOffset!~
 	basicMaths Tmp,xDestination,~!Tmp,xOffset!~,+,0
 	basicMaths Tmp,yDestination,~!Tmp,yOffset!~,+,0
-	defineTest 2coordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
-		2coordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
+	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
+		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		
 		expect undefined,~!Tmp,angle!~
 	
@@ -99,8 +99,8 @@ loop
 	set Tmp,yOrigin,~!Tmp,yOffset!~
 	basicMaths Tmp,xDestination,~!Tmp,xOffset!~,+,2
 	basicMaths Tmp,yDestination,~!Tmp,yOffset!~,+,3
-	defineTest 2coordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
-		2coordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
+	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
+		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		round Tmp,radianAngle,~!Tmp,radianAngle!~,2
 		
@@ -111,8 +111,8 @@ loop
 	set Tmp,yOrigin,~!Tmp,yOffset!~
 	basicMaths Tmp,xDestination,~!Tmp,xOffset!~,+,3
 	basicMaths Tmp,yDestination,~!Tmp,yOffset!~,+,-2
-	defineTest 2coordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
-		2coordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
+	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
+		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		round Tmp,radianAngle,~!Tmp,radianAngle!~,2
 		
@@ -123,8 +123,8 @@ loop
 	set Tmp,yOrigin,~!Tmp,yOffset!~
 	basicMaths Tmp,xDestination,~!Tmp,xOffset!~,+,-2
 	basicMaths Tmp,yDestination,~!Tmp,yOffset!~,+,-3
-	defineTest 2coordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
-		2coordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
+	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
+		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		round Tmp,radianAngle,~!Tmp,radianAngle!~,2
 		
@@ -135,8 +135,8 @@ loop
 	set Tmp,yOrigin,~!Tmp,yOffset!~
 	basicMaths Tmp,xDestination,~!Tmp,xOffset!~,+,-3
 	basicMaths Tmp,yDestination,~!Tmp,yOffset!~,+,2
-	defineTest 2coordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
-		2coordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
+	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
+		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		round Tmp,radianAngle,~!Tmp,radianAngle!~,2
 		
@@ -148,8 +148,8 @@ loop
 	set Tmp,yOrigin,~!Tmp,yOffset!~
 	basicMaths Tmp,xDestination,~!Tmp,xOffset!~,+,0
 	basicMaths Tmp,yDestination,~!Tmp,yOffset!~,+,3
-	defineTest 2coordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
-		2coordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
+	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
+		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		
 		expect 0,~!Tmp,radianAngle!~
@@ -159,8 +159,8 @@ loop
 	set Tmp,yOrigin,~!Tmp,yOffset!~
 	basicMaths Tmp,xDestination,~!Tmp,xOffset!~,+,3
 	basicMaths Tmp,yDestination,~!Tmp,yOffset!~,+,0
-	defineTest 2coordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
-		2coordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
+	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
+		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		
 		expect 90,~!Tmp,radianAngle!~
@@ -170,8 +170,8 @@ loop
 	set Tmp,yOrigin,~!Tmp,yOffset!~
 	basicMaths Tmp,xDestination,~!Tmp,xOffset!~,+,0
 	basicMaths Tmp,yDestination,~!Tmp,yOffset!~,+,-3
-	defineTest 2coordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
-		2coordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
+	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
+		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		
 		expect 180,~!Tmp,radianAngle!~
@@ -181,10 +181,24 @@ loop
 	set Tmp,yOrigin,~!Tmp,yOffset!~
 	basicMaths Tmp,xDestination,~!Tmp,xOffset!~,+,-3
 	basicMaths Tmp,yDestination,~!Tmp,yOffset!~,+,0
-	defineTest 2coordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
-		2coordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
+	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
+		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		
 		expect 270,~!Tmp,radianAngle!~
+
+
+
+
+
+# 2 co-ordinates to 1
+2CoordsTo1Coord Tmp,2To1,1,2,3,5
+defineTest 2CoordsTo1Coord x,
+	expect 2,~!Tmp,2To1,x!~
+defineTest 2CoordsTo1Coord y,
+	expect 3,~!Tmp,2To1,y!~
+unset Tmp,2To1
+
+
 
 

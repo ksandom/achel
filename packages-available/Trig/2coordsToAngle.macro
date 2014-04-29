@@ -1,9 +1,0 @@
-# Take 2 sets of coordinates and derive the angle from north and the distance to reach the destination. Note that both of these values will be put inside of the destination variable you specify. --2coordsToAngle=Category,variable,originX,originY,destinationX,destinationY  ~ trig,coord,angle
-
-basicMaths Tmp,x,~!Global,2coordsToAngle-4!~,-,~!Global,2coordsToAngle-2!~
-basicMaths Tmp,y,~!Global,2coordsToAngle-5!~,-,~!Global,2coordsToAngle-3!~
-
-coordToAngle ~!Global,2coordsToAngle-0!~,~!Global,2coordsToAngle-1!~,~!Tmp,x!~,~!Tmp,y!~
-
-unset Tmp,x
-unset Tmp,y

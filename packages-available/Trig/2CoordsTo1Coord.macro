@@ -1,0 +1,10 @@
+# Take two sets of co-ordinates and give one set of co-ordinates where the origin has become 0,0 and the destination has had the origin subtracted from it. ~ trig
+
+basicMaths Tmp,cox,~!Global,2CoordsTo1Coord-4!~,-,~!Global,2CoordsTo1Coord-2!~
+basicMaths Tmp,coy,~!Global,2CoordsTo1Coord-5!~,-,~!Global,2CoordsTo1Coord-3!~
+
+setNested ~!Global,2CoordsTo1Coord-0!~,~!Global,2CoordsTo1Coord-1!~,x,~!Tmp,cox!~
+setNested ~!Global,2CoordsTo1Coord-0!~,~!Global,2CoordsTo1Coord-1!~,y,~!Tmp,coy!~
+
+unset Tmp,cox
+unset Tmp,coy

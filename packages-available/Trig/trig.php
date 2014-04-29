@@ -75,13 +75,19 @@ class Trig extends Module
 			case 'radiansToDegrees':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
-					$this->core->set($parms[0], $parms[1], rad2deg($parms[2]));
+					if (is_numeric($parms[2]))
+					{
+						$this->core->set($parms[0], $parms[1], rad2deg($parms[2]));
+					}
 				}
 				break;
 			case 'degreesToRadians':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
-					$this->core->set($parms[0], $parms[1], deg2rad($parms[2]));
+					if (is_numeric($parms[2]))
+					{
+						$this->core->set($parms[0], $parms[1], deg2rad($parms[2]));
+					}
 				}
 				break;
 			
