@@ -17,6 +17,7 @@ class Maths extends Module
 			case 'init':
 				$this->core->registerFeature($this, array('basicMaths'), 'basicMaths', 'Apply a mathematical operator on two numbers and put the results into a store variable. --basicMaths=Category,variableName,value1,operator,value2 . Current accepted operators are +, -, *, /, %, ^, sr, /!, /<, />. sr is square root. /! is assume false on divide by 0. /< is assume the left value on divide by zero, and /> assumes right.', array('maths','calculations'));
 				$this->core->registerFeature($this, array('round'), 'round', 'Round a value to a certain precision. --round=Category,variableName,value,precision . precision  is how many decimal places to round to.', array('maths'));
+				$this->core->registerFeature($this, array('absolute'), 'absolute', 'Give the absolute value of a value (ie input can be positive or negative. Output will always be the positive version of that input.). --absolute=Category,variableName,value .', array('maths'));
 				break;
 			case 'followup':
 				break;
@@ -32,6 +33,10 @@ class Maths extends Module
 			case 'round':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 4, 4);
 				$this->core->set($parms[0], $parms[1], round($parms[2], $parms[3]));
+				break;
+			case 'absolute':
+				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3);
+				$this->core->set($parms[0], $parms[1], abs($parms[2]));
 				break;
 			
 			default:

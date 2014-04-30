@@ -196,10 +196,49 @@ loop
 
 # 2 co-ordinates to 1
 2CoordsTo1Coord Tmp,2To1,1,2,3,5
-defineTest 2CoordsTo1Coord x,
+defineTest 2CoordsTo1Coord x +,
 	expect 2,~!Tmp,2To1,x!~
-defineTest 2CoordsTo1Coord y,
+defineTest 2CoordsTo1Coord y +,
 	expect 3,~!Tmp,2To1,y!~
 unset Tmp,2To1
+
+2CoordsTo1Coord Tmp,2To1,-10,-10,-8,-8
+defineTest 2CoordsTo1Coord x -,
+	expect 2,~!Tmp,2To1,x!~
+defineTest 2CoordsTo1Coord y -,
+	expect 2,~!Tmp,2To1,y!~
+unset Tmp,2To1
+
+
+defineTest 2CoordsToDistance 0 0 2 2,
+	2CoordsToDistance Tmp,h,0,0,2,2
+	round Tmp,h,~!Tmp,h!~,2
+	expect 2.83,~!Tmp,h!~
+
+defineTest 2CoordsToDistance 0 0 3.4 6.8,
+	2CoordsToDistance Tmp,h,0,0,3.4,6.8
+	round Tmp,h,~!Tmp,h!~,2
+	expect 7.6,~!Tmp,h!~
+
+defineTest 2CoordsToDistance 2 2 4 4,
+	2CoordsToDistance Tmp,h,2,2,4,4
+	round Tmp,h,~!Tmp,h!~,2
+	expect 2.83,~!Tmp,h!~
+
+defineTest 2CoordsToDistance 2 2 5.4 8.8,
+	2CoordsToDistance Tmp,h,2,2,5.4,8.8
+	round Tmp,h,~!Tmp,h!~,2
+	expect 7.6,~!Tmp,h!~
+
+defineTest 2CoordsToDistance -10 -10 -8 -8,
+	2CoordsToDistance Tmp,h,-10,-10,-8,-8
+	round Tmp,h,~!Tmp,h!~,2
+	expect 2.83,~!Tmp,h!~
+
+defineTest 2CoordsToDistance -10 -10 -6.6 -3.2,
+	2CoordsToDistance Tmp,h,-10,-10,-6.6,-3.2
+	round Tmp,h,~!Tmp,h!~,2
+	expect 7.6,~!Tmp,h!~
+
 
 

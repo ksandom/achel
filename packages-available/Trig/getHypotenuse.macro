@@ -1,4 +1,6 @@
 # Get the hypotenuse from the oposite and adjacent values. --getHypotenuse=Category,variable,oposite,adjacent ~ trig
+# TODO figure out why the alias didn't work. For now it is commented out to avoid confusion.
+# #onDefine aliasFeature getHypotenuse,coordToDistance
 
 basicMaths Tmp,aSquared,~!Global,getHypotenuse-2!~,^,2
 basicMaths Tmp,bSquared,~!Global,getHypotenuse-3!~,^,2

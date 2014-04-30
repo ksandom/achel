@@ -102,3 +102,18 @@ defineTest 2 squared,
 defineTest square root of 4,
 	basicMaths Tmp,square,4,sr,2
 	expect 2,~!Tmp,square!~
+
+unset Tmp,square
+
+
+
+
+defineTest absolute 2,
+	absolute Tmp,absolute,2
+	expect 2,~!Tmp,absolute!~
+
+defineTest absolute -2,
+	absolute Tmp,absolute,-2
+	expect 2,~!Tmp,absolute!~
+
+unset Tmp,absolute
