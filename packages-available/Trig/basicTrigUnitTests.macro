@@ -270,20 +270,72 @@ defineTest getHypotenuse 3.4 6.8,
 pi Tmp,pi
 basicMaths Tmp,0.25Pi,~!Tmp,pi!~,*,0.25
 
-defineTest co-ordinates to angle and distance 180,
+defineTest angle and distance to co-ordinates 180,
 	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,pi!~,5
 	
-	expect 0-5,~!Tmp,aadtc,x!~~!Tmp,aadtc,y!~
+	expect 0 -5,~!Tmp,aadtc,x!~ ~!Tmp,aadtc,y!~
 	
 	unset Tmp,aadtc
 
-defineTest co-ordinates to angle and distance 45,
+defineTest angle and distance to co-ordinates 45,
 	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,0.25Pi!~,5
 	
 	round Tmp,x,~!Tmp,aadtc,x!~,2
 	round Tmp,y,~!Tmp,aadtc,y!~,2
 	
-	expect 3.543.54,~!Tmp,x!~~!Tmp,y!~
+	expect 3.54 3.54,~!Tmp,x!~ ~!Tmp,y!~
+	
+	unset Tmp,x
+	unset Tmp,y
+	unset Tmp,aadtc
+
+defineTest angle and distance to co-ordinates 33.69,
+	degreesToRadians Tmp,degrees,33.69
+	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,degrees!~,3.61
+	
+	round Tmp,x,~!Tmp,aadtc,x!~,2
+	round Tmp,y,~!Tmp,aadtc,y!~,2
+	
+	expect 2 3,~!Tmp,x!~ ~!Tmp,y!~
+	
+	unset Tmp,x
+	unset Tmp,y
+	unset Tmp,aadtc
+
+defineTest angle and distance to co-ordinates 123.69,
+	degreesToRadians Tmp,degrees,123.69
+	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,degrees!~,3.61
+	
+	round Tmp,x,~!Tmp,aadtc,x!~,2
+	round Tmp,y,~!Tmp,aadtc,y!~,2
+	
+	expect 3 -2,~!Tmp,x!~ ~!Tmp,y!~
+	
+	unset Tmp,x
+	unset Tmp,y
+	unset Tmp,aadtc
+
+defineTest angle and distance to co-ordinates 213.69,
+	degreesToRadians Tmp,degrees,213.69
+	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,degrees!~,3.61
+	
+	round Tmp,x,~!Tmp,aadtc,x!~,2
+	round Tmp,y,~!Tmp,aadtc,y!~,2
+	
+	expect -2 -3,~!Tmp,x!~ ~!Tmp,y!~
+	
+	unset Tmp,x
+	unset Tmp,y
+	unset Tmp,aadtc
+
+defineTest angle and distance to co-ordinates 303.69,
+	degreesToRadians Tmp,degrees,303.69
+	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,degrees!~,3.61
+	
+	round Tmp,x,~!Tmp,aadtc,x!~,2
+	round Tmp,y,~!Tmp,aadtc,y!~,2
+	
+	expect -3 2,~!Tmp,x!~ ~!Tmp,y!~
 	
 	unset Tmp,x
 	unset Tmp,y
@@ -291,3 +343,17 @@ defineTest co-ordinates to angle and distance 45,
 
 
 unset Tmp,pi
+
+
+
+
+defineTest get opposite from angle and distance,
+	rightTriangleGetOppositeFromAngle Tmp,opposite,0.588,3.61
+	round Tmp,opposite,~!Tmp,opposite!~,2
+	expect 2,~!Tmp,opposite!~
+
+defineTest get adjacent from angle and distance,
+	rightTriangleGetAdjacentFromAngle Tmp,adjacent,0.588,3.61
+	round Tmp,adjacent,~!Tmp,adjacent!~,2
+	expect 3,~!Tmp,adjacent!~
+

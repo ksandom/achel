@@ -1,0 +1,6 @@
+# Get the adjacent edge from the angle and the hypotenuse. --rightTriangleGetAdjacentFromAngle=Category,variable,angle,hypotenuse ~ trig,rightAngleTriangle
+
+cos Tmp,acos,~!Global,rightTriangleGetAdjacentFromAngle-2!~
+basicMaths ~!Global,rightTriangleGetAdjacentFromAngle-0!~,~!Global,rightTriangleGetAdjacentFromAngle-1!~,~!Tmp,acos!~,*,~!Global,rightTriangleGetAdjacentFromAngle-3!~
+
+unset Tmp,acos
