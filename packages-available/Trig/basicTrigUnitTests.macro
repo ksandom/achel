@@ -271,17 +271,17 @@ pi Tmp,pi
 basicMaths Tmp,0.25Pi,~!Tmp,pi!~,*,0.25
 
 defineTest co-ordinates to angle and distance 180,
-	angleAndDistanceToCoordinates Tmp,aadtc,~!Tmp,pi!~,5
+	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,pi!~,5
 	
 	expect 0-5,~!Tmp,aadtc,x!~~!Tmp,aadtc,y!~
 	
 	unset Tmp,aadtc
 
 defineTest co-ordinates to angle and distance 45,
-	angleAndDistanceToCoordinates Tmp,aadtc,~!Tmp,0.25Pi!~,5
+	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,0.25Pi!~,5
 	
-	round Tmp,x,~!Tmp,aadtc,x!~
-	round Tmp,y,~!Tmp,aadtc,y!~
+	round Tmp,x,~!Tmp,aadtc,x!~,2
+	round Tmp,y,~!Tmp,aadtc,y!~,2
 	
 	expect 3.543.54,~!Tmp,x!~~!Tmp,y!~
 	
