@@ -19,6 +19,7 @@ class Events extends Module
 			case 'init':
 				$this->core->registerFeature($this, array('registerOnceForEvent', 'registerForEvent'), 'registerOnceForEvent', "Register a feature once to be executed when a particular event is triggered. --registerForEvent=Category,eventName,featureName[,featureValue]", array());
 				$this->core->registerFeature($this, array('registerMultipleTimesForEvent'), 'registerMultipleTimesForEvent', "Register a feature to be executed when a particular event is triggered. If you use --registerMultipleTimesForEvent multiple times for a single action (say saving some data), then that action will get called once for everytime it was registered per trigger of that event. This is probably not what you want. Usually --registerOnceForEvent (--registerForEvent) will be what you want. --registerEvent=Category,eventName,featureName[,featureValue]", array());
+				$this->core->registerFeature($this, array('unregisterForEvent'), 'unregisterForEvent', "Unregister a feature from an event. --registerForEvent=Category,eventName,featureName[,featureValue]", array());
 				$this->core->registerFeature($this, array('triggerEvent'), 'triggerEvent', "Trigger an event. --triggerEvent=Category,eventName[,value] . Note that if value is given, it will be appended as an extra option to what ever was provided when the eventee was registered.", array());
 				break;
 			case 'followup':
@@ -34,6 +35,10 @@ class Events extends Module
 			case 'registerOnceForEvent':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 3, true);
 				$this->registerForEvent($parms[0], $parms[1], $parms[2], $parms[3], true);
+				break;
+			case 'unregisterForEvent':
+				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 3, true);
+				$this->unregisterForEvent($parms[0], $parms[1], $parms[2], $parms[3]);
 				break;
 			case 'triggerEvent':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
@@ -59,9 +64,19 @@ class Events extends Module
 	}
 	
 	
-	function unRegisterEvent($category, $eventName, $featureName)
+	function unRegisterForEvent($category, $eventName, $featureName, $featureValue, $priority=50)
 	{
-		# TODO write this. It will be useful for unloading code.
+		$priorityGroups=$this->core->get('Events', "$category-$eventName");
+		if (!isset($priorityGroups[$priority])) $priorityGroups[$priority]=array();
+		
+		$key=md5("$featureName,$featureValue");
+		if (isset($priorityGroups[$priority][$key]))
+		{
+			unset($priorityGroups[$priority][$key]);
+			$this->core->debug(3, "Unregistered \"$featureName $featureValue\" from event \"$category, $eventName\" at priority $priority.");
+		}
+		
+		$this->core->set('Events', "{$category}-{$eventName}", $priorityGroups);
 	}
 	
 	function setPriority($category, $eventName, $featureName, $priority=50)
@@ -71,6 +86,8 @@ class Events extends Module
 	
 	function triggerEvent($category, $eventName, $value='')
 	{
+		if (!$category and !$eventName) return false;
+		
 		$this->core->debug(4, "triggerEvent: $category,$eventName");
 		$priorityGroups=$this->core->get('Events', "$category-$eventName");
 		if (is_array($priorityGroups) && count($priorityGroups)>0)
@@ -98,11 +115,11 @@ class Events extends Module
 				}
 				else
 				{
-					$this->core->debug(4, "Removing priority group $priority from event \"$category, $eventName\" as it has no eventees.");
+					$this->core->debug(3, "Removing priority group $priority from event \"$category,$eventName\" as it has no eventees.");
 					unset($priorityGroups['priority']);
 					
 					# This is potentially inefficient. But there would have to be a LOT of priority groups for it to matter. If it becomes an issue, set a flag and do it at the end.
-					$this->core->doUnSet('Events', "$category-$eventName");
+					$this->core->doUnSet(array('Events', "$category-$eventName"));
 				}
 			}
 		}

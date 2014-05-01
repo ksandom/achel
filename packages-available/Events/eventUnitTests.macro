@@ -1,0 +1,24 @@
+# Unit tests for the events package. ~ unitTest,events,hidden
+
+
+set Tmp,tmpFunction,
+	set Tmp,eventResult,it was triggered
+
+registerForEvent Tmp,testEvent,~!Tmp,tmpFunction!~
+
+defineTest Trigger event,
+	triggerEvent Tmp,testEvent
+	expect it was triggered,~!Tmp,eventResult!~
+
+unset Tmp,eventResult
+unregisterForEvent Tmp,testEvent,~!Tmp,tmpFunction!~
+
+defineTest Trigger deleted event,
+	triggerEvent Tmp,testEvent
+	expect ,~!Tmp,eventResult!~
+
+# There is some clean up that is done if the event is no longer there. This duplicate test is to make sure that the behavior is still the same after the cleanup.
+defineTest Trigger still deleted event,
+	triggerEvent Tmp,testEvent
+	expect ,~!Tmp,eventResult!~
+

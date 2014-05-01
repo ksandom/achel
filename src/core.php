@@ -962,6 +962,12 @@ class core extends Module
 	
 	function doUnsetNested(&$currentScope, $deleteList, $position=0)
 	{
+		if (is_string($deleteList))
+		{
+			$this->debug(0, "doUnsetNested: WARNING! Converted string to array. The string was \"$deleteList\", which was expected to be an absolute path in the form of an array. You can do this in PHP like so: array('CategoryName', 'subCategory', 'variable'). Ideally execution should stop here, but it is being allowed incase there is still some old code relying on this behavior (PHP would have complained bitterly). This decision will be reversed very soon, so please fix the bug if it is yours. If you think the bug is in Achel, please get in contact via github.");
+			$deleteList=explode(',', $deleteList);
+		}
+		
 		if (!isset($currentScope[$deleteList[$position]]))
 		{
 			$fullChain=implode(',', $deleteList);
