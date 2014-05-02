@@ -1,4 +1,4 @@
-# Take an angle (in radians) and a distance and calcuate the x,y co-ordinates from 0,0. --angleAndDistanceToCoord=Category,variable,angle,distance
+# Take an angle (in radians) and a distance and calcuate the x,y co-ordinates from 0,0. --angleAndDistanceToCoord=Category,variable,angle,distance ~ trig,coord
 
 pi Tmp,pi
 piBy Tmp,0.5Pi,0.5
