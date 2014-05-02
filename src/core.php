@@ -167,13 +167,13 @@ class core extends Module
 				$originalParms=$this->get('Global', 'stashResults');
 				$parms=$this->interpretParms($originalParms);
 				$this->requireNumParms($this, 2, $event, $originalParms, $parms);
-				$this->set($parms[0], $parms[1], $this->core->getResultSet());
+				$this->setNestedViaPath($parms, $this->core->getResultSet());
 				break;
 			case 'retrieveResults':
 				$originalParms=$this->get('Global', 'retrieveResults');
 				$parms=$this->interpretParms($originalParms);
 				$this->requireNumParms($this, 2, $event, $originalParms, $parms);
-				return $this->get($parms[0], $parms[1]);
+				return $this->getNested($parms);
 				break;
 			case 'setJson':
 				$parms=$this->interpretParms($this->get('Global', $event));
