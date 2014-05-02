@@ -135,7 +135,7 @@ defineTest stashResults nested,
 	first 3
 	stashResults Tmp,c,d
 	clearResultset
-	retrieveResults Tmp,a,c,d
+	retrieveResults Tmp,c,d
 	
 	countToVar Tmp,b
 	

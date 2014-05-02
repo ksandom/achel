@@ -166,8 +166,10 @@ class core extends Module
 			case 'stashResults':
 				$originalParms=$this->get('Global', 'stashResults');
 				$parms=$this->interpretParms($originalParms);
-				$this->requireNumParms($this, 2, $event, $originalParms, $parms);
-				$this->setNestedViaPath($parms, $this->core->getResultSet());
+				if ($this->requireNumParms($this, 2, $event, $originalParms, $parms))
+				{
+					$this->setNestedViaPath($parms, $this->core->getResultSet());
+				}
 				break;
 			case 'retrieveResults':
 				$originalParms=$this->get('Global', 'retrieveResults');
