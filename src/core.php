@@ -42,6 +42,8 @@ class core extends Module
 		$this->store=array();
 		$this->module=array();
 		
+		$this->setRef('Core', 'modules', $this->module);
+		
 		$this->verbosity=$verbosity;
 		$this->set('Verbosity', 'level', $verbosity);
 		

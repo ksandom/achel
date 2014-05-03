@@ -1,7 +1,7 @@
 <?php
 # Copyright (c) 2014 Kevin Sandom under the BSD License. See LICENSE for full details.
 
-class Iterator extends Module
+class AchelIterator extends Module
 {
 	private $dataDir=null;
 	
@@ -50,6 +50,6 @@ class Iterator extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Iterator());
+$core->registerModule(new AchelIterator());
  
 ?>
