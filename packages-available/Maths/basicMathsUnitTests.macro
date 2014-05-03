@@ -117,3 +117,20 @@ defineTest absolute -2,
 	expect 2,~!Tmp,absolute!~
 
 unset Tmp,absolute
+
+
+
+defineTest Iterator 1-10 inclusive - Step 1,
+	iterator 1,1,10
+	countToVar Tmp,iterations
+	expect 10,~!Tmp,iterations!~
+	
+	unset Tmp,iterations
+
+defineTest Iterator 1-10 inclusive - Step 2,
+	iterator 1,2,10
+	countToVar Tmp,iterations
+	expect 5,~!Tmp,iterations!~
+	
+	unset Tmp,iterations
+

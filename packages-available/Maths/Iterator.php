@@ -29,6 +29,10 @@ class AchelIterator extends Module
 					$returnValue=$this->genericIterator($parms[0], $parms[1], $parms[2]);
 					return $returnValue;
 				}
+				else
+				{
+					$this->core->complain($this, "Insufficient parameters. Got ".implode(','.$parms), $event);
+				}
 				break;
 			
 			default:
@@ -42,7 +46,7 @@ class AchelIterator extends Module
 		$result=array();
 		for ($i=$start;$i<=$stop;$i+=$incrementor)
 		{
-			$result=$i;
+			$result[]=$i;
 		}
 		
 		return $result;
