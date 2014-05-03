@@ -26,7 +26,7 @@ class AchelIterator extends Module
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event));
 				if ($this->core->requireNumParms($this, 3, $event, $originalParms, $parms))
 				{
-					$returnValue=$this->basicMaths($parms[0], $parms[1], $parms[2]);
+					$returnValue=$this->genericIterator($parms[0], $parms[1], $parms[2]);
 					return $returnValue;
 				}
 				break;
