@@ -134,3 +134,9 @@ defineTest Iterator 1-10 inclusive - Step 2,
 	
 	unset Tmp,iterations
 
+defineTest Iterator 10-1 inclusive - Step -1,
+	iterator 10,-1,1
+	countToVar Tmp,iterations
+	expect 10,~!Tmp,iterations!~
+	
+	unset Tmp,iterations

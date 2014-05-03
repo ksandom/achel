@@ -44,9 +44,19 @@ class AchelIterator extends Module
 	function genericIterator($start, $incrementor, $stop)
 	{
 		$result=array();
-		for ($i=$start;$i<=$stop;$i+=$incrementor)
+		if ($stop>$start)
 		{
-			$result[]=$i;
+			for ($i=$start;$i<=$stop;$i+=$incrementor)
+			{
+				$result[]=$i;
+			}
+		}
+		else
+		{
+			for ($i=$start;$i>=$stop;$i+=$incrementor)
+			{
+				$result[]=$i;
+			}
 		}
 		
 		return $result;
