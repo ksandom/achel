@@ -41,8 +41,6 @@ defineTest setNested - 3 auto-indexed entries - expected addresses,
 	setNested Tmp,setNested,,bork,b,B
 	setNested Tmp,setNested,,bork,c,C
 	
-	retrieveResults Tmp,setNested
-	
 	if ~!Tmp,setNested,0,bork,0!~ ~!Tmp,setNested,1,bork,b!~ ~!Tmp,setNested,2,bork,c!~,==,A B C,
 		passTest The expected addresses worked.
 	else
@@ -50,3 +48,28 @@ defineTest setNested - 3 auto-indexed entries - expected addresses,
 	
 	unset Tmp,nestedCount
 	unset Tmp,setNested
+
+
+
+debug 0,###### begin here
+setNested ["Tmp","setNested","default","",{"instanceName":"default","longitude":"1","latitude":"1"}]
+setNested ["Tmp","setNested","default","",{"instanceName":"default","longitude":"2","latitude":"2"}]
+setNested ["Tmp","setNested","default","",{"instanceName":"default","longitude":"3","latitude":"3"}]
+debug 0,###### end here
+
+getCategory Tmp,setNested
+nested
+outNow
+
+defineTest setNested - reproduced addressing bug - 0,
+	expect 1,~!Tmp,setNested,default,longitude!~
+
+defineTest setNested - reproduced addressing bug - 1,
+	expect 2,~!Tmp,setNested,default,longitude!~
+
+defineTest setNested - reproduced addressing bug - 2,
+	expect 3,~!Tmp,setNested,default,longitude!~
+
+unset Tmp,nestedCount
+unset Tmp,setNested
+

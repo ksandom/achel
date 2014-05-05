@@ -266,7 +266,6 @@ class core extends Module
 			}
 		}
 		
-		
 		#if ($require===null) $require=$limit;
 		
 		$partsCount=count($parts);
@@ -1091,6 +1090,7 @@ class core extends Module
 		$value=$path[$lastPosition];
 		unset($path[$lastPosition]);
 		
+		
 		$this->setNestedStart($path, $value);
 	}
 	
@@ -1120,6 +1120,7 @@ class core extends Module
 		
 		$pathParts=(is_array($path))?$path:explode(',', $path);
 		
+		# $this->core->debug(0, implode(',', $pathParts));
 		# TODO Add shortcuts
 		
 		$this->setNestedWorker($this->store, $pathParts, $value, count($pathParts));
@@ -1162,6 +1163,8 @@ class core extends Module
 			if ($path[$position]==='') $initialValue[]=$value;
 			else $initialValue[$path[$position]]=$value;
 			
+			#print_r($value);
+			
 			# TODO looks like some optimisation can be done here.
 			$tmpValue=$this->getNested($path);
 			$vcount=count($value);
@@ -1169,7 +1172,8 @@ class core extends Module
 			
 			$destination=implode(',', $path);
 			
-			$this->debug(4, "setNestedWorker: Setting value $position/$count {$path[$position]}. vcount=$vcount tcount=$tcount destination=$destination");
+			
+			$this->debug(0, "setNestedWorker: Setting value $position/$count {$path[$position]}. vcount=$vcount tcount=$tcount destination=$destination");
 		}
 	}
 	
