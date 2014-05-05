@@ -155,3 +155,32 @@ defineTest Iterator 10-0 inclusive - Step -0.1,
 	
 	unset Tmp,iterations
 
+defineTest Iterator 1-10 inclusive - Step 0 (invalid incrementor),
+	iterator 1,0,10
+	countToVar Tmp,iterations
+	expect 1,~!Tmp,iterations!~
+	
+	unset Tmp,iterations
+
+defineTest Iterator 1-0 inclusive - Step 1 (incrementor is in the wrong direction),
+	iterator 1,1,0
+	countToVar Tmp,iterations
+	expect 1,~!Tmp,iterations!~
+	
+	unset Tmp,iterations
+
+defineTest Iterator 1- (missing stop) inclusive - Step 1,
+	iterator 1,1,
+	countToVar Tmp,iterations
+	expect 1,~!Tmp,iterations!~
+	
+	unset Tmp,iterations
+
+defineTest Iterator -10 (missing start) inclusive - Step 1,
+	iterator ,1,10
+	countToVar Tmp,iterations
+	expect 1,~!Tmp,iterations!~
+	
+	unset Tmp,iterations
+
+
