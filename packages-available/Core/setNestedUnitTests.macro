@@ -25,9 +25,9 @@ defineTest setNested - 3 simple auto-indexed entries,
 	unset Tmp,setNested
 
 defineTest setNested - 3 auto-indexed entries,
-	setNested Tmp,setNested,,bork,A
-	setNested Tmp,setNested,,bork,B
-	setNested Tmp,setNested,,bork,C
+	setNested Tmp,setNested,,bork,0,A
+	setNested Tmp,setNested,,bork,b,B
+	setNested Tmp,setNested,,bork,c,C
 	
 	retrieveResults Tmp,setNested
 	countToVar Tmp,nestedCount
@@ -37,16 +37,16 @@ defineTest setNested - 3 auto-indexed entries,
 	unset Tmp,setNested
 
 defineTest setNested - 3 auto-indexed entries - expected addresses,
-	setNested Tmp,setNested,,bork,A
-	setNested Tmp,setNested,,bork,B
-	setNested Tmp,setNested,,bork,C
+	setNested Tmp,setNested,,bork,0,A
+	setNested Tmp,setNested,,bork,b,B
+	setNested Tmp,setNested,,bork,c,C
 	
 	retrieveResults Tmp,setNested
 	
-	if ~!Tmp,setNested,0,bork!~ ~!Tmp,setNested,1,bork!~ ~!Tmp,setNested,2,bork!~,==,A B C,
+	if ~!Tmp,setNested,0,bork,0!~ ~!Tmp,setNested,1,bork,b!~ ~!Tmp,setNested,2,bork,c!~,==,A B C,
 		passTest The expected addresses worked.
 	else
-		failTest The expected addresses should have produces "A B C". But instead produced "~!Tmp,setNested,0,bork!~ ~!Tmp,setNested,1,bork!~ ~!Tmp,setNested,2,bork!~"
+		failTest The expected addresses should have produces "A B C". But instead produced "~!Tmp,setNested,0,bork,0!~ ~!Tmp,setNested,1,bork,b!~ ~!Tmp,setNested,2,bork,c!~"
 	
 	unset Tmp,nestedCount
 	unset Tmp,setNested
