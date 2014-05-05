@@ -1134,11 +1134,13 @@ class core extends Module
 			# Make sure we have a sane place to continue
 			if (!isset($initialValue[$path[$position]]))
 			{
-				$initialValue[$path[$position]]=array();
+				if ($path[$position]==='') $initialValue[]=array();
+				else $initialValue[$path[$position]]=array();
 			}
 			elseif (!is_array($initialValue[$path[$position]]))
 			{
-				$initialValue[$path[$position]]=array();
+				if ($path[$position]==='') $initialValue[]=array();
+				else $initialValue[$path[$position]]=array();
 			}
 			
 			$this->setNestedWorker($initialValue[$path[$position]], $path, $value, $count, $position+1);
@@ -1146,8 +1148,10 @@ class core extends Module
 		else
 		{
 			# set the value
-			$initialValue[$path[$position]]=$value;
+			if ($path[$position]==='') $initialValue[]=$value;
+			else $initialValue[$path[$position]]=$value;
 			
+			# TODO looks like some optimisation can be done here.
 			$tmpValue=$this->getNested($path);
 			$vcount=count($value);
 			$tcount=count($tmpValue);

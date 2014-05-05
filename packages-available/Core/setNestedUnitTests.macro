@@ -1,0 +1,26 @@
+# unit tests for setNested ~ unitTest,hidden,setNested
+
+defineTest setNested - 3 simple entries,
+	setNested Tmp,setNested,0,A
+	setNested Tmp,setNested,b,B
+	setNested Tmp,setNested,c,C
+	
+	retrieveResults Tmp,setNested
+	countToVar Tmp,nestedCount
+	expect 3,~!Tmp,nestedCount!~
+	
+	unset Tmp,nestedCount
+	unset Tmp,setNested
+
+
+defineTest setNested - 3 auto-indexed entries,
+	setNested Tmp,setNested,,A
+	setNested Tmp,setNested,,B
+	setNested Tmp,setNested,,C
+	
+	retrieveResults Tmp,setNested
+	countToVar Tmp,nestedCount
+	expect 3,~!Tmp,nestedCount!~
+	
+	unset Tmp,nestedCount
+	unset Tmp,setNested
