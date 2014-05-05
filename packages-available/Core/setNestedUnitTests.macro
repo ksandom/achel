@@ -1,9 +1,9 @@
 # unit tests for setNested ~ unitTest,hidden,setNested
 
 defineTest setNested - 3 simple entries,
-	setNested Tmp,setNested,0,A
-	setNested Tmp,setNested,b,B
-	setNested Tmp,setNested,c,C
+	setNested Tmp,setNested,0,bork,A
+	setNested Tmp,setNested,b,bork,B
+	setNested Tmp,setNested,c,bork,C
 	
 	retrieveResults Tmp,setNested
 	countToVar Tmp,nestedCount
@@ -12,8 +12,7 @@ defineTest setNested - 3 simple entries,
 	unset Tmp,nestedCount
 	unset Tmp,setNested
 
-
-defineTest setNested - 3 auto-indexed entries,
+defineTest setNested - 3 simple auto-indexed entries,
 	setNested Tmp,setNested,,A
 	setNested Tmp,setNested,,B
 	setNested Tmp,setNested,,C
@@ -21,6 +20,33 @@ defineTest setNested - 3 auto-indexed entries,
 	retrieveResults Tmp,setNested
 	countToVar Tmp,nestedCount
 	expect 3,~!Tmp,nestedCount!~
+	
+	unset Tmp,nestedCount
+	unset Tmp,setNested
+
+defineTest setNested - 3 auto-indexed entries,
+	setNested Tmp,setNested,,bork,A
+	setNested Tmp,setNested,,bork,B
+	setNested Tmp,setNested,,bork,C
+	
+	retrieveResults Tmp,setNested
+	countToVar Tmp,nestedCount
+	expect 3,~!Tmp,nestedCount!~
+	
+	unset Tmp,nestedCount
+	unset Tmp,setNested
+
+defineTest setNested - 3 auto-indexed entries - expected addresses,
+	setNested Tmp,setNested,,bork,A
+	setNested Tmp,setNested,,bork,B
+	setNested Tmp,setNested,,bork,C
+	
+	retrieveResults Tmp,setNested
+	
+	if ~!Tmp,setNested,0,bork!~ ~!Tmp,setNested,1,bork!~ ~!Tmp,setNested,2,bork!~,==,A B C,
+		passTest The expected addresses worked.
+	else
+		failTest The expected addresses should have produces "A B C". But instead produced "~!Tmp,setNested,0,bork!~ ~!Tmp,setNested,1,bork!~ ~!Tmp,setNested,2,bork!~"
 	
 	unset Tmp,nestedCount
 	unset Tmp,setNested

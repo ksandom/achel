@@ -1132,18 +1132,29 @@ class core extends Module
 			$this->debug(5, "setNestedWorker: processing $position/$count {$path[$position]}");
 			
 			# Make sure we have a sane place to continue
+			$lastkey=$path[$position];
 			if (!isset($initialValue[$path[$position]]))
 			{
-				if ($path[$position]==='') $initialValue[]=array();
+				if ($path[$position]==='')
+				{
+					$initialValue[]=array();
+					$keys=array_keys($initialValue);
+					$lastkey=$keys[count($keys)-1];
+				}
 				else $initialValue[$path[$position]]=array();
 			}
 			elseif (!is_array($initialValue[$path[$position]]))
 			{
-				if ($path[$position]==='') $initialValue[]=array();
+				if ($path[$position]==='')
+				{
+					$initialValue[]=array();
+					$keys=array_keys($initialValue);
+					$lastkey=$keys[count($keys)-1];
+				}
 				else $initialValue[$path[$position]]=array();
 			}
 			
-			$this->setNestedWorker($initialValue[$path[$position]], $path, $value, $count, $position+1);
+			$this->setNestedWorker($initialValue[$lastkey], $path, $value, $count, $position+1);
 		}
 		else
 		{
