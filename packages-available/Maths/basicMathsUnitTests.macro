@@ -121,6 +121,7 @@ unset Tmp,absolute
 
 
 defineTest Iterator 1-10 inclusive - Step 1,
+	clear
 	iterator 1,1,10
 	countToVar Tmp,iterations
 	expect 10,~!Tmp,iterations!~
@@ -128,6 +129,7 @@ defineTest Iterator 1-10 inclusive - Step 1,
 	unset Tmp,iterations
 
 defineTest Iterator 0-10 inclusive - Step 0.1,
+	clear
 	iterator 0,0.1,10
 	countToVar Tmp,iterations
 	expect 101,~!Tmp,iterations!~
@@ -135,6 +137,7 @@ defineTest Iterator 0-10 inclusive - Step 0.1,
 	unset Tmp,iterations
 
 defineTest Iterator 1-10 inclusive - Step 2,
+	clear
 	iterator 1,2,10
 	countToVar Tmp,iterations
 	expect 5,~!Tmp,iterations!~
@@ -142,6 +145,7 @@ defineTest Iterator 1-10 inclusive - Step 2,
 	unset Tmp,iterations
 
 defineTest Iterator 10-1 inclusive - Step -1,
+	clear
 	iterator 10,-1,1
 	countToVar Tmp,iterations
 	expect 10,~!Tmp,iterations!~
@@ -149,6 +153,7 @@ defineTest Iterator 10-1 inclusive - Step -1,
 	unset Tmp,iterations
 
 defineTest Iterator 10-0 inclusive - Step -0.1,
+	clear
 	iterator 10,-0.1,0
 	countToVar Tmp,iterations
 	expect 101,~!Tmp,iterations!~
@@ -156,6 +161,7 @@ defineTest Iterator 10-0 inclusive - Step -0.1,
 	unset Tmp,iterations
 
 defineTest Iterator 1-10 inclusive - Step 0 (invalid incrementor),
+	clear
 	iterator 1,0,10
 	countToVar Tmp,iterations
 	expect 1,~!Tmp,iterations!~
@@ -163,6 +169,7 @@ defineTest Iterator 1-10 inclusive - Step 0 (invalid incrementor),
 	unset Tmp,iterations
 
 defineTest Iterator 1-0 inclusive - Step 1 (incrementor is in the wrong direction),
+	clear
 	iterator 1,1,0
 	countToVar Tmp,iterations
 	expect 1,~!Tmp,iterations!~
@@ -170,6 +177,7 @@ defineTest Iterator 1-0 inclusive - Step 1 (incrementor is in the wrong directio
 	unset Tmp,iterations
 
 defineTest Iterator 1- (missing stop) inclusive - Step 1,
+	clear
 	iterator 1,1,
 	countToVar Tmp,iterations
 	expect 1,~!Tmp,iterations!~
@@ -177,6 +185,7 @@ defineTest Iterator 1- (missing stop) inclusive - Step 1,
 	unset Tmp,iterations
 
 defineTest Iterator -10 (missing start) inclusive - Step 1,
+	clear
 	iterator ,1,10
 	countToVar Tmp,iterations
 	expect 1,~!Tmp,iterations!~
