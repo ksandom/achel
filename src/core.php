@@ -649,7 +649,7 @@ class core extends Module
 		
 		$output=$this->findAndProcessVariables($output, $iterations);
 		
-		if ($iterations>10) $this->debug(0, "processValue: $iterations reached while processing variables in \"$value\". The result achieved is \"$output\". This is probably a big."); # NOTE 10 is very strict, yet unlikely to be reached in any legitimate situation I can think of at the moment. The warning limit may need to be reconsidered in the future.
+		if ($iterations>20) $this->debug(0, "processValue: $iterations reached while processing variables in \"$value\". The result achieved is \"$output\". This is probably a big."); # NOTE 10 is very strict, yet unlikely to be reached in any legitimate situation I can think of at the moment. The warning limit may need to be reconsidered in the future.
 		
 		return $output;
 	}

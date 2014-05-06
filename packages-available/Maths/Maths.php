@@ -26,9 +26,11 @@ class Maths extends Module
 
 			case 'basicMaths':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event));
-				$this->core->requireNumParms($this, 5, $event, $originalParms, $parms);
-				$returnValue=$this->basicMaths($parms[2], $parms[3], $parms[4]);
-				$this->core->set($parms[0], $parms[1], $returnValue);
+				if ($this->core->requireNumParms($this, 5, $event, $originalParms, $parms))
+				{
+					$returnValue=$this->basicMaths($parms[2], $parms[3], $parms[4]);
+					$this->core->set($parms[0], $parms[1], $returnValue);
+				}
 				break;
 			case 'round':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 4, 4);
