@@ -50,26 +50,44 @@ defineTest setNested - 3 auto-indexed entries - expected addresses,
 	unset Tmp,setNested
 
 
-
-debug 0,###### begin here
 setNested ["Tmp","setNested","default","",{"instanceName":"default","longitude":"1","latitude":"1"}]
 setNested ["Tmp","setNested","default","",{"instanceName":"default","longitude":"2","latitude":"2"}]
 setNested ["Tmp","setNested","default","",{"instanceName":"default","longitude":"3","latitude":"3"}]
-debug 0,###### end here
 
 getCategory Tmp,setNested
 nested
 outNow
 
 defineTest setNested - reproduced addressing bug - 0,
-	expect 1,~!Tmp,setNested,default,longitude!~
+	expect 1,~!Tmp,setNested,default,0,longitude!~
 
 defineTest setNested - reproduced addressing bug - 1,
-	expect 2,~!Tmp,setNested,default,longitude!~
+	expect 2,~!Tmp,setNested,default,1,longitude!~
 
 defineTest setNested - reproduced addressing bug - 2,
-	expect 3,~!Tmp,setNested,default,longitude!~
+	expect 3,~!Tmp,setNested,default,2,longitude!~
 
 unset Tmp,nestedCount
 unset Tmp,setNested
+
+defineTest setNested - simplified addressing test - no blank,
+	setNested Tmp,setNested,A
+	
+	expect A,~!Tmp,setNested!~
+	
+	unset Tmp,setNested
+
+defineTest setNested - simplified addressing test - no appendage,
+	setNested Tmp,setNested,,A
+	
+	expect A,~!Tmp,setNested,0!~
+	
+	unset Tmp,setNested
+
+defineTest setNested - simplified addressing test - appendage,
+	setNested Tmp,setNested,,a,A
+	
+	expect A,~!Tmp,setNested,0,a!~
+	
+	unset Tmp,setNested
 

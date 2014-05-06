@@ -1002,15 +1002,12 @@ class core extends Module
 	
 	function getNested($values)
 	{
-		# TODO what was I trying to do here. Is it even that?
-		
 		$output=$this->store;
 		foreach ($values as $value)
 		{
 			if (isset($output[$value]))
 			{
 				$output=$output[$value];
-				# print_r($output);
 			}
 			else
 			{
@@ -1166,6 +1163,7 @@ class core extends Module
 			#print_r($value);
 			
 			# TODO looks like some optimisation can be done here.
+			/*
 			$tmpValue=$this->getNested($path);
 			$vcount=count($value);
 			$tcount=count($tmpValue);
@@ -1173,7 +1171,8 @@ class core extends Module
 			$destination=implode(',', $path);
 			
 			
-			$this->debug(0, "setNestedWorker: Setting value $position/$count {$path[$position]}. vcount=$vcount tcount=$tcount destination=$destination");
+			$this->debug(4, "setNestedWorker: Setting value $position/$count {$path[$position]}. vcount=$vcount tcount=$tcount destination=$destination");
+			*/
 		}
 	}
 	
