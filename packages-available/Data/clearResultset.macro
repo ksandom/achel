@@ -1,4 +1,6 @@
 # Clear the resultset ~ resultset
 #onDefine aliasFeature clearResultset,clear
 
+# Asser that this thing doesn't exist, and then get it.
+unset SomeArbitraryCategory,someArbitraryThing
 get SomeArbitraryCategory,someArbitraryThing
