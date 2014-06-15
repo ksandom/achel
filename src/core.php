@@ -18,6 +18,8 @@ define('isolatedNestedPrivateVarsName', 'Isolated');
 
 define('workAroundIfBug', true); // See doc/bugs/ifBug.md
 
+define ('cleanupArgs', true); // Turn this off if you strike code that relies on arguments set for other macros. This is a bad way of programming and should serve as a severe warning that the code needs to be updated. This option will be removed soon.
+
 
 /*
 	Debug levels
@@ -463,7 +465,7 @@ class core extends Module
 					$this->debugResultSet($obj['name']);
 				}
 				
-				$this->makeArgsAvailableToTheScript($obj['name'], $valueIn);
+				$numberOfArgs=$this->makeArgsAvailableToTheScript($obj['name'], $valueIn);
 				$result=$obj['obj']->event($obj['name']);
 				
 				if (isset($obj['featureType']))
@@ -485,6 +487,10 @@ class core extends Module
 					else $this->core->debug(4, "callFeature: Could not find featureType ".$obj['featureType']);
 				}
 				
+				if (cleanupArgs)
+				{
+					$this->removeArgs($obj['name'], $numberOfArgs);
+				}
 				
 				if ($this->isVerboseEnough(4))
 				{
@@ -505,9 +511,20 @@ class core extends Module
 	function makeArgsAvailableToTheScript($featureName, $args)
 	{
 		$this->set('Global', $featureName, $args);
-		foreach ($this->interpretParms($args) as $key=>$arg)
+		$argParts=$this->interpretParms($args);
+		foreach ($argParts as $key=>$arg)
 		{
 			$this->set('Global', "$featureName-$key", $arg);
+		}
+		
+		return count($argParts);
+	}
+	
+	function removeArgs($featureName, $numberOfArgs)
+	{
+		for ($key=0; $key<$numberOfArgs; $key++)
+		{
+			$this->doUnset(array('Global', "$featureName-$key"));
 		}
 	}
 	
