@@ -132,7 +132,7 @@ class core extends Module
 				return array($this->getNested($parms));
 				break;
 			case 'set':
-				$parms=$this->interpretParms($this->get('Global', $event), 2, 2, true);
+				$parms=$this->interpretParms($this->get('Global', $event), 3, 2, true);
 				$this->set($parms[0], $parms[1], $parms[2]);
 				break;
 			case 'setNested':
@@ -302,7 +302,8 @@ class core extends Module
 			
 			for ($j=$i;$j<$stop;$j++)
 			{
-				$outputParts[]=$parts[$j];
+				if (is_array($parts[$j])) $outputParts[]=json_encode($parts[$j]);
+				else $outputParts[]=$parts[$j];
 				# $this->core->debug(2, "interpretParms: Added remaining part $j => {$parts[$j]}");
 			}
 			
