@@ -14,3 +14,5 @@ In my earlier implementations, I tried to make the concept do everything that a 
 
 In late 2001 there were a number of projects I wanted to build that weren't particularly well suited to traditional programming languages. So I started playing with the concept of flows of data and how you could dynamically manipulate them while live. In it's most basic sense, the concept isn't new. But here I am taking the concept to a level I've never seen before.
 
+This is pre-alpha software. And not yet intented for mainstream use.
+
