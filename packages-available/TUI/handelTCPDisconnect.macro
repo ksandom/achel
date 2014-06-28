@@ -1,0 +1,11 @@
+# Create all the pipes for a new connection ~ TCP
+#onDefine registerForEvent SocketServerFaucet,sharedDisconnect,handelTCPDisconnect
+
+debug 1,handelTCPDisconnect: ~!Global,handelTCPDisconnect-0!~
+
+deletePipe prefixMassOut,TCPcarbonCopy,default,~!Global,handelTCPDisconnect-0!~
+deletePipe prefixTermOut,TCPcarbonCopy,default,~!Global,handelTCPDisconnect-0!~
+deletePipe debugFaucet,TCPcarbonCopy,default,~!Global,handelTCPDisconnect-0!~
+deletePipe colors,TCPcarbonCopy,default,~!Global,handelTCPDisconnect-0!~
+
+deletePipe TCPcarbonCopy,userInputSelector,~!Global,handelTCPDisconnect-0!~,default

@@ -1,0 +1,5 @@
+# Converts the input (BalanceM2N,current,value) from the defined input range to -1,0,1 and validates/asserts that it is not out of range. Therefore it is still valuable to do this even if the input range is already -1,0,1. --inputRange=min,center,max ~ BalanceM2N,validation,range,conversion
+
+rangeConvert Tmp,inRangeValue,~!BalanceM2N,current,value!~,~!Global,inputRange-0!~,~!Global,inputRange-1!~,~!Global,inputRange-2!~,-1,0,1
+setNested BalanceM2N,current,value,~!Tmp,inRangeValue!~
+unset Tmp,inRangeValue

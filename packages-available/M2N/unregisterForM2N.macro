@@ -1,0 +1,6 @@
+# Unregister a user or thing from M2N. --unregisterForM2N=faucetName,channel ~ m2n
+
+pass
+
+# TODO unjoin from everything
+# TODO delete entry

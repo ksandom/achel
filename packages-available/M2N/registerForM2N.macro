@@ -1,0 +1,28 @@
+# Register a faucet for usage in M2N. --registerForM2N=faucetName,[channel],[userOrThing],[label] . channel defaults to "default". userOrThing defaults to thing, which is something a user would connect to. label specifies the human-friendly-ish name which we will refer to this item as. Usually this would be a person's name, or labeling a particular terminal with a  purpose. If omitted, it will default to faucetName. ~ m2n
+
+set Tmp,m2nFaucetName,~!Global,registerForM2N-0!~
+
+set Tmp,m2nChannel,~!Global,registerForM2N-1!~
+if ~!Tmp,m2nChannel!~,==,,
+	set Tmp,m2nChannel,default
+
+set Tmp,m2nUserOrThing,~!Global,registerForM2N-2!~
+if ~!Tmp,m2nUserOrThing!~,==,,
+	set Tmp,m2nUserOrThing,thing
+
+set Tmp,m2nLabel,~!Global,registerForM2N-3!~
+if ~!Tmp,m2nLabel!~,==,,
+	set Tmp,m2nLabel,~!Tmp,m2nFaucetName!~
+
+
+setNested M2N,items,~!Tmp,m2nFaucetName!~-~!Tmp,m2nChannel!~,faucetName,~!Tmp,m2nFaucetName!~
+setNested M2N,items,~!Tmp,m2nFaucetName!~-~!Tmp,m2nChannel!~,channel,~!Tmp,m2nChannel!~
+setNested M2N,items,~!Tmp,m2nFaucetName!~-~!Tmp,m2nChannel!~,type,~!Tmp,m2nUserOrThing!~
+setNested M2N,items,~!Tmp,m2nFaucetName!~-~!Tmp,m2nChannel!~,label,~!Tmp,m2nLabel!~
+
+debug 1,registerForM2N: Registered ~!Tmp,m2nUserOrThing!~ "~!Tmp,m2nFaucetName!~,~!Tmp,m2nChannel!~" as ~!Tmp,m2nLabel!~
+
+unset Tmp,m2nFaucetName
+unset Tmp,m2nChannel
+unset Tmp,m2nUserOrThing
+unset Tmp,m2nName

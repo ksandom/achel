@@ -1,0 +1,7 @@
+# Show the current state of Global. This is to test the bug where the resultSet seems to get stuck ~ debug,tui2
+#onDefine aliasFeature showGlobal,sg
+
+showNesting
+getCategory Global
+debugResultSet
+showNesting

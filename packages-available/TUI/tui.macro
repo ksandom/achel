@@ -1,0 +1,6 @@
+# Text User Interface ~ tui
+
+verbose
+load tuiBase
+registerForEvent Achel,finishEarly,tuiStart
+

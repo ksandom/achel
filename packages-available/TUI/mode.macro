@@ -1,0 +1,9 @@
+# Set where user input will go ~ tui,tuiuser
+
+if ~!Global,mode!~,==,,pass
+	debug 1,Here are some modes you can set with `mode modeName`:
+	debug 1,  mass - Switch to this mode to run any mass command.
+	debug 1,  term - Switch to this mode to talk to any hosts you've connected to.
+else
+	debug 1,Setting user input to "~!Global,mode!~". Type mode by itself to get a list of possible modes.
+	setFaucetConfigItem userInputSelector,defaultOut,,~!Global,mode!~

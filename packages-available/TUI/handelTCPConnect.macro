@@ -1,0 +1,15 @@
+# Create all the pipes for a new connection ~ TCP
+#onDefine registerForEvent SocketServerFaucet,sharedConnect,handelTCPConnect
+
+# TODO This needs to be simplified
+
+debug 1,handelTCPConnect: ~!Global,handelTCPConnect-0!~
+createPipe prefixMassOut,TCPcarbonCopy,default,~!Global,handelTCPConnect-0!~
+createPipe prefixTermOut,TCPcarbonCopy,default,~!Global,handelTCPConnect-0!~
+createPipe debugFaucet,TCPcarbonCopy,default,~!Global,handelTCPConnect-0!~
+createPipe colors,TCPcarbonCopy,default,~!Global,handelTCPConnect-0!~
+createPipe massOut,TCPcarbonCopy,default,~!Global,handelTCPConnect-0!~
+
+createPipe TCPcarbonCopy,userInputSelector,~!Global,handelTCPConnect-0!~,default
+
+deliver TCPcarbonCopy,~!Global,handelTCPConnect-0!~,You are connected using a shared session.

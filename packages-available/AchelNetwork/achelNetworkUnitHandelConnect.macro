@@ -1,0 +1,5 @@
+# Handel an incomming connection for the unit tests. ~ network,hidden
+#onDefine registerForEvent SocketServerFaucet,achelNetworkUnitConnect,achelNetworkUnitHandelConnect
+
+debug 1,achelNetworkUnitHandelConnect: Got connection ~!Global,achelNetworkUnitHandelConnect-0!~
+createPipe serverSocket,destination,~!Global,achelNetworkUnitHandelConnect-0!~,default

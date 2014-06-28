@@ -1,0 +1,34 @@
+# Manages the many to many relationship between the left and right sides. --joinLooper=[writeMode],workerFunction . writeMode can be one of rw,ro,wo. workerFunction is the name of the function to call to do the work. This is typically passed automatically via indentation. ~ m2n,hidden
+
+if ~!Global,joinLooper-0!~,==,rw,
+	set M2N,m2nReadMode,1
+	set M2N,m2nWriteMode,1
+elseIf ~!Global,joinLooper-0!~,==,ro,
+	set M2N,m2nReadMode,1
+	set M2N,m2nWriteMode,0
+elseIf ~!Global,joinLooper-0!~,==,wo,
+	set M2N,m2nReadMode,0
+	set M2N,m2nWriteMode,1
+else
+	set M2N,m2nReadMode,1
+	set M2N,m2nWriteMode,1
+
+
+retrieveResults M2N,left
+loop
+	isolate
+		getCategory Result
+		stashResults M2N,leftEntry
+		retrieveResults M2N,right
+		loop
+			isolate
+				getCategory Result
+				stashResults M2N,rightEntry
+				
+				isolate ~!Global,joinLooper-1!~,~!Global,joinLooper-0!~
+
+unset M2N,leftEntry
+unset M2N,rightEntry
+unset M2N,m2nReadMode
+unset M2N,m2nWriteMode
+

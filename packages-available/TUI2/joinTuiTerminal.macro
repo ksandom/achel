@@ -1,0 +1,5 @@
+# Join the terminal and the core. ~ tui2
+
+selectUsers ^terminal$
+selectThings ^core$
+join

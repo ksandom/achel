@@ -1,0 +1,5 @@
+# Handel an unexpected event. ~ network,hidden
+#onDefine registerForEvent SocketServerFaucet,unexpectedEvent,achelNetworkUnitUnexpected
+
+debug 1,achelNetworkUnitUnexpected: Got an exepected event from somewhere. Increment debugging with -v to figure out where.
+failTest unexpected event.

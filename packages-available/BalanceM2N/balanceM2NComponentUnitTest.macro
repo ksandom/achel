@@ -1,0 +1,183 @@
+# BalanceM2N unit tests for components. ~ hidden,unitTest,balanceM2N
+
+setNested BalanceM2N,rules,ruleSet1,state1,rule1,process,
+	inputRange -1,0,1
+	outputRange -2,0,2
+
+
+# Basic bounds
+defineTest rangeConvert OOB -2<,
+	rangeConvert Tmp,rangeConvert,-2,-1,0,1,-3,0,3
+	
+	expect -3,~!Tmp,rangeConvert!~
+	unset Tmp,rangeConvert
+
+defineTest rangeConvert center,
+	rangeConvert Tmp,rangeConvert,0,-1,0,1,-3,0,3
+	
+	expect 0,~!Tmp,rangeConvert!~
+	unset Tmp,rangeConvert
+
+defineTest rangeConvert OOB 2>,
+	rangeConvert Tmp,rangeConvert,2,-1,0,1,-3,0,3
+	
+	expect 3,~!Tmp,rangeConvert!~
+	unset Tmp,rangeConvert
+
+defineTest rangeConvert AB =-1,
+	rangeConvert Tmp,rangeConvert,-1,-1,0,1,-3,0,3
+	
+	expect -3,~!Tmp,rangeConvert!~
+	unset Tmp,rangeConvert
+
+defineTest rangeConvert IB -0.5,
+	rangeConvert Tmp,rangeConvert,-0.5,-1,0,1,-3,0,3
+	
+	expect -1.5,~!Tmp,rangeConvert!~
+	unset Tmp,rangeConvert
+
+defineTest rangeConvert IB 0.5,
+	rangeConvert Tmp,rangeConvert,0.5,-1,0,1,-3,0,3
+	
+	expect 1.5,~!Tmp,rangeConvert!~
+	unset Tmp,rangeConvert
+
+
+# Middle grounds
+defineTest rangeConvert <,
+	rangeConvert Tmp,rangeConvert,-0.5,-1,0,1,-3,0,3
+	
+	expect -1.5,~!Tmp,rangeConvert!~
+	unset Tmp,rangeConvert
+
+defineTest rangeConvert >,
+	rangeConvert Tmp,rangeConvert,0.5,-1,0,1,-3,0,3
+	
+	expect 1.5,~!Tmp,rangeConvert!~
+	unset Tmp,rangeConvert
+
+
+# User facing manipulations
+defineTest inputRange OOB -2< -1 0 1,
+	setNested BalanceM2N,current,value,-2
+	inputRange -1,0,1
+	expect -1,~!BalanceM2N,current,value!~
+
+defineTest inputRange OOB -3 -2 0 2<,
+	setNested BalanceM2N,current,value,-3
+	inputRange -2,0,2
+	expect -1,~!BalanceM2N,current,value!~
+
+defineTest outputRange  -0.5< -2 0 2<,
+	setNested BalanceM2N,current,value,-0.5
+	outputRange -2,0,2
+	expect -1,~!BalanceM2N,current,value!~
+
+defineTest outputRange  0.5< -2 0 2<,
+	setNested BalanceM2N,current,value,0.5
+	outputRange -2,0,2
+	expect 1,~!BalanceM2N,current,value!~
+
+defineTest outputRange OOB -5< -2 0 2<,
+	setNested BalanceM2N,current,value,-5
+	outputRange -2,0,2
+	expect -2,~!BalanceM2N,current,value!~
+
+
+defineTest assertRange OOB -5< -2 0 2<,
+	setNested BalanceM2N,current,value,-5
+	assertRange -2,0,2
+	expect -2,~!BalanceM2N,current,value!~
+
+defineTest assertRange OOB 5< -2 0 2<,
+	setNested BalanceM2N,current,value,5
+	assertRange -2,0,2
+	expect 2,~!BalanceM2N,current,value!~
+
+defineTest assertRange IB -0.5< -2 0 2<,
+	setNested BalanceM2N,current,value,-0.5
+	assertRange -2,0,2
+	expect -0.5,~!BalanceM2N,current,value!~
+
+defineTest assertRange IB 0.5< -2 0 2<,
+	setNested BalanceM2N,current,value,0.5
+	assertRange -2,0,2
+	expect 0.5,~!BalanceM2N,current,value!~
+
+defineTest assertRange OOB -5< defaults,
+	setNested BalanceM2N,current,value,-5
+	assertRange
+	expect -1,~!BalanceM2N,current,value!~
+
+defineTest assertRange OOB 5< defaults,
+	setNested BalanceM2N,current,value,5
+	assertRange
+	expect 1,~!BalanceM2N,current,value!~
+
+defineTest assertRange IB -0.5< defaults,
+	setNested BalanceM2N,current,value,-0.5
+	assertRange
+	expect -0.5,~!BalanceM2N,current,value!~
+
+defineTest assertRange IB 0.5< defaults,
+	setNested BalanceM2N,current,value,0.5
+	assertRange
+	expect 0.5,~!BalanceM2N,current,value!~
+
+defineTest trim 0.5 + 1,
+	setNested BalanceM2N,current,value,0.5
+	trim 1
+	expect 1.5,~!BalanceM2N,current,value!~
+
+defineTest trim 0.5 + -1,
+	setNested BalanceM2N,current,value,0.5
+	trim -1
+	expect -0.5,~!BalanceM2N,current,value!~
+
+defineTest multiply 0.5 * 2,
+	setNested BalanceM2N,current,value,0.5
+	setNested BalanceM2N,current,trim,-1
+	multiply 2
+	expect 1,~!BalanceM2N,current,value!~
+
+defineTest multiply 0.5 * 0.5,
+	setNested BalanceM2N,current,value,0.5
+	multiply 0.5
+	expect 0.25,~!BalanceM2N,current,value!~
+
+defineTest invert 0.5,
+	setNested BalanceM2N,current,value,0.5
+	invert
+	expect -0.5,~!BalanceM2N,current,value!~
+
+defineTest invert -0.5,
+	setNested BalanceM2N,current,value,-0.5
+	invert
+	expect 0.5,~!BalanceM2N,current,value!~
+
+defineTest invert 0,
+	setNested BalanceM2N,current,value,0
+	invert
+	expect 0,~!BalanceM2N,current,value!~
+
+
+# Input
+defineTest setInputValue default,
+	setNested BalanceM2N,current,inputVariable,input
+	unset BalanceM2N,current,input
+	
+	setInputValue 0.4
+	
+	expect 0.4,~!BalanceM2N,current,input!~
+	unset BalanceM2N,current,input
+
+defineTest setInputValue override,
+	setNested BalanceM2N,current,inputVariable,input
+	unset BalanceM2N,current,input2
+	
+	setInputValue 0.3,input2
+	
+	expect 0.3,~!BalanceM2N,current,input2!~
+	unset BalanceM2N,current,input2
+
+

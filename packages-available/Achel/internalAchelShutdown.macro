@@ -1,0 +1,5 @@
+#  ~ tui,internal,shutdown
+
+debug 2,Deleting faucet ~!Result,name!~
+deleteFaucet ~!Result,name!~
+null

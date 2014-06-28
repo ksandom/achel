@@ -1,0 +1,4 @@
+# Lists out a pure result set of pipes. Usually this will be called be something like listPipes ~ internal,faucets,pipes
+
+templateOut pipes
+outNow

@@ -1,0 +1,9 @@
+# Forget tracking to do with any hosts that haven't been seen in more than ageInSeconds. --forgetOlderThan=ageInSeconds ~ forget,host
+#onDefine aliasFeature forgetOlderThan,forget
+
+if ~!Global,forgetOlderThan!~,==,,set,ForgetOlderThan,seconds,60
+else set,ForgetOlderThan,seconds,~!Global,forgetOlderThan!~
+
+deliver lastSeen,_control,forgetOlderThan ~!ForgetOlderThan,seconds!~
+
+unset ForgetOlderThan,seconds

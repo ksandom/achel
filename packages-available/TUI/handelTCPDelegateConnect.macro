@@ -1,0 +1,6 @@
+# Create all the pipes for a new delegation connection ~ TCP
+#onDefine registerForEvent SocketServerFaucet,delegatedConnect,handelTCPDelegateConnect
+
+debug 1,handelTCPDelegateConnect: ~!Global,handelTCPDelegateConnect-0!~
+
+deliver TCPdelegation,~!Global,handelTCPDelegateConnect-0!~,You are connected as a delegate.

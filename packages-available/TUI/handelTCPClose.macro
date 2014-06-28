@@ -1,0 +1,4 @@
+# Create all the pipes for a new connection ~ TCP
+#onDefine registerForEvent SocketServerFaucet,sharedClose,handelTCPClose
+
+debug 1,handelTCPClose: ~!Global,handelTCPClose-0!~

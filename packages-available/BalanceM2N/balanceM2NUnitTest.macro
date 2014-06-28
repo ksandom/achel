@@ -1,0 +1,49 @@
+# Unit tests for BalanceM2N. ~ balanceM2N,unitTest,hidden
+
+
+# Test the bigger picture
+setNested BalanceM2N,rules,ruleSet1,state1,rule1,inputs,value,
+	setInputValue -0.5
+
+setNested BalanceM2N,rules,ruleSet1,state1,rule1,process,
+	inputRange -1,0,1
+	outputRange -2,0,2
+
+setNested BalanceM2N,rules,ruleSet1,state1,rule1,outputs,tmp,
+	set Tmp,testOutput1,~!BalanceM2N,current,value!~
+
+
+defineTest BalanceM2N bM2NSetState rule1,
+	bM2NSetState blah,state1,ruleSet1
+	
+	expect blah,~!BalanceM2N,instances,blah,instanceName!~
+
+defineTest BalanceM2N bM2NSetState blank state,
+	setNested BalanceM2N,instances,default,state,aValue
+	bM2NSetState default,,ruleSet1
+	
+	expect aValue,~!BalanceM2N,instances,default,state!~
+
+defineTest BalanceM2N bM2NSetState blank ruleSet,
+	setNested BalanceM2N,instances,default,ruleSet,aValue
+	bM2NSetState default,state,
+	
+	expect aValue,~!BalanceM2N,instances,default,ruleSet!~
+
+
+defineTest BalanceM2N bM2NSetState non-existent ruleSet1asdasd,
+	setNested BalanceM2N,instances,default,ruleSet,aValue
+	bM2NSetState default,state1,ruleSet1asdasd
+	
+	expect aValue,~!BalanceM2N,instances,default,ruleSet!~
+
+defineTest BalanceM2N tick rule1,
+	bM2NSetState default,state1,ruleSet1
+	bM2NTick
+	
+	expect -1,~!Tmp,testOutput1!~
+
+
+# TODO destroy instance
+# TODO destroy ruleSet/state
+# TODO destroy ruleSet

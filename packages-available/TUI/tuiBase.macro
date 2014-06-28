@@ -1,0 +1,106 @@
+# The foundation of the text user interface ~ base,macro,interactive,tui
+#onDefine registerForEvent Tui,startup,setDefaultHelp,(^|,)(tui)*user(,|$)
+
+showNesting
+
+registerForEvent Mass,finishGeneral,achelShutdown
+registerForEvent Tui,quit,nested
+
+
+getHostName
+
+# Create the main faucets
+createTermFaucet terminal
+createFileFaucet log,/tmp/log
+createInlineCallFaucet iCall
+createRegexFaucet userInputSelector
+createRegexFaucet autoBackgroundTask
+createRegexFaucet delegation
+createDumbInsertFaucetAfter autoOut,outNow
+createSocketServerFaucet TCPcarbonCopy,sharedConnect,sharedDisconnect,sharedClose,4277,
+createSocketServerFaucet TCPdelegation,delegatedConnect,delegatedDisconnect,delegatedClose,4278,
+createThroughFaucet massOut
+createDynamicLastSeenFaucet lastSeen
+
+# Create return path for mass output
+setFaucetAs massOut,General,echoObject
+createPipe massOut,delegation
+
+# This is a hack to make CTRL + C work until I find a better solution.
+createCallFaucet backgroundTask,toString,~%value%~ &
+
+
+# Terminal formatting
+createCallFaucet prefixMassOut,toString,mass> ~%value%~
+createCallFaucet prefixTermOut,toString,term# ~%value%~
+createCallFaucet debugFaucet,toString,debug: "~%value%~"
+createLabelFaucet labeler
+createReplaceFaucet colors
+
+# userApp endpoint
+createThroughFaucet userAppInput
+
+# Basic terminal output
+createPipe prefixMassOut,delegation
+createPipe prefixTermOut,delegation
+createPipe debugFaucet,delegation
+createPipe TCPcarbonCopy,delegation
+createPipe delegation,terminal
+createPipe TCPdelegation,delegation
+createPipe lastSeen,delegation
+
+
+# createPipe terminal,log
+
+# Mappings for interacting direcly with mass
+createPipe iCall,delegation
+createPipe userInputSelector,autoOut,mass,default
+createPipe autoOut,iCall
+createPipe userInputSelector,prefixMassOut,mass,default
+
+# Handel user input for terminal applications
+createPipe userInputSelector,autoBackgroundTask,term,default
+
+createPipe autoBackgroundTask,userAppInput,noBackground,default
+createPipe autoBackgroundTask,backgroundTask,background,default
+
+createPipe backgroundTask,userAppInput
+createPipe userAppInput,prefixTermOut
+createPipe labeler,colors
+createPipe colors,delegation
+
+
+
+
+# Add a couple of highlighting rules
+highlight Document(ation|s),green
+highlight ~!Local,hostName!~,purple
+
+# End points for terminal applications to hook into
+createFaucetAlias termReturn,labeler
+createFaucetAlias termInput,userAppInput
+
+
+# Handel user input and direct it to the right place
+createPipe terminal,userInputSelector
+setFaucetConfigItem userInputSelector,defaultOut,,mass
+addFaucetConfigItemEntry userInputSelector,rules,,massMode,,^mode.*$,mass
+addFaucetConfigItemEntry userInputSelector,rules,,massQuit,,^quit.*$,mass
+addFaucetConfigItemEntry userInputSelector,rules,,massBreak,,^break$,mass
+addFaucetConfigItemEntry userInputSelector,rules,,massDelegate,,^delegate .*$,mass
+addFaucetConfigItemEntry userInputSelector,rules,,massDisconnect,,^disconnect$,mass
+addFaucetConfigItemEntry userInputSelector,rules,,highlight,,^(h|unH)ighlight .*$,mass
+
+# This is done here so that trusted input from any source will get too lastSeen. Once userInputSelector is abstracted these pipes will need to be moved.
+createPipe userInputSelector,lastSeen,mass,_userInput
+createPipe userInputSelector,lastSeen,term,_userInput
+
+# Set rules backgrounding tasks
+setFaucetConfigItem autoBackgroundTask,defaultOut,,noBackground
+addFaucetConfigItemEntry autoBackgroundTask,rules,,tail,,^tail .*$,background
+
+# Set rules output delegation
+setFaucetConfigItem delegation,defaultOut,,default
+
+triggerEvent Tui,startup
+

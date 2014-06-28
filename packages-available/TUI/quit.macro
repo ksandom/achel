@@ -1,0 +1,6 @@
+# Quit from the TUI interface ~ tui
+
+triggerEvent Tui,quit
+
+stopMainLoop
+null
