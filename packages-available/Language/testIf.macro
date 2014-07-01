@@ -106,3 +106,21 @@ defineTest nested - else else,
 		else
 			passTest else else
 
+
+defineTest ifNested true,
+	setNested Tmp,a,b,c
+	failTest no result??
+	ifNested Tmp,a,b,
+		passTest true
+	else
+		failTest Did not find the variable.
+	
+	unset Tmp,a,b
+
+defineTest ifNested false,
+	unset Tmp,a,b
+	failTest no result??
+	ifNested Tmp,a,b,
+		failTest Found a non-existent variable.
+	else
+		passTest false.
