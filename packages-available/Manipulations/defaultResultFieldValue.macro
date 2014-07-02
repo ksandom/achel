@@ -1,0 +1,5 @@
+# Give a result variable a default value if it doesn't have a value. --defaultResultFieldValue=fieldName,value . ~ Result,default
+
+loop
+	if ~!Result,~!Global,defaultResultFieldValue-0!~!~,==,,
+		set Result,~!Global,defaultResultFieldValue-0!~,~!Global,defaultResultFieldValue-1!~
