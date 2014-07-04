@@ -144,7 +144,7 @@ class core extends Module
 				break;
 			case 'setIfNotSet':
 				$originalParms=$this->get('Global', $event);
-				$parms=$this->interpretParms($originalParms);
+				$parms=$this->interpretParms($originalParms, 2);
 				$this->requireNumParms($this, 3, $event, $originalParms, $parms);
 				$this->setIfNotSet($parms[0], $parms[1], $parms[2]);
 				break;
@@ -1102,11 +1102,26 @@ class core extends Module
 	{
 		$path=$this->interpretParms($allValues);
 		$lastPosition=count($path)-1;
-		$value=$path[$lastPosition];
-		unset($path[$lastPosition]);
+		if ($lastPosition==-1)
+		{
+			$this->debug(1, "setNestedFromInterpreter: Could not interpret the path provied (\"$allValues\") at all. This is likely a syntax error in the address.");
+			return false;
+		}
 		
-		
-		$this->setNestedStart($path, $value);
+		if (isset($path[$lastPosition]))
+		{
+			$value=$path[$lastPosition];
+			unset($path[$lastPosition]);
+			
+			
+			$this->setNestedStart($path, $value);
+			return true;
+		}
+		else
+		{
+			$this->debug(1, "setNestedFromInterpreter: Could not interpret the path provied (\"$allValues\"). This suggests that interpretParms was unable to interpret it.");
+			return false;
+		}
 	}
 	
 	function setNestedOldWay($store, $category, $values) # DEPRECATED
