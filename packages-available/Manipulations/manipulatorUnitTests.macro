@@ -6,4 +6,50 @@ defineTest Manipulator - Fatal error in --toString,
 	first
 	toString tagString
 	passTest No fatal error.
+
+
+set Tmp,createDataSet,
+	setNested Tmp,dataSet,a,A,1
+	setNested Tmp,dataSet,a,B,2
+	setNested Tmp,dataSet,a,C,3
 	
+	retrieveResults Tmp,dataSet
+
+set Tmp,destoryDataSet,
+	unset Tmp,dataSet
+
+defineTest copyResultVar,
+	callFeature ~!Tmp,createDataSet!~
+	
+	failTest no results.
+	copyResultVar A,D
+	loop
+		expect 1,~!Result,D!~
+	
+	
+	callFeature ~!Tmp,destroyDataSet!~
+
+defineTest moveResultVar - destination,
+	callFeature ~!Tmp,createDataSet!~
+	
+	failTest no results.
+	moveResultVar B,E
+	loop
+		expect 2,~!Result,E!~
+	
+	
+	callFeature ~!Tmp,destroyDataSet!~
+
+defineTest moveResultVar - source,
+	callFeature ~!Tmp,createDataSet!~
+	
+	failTest no results.
+	moveResultVar B,E
+	loop
+		expect ,~!Result,B!~
+	
+	
+	callFeature ~!Tmp,destroyDataSet!~
+
+unset Tmp,createDataSet
+unset Tmp,destroyDataSet

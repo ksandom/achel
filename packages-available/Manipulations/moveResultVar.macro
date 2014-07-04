@@ -1,0 +1,6 @@
+# Move (aka rename) a result variable to another result variable. Typically you'd use this when converting data from one form to another. --moveResultVar=sourceVariableName,destinationVariableName . ~ manipulations,move,mv,rename
+#onDefine aliasFeature moveResultVar,renameResultVar
+
+loop
+	set Result,~!Global,moveResultVar-1!~,~!Result,~!Global,moveResultVar-0!~!~
+	unset Result,~!Global,moveResultVar-0!~

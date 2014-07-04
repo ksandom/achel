@@ -1,0 +1,4 @@
+# Copy a result variable to another result variable. Typically you'd use this when converting data from one form to another. --copyResultVar=sourceVariableName,destinationVariableName . ~ manipulations,copy,cp
+
+loop
+	set Result,~!Global,copyResultVar-1!~,~!Result,~!Global,copyResultVar-0!~!~
