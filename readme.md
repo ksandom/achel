@@ -17,7 +17,7 @@ This is a tiny percentage of the final vision, so there's a lot more to come!
 
 ## Easy way
 
-    curl https://raw.github.com/ksandom/achel/master/supplimentary/misc/webInstall | bash
+    curl https://raw.githubusercontent.com/ksandom/achel/master/supplimentary/misc/webInstall | bash
 
 ## Traditional way
 
