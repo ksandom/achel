@@ -1,36 +1,49 @@
 # Chooses which state within a ruleSet will be used. An example of this being used would be a plane transitioning from climbing out of a take off, to sustaining flight. --bM2NSetState=[instanceName],state,ruleSet . instanceName specifies which instance we are talking about. If omitted it is "default". state specifies which state within the ruleSet will be used. ruleSet specifies which ruleSet we are using. This can be omitted after the first usage. ~ balanceM2N
 
+set Tmp,ready,true
 set Tmp,stateInstanceName,~!Global,bM2NSetState-0!~
 setIfNothing Tmp,stateInstanceName,default
 
-# TODO finish this
-# BalanceM2N,rules,ruleSet1,state1,rule1,process
-isolate
-	set Tmp,contentTest,~!BalanceM2N,rules,~!BalanceM2N,instances,~!Tmp,stateInstanceName!~,ruleSet!~,~!BalanceM2N,instances,~!Tmp,stateInstanceName!~,state!~!~
-	clear
-	retrieveResults Tmp,contentTest
-	countToVar Tmp,contentTest
-
-	debug 0,result asd ~!Tmp,contentTest!~
-	print_r
-	outNow
-
-# ~!BalanceM2N,rules,~!BalanceM2N,instances,~!Tmp,stateInstanceName!~,ruleSet!~,state1,rule1,process!~
-# ~!BalanceM2N,rules,~!BalanceM2N,instances,~!Tmp,stateInstanceName!~,ruleSet!~,~!BalanceM2N,instances,~!Tmp,stateInstanceName!~,state!~!~
-if ~!Tmp,contentTest!~,>,0,
-	setNested BalanceM2N,instances,~!Tmp,stateInstanceName!~,instanceName,~!Tmp,stateInstanceName!~
-	
-	if ~!Global,bM2NSetState-1!~,!=,,
-		setNested BalanceM2N,instances,~!Tmp,stateInstanceName!~,state,~!Global,bM2NSetState-1!~
-	else
-		if ~!BalanceM2N,instances,~!Tmp,stateInstanceName!~,state!~,==,,
-			debug 3,bM2NSetState: State not specified or found.
-	
-	if ~!Global,bM2NSetState-2!~,!=,,
-		setNested BalanceM2N,instances,~!Tmp,stateInstanceName!~,ruleSet,~!Global,bM2NSetState-2!~
+# Do we have sufficient input?
+if ~!Global,bM2NSetState-1!~,==,,
+	debug 1,bM2NSetState: No state specified in --bM2NSetState=~!Global,bM2NSetState!~
+	set Tmp,ready,false
 else
-	debug 1,bM2NSetState: Could not find a ruleSet and state containing a description with the combination ruleSet=~!BalanceM2N,instances,~!Tmp,stateInstanceName!~,ruleSet!~ and state=~!BalanceM2N,instances,~!Tmp,stateInstanceName!~,state!~. If it exists, make sure the description is set.
-	# TODO finish writing the output
-	# TODO set the description for the state.
+	set Tmp,state,~!Global,bM2NSetState-1!~
 
-unset Tmp,contentTest
+if ~!Global,bM2NSetState-2!~,==,,
+	debug 1,bM2NSetState: No ruleSet specified in --bM2NSetState=~!Global,bM2NSetState!~
+	set Tmp,ready,false
+else
+	set Tmp,ruleSet,~!Global,bM2NSetState-2!~
+
+
+# Do we have the requested rule?
+# Structure: BalanceM2N,rules,ruleSet1,state1,rule1,process
+ifNested BalanceM2N,rules,~!Tmp,ruleSet!~,~!Tmp,state!~,
+	debug 3,bM2NSetState: RuleSet/state exists.
+else
+	debug 3,bM2NSetState: ruleSet=~!Tmp,ruleSet!~ state=~!Tmp,state!~ as defined in ~!Global,bM2NSetState!~ does not exist.
+	set Tmp,ready,false
+
+
+
+if ~!Tmp,ready!~,==,true,
+	# Do we have the requested instance?
+	ifNested BalanceM2N,instances,~!Tmp,stateInstanceName!~,
+		debug 3,bM2NSetState: Instance exists.
+	else
+		debug 3,bM2NSetState: Instance does not exist.
+		setNested BalanceM2N,instances,~!Tmp,stateInstanceName!~,instanceName,~!Tmp,stateInstanceName!~
+	
+	setNested BalanceM2N,instances,~!Tmp,stateInstanceName!~,state,~!Tmp,state!~
+	setNested BalanceM2N,instances,~!Tmp,stateInstanceName!~,ruleSet,~!Tmp,ruleSet!~
+
+else
+	debug 2,bM2NSetState: One or more tests (listed above) did not pass, so we can not set the state as requested --bM2NSetState=~!Global,bM2NSetState!~
+
+
+unset Tmp,stateInstanceName
+unset Tmp,state
+unset Tmp,ruleSet
+unset Tmp,ready

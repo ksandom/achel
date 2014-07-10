@@ -13,6 +13,7 @@ setNested BalanceM2N,rules,ruleSet1,state1,rule1,outputs,tmp,
 	set Tmp,testOutput1,~!BalanceM2N,current,value!~
 
 
+
 defineTest BalanceM2N bM2NSetState rule1,
 	bM2NSetState blah,state1,ruleSet1
 	
@@ -29,7 +30,6 @@ defineTest BalanceM2N bM2NSetState blank ruleSet,
 	bM2NSetState default,state,
 	
 	expect aValue,~!BalanceM2N,instances,default,ruleSet!~
-
 
 defineTest BalanceM2N bM2NSetState non-existent ruleSet1asdasd,
 	setNested BalanceM2N,instances,default,ruleSet,aValue
