@@ -1,0 +1,6 @@
+# Destroy an instance in BalanceM2N. --bM2NDestroyInstance=instanceName ~ bm2n,destroy,instance
+
+if ~!Global,bM2NDestroyInstance-0!~,!=,,
+	unset BalanceM2N,instances,~!Global,bM2NDestroyInstance-0!~
+else
+	debug 1,bM2NDestroyInstance: No instance name specified.
