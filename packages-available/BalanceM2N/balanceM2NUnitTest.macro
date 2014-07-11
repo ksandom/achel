@@ -80,3 +80,10 @@ defineTest destroy ruleSet/state,
 	
 
 # TODO destroy ruleSet
+defineTest destroy ruleSet,
+	balanceM2NDestroyRuleSet ruleSet1
+	
+	ifNested BalanceM2N,rules,ruleSet1,
+		failTest was not deleted.
+	else
+		passTest was deleted.
