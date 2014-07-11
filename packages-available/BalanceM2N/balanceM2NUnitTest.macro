@@ -46,7 +46,7 @@ defineTest BalanceM2N tick rule1,
 
 # destroy instance
 defineTest BalanceM2N destroy instance,
-	setNested BalanceM2N,instances,default,ruleSet,aValue
+	bM2NSetState default,state1,ruleSet1
 	bM2NDestroyInstance default
 	
 	ifNested BalanceM2N,instances,default,
@@ -55,7 +55,9 @@ defineTest BalanceM2N destroy instance,
 		passTest Instance destroyed.
 
 defineTest BalanceM2N destroy instance - still destroyed,
-	setNested BalanceM2N,instances,default,ruleSet,aValue
+	# Test is to make sure that there is no residue that is left behind after a tick. This is to future-proof the testing for any caching, threading. In reality the test will probably need to be refactored to truly test the effects of threading.
+	
+	bM2NSetState default,state1,ruleSet1
 	bM2NDestroyInstance default
 	
 	bM2NTick
@@ -65,5 +67,8 @@ defineTest BalanceM2N destroy instance - still destroyed,
 	else
 		passTest Instance destroyed.
 
+
+
 # TODO destroy ruleSet/state
+
 # TODO destroy ruleSet
