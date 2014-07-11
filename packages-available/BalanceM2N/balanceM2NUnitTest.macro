@@ -69,6 +69,14 @@ defineTest BalanceM2N destroy instance - still destroyed,
 
 
 
-# TODO destroy ruleSet/state
+# destroy ruleSet/state
+defineTest destroy ruleSet/state,
+	balanceM2NDestroyState state1,ruleSet1
+	
+	ifNested BalanceM2N,rules,ruleSet1,state1,
+		failTest was not deleted.
+	else
+		passTest was deleted.
+	
 
 # TODO destroy ruleSet
