@@ -112,6 +112,9 @@ function installRepo_setup
 	# It needs to happen here (instead of in the getRepo library) so that we have the name available.
 	documentationAddRepo "$irs_repoName"
 	
+	# Handel the subplimentary stuff
+	supplimentaryInstall "$irs_repoName"
+	
 	
 	while read profileRefName; do
 		if [ "$profileRefName" != '' ]; then
@@ -145,6 +148,57 @@ function installRepo_setup
 			echo "installRepo_setup: profileRefName=\"$profileRefName\""
 		fi
 	done < <(repoGetProfiles "$irs_repoName")
+}
+
+function supplimentaryInstall
+{
+	local si_repoName="$1"
+	local si_prefix="$configDir/repos/$si_repoName"
+	if [ ! -e "$si_prefix" ]; then
+		echo "supplimentaryInstall: Repo \"$si_repoName\" is not currently installed." >&2
+		return 1
+	fi
+	
+	if [ ! -e "$si_prefix/supplimentary" ]; then
+		echo "supplimentaryInstall: Repo \"$si_repoName\" does not have a supplimentary directory, so there's no need to install one." >&2
+	fi
+	
+	# echo "supplimentaryInstall: First, let's uninstall any files for this repo."
+	supplimentaryUninstall "$si_repoName"
+	
+	# echo "supplimentaryInstall: Now we install any scripts in \""$si_prefix/supplimentary"\"."
+	cd "$configDir/supplimentary"
+	while read fileName;do
+		if [ ! -e "$fileName" ]; then
+			if [ -f "$si_prefix/supplimentary/$fileName" ]; then
+				# echo "supplimentaryInstall: Adding symlink for \"$fileName\"."
+				ln -s "$si_prefix/supplimentary/$fileName" .
+			fi
+		fi
+		
+	done < <(ls -1 "$si_prefix/supplimentary" 2>/dev/null)
+	
+	cd ~-
+}
+
+function supplimentaryUninstall
+{
+	local su_repoName="$1"
+	local su_prefix="$configDir/repos/$su_repoName"
+	local su_supplimentaryDir="$configDir/supplimentary"
+	local su_refine="/$su_repoName/"
+	if [ ! -e "$su_prefix" ]; then
+		echo "supplimentaryUninstall: Repo \"$su_repoName\" is not currently installed." >&2
+		return 1
+	fi
+	
+	# echo "supplimentaryUninstall: Removing scripts in \"$su_supplimentaryDir\" matching regex \"/$su_repoName/\"."
+	cd "$configDir/supplimentary"
+	while read fileName symlinkSrc;do
+		# echo "supplimentaryUninstall: Removing symlink \"$fileName\" which points to \"$symlinkSrc\" because it belongs to the repository \"$su_repoName\"."
+		rm "$fileName"
+	done < <(resolveSymlinks "$su_supplimentaryDir" | grep "$su_refine")
+	cd ~-
 }
 
 function userUninstallRepo

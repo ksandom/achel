@@ -231,7 +231,16 @@ function doInstall
 	
 	# Linking like there's no tomorrow.
 	cd "$configDir"
-	ln -sf "$repoDir/src/core.php" "$repoDir"/interfaces "$repoDir"/supplimentary .
+	ln -sf "$repoDir/src/core.php" "$repoDir"/interfaces .
+	
+	# Remove legacy supplimentary symlink and create a directory instead.
+	if [ -h "$configDir"/supplimentary ]; then
+		echo "AAA did this"
+		rm "$configDir"/supplimentary
+	fi
+	mkdir -p "$configDir"/supplimentary
+	
+	supplimentaryInstall achel
 	
 	
 	# Make it executable
