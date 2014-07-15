@@ -170,10 +170,8 @@ function supplimentaryInstall
 	cd "$configDir/supplimentary"
 	while read fileName;do
 		if [ ! -e "$fileName" ]; then
-			if [ -f "$si_prefix/supplimentary/$fileName" ]; then
-				# echo "supplimentaryInstall: Adding symlink for \"$fileName\"."
-				ln -s "$si_prefix/supplimentary/$fileName" .
-			fi
+			# echo "supplimentaryInstall: Adding symlink for \"$fileName\"."
+			ln -s "$si_prefix/supplimentary/$fileName" .
 		fi
 		
 	done < <(ls -1 "$si_prefix/supplimentary" 2>/dev/null)
