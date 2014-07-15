@@ -209,6 +209,7 @@ function userUninstallRepo
 	userUninstallRepo_confirm "$repoName" $returnValue "$overRideRepoName"
 	
 	if [ "$?" -eq 0 ]; then
+		supplimentaryUninstall "$repoName"
 		uninstallRepo_removeBindings "$repoName"
 		removeRepo "$repoName"
 	fi
