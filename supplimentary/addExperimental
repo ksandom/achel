@@ -1,6 +1,6 @@
 #!/bin/bash
 # Description
-#   Install mass-experimental library
+#   Install achel-experimental library
 #
 # Syntax:
 #   $0
@@ -14,4 +14,4 @@ requiredParms="none"
 
 . $libDir/getRepo.sh
 
-getRepo "experimental" "git@github.com:ksandom/mass-experimental.git"
+getRepo "experimental" "git@github.com:ksandom/achel-experimental.git"
