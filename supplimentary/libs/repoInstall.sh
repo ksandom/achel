@@ -176,6 +176,15 @@ function supplimentaryInstall
 		
 	done < <(ls -1 "$si_prefix/supplimentary" 2>/dev/null)
 	
+	cd "$configDir/supplimentary/libs"
+	while read fileName;do
+		if [ ! -e "$fileName" ]; then
+			# echo "supplimentaryInstall: Adding symlink for \"$fileName\"."
+			ln -s "$si_prefix/supplimentary/libs/$fileName" .
+		fi
+		
+	done < <(ls -1 "$si_prefix/supplimentary/libs" 2>/dev/null)
+	
 	cd ~-
 }
 
@@ -196,6 +205,13 @@ function supplimentaryUninstall
 		# echo "supplimentaryUninstall: Removing symlink \"$fileName\" which points to \"$symlinkSrc\" because it belongs to the repository \"$su_repoName\"."
 		rm "$fileName"
 	done < <(resolveSymlinks "$su_supplimentaryDir" | grep "$su_refine")
+	cd ~-
+	
+	cd "$configDir/supplimentary/libs"
+	while read fileName symlinkSrc;do
+		# echo "supplimentaryUninstall: Removing symlink \"$fileName\" which points to \"$symlinkSrc\" because it belongs to the repository \"$su_repoName\"."
+		rm "$fileName"
+	done < <(resolveSymlinks "$su_supplimentaryDir/libs" | grep "$su_refine")
 	cd ~-
 }
 
