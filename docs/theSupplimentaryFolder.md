@@ -4,6 +4,21 @@ is a place to put bash scripts that manage your application. They will then appe
 
 There are lots of libraries to improve code re-use.
 
+## Using the supplimentary folder
+
+The supplimentary folder goes in the root of a given repository. If you would like to reuse code that is not provided by another repository, you can do so by putting it in the libs folder inside the supplimentary folder. So the structure looks like this
+
+    ./supplimentary
+    ./supplimentary/aScript
+    ./supplimentary/libs
+    ./supplimentary/libs/aLibrary.sh
+
+Inside the aScript file there will be a line that pulls in the library and looks like this
+
+    . $libDir/aLibrary.sh
+
+More information about this can be found in "The anatomy of a supplimentary script" section.
+
 ## The anatomy of a supplimentary script
 
 ### The normal bash declaration
@@ -131,6 +146,22 @@ So all together it looks like this
 ## Internal documentation
 
 Only comments with the `#` hard left-aligned will be displayed in generated help output. So internal comments can be indented in any form and they will not be displayed.
+
+## The anatomy of a library
+
+Put a comment at the beginning of the library describing what it does
+
+    # This library indexes imaginary books.
+
+Put in the code that does the work
+
+    function indexBook
+    {
+    	local bookName="$1"
+    	local genre="$2"
+    	
+    	echo "Whoops I dropped the book called \"$bookName\". It was supposed to go in the \"$genre\" section."
+    }
 
 
 
