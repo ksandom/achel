@@ -1,0 +1,16 @@
+#!/bin/bash
+# Description
+#   Shows the current Achel config for Dropbox.
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Shows the current Achel config for Dropbox.
+#     $0
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+. "$libDir"/dropbox.sh
+
+showDropboxConfig
