@@ -1,0 +1,21 @@
+#!/bin/bash
+# Description
+#   Remove a file from being replicated by a replication provider. This does not remove the file. It simply replicates it.
+#
+# Syntax:
+#   $0 fileToRemove
+#     fileToRemove is the file that should no longer be replicated. This can be found with fileRepFileList.
+#
+# Examples:
+#   Tells Achel to no longer replicate the fileReplication settings.
+#     $0 FileReplication.data.json
+#   
+#   Tells Achel to no longer replicate the fileReplication settings.
+#     $0 DoneIt.data.json
+
+requiredParms="$1"
+. `dirname $0`/libs/includeLibs.sh
+. "$libDir"/fileRelication.sh
+
+# TODO write this
+

@@ -1,0 +1,23 @@
+#!/bin/bash
+# Description
+#   Add a replication provider. This is typically something like dropbox.
+#
+# Syntax:
+#   $0 providerName pathToProvider
+#     providerName is what the provider will be known as. Eg dropbox.
+#     pathToProvider is where the practical file replication happens. Eg ~/Dropbox . This could also be something like a network share.
+#
+# Examples:
+#   Adds a provider called dropbox, which points to the the Dropbox folder in the home directory.
+#     $0 dropbox ~/Dropbox
+#   
+#   Adds a provider called dropboxMass, which points to the the Dropbox/mass folder in the home directory. This is actually probably more suitable for morst people since it will separate out the files being replicated for Achel and related tools from other things being replicated by that service.
+#     $0 dropboxMass ~/Dropbox/mass
+
+requiredParms="$1"
+. `dirname $0`/libs/includeLibs.sh
+. "$libDir"/fileRelication.sh
+. "$libDir"/collection.sh
+
+# TODO write this
+

@@ -1,0 +1,23 @@
+#!/bin/bash
+# Description
+#   Add a file to be replicated by a replication provider.
+#   If the file already exists in the replication provider, that will be used and the local copy will be discarded.
+#
+# Syntax:
+#   $0 fileToAdd [provider]
+#     fileToAdd is the file that should be replicated. This can be found with fileRepFileList.
+#     provider is which replication provider to use. If this is not specified it will be what ever is currently set to default.
+#
+# Examples:
+#   Tells Achel to replicate the fileReplication settings using the default replication provider.... What could possibly go wrong?!
+#     $0 FileReplication.data.json
+#   
+#   Tells Achel to replicate the fileReplication settings using the dropbox provider.
+#     $0 DoneIt.data.json dropbox
+
+requiredParms="$1"
+. `dirname $0`/libs/includeLibs.sh
+. "$libDir"/fileRelication.sh
+
+# TODO write this
+

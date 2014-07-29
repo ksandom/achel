@@ -1,0 +1,22 @@
+#!/bin/bash
+# Description
+#   Set/show the default provider. You can see what providers are currently known with fileRepShowConfig.
+#
+# Syntax:
+#   $0 [provider]
+#     provider is which replication provider to use. If this is not specified it will show what the default is.
+#
+# Examples:
+#   Shows which provider is currently default.
+#     $0
+#   
+#   Tells Achel to use dropbox as the default provider.
+#     $0 dropbox
+
+requiredParms="$1"
+. `dirname $0`/libs/includeLibs.sh
+. "$libDir"/fileRelication.sh
+. "$libDir"/collection.sh
+
+# TODO write this
+

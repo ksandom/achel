@@ -1,0 +1,18 @@
+#!/bin/bash
+# Description
+#   Attempt to figure out how file replication is setup on the current machine and configure the Achel file replication accordingly. This assumes you already have something like dropbox already installed and configured.
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Detect and configure fileReplication.
+#     $0
+
+requiredParms="$1"
+. `dirname $0`/libs/includeLibs.sh
+. "$libDir"/fileRelication.sh
+. "$libDir"/collection.sh
+
+# TODO write this
+

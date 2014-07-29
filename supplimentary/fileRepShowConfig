@@ -1,0 +1,18 @@
+#!/bin/bash
+# Description
+#   Show the current file replication configuration.
+#
+# Syntax:
+#   $0 
+#
+# Examples:
+#   Show the current file replication configuration.
+#     $0 
+
+requiredParms="$1"
+. `dirname $0`/libs/includeLibs.sh
+. "$libDir"/fileRelication.sh
+. "$libDir"/collection.sh
+
+# TODO write this
+

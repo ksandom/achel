@@ -1,0 +1,19 @@
+#!/bin/bash
+# Description
+#   Remove a replication provider. This is typically something like dropbox.
+#
+# Syntax:
+#   $0 providerName
+#     providerName is what the provider is known as. Eg dropbox.
+#
+# Examples:
+#   Adds a provider called dropbox, which points to the the Dropbox folder in the home directory.
+#     $0 dropbox
+
+requiredParms="$1"
+. `dirname $0`/libs/includeLibs.sh
+. "$libDir"/fileRelication.sh
+. "$libDir"/collection.sh
+
+# TODO write this
+

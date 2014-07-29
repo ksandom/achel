@@ -1,0 +1,21 @@
+#!/bin/bash
+# Description
+#   Show which files are currently replicated and with which location.
+#
+# Syntax:
+#   $0 [filter]
+#     filter is a regular expression to refine the list. Useful if you have a lot of files.
+#
+# Examples:
+#   Shows all replicated/replicatable files.
+#     $0
+#   
+#   Shows all replicated/replicatable files that contain Mass in their name or linked path.
+#     $0 Mass
+
+requiredParms="$1"
+. `dirname $0`/libs/includeLibs.sh
+. "$libDir"/fileRelication.sh
+
+# TODO write this
+
