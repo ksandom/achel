@@ -19,5 +19,5 @@ requiredParms="$1"
 . "$libDir"/fileRelication.sh
 . "$libDir"/collection.sh
 
-# TODO write this
+addProvider "$1" "$2"
 

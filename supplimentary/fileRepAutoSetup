@@ -9,10 +9,10 @@
 #   Detect and configure fileReplication.
 #     $0
 
-requiredParms="$1"
+requiredParms="$0"
 . `dirname $0`/libs/includeLibs.sh
 . "$libDir"/fileRelication.sh
 . "$libDir"/collection.sh
 
-# TODO write this
+autoSetupReplicators
 

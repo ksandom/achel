@@ -40,6 +40,18 @@ function collectionGetArrayValue
 	achel --collectionLoad="$collectionName" --get="$collectionName,$collectionValueName" --nested
 }
 
+function collectionGet
+{
+	local collectionName="$1"
+	
+	if [ "$collectionName" == "" ]; then
+		echo "collectionSetValue: Insufficient values. collectionName=\"$collectionName\""
+		return 1
+	fi
+	
+	achel --collectionLoad="$collectionName" --getCategory="$collectionName" --nested
+}
+
 function collectionRemoveValue
 {
 	local collectionName="$1"
