@@ -19,5 +19,4 @@ requiredParms="$1"
 . `dirname $0`/libs/includeLibs.sh
 . "$libDir"/fileRelication.sh
 
-# TODO write this
-
+fileRepAddFile "$1" "$2"

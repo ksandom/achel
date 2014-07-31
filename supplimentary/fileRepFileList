@@ -13,9 +13,8 @@
 #   Shows all replicated/replicatable files that contain Mass in their name or linked path.
 #     $0 Mass
 
-requiredParms="$1"
+requiredParms="$0"
 . `dirname $0`/libs/includeLibs.sh
 . "$libDir"/fileRelication.sh
 
-# TODO write this
-
+fileRepListFiles "$1"
