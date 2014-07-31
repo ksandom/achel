@@ -3,9 +3,10 @@
 #   Add a replication provider. This is typically something like dropbox.
 #
 # Syntax:
-#   $0 providerName pathToProvider
+#   $0 providerName pathToProvider [subFolder]
 #     providerName is what the provider will be known as. Eg dropbox.
 #     pathToProvider is where the practical file replication happens. Eg ~/Dropbox . This could also be something like a network share.
+#     subFolder is the folder inside the replication area where files will be sent. Defaults to Achel.
 #
 # Examples:
 #   Adds a provider called dropbox, which points to the the Dropbox folder in the home directory.
@@ -19,5 +20,5 @@ requiredParms="$1"
 . "$libDir"/fileRelication.sh
 . "$libDir"/collection.sh
 
-addProvider "$1" "$2"
+addProvider "$1" "$2" "$3"
 

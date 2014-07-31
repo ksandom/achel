@@ -4,9 +4,14 @@ function addProvider
 {
 	local providerName="$1"
 	local providerPath="$2"
+	local providerFolder="$3"
+	
+	if [ "$providerFolder" == '' ]; then
+		providerFolder='Achel'
+	fi
 	
 	if [ -e "$providerPath" ]; then
-		collectionSetValue "FileReplication" "Providers,$providerName" "$providerPath"
+		collectionSetValue "FileReplication" "Providers,$providerName" "$providerPath/$providerFolder"
 		autoSetDefaultProvider
 	else
 		echo "addProvider: Could not find path \"$providerPath\"." >&2
