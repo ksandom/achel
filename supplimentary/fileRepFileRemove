@@ -1,6 +1,9 @@
 #!/bin/bash
 # Description
-#   Remove a file from being replicated by a replication provider. This does not remove the file. It simply replicates it.
+#   Remove a file from being replicated by a replication provider. This does not remove the file.
+#   It simply makes the file local again, and leaves the destination file in place since I can't
+#   assume how other users should be affected in your situation. If you know that you don't need
+#   it, you can easily remove it yourself.
 #
 # Syntax:
 #   $0 fileToRemove

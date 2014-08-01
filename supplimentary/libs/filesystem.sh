@@ -7,7 +7,12 @@ function resolveSymlinks
 	#  aws-sdk-for-php	/home/ksandom/files/develop/externalRepos/aws-sdk-for-php/
 	
 	dirToScan="$1"
-	ls -l --time-style=+NODATE "$dirToScan" | tail -n +2 | sed 's/^.*NODATE.//g;s/ -> /	/g' 
+	local results=`ls -l --time-style=+NODATE "$dirToScan"`
+	if [ `echo "$results"| wc -l` -gt 1 ]; then # We are looking at a directory.
+		echo "$results" | tail -n +2 | sed 's/^.*NODATE.//g;s/ -> /	/g' 
+	else # We are looking at a file. Ie we have not recieved the . and .. entries.
+		echo "$results" | sed 's/^.*NODATE.//g;s/ -> /	/g' 
+	fi
 }
 
 function getFile

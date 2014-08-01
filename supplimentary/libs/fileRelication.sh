@@ -124,7 +124,6 @@ function fileRepAddFile
 	fi
 	
 	# Check that the path of the selected provider exists
-	collectionGetArrayValue "FileReplication" "Providers,$provider"
 	local providerPath=`getProviderPath "$provider"`
 	if [ ! -e "$providerPath" ]; then
 		echo "fileRepAddFile: Provider path \"$providerPath\" does not exist for provider \"$provider\". Aborting." >&2
@@ -154,15 +153,13 @@ function fileRepAddFile
 
 function fileRepRemoveFile
 {
-	# TODO finish this.
 	local fileToRemove="$1"
-	local fileName
-	local destinationPath
 	
 	# Resolve the symlink
-	resolveSymlinks "$configDir/$fileToRemove" | read fileName destinationPath
+	read fileName	destinationPath < <(resolveSymlinks "$configDir/$fileToRemove")
 	
-	echo f1=$fileToRemove f2=$fileName d=$destinationPath
-	#rm "$configDir/$fileToRemove"
+	# Do the work. NOTE that we are not deleting the destination file. This is because we can not be sure that deleteing it will not incorrectly affect other users. If you know it's not needed any more, it's easy to remove the file yourself.
+	rm "$fileName"
+	cp "$destinationPath" "$fileName"
 	
 }
