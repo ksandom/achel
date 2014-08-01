@@ -11,6 +11,7 @@ function addProvider
 	fi
 	
 	if [ -e "$providerPath" ]; then
+		mkdir -p "$providerPath/$providerFolder"
 		collectionSetValue "FileReplication" "Providers,$providerName" "$providerPath/$providerFolder"
 		autoSetDefaultProvider
 	else
@@ -98,7 +99,11 @@ function fileRepListFilesIn
 {
 	local folderName="$1"
 	while read file	destination;do
-		echo "$folderName/$file    points to     $destination"
+		if [ "$destination" == "" ]; then
+			echo "$folderName/$file      **local**"
+		else
+			echo "$folderName/$file    points to     $destination"
+		fi
 	done < <(resolveSymlinks "$configDir/$folderName")
 }
 
@@ -112,18 +117,43 @@ function fileRepAddFile
 		provider=`getDefaultProvider`
 	fi
 	
-	# TODO add check to make sure that the selected provider (via either method), actually exists
-	
-	local providerPath=`getProviderPath "$provider"`
-	# Check that the path of the selected provider exists
-	if [ ! -e "$providerPath" ]; then
-		# TODO write error
-		echo "fileRepAddFile: "
+	# Check that our origin file exists.
+	if [ ! -e "$configDir/$fileToAdd" ]; then
+		echo "fileRepAddFile: Origin \"$configDir/$fileToAdd\" does not exist. Aborting." >&2
 		return 1
 	fi
 	
+	# Check that the path of the selected provider exists
+	collectionGetArrayValue "FileReplication" "Providers,$provider"
+	local providerPath=`getProviderPath "$provider"`
+	if [ ! -e "$providerPath" ]; then
+		echo "fileRepAddFile: Provider path \"$providerPath\" does not exist for provider \"$provider\". Aborting." >&2
+		return 1
+	fi
+	
+	
+	pathToFile=`dirname "$fileToAdd"`
+	# Make sure the desintation folder exists.
+	if [ "$pathToFile" != '.' ]; then
+		mkdir -p "$providerPath/$pathToFile"
+	fi
+
+	# Put the file in the right place and symlink it back.
 	cd "$configDir"
-	# TODO write this
+	if [ ! -e "$providerPath/$fileToAdd" ]; then
+		echo "fileRepAddFile: \"$providerPath/$fileToAdd\" Already didn't exist. Copying."
+		cp "$configDir/$fileToAdd" "$providerPath/$fileToAdd"
+	fi
+	
+	
+	rm -Rf "$configDir/$fileToAdd"
+	ln -s "$providerPath/$fileToAdd" "$fileToAdd"
 	
 	cd ~-
+}
+
+function fileRepRemoveFile
+{
+	# TODO implement this.
+	true
 }

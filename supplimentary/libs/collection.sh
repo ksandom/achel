@@ -24,7 +24,7 @@ function collectionGetValue
 		return 1
 	fi
 	
-	achel --collectionLoad="$collectionName" --get="$collectionName,$collectionValueName" --singleString
+	achel --collectionLoad="$collectionName" --getNested="$collectionName,$collectionValueName" --flatten --singleString
 }
 
 function collectionGetArrayValue
@@ -37,7 +37,7 @@ function collectionGetArrayValue
 		return 1
 	fi
 	
-	achel --collectionLoad="$collectionName" --get="$collectionName,$collectionValueName" --nested
+	achel --collectionLoad="$collectionName" --getNested="$collectionName,$collectionValueName" --nested
 }
 
 function collectionGet

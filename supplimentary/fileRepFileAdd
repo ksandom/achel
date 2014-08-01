@@ -17,6 +17,7 @@
 
 requiredParms="$1"
 . `dirname $0`/libs/includeLibs.sh
+. "$libDir"/collection.sh
 . "$libDir"/fileRelication.sh
 
 fileRepAddFile "$1" "$2"
