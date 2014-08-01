@@ -154,6 +154,15 @@ function fileRepAddFile
 
 function fileRepRemoveFile
 {
-	# TODO implement this.
-	true
+	# TODO finish this.
+	local fileToRemove="$1"
+	local fileName
+	local destinationPath
+	
+	# Resolve the symlink
+	resolveSymlinks "$configDir/$fileToRemove" | read fileName destinationPath
+	
+	echo f1=$fileToRemove f2=$fileName d=$destinationPath
+	#rm "$configDir/$fileToRemove"
+	
 }
