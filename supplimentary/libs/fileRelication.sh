@@ -1,5 +1,22 @@
 # Handel file replication configuration
 
+defaultProvider=''
+
+function assertFileRepSetup
+{
+	if [ "`getDefaultProvider`" == '' ]; then
+		echo "assertSetup: FileReplication does not appear to be set up. Attempting to configure it automatically."
+		autoSetupReplicators
+	fi
+	
+	if [ "`getDefaultProvider`" == '' ]; then
+		echo "assertSetup: Bummer. It looks like that didn't work. It's not sane to continue."
+		return 1
+	else
+		return 0
+	fi
+}
+
 function addProvider
 {
 	local providerName="$1"
@@ -54,6 +71,7 @@ function setDefaultProvider
 	
 	if [ "`getProviders | grep \"^$providerName$\"`" != "" ]; then
 		collectionSetValue "FileReplication" "defaultProvider" "$providerName"
+		defaultProvider="$providerName"
 	else
 		echo "setDefaultProvider: \"$providerName\" not found in the current providers." >&2
 	fi
@@ -68,8 +86,11 @@ function getProviderPath
 
 function getDefaultProvider
 {
-	local providerName="$1"
-	collectionGetValue "FileReplication" "defaultProvider"
+	if [ "$defaultProvider" == '' ]; then
+		collectionGetValue "FileReplication" "defaultProvider"
+	else
+		echo "$defaultProvider"
+	fi
 }
 
 

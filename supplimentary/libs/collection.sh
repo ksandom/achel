@@ -11,7 +11,7 @@ function collectionSetValue
 		return 1
 	fi
 	
-	achel --collectionLoad="$collectionName" --setNested="$collectionName,$collectionValueName,$collectionValueValue"
+	achel -q --collectionLoad="$collectionName" --setNested="$collectionName,$collectionValueName,$collectionValueValue"
 }
 
 function collectionGetValue
@@ -24,7 +24,7 @@ function collectionGetValue
 		return 1
 	fi
 	
-	achel --collectionLoad="$collectionName" --getNested="$collectionName,$collectionValueName" --flatten --singleString
+	achel -q --collectionLoad="$collectionName" --getNested="$collectionName,$collectionValueName" --flatten --singleString
 }
 
 function collectionGetArrayValue
@@ -37,7 +37,7 @@ function collectionGetArrayValue
 		return 1
 	fi
 	
-	achel --collectionLoad="$collectionName" --getNested="$collectionName,$collectionValueName" --nested
+	achel -q --collectionLoad="$collectionName" --getNested="$collectionName,$collectionValueName" --nested
 }
 
 function collectionGet
@@ -49,7 +49,7 @@ function collectionGet
 		return 1
 	fi
 	
-	achel --collectionLoad="$collectionName" --getCategory="$collectionName" --nested
+	achel -q --collectionLoad="$collectionName" --getCategory="$collectionName" --nested
 }
 
 function collectionRemoveValue
@@ -62,6 +62,6 @@ function collectionRemoveValue
 		return 1
 	fi
 	
-	achel --collectionLoad="$collectionName" --unset="$collectionName,$collectionValueName"
+	achel -q --collectionLoad="$collectionName" --unset="$collectionName,$collectionValueName"
 }
 

@@ -19,6 +19,7 @@
 requiredParms="$1"
 . `dirname $0`/libs/includeLibs.sh
 . "$libDir"/fileRelication.sh
+. "$libDir"/collection.sh
 
-fileRepRemoveFile "$1"
+assertFileRepSetup && fileRepRemoveFile "$1"
 
