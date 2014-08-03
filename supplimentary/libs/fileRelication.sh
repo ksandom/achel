@@ -40,16 +40,20 @@ function removeProvider
 {
 	local providerName="$1"
 	
+	# Destroy the cache, so it gets looked up again.
+	defaultProvider=''
+	
 	collectionRemoveValue "FileReplication" "Providers,$providerName"
 	
-	if [ "`getDefaultProvider`" == "$providerName" ]; then
-		autoSetDefaultProvider
+	testedProvider=`getDefaultProvider`
+	if [ "$testedProvider" == "$providerName" ]; then
+		autoSetDefaultProvider --ignoreCurrent
 	fi
 }
 
 function autoSetDefaultProvider
 {
-	if [ "`getDefaultProvider`" == "" ]; then
+	if [ "`getDefaultProvider`" == "" ] || [ "$1" == '--ignoreCurrent' ] ; then
 		firstProvider=`getProviders | head -n 1`
 		if [ "$firstProvider" != "" ]; then
 			setDefaultProvider "$firstProvider"
@@ -87,10 +91,9 @@ function getProviderPath
 function getDefaultProvider
 {
 	if [ "$defaultProvider" == '' ]; then
-		collectionGetValue "FileReplication" "defaultProvider"
-	else
-		echo "$defaultProvider"
+		defaultProvider=`collectionGetValue "FileReplication" "defaultProvider"`
 	fi
+	echo "$defaultProvider"
 }
 
 
@@ -138,16 +141,11 @@ function fileRepAddFile
 		provider=`getDefaultProvider`
 	fi
 	
-	# Check that our origin file exists.
-	if [ ! -e "$configDir/$fileToAdd" ]; then
-		echo "fileRepAddFile: Origin \"$configDir/$fileToAdd\" does not exist. Aborting." >&2
-		return 1
-	fi
-	
-	# Check that the path of the selected provider exists
 	local providerPath=`getProviderPath "$provider"`
-	if [ ! -e "$providerPath" ]; then
-		echo "fileRepAddFile: Provider path \"$providerPath\" does not exist for provider \"$provider\". Aborting." >&2
+	
+	if [ ! -e "$configDir/$fileToAdd" ] && [ ! -e "$providerPath" ]; then
+		# Check that our origin file exists.
+		echo "fileRepAddFile: Origin \"$configDir/$fileToAdd\" does not exist. And provider path \"$providerPath\" does not exist for provider \"$provider\". Aborting." >&2
 		return 1
 	fi
 	
