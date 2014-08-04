@@ -15,7 +15,7 @@
 
 requiredParms="$0"
 . `dirname $0`/libs/includeLibs.sh
-. "$libDir"/fileRelication.sh
+. "$libDir"/fileReplication.sh
 . "$libDir"/collection.sh
 
 if [ "$1" == "" ]; then

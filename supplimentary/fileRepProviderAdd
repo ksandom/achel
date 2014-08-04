@@ -17,7 +17,7 @@
 
 requiredParms="$1"
 . `dirname $0`/libs/includeLibs.sh
-. "$libDir"/fileRelication.sh
+. "$libDir"/fileReplication.sh
 . "$libDir"/collection.sh
 
 addProvider "$1" "$2" "$3"
