@@ -136,6 +136,8 @@ function fileRepAddFile
 	local fileToAdd="$1"
 	local provider="$2"
 	
+	if ! assertFileRepSetup; then return 1; fi
+	
 	# Use the default provider if we don't have one.
 	if [ "$provider" == "" ]; then
 		provider=`getDefaultProvider`
@@ -173,6 +175,8 @@ function fileRepAddFile
 function fileRepRemoveFile
 {
 	local fileToRemove="$1"
+	
+	if ! assertFileRepSetup; then return 1; fi
 	
 	# Resolve the symlink
 	read fileName	destinationPath < <(resolveSymlinks "$configDir/$fileToRemove")

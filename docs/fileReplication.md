@@ -81,3 +81,4 @@ Find which provider you want to make default with `manageAchel fileRepShowConfig
 ### Removing a provider
 
     $ manageAchel fileRepProviderRemove googleDrive
+    autoSetDefaultProvider: "dropbox" has been assigned as the default provider. Use fileRepDefaultProvider to change it.

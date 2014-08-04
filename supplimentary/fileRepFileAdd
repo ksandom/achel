@@ -20,4 +20,4 @@ requiredParms="$1"
 . "$libDir"/collection.sh
 . "$libDir"/fileRelication.sh
 
-assertFileRepSetup && fileRepAddFile "$1" "$2"
+fileRepAddFile "$1" "$2"
