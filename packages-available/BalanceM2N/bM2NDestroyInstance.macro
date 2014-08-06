@@ -2,5 +2,12 @@
 
 if ~!Global,bM2NDestroyInstance-0!~,!=,,
 	unset BalanceM2N,instances,~!Global,bM2NDestroyInstance-0!~
+	
+	retrieveResults BalanceM2N,instances
+	countToVar Tmp,instances
+	if ~!Tmp,instances!~,<,1,
+		BalanceM2NStop
+	
+	unset Tmp,instances
 else
 	debug 1,bM2NDestroyInstance: No instance name specified.

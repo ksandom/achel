@@ -1,0 +1,21 @@
+# For use with BalanceM2N. Applies the current goal as an inverse diff. Eg if the input value is 0.5/1 and the goal is 0/1, then the applied difference would be -0.5/1. This is typically applied before the inputRange conversion. --applyGoalDiff=[goalValue],[inputValue][,outputValueName] ~ BalanceM2N,validation,range,conversion
+
+set Tmp,inputValue,~!Global,applyGoalDiff-0!~
+setIfNothing Tmp,inputValue,~!BalanceM2N,current,value!~
+
+set Tmp,goalValue,~!Global,applyGoalDiff-1!~
+setIfNothing Tmp,goalValue,~!BalanceM2N,current,goal!~
+
+set Tmp,outputValueName,~!Global,applyGoalDiff-2!~
+setIfNothing Tmp,outputValueName,value
+
+
+basicMaths Tmp,outValue,~!Tmp,goalValue!~,-,~!Tmp,inputValue!~
+
+setNested BalanceM2N,current,~!Tmp,outputValueName!~,~!Tmp,outValue!~
+
+
+unset Tmp,outValue
+unset Tmp,inputValue
+unset Tmp,outValue
+unset Tmp,outputValueName
