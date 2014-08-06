@@ -157,6 +157,8 @@ function fileRepAddFile
 	if [ "$pathToFile" != '.' ]; then
 		mkdir -p "$providerPath/$pathToFile"
 	fi
+	
+	mkdir -p "$configDir/$pathToFile"
 
 	# Put the file in the right place and symlink it back.
 	cd "$configDir"
