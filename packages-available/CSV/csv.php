@@ -96,5 +96,5 @@ class CSV extends Module
 
 $core=core::assert();
 $core->registerModule(new CSV());
- 
+
 ?>
