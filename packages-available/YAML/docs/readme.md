@@ -9,5 +9,5 @@ Imports/Exports YAML.
 
 ## A worked example
 
-    mass --setNested=A,b,c,d,1 --setNested=A,b,c,e,2 --setNested=A,b,c,f,2 --setNested=A,b,g,h,3 --retrieveResults=A,b --toYAML
+    achel --setNested=A,b,c,d,1 --setNested=A,b,c,e,2 --setNested=A,b,c,f,2 --setNested=A,b,g,h,3 --retrieveResults=A,b --toYAML
 
