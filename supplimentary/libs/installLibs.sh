@@ -136,7 +136,8 @@ function showConfig
 		fi
 	done
 	
-	echo "	installNotes: 	$installTypeComments"
+	echo "	installNotes:"
+	echo "$installTypeComments" | cleanWrap 16
 }
 
 function copyTemplatedFile

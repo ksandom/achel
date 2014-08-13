@@ -134,3 +134,42 @@ function getAnswer
 		export $name="$defaultToUse"
 	fi
 }
+
+function cleanWrap
+{
+	# Takes an integer specifying how many characters to indent by
+	# and the cleanly wraps the content piped to it while indenting
+	# by the requested amount.
+	
+	indent="$1"
+	let derivedWidth=$COLUMNS-$indent
+	
+	# TODO This is a hack, there must be a better way.
+	lotsOfPadding='                                          '
+	lotsOfPadding="$lotsOfPadding$lotsOfPadding$lotsOfPadding"
+	
+	padding=${lotsOfPadding::indent}
+	
+	if [ "$derivedWidth" -gt 0 ]; then
+		while read line;do
+			echo "$padding$line"
+		done < <(fold -s --width=$derivedWidth)
+	else
+		while read line;do
+			echo "$padding$line"
+		done < <(fold -s)
+	fi
+}
+
+function getDimensions
+{
+	# TODO There has got to be a better way than this.
+	
+	if which resize > /dev/null; then
+		resize | grep COL | grep -v export | sed 's/.*=//g;s/;//g'
+	else
+		echo 80
+	fi
+}
+
+export COLUMNS=`getDimensions`
