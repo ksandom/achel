@@ -236,12 +236,11 @@ function doInstall
 	
 	# Remove legacy supplimentary symlink and create a directory instead.
 	if [ -h "$configDir"/supplimentary ]; then
-		rm "$configDir"/supplimentary
+		rm "$configDir"/supplimentary; mkdir -p "$configDir"/supplimentary/libs
 	fi
 	if [ -h "$configDir"/supplimentary/libs ]; then
-		rm "$configDir"/supplimentary/libs
+		rm "$configDir"/supplimentary/libs; mkdir -p "$configDir"/supplimentary/libs
 	fi
-	mkdir -p "$configDir"/supplimentary/libs
 	
 	supplimentaryInstall achel
 	
