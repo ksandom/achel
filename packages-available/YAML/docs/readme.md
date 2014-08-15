@@ -7,9 +7,9 @@ Imports/Exports YAML.
 * Make sure `YAML` is included via [repoParms](https://github.com/ksandom/achel/blob/master/docs/programming/creatingARepositoryWithProfiles.md#use-repoparmdefinepackages-to-create-a-profile). If BASE is included, it should be fine.
 * Perform options as needed.
 
-### On ubuntu
+### On ubuntu/debian
 
-    sudo apt-get install php5-dev libyaml-dev
+    sudo apt-get install php5-dev libyaml-dev php-pear make
     sudo pecl install yaml
 
 *Snip*
