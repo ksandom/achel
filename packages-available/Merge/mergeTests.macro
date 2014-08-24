@@ -1,3 +1,45 @@
 # Run the merge unit tests. ~ unitTest,hidden,merge
 
-pass
+# Create data set
+setNested Example,animals,dog,name,dog
+setNested Example,animals,dog,legs,4
+setNested Example,animals,dog,noise,woof
+
+setNested Example,animals,cat,name,cat
+setNested Example,animals,cat,legs,4
+setNested Example,animals,cat,noise,meow
+
+setNested Example,animals,bird,name,bird
+setNested Example,animals,bird,legs,2
+setNested Example,animals,bird,noise,chirp
+
+setNested Example,vehicles,dog,name,dog
+setNested Example,vehicles,dog,wheels,4
+setNested Example,vehicles,dog,legs,until the fuel runs out
+setNested Example,vehicles,dog,noise,woof
+setNested Example,vehicles,dog,comment,runs like a
+
+setNested Example,vehicles,bike,name,fast
+setNested Example,vehicles,bike,wheels,2
+setNested Example,vehicles,bike,noise,brrrrrrrr
+
+setNested Example,vehicles,snowPlow,name,snowPlow
+setNested Example,vehicles,snowPlow,wheels,6
+setNested Example,vehicles,snowPlow,noise,wiiirrrrrEEEEEzzzz
+
+
+defineTest Merge - TakeFirst,
+	merge
+		dataSet
+			retrieveResults Example,animals
+		dataSet TakeFirst
+			retrieveResults Example,vehicles
+	
+	failTest no test
+
+
+
+
+
+unsetCategory Example
+

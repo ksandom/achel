@@ -39,19 +39,37 @@ Let's create some data sets
 
 Let's merge it and take only the first version when there's a clash.
 
-merge
-	dataSet
-		retieveResults Example,animals
-	
-	dataSet mergeTakeFirst
-		retieveResults Example,vehicles
+    merge
+    	dataSet
+    		retieveResults Example,animals
+    	
+    	dataSet TakeFirst
+    		retieveResults Example,vehicles
 
 Let's merge it and take only the last version when there's a clash.
 
-merge
-	dataSet
-		retieveResults Example,animals
-	
-	dataSet mergeTakeLast
-		retieveResults Example,vehicles
+    merge
+    	dataSet
+    		retieveResults Example,animals
+    	
+    	dataSet TakeLast
+    		retieveResults Example,vehicles
+
+Let's merge it and combine clashes with a bias towards first version when there's a clash.
+
+    merge
+    	dataSet
+    		retieveResults Example,animals
+    	
+    	dataSet CombineBiasFirst
+    		retieveResults Example,vehicles
+
+Let's merge it and combine clashes with a bias towards last version when there's a clash.
+
+    merge
+    	dataSet
+    		retieveResults Example,animals
+    	
+    	dataSet CombineBiasLast
+    		retieveResults Example,vehicles
 
