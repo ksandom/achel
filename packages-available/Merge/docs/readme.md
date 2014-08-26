@@ -26,12 +26,12 @@ Let's create some data sets
     setNested Example,vehicles,dog,name,dog
     setNested Example,vehicles,dog,wheels,4
     setNested Example,vehicles,dog,legs,until the fuel runs out
-    setNested Example,vehicles,dog,noise,woof
+    setNested Example,vehicles,dog,noise,brrrrrr
     setNested Example,vehicles,dog,comment,runs like a
     
     setNested Example,vehicles,bike,name,fast
     setNested Example,vehicles,bike,wheels,2
-    setNested Example,vehicles,bike,noise,brrrrrrrr
+    setNested Example,vehicles,bike,noise,whooosh
     
     setNested Example,vehicles,snowPlow,name,snowPlow
     setNested Example,vehicles,snowPlow,wheels,6

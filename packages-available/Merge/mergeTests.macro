@@ -13,15 +13,15 @@ setNested Example,animals,bird,name,bird
 setNested Example,animals,bird,legs,2
 setNested Example,animals,bird,noise,chirp
 
-setNested Example,vehicles,dog,name,dog
+setNested Example,vehicles,dog,name,doggyCar
 setNested Example,vehicles,dog,wheels,4
 setNested Example,vehicles,dog,legs,until the fuel runs out
-setNested Example,vehicles,dog,noise,woof
+setNested Example,vehicles,dog,noise,brrrrrr
 setNested Example,vehicles,dog,comment,runs like a
 
 setNested Example,vehicles,bike,name,fast
 setNested Example,vehicles,bike,wheels,2
-setNested Example,vehicles,bike,noise,brrrrrrrr
+setNested Example,vehicles,bike,noise,whooosh
 
 setNested Example,vehicles,snowPlow,name,snowPlow
 setNested Example,vehicles,snowPlow,wheels,6
@@ -35,7 +35,133 @@ defineTest Merge - TakeFirst,
 		dataSet TakeFirst
 			retrieveResults Example,vehicles
 	
-	failTest no test
+	stashResults Example,result
+	
+	expect woof,~!Example,result,dog,noise!~
+	
+	unset Example,result
+
+defineTest Merge - TakeLast,
+	merge
+		dataSet
+			retrieveResults Example,animals
+		dataSet TakeLast
+			retrieveResults Example,vehicles
+	
+	stashResults Example,result
+	
+	expect brrrrrr,~!Example,result,dog,noise!~
+	
+	unset Example,result
+
+defineTest Merge - TakeFirst - surrounding data,
+	merge
+		dataSet
+			retrieveResults Example,animals
+		dataSet TakeFirst
+			retrieveResults Example,vehicles
+	
+	stashResults Example,result
+	
+	expect ,~!Example,result,dog,wheels!~
+	
+	unset Example,result
+
+defineTest Merge - TakeLast - surrounding data,
+	merge
+		dataSet
+			retrieveResults Example,animals
+		dataSet TakeLast
+			retrieveResults Example,vehicles
+	
+	stashResults Example,result
+	
+	expect ,~!Example,result,dog,legs!~
+	
+	unset Example,result
+
+defineTest Merge - CombineBiasFirst - right bias,
+	merge
+		dataSet
+			retrieveResults Example,animals
+		dataSet CombineBiasFirst
+			retrieveResults Example,vehicles
+	
+	stashResults Example,result
+	
+	expect woof,~!Example,result,dog,noise!~
+	
+	unset Example,result
+
+defineTest Merge - CombineBiasLast - right bias,
+	merge
+		dataSet
+			retrieveResults Example,animals
+		dataSet CombineBiasLast
+			retrieveResults Example,vehicles
+	
+	stashResults Example,result
+	
+	expect brrrrrr,~!Example,result,dog,noise!~
+	
+	unset Example,result
+
+defineTest Merge - CombineBiasFirst - surrounding data,
+	merge
+		dataSet
+			retrieveResults Example,animals
+		dataSet CombineBiasFirst
+			retrieveResults Example,vehicles
+	
+	stashResults Example,result
+	
+	expect 4,~!Example,result,dog,wheels!~
+	
+	unset Example,result
+
+defineTest Merge - CombineBiasLast - surrounding data,
+	merge
+		dataSet
+			retrieveResults Example,animals
+		dataSet CombineBiasLast
+			retrieveResults Example,vehicles
+	
+	stashResults Example,result
+	
+	expect 4,~!Example,result,dog,legs!~
+	
+	unset Example,result
+
+defineTest Merge - TakeFirst - surrounding data repeat (pollution test),
+	merge
+		dataSet
+			retrieveResults Example,animals
+		dataSet TakeFirst
+			retrieveResults Example,vehicles
+	
+	stashResults Example,result
+	
+	expect ,~!Example,result,dog,wheels!~
+	
+	unset Example,result
+
+defineTest Merge - TakeLast - surrounding data repeat (pollution test),
+	merge
+		dataSet
+			retrieveResults Example,animals
+		dataSet TakeLast
+			retrieveResults Example,vehicles
+	
+	stashResults Example,result
+	
+	expect ,~!Example,result,dog,legs!~
+	
+	unset Example,result
+
+
+
+
+
 
 
 
