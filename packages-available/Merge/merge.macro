@@ -2,4 +2,6 @@
 
 clear
 
-pass
+callFeature ~!Global,merge!~
+
+unset Merge,resultSet

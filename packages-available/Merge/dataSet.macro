@@ -1,3 +1,17 @@
-# Define a dataSet to merge into the main resultSet. ~ merge
+# Define a dataSet to merge into the main resultSet. --dataSet[=MergeAlgorithm,] . Note the comma at the end. You can find MergeAlgorithms with --help=MergeAlgorithm ~ merge
 
-pass
+if ~!Global,dataSet-1!~,==,,
+	# No MergeAlgorithm provided. Use default.
+	set Tmp,retreieveDataset,~!Global,dataSet-0!~
+	set Tmp,mergeAlgorithm,mergeTakeLast
+else
+	# MergeAlgorithm provided.
+	set Tmp,retreieveDataset,~!Global,dataSet-1!~
+	set Tmp,mergeAlgorithm,merge~!Global,dataSet-0!~
+
+
+callFeature ~!Tmp,retreieveDataset!~
+callFeature ~!Tmp,mergeAlgorithm!~
+
+unset Tmp,mergeAlgorithm
+unset Tmp,retreieveDataset

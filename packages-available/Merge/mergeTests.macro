@@ -1,5 +1,7 @@
 # Run the merge unit tests. ~ unitTest,hidden,merge
 
+
+
 # Create data set
 setNested Example,animals,dog,name,dog
 setNested Example,animals,dog,legs,4
@@ -32,7 +34,7 @@ defineTest Merge - TakeFirst,
 	merge
 		dataSet
 			retrieveResults Example,animals
-		dataSet TakeFirst
+		dataSet TakeFirst,
 			retrieveResults Example,vehicles
 	
 	stashResults Example,result
@@ -45,7 +47,20 @@ defineTest Merge - TakeLast,
 	merge
 		dataSet
 			retrieveResults Example,animals
-		dataSet TakeLast
+		dataSet TakeLast,
+			retrieveResults Example,vehicles
+	
+	stashResults Example,result
+	
+	expect brrrrrr,~!Example,result,dog,noise!~
+	
+	unset Example,result
+
+defineTest Merge - Default (TakeLast),
+	merge
+		dataSet
+			retrieveResults Example,animals
+		dataSet
 			retrieveResults Example,vehicles
 	
 	stashResults Example,result
@@ -58,7 +73,7 @@ defineTest Merge - TakeFirst - surrounding data,
 	merge
 		dataSet
 			retrieveResults Example,animals
-		dataSet TakeFirst
+		dataSet TakeFirst,
 			retrieveResults Example,vehicles
 	
 	stashResults Example,result
@@ -71,12 +86,12 @@ defineTest Merge - TakeLast - surrounding data,
 	merge
 		dataSet
 			retrieveResults Example,animals
-		dataSet TakeLast
+		dataSet TakeLast,
 			retrieveResults Example,vehicles
 	
 	stashResults Example,result
 	
-	expect ,~!Example,result,dog,legs!~
+	expect until the fuel runs out,~!Example,result,dog,legs!~
 	
 	unset Example,result
 
@@ -84,7 +99,7 @@ defineTest Merge - CombineBiasFirst - right bias,
 	merge
 		dataSet
 			retrieveResults Example,animals
-		dataSet CombineBiasFirst
+		dataSet CombineBiasFirst,
 			retrieveResults Example,vehicles
 	
 	stashResults Example,result
@@ -97,7 +112,7 @@ defineTest Merge - CombineBiasLast - right bias,
 	merge
 		dataSet
 			retrieveResults Example,animals
-		dataSet CombineBiasLast
+		dataSet CombineBiasLast,
 			retrieveResults Example,vehicles
 	
 	stashResults Example,result
@@ -110,7 +125,7 @@ defineTest Merge - CombineBiasFirst - surrounding data,
 	merge
 		dataSet
 			retrieveResults Example,animals
-		dataSet CombineBiasFirst
+		dataSet CombineBiasFirst,
 			retrieveResults Example,vehicles
 	
 	stashResults Example,result
@@ -123,12 +138,12 @@ defineTest Merge - CombineBiasLast - surrounding data,
 	merge
 		dataSet
 			retrieveResults Example,animals
-		dataSet CombineBiasLast
+		dataSet CombineBiasLast,
 			retrieveResults Example,vehicles
 	
 	stashResults Example,result
 	
-	expect 4,~!Example,result,dog,legs!~
+	expect runs like a,~!Example,result,dog,comment!~
 	
 	unset Example,result
 
@@ -136,7 +151,7 @@ defineTest Merge - TakeFirst - surrounding data repeat (pollution test),
 	merge
 		dataSet
 			retrieveResults Example,animals
-		dataSet TakeFirst
+		dataSet TakeFirst,
 			retrieveResults Example,vehicles
 	
 	stashResults Example,result
@@ -149,12 +164,12 @@ defineTest Merge - TakeLast - surrounding data repeat (pollution test),
 	merge
 		dataSet
 			retrieveResults Example,animals
-		dataSet TakeLast
+		dataSet TakeLast,
 			retrieveResults Example,vehicles
 	
 	stashResults Example,result
 	
-	expect ,~!Example,result,dog,legs!~
+	expect until the fuel runs out,~!Example,result,dog,legs!~
 	
 	unset Example,result
 
