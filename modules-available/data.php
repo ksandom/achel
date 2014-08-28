@@ -78,7 +78,7 @@ class Data extends Module
 		elseif (file_exists($this->storageDir."/$source/$filename")) $filenameTouse=$this->storageDir."/$filename";
 		else
 		{
-			$this->core->complain($this, "Could not find $filename.");
+			$this->core->debug(3, "loadStoreEntry: Could not find $filename.");
 			return false;
 		}
 		
