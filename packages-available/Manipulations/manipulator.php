@@ -51,6 +51,7 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('lastResult', 'lastResults', 'last'), 'lastResult', "Take the last x results, where x is one if not specified. --lastResult=x", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('offsetResult', 'offsetResults'), 'offsetResult', "After x results, take the first y results. --offsetResult=x,y . If y is negative, The results will be taken from the end rather than the beginning. In this case x therefore is an offset from the end, not the beginning.", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('keyOn'), 'keyOn', "Key items in the resultSet using a named value from each item in the resultSet. --keyOn=itemKey1[,itemKey2[,itemKey3[,...]]]", array('result', 'Manipulations'));
+				$this->core->registerFeature($this, array('keyOnPreserve'), 'keyOnPreserve', "Key items in the resultSet using a named value from each item in the resultSet. --keyOn=itemKey1[,itemKey2[,itemKey3[,...]]] . Preseve keys. Clashes will take the last value. Use this where you need to match up keys from multiple sources.", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('keyValueOn'), 'keyValueOn', "Key items in the value of each item in the resultSet using a named value from each item inside that item in the resultSet. If this sounds confusing, just think of it as running --keyOn inside a value inside each item in the result set. --keyValueOn=valueName,subValueName", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('lessThan'), 'lessThan', "Restrict the resultset to items where a named result value is less than a specified value. --lessThan=valueName,valueToTest", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('greaterThan'), 'greaterThan', "Restrict the resultset to items where a named result value is greater than a specified value. --greaterThan=valueName,valueToTest", array('result', 'Manipulations'));
@@ -198,6 +199,10 @@ class Manipulator extends Module
 			case 'keyOn':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 1, 1);
 				return $this->keyOn($this->core->getResultSet(), $parms);
+				break;
+			case 'keyOnPreserve':
+				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 1, 1);
+				return $this->keyOn($this->core->getResultSet(), $parms, false);
 				break;
 			case 'keyValueOn':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 2, 2);
@@ -783,19 +788,27 @@ class Manipulator extends Module
 		return $output;
 	}
 	
-	function keyOn($resultSet, $keysToKeyOn)
+	function keyOn($resultSet, $keysToKeyOn, $unique=true)
 	{
 		$output=array();
 		$separator='_';
 		
 		foreach ($resultSet as $oldKey=>$item)
 		{
-			$key='';
-			foreach ($keysToKeyOn as $keyPart)
+			if ($unique)
 			{
-				$key.=(isset($item[$keyPart]))?$separator.$item[$keyPart]:$separator.$oldKey;
+				$key='';
+				foreach ($keysToKeyOn as $keyPart)
+				{
+					$key.=(isset($item[$keyPart]))?$separator.$item[$keyPart]:$separator.$oldKey;
+				}
+				$this->core->debug(3, "keyOn: Derived key $key");
 			}
-			$this->core->debug(3, "keyOn: Derived key $key");
+			else
+			{
+				$keyKeys=array_keys($keysToKeyOn);
+				$key=$item[$keysToKeyOn[0]];
+			}
 			$output[$key]=$item;
 		}
 		
