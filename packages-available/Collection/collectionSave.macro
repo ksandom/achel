@@ -1,11 +1,14 @@
 # Save a specified collection. --collectionSave=collectionName ~ collection
 
-if ~!Global,collectionSave!~,!=,,
-	debug 2,Collection: Saving ~!Global,collectionSave!~.
-	saveStoreToData ~!Global,collectionSave!~
-	
-	# TODO Is this really necessary?
-	# getCategory ~!Global,collectionSave!~
+if ~!~!Core,categoryMarker!~,~!Global,collectionSave!~!~,!=,,
+	if ~!Global,collectionSave!~,!=,,
+		debug 2,Collection: Saving ~!Global,collectionSave!~.
+		saveStoreToData ~!Global,collectionSave!~
+		
+		# TODO Is this really necessary?
+		# getCategory ~!Global,collectionSave!~
+	else
+		complain Collection: No collection specified.
 else
-	complain Collection: No collection specified.
+	debug 2,Collection: Nothing has changed in "~!Global,categoryMarker!~"
 

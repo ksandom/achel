@@ -926,7 +926,7 @@ class core extends Module
 	
 	function markCategory($category)
 	{
-		if ($category!=categoryMarker) $this->set(categoryMarker, $category, true);
+		if ($category!=categoryMarker) $this->set(categoryMarker, $category, 'true');
 	}
 	
 	function setIfNotSet($category, $valueName, $value, $orNothing=false)

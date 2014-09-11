@@ -5,5 +5,6 @@ if ~!Global,collectionLoadArbitrary-0!~,!=,,
 		registerForEvent Achel,finishGeneral,collectionSaveArbitrary,~!Global,collectionLoadArbitrary!~
 
 	load loadStoreFromFile ~!Global,collectionLoadArbitrary-1!~,~!Global,collectionLoadArbitrary-0!~
+	unset ~!Core,categoryMarker!~,~!Global,collectionLoadArbitrary-0!~
 else
 	complain Collection: No collection specified.

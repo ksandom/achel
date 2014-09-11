@@ -1,8 +1,10 @@
 # Save a specified collection to an arbitrary location. --collectionSaveArbitrary=collectionName,fullPathToFile ~ collection
 
-if ~!Global,collectionSaveArbitrary-0!~,!=,,
-	debug 2,Collection: Saving ~!Global,collectionSaveArbitrary-0!~ to ~!Global,collectionSaveArbitrary-1!~.
-	saveStoreToFile ~!Global,collectionSaveArbitrary-1!~,~!Global,collectionSaveArbitrary-0!~
+if ~!~!Core,categoryMarker!~,~!Global,collectionSaveArbitrary-0!~!~,!=,,
+	if ~!Global,collectionSaveArbitrary-0!~,!=,,
+		debug 2,Collection: Saving ~!Global,collectionSaveArbitrary-0!~ to ~!Global,collectionSaveArbitrary-1!~.
+		saveStoreToFile ~!Global,collectionSaveArbitrary-1!~,~!Global,collectionSaveArbitrary-0!~
+	else
+		complain Collection: No collection specified.
 else
-	complain Collection: No collection specified.
-
+	debug 2,Collection: Nothing has changed in "~!Global,collectionSaveArbitrary-0!~"
