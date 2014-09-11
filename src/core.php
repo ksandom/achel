@@ -8,6 +8,8 @@ define('storeValueEnd', '!~');
 define('resultVarBegin', '~%');
 define('resultVarEnd', '%~');
 
+define('categoryMarker', 'CategoryMark'); // When a category is marked as changed, it's recorded here.
+
 define('resultVarsDefaultMaxRecusion', 50); // Prevent a stack overflow. We could go many times deeper than this, but if we get this far, sompething is very likely wrong.
 define('resultVarsDefaultRecusionWarn', 25); // If we get to this many (arbitrary) levels of recusion, something is probably wrong
 define('resultVarsDefaultWarnDebugLevel', 2);
@@ -55,6 +57,7 @@ class core extends Module
 		
 		parent::__construct('Core');
 		$this->set('Core', 'serial', intval(rand()));
+		$this->set('Core', 'categoryMarker', categoryMarker);
 		$this->registerModule($this);
 	}
 	
@@ -921,6 +924,11 @@ class core extends Module
 		return $result;
 	}
 	
+	function markCategory($category)
+	{
+		if ($category!=categoryMarker) $this->set(categoryMarker, $category, true);
+	}
+	
 	function setIfNotSet($category, $valueName, $value, $orNothing=false)
 	{
 		$shouldSet=false;
@@ -959,6 +967,8 @@ class core extends Module
 			if (!isset($this->store[$category][$nesting])) $this->store[$category][$nesting]=array();
 			$this->store[$category][$nesting][$valueName]=$args;
 		}
+		
+		$this->markCategory($category);
 	}
 
 	function setRef($category, $valueName, &$args)
@@ -974,6 +984,8 @@ class core extends Module
 			if (!isset($this->store[$category][$nesting])) $this->store[$category][$nesting]=array();
 			$this->store[$category][$nesting][$valueName]=$args;
 		}
+		
+		$this->markCategory($category);
 	}
 	
 	function doUnSet($deleteList)
@@ -1139,6 +1151,7 @@ class core extends Module
 		$fullAddress=array_merge($traditionalAddress, $remainingStuff);
 		
 		$this->setNestedViaPath($fullAddress, $value);
+		$this->markCategory($store);
 	}
 	
 	private function setNestedStart($path, $value)
@@ -1154,6 +1167,8 @@ class core extends Module
 		# TODO Add shortcuts
 		
 		$this->setNestedWorker($this->store, $pathParts, $value, count($pathParts));
+		
+		$this->markCategory($pathParts[0]);
 	}
 	
 	private function setNestedWorker(&$initialValue, $path, &$value, $count=0, $position=0)
