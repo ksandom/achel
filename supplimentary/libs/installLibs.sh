@@ -242,6 +242,10 @@ function doInstall
 		rm "$configDir"/supplimentary/libs; mkdir -p "$configDir"/supplimentary/libs
 	fi
 	
+	# This seems a little silly to repeat this a third time, and so probably needs to be re-thought. 
+	# The reason for the two previoius ones is so that the directory gets re-created on the same line to prevent the script dying horribly. This appeared to fix the problem at the time, but has not been scientifically tested.
+	mkdir -p "$configDir"/supplimentary/libs
+	
 	supplimentaryInstall achel
 	
 	
