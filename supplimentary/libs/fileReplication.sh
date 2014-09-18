@@ -145,12 +145,18 @@ function fileRepAddFile
 	
 	local providerPath=`getProviderPath "$provider"`
 	
+	# TODO I think the problem is somewhere in this test.
 	if [ ! -e "$configDir/$fileToAdd" ] && [ ! -e "$providerPath" ]; then
 		# Check that our origin file exists.
 		echo "fileRepAddFile: Origin \"$configDir/$fileToAdd\" does not exist. And provider path \"$providerPath\" does not exist for provider \"$provider\". Aborting." >&2
 		return 1
 	fi
 	
+	if [ ! -e "$configDir/$fileToAdd" ] && [ ! -e "$providerPath/$fileToAdd" ]; then
+		# Check that our origin file exists.
+		echo "fileRepAddFile: Origin \"$configDir/$fileToAdd\" does not exist. And destination \"$providerPath/$fileToAdd\" does not exist for provider \"$provider\". Aborting." >&2
+		return 1
+	fi
 	
 	pathToFile=`dirname "$fileToAdd"`
 	# Make sure the desintation folder exists.
@@ -164,7 +170,7 @@ function fileRepAddFile
 	cd "$configDir"
 	if [ ! -e "$providerPath/$fileToAdd" ]; then
 		echo "fileRepAddFile: \"$providerPath/$fileToAdd\" Already didn't exist. Copying."
-		cp "$configDir/$fileToAdd" "$providerPath/$fileToAdd"
+		cp -v "$configDir/$fileToAdd" "$providerPath/$fileToAdd"
 	fi
 	
 	
