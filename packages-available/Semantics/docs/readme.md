@@ -137,6 +137,16 @@ Here's the macro that lists the features types for semantics
 * The `#onLoaded setFeatureType` **is the important line** that tells achel what type of feature this is.
 * The rest is just performing the actions.
 
+## Solving Problems
+
+### [debug0]: callFeature: Could not find a module to match ','
+
+I have caused this by failing to create the feature type. In my case it was a typo in registering for the `Install,featureTypes` event.
+
+This lead to `callFeature()` assuming that there is no semantics data for the feature, and therefore falling back to basic, explicit behavior.
+
+The same thing could happen if the corresponding data type is not created.
+
 ## More info
 
 `$ achel --help=Semantics`
