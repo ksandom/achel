@@ -807,7 +807,14 @@ class Manipulator extends Module
 			else
 			{
 				$keyKeys=array_keys($keysToKeyOn);
-				$key=$item[$keysToKeyOn[0]];
+				if (isset($item[$keysToKeyOn[0]]))
+				{
+					$key=$item[$keysToKeyOn[0]];
+				}
+				else
+				{
+					$key=$oldKey;
+				}
 			}
 			$output[$key]=$item;
 		}
