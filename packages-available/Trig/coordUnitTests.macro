@@ -242,3 +242,19 @@ defineTest 2CoordsToDistance -10 -10 -6.6 -3.2,
 
 
 
+defineTest rightTriangleGetAdjacentFromAngleAndOpposite - 45,
+	degreesToRadians Tmp,rads,45
+	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,testResult,~!Tmp,rads!~,2
+	expect 2,~!Tmp,testResult!~
+	
+	unset Tmp,rads
+	unset Tmp,testResult
+
+defineTest rightTriangleGetAdjacentFromAngleAndOpposite - 20,
+	degreesToRadians Tmp,rads,20
+	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,testResult,~!Tmp,rads!~,2
+	round Tmp,testResult,~!Tmp,testResult!~,2
+	expect 5.49,~!Tmp,testResult!~
+	
+	unset Tmp,rads
+	unset Tmp,testResult

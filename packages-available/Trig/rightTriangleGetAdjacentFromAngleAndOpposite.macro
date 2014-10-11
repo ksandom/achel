@@ -1,0 +1,12 @@
+# Get the adjacent edge from the angle and the opposite. --rightTriangleGetAdjacentFromAngleAndOpposite=Category,variable,angle,opposite ~ trig,rightAngleTriangle
+
+
+# TODO write this
+
+#  O
+# T A
+
+tan Tmp,atan,~!Global,rightTriangleGetAdjacentFromAngleAndOpposite-2!~
+basicMaths ~!Global,rightTriangleGetAdjacentFromAngleAndOpposite-0!~,~!Global,rightTriangleGetAdjacentFromAngleAndOpposite-1!~,~!Global,rightTriangleGetAdjacentFromAngleAndOpposite-3!~,/,~!Tmp,atan!~
+
+unset Tmp,atan
