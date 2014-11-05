@@ -1,0 +1,92 @@
+# Test that me scoping works. ~ unitTest,scope
+
+defineTest Isolated Local,
+	unset Isolated,test1
+	set Isolated,test1,aa1
+	expect aa1,~!Isolated,test1!~
+
+defineTest Isolated Local - inherit forwards,
+	unset Isolated,test1
+	set Isolated,test1,aa1
+	isolate
+		expect ,~!Isolated,test1!~
+
+defineTest Isolated Local - inherit backwards,
+	unset Isolated,test1
+	isolate
+		set Isolated,test1,aa1
+	expect ,~!Isolated,test1!~
+
+defineTest Isolated Local - repeat,
+	unset Isolated,test1
+	set Isolated,test1,aa1
+	expect aa1,~!Isolated,test1!~
+
+
+
+
+
+
+
+defineTest Me Local,
+	unset Me,test1
+	set Me,test1,aa1
+	expect aa1,~!Me,test1!~
+
+defineTest Me Local - inherit forwards,
+	unset Me,testMeLocal
+	set Me,testMeLocal,aa1
+	isolate
+		expect aa1,~!Me,testMeLocal!~
+
+defineTest Me Local - inherit backwards,
+	unset Me,test1
+	isolate
+		set Me,test1,aa1
+	expect ,~!Me,test1!~
+
+defineTest Me Local - repeat,
+	unset Me,test1
+	set Me,test1,aa1
+	expect aa1,~!Me,test1!~
+
+defineTest Me Local - return,
+	unset Me,test1
+	set Me,test1,aa1
+	isolate
+		set Me,test1,aa2
+	
+	if ~!Me,test1!~,==,aa1,
+		failTest Got value from before nested setting.
+	elseIf ~!Me,test1!~,==,aa2,
+		passTest Got value from nested setting.
+	else
+		failTest Got something entirely unexpected: "~!Me,test1!"
+	
+
+
+
+
+
+defineTest Normal Local,
+	unset Normal,test1
+	set Normal,test1,aa1
+	expect aa1,~!Normal,test1!~
+
+defineTest Normal Local - inherit forwards,
+	unset Normal,test1
+	set Normal,test1,aa1
+	isolate
+		expect aa1,~!Normal,test1!~
+
+defineTest Normal Local - inherit backwards,
+	unset Normal,test1
+	isolate
+		set Normal,test1,aa1
+	expect aa1,~!Normal,test1!~
+
+defineTest Normal Local - repeat,
+	unset Normal,test1
+	set Normal,test1,aa1
+	expect aa1,~!Normal,test1!~
+

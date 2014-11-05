@@ -772,6 +772,7 @@ class core extends Module
 		$srcNesting=$this->get('Core', 'nesting');
 		
 		$this->delete(nestedPrivateVarsName, $srcNesting);
+		$this->delete(isolatedNestedPrivateVarsName, $srcNesting);
 		
 		$nesting=(is_numeric($srcNesting))?$srcNesting-1:1;
 		if ($nesting<1) $nesting=1;
@@ -893,7 +894,7 @@ class core extends Module
 					break;
 				case nestedPrivateVarsName:
 					$nesting=$this->get('Core', 'nesting');
-					if (isset($this->store[nestedPrivateVarsName][$nesting])) 
+					if (isset($this->store[nestedPrivateVarsName])) 
 					{
 						for ($i=$nesting;$i>0;$i--)
 						{
@@ -960,13 +961,13 @@ class core extends Module
 		
 		if (!isset($this->store[$category])) $this->store[$category]=array();
 		
-		if ($category!=nestedPrivateVarsName) $this->store[$category][$valueName]=$args;
-		else
+		if ($category==nestedPrivateVarsName or $category==isolatedNestedPrivateVarsName)
 		{
 			$nesting=$this->get('Core', 'nesting');
 			if (!isset($this->store[$category][$nesting])) $this->store[$category][$nesting]=array();
 			$this->store[$category][$nesting][$valueName]=$args;
 		}
+		else $this->store[$category][$valueName]=$args;
 		
 		$this->markCategory($category);
 	}
