@@ -999,7 +999,7 @@ class core extends Module
 			}
 		}
 		
-		
+		return true;
 		
 		
 		// Let's do something with it.
