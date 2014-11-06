@@ -40,6 +40,7 @@ class core extends Module
 	private static $singleton;
 	private $verbosity=0;
 	private $initMap=array();
+	private $lastMessage=array('value'=>'', 'count'=>0);
 	
 	function __construct($verbosity=0)
 	{
@@ -718,7 +719,23 @@ class core extends Module
 			$default=$this->get('Codes', 'default', false);
 			$eol=$this->get('General', 'EOL', false); # TODO This can be improved
 			
-			echo "[$code$title$default]: $output$eol";
+			if ($output!=$this->lastMessage['value'])
+			{
+				if ($this->lastMessage['count']>0) echo "$eol";
+				echo "[$code$title$default]: $output$eol";
+				$this->lastMessage['value']=$output;
+				$this->lastMessage['count']=0;
+			}
+			elseIf ($this->lastMessage['count']==0)
+			{
+				echo "[$code$title$default]: Repeat";
+				$this->lastMessage['count']++;
+			}
+			else
+			{
+				echo ".";
+				$this->lastMessage['count']++;
+			}
 			# return false;
 		}
 	}
@@ -771,10 +788,12 @@ class core extends Module
 	{
 		$srcNesting=$this->get('Core', 'nesting');
 		
+		$nesting=(is_numeric($srcNesting))?$srcNesting-1:1;
+		
+		$this->returnMeVariables($srcNesting, $nesting);
+		
 		$this->delete(nestedPrivateVarsName, $srcNesting);
 		$this->delete(isolatedNestedPrivateVarsName, $srcNesting);
-		
-		$nesting=(is_numeric($srcNesting))?$srcNesting-1:1;
 		if ($nesting<1) $nesting=1;
 		$this->set('Core', 'nesting', $nesting);
 		$this->debug(5, "Decremented nesting to $nesting count=*disabled for performance*"); //.$this->getResultSetCount());
@@ -923,6 +942,78 @@ class core extends Module
 		}
 		
 		return $result;
+	}
+	
+	function getMeVariableLevel($variableName, $startLevel)
+	{
+		// Returns the nesting level that the variable was found at and the value associated with it.
+		// Returns false on failure.
+		
+		for ($i=$startLevel;$i>0;$i--)
+		{
+			if (isset($this->store[nestedPrivateVarsName][$i][$variableName]))
+			{
+				return array('level'=>$i, 'value'=>$this->store[nestedPrivateVarsName][$i][$variableName]);
+			}
+		}
+		
+		return false;
+	}
+	
+	function returnMeVariables($srcNestingLevel, $dstNestingLevel)
+	{
+		/*
+			$srcNestingLevel will typically be larger than $dstNestingLevel. There might be a useful exception to this, but I haven't thought of it yet.
+		*/
+		
+		$haveSrc=false;
+		$haveDst=false;
+		
+		// What do we have to work with?
+		if (isset($this->store[nestedPrivateVarsName][$srcNestingLevel]))
+		{
+			$haveSrc=is_array($this->store[nestedPrivateVarsName][$srcNestingLevel]);
+		}
+		
+		if (isset($this->store[nestedPrivateVarsName][$dstNestingLevel]))
+		{
+			$haveDst=is_array($this->store[nestedPrivateVarsName][$dstNestingLevel]);
+		}
+		
+		
+		if ($haveSrc)
+		{
+			# Loop through each variable at current nesting.
+			foreach ($this->store[nestedPrivateVarsName][$srcNestingLevel] as $variableName=>$variableValue)
+			{
+				# Do we have it from an earlier nesting.
+				if ($mePosition=$this->getMeVariableLevel($variableName, $srcNestingLevel-1))
+				{
+					# Is it different?
+					if ($mePosition['value']!=$this->store[nestedPrivateVarsName][$srcNestingLevel][$variableName])
+					{
+						# Save it back.
+						$this->store[nestedPrivateVarsName][$mePosition['level']][$variableName]=$this->store[nestedPrivateVarsName][$srcNestingLevel][$variableName];
+					}
+				}
+			}
+		}
+		
+		
+		
+		
+		// Let's do something with it.
+		if ($haveSrc and $haveDst)
+		{ // Need to merge.
+			
+		}
+		elseif ($haveSrc and !$haveDst)
+		{ // Need to replace.
+			$this->store[nestedPrivateVarsName][$dstNestingLevel]=$this->store[nestedPrivateVarsName][$srcNestingLevel];
+		}
+		elseif ($haveDst and !$haveSrc)
+		{ // Can ignore.
+		}
 	}
 	
 	function markCategory($category)
