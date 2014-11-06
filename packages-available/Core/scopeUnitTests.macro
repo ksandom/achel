@@ -50,7 +50,7 @@ defineTest Me Local - repeat,
 	set Me,test1,aa1
 	expect aa1,~!Me,test1!~
 
-defineTest Me Local - dirty return,
+defineTest Me Local - return,
 	unset Me,test1
 	set Me,test1,aa1
 	isolate
@@ -60,20 +60,6 @@ defineTest Me Local - dirty return,
 		failTest Got value from before nested setting.
 	elseIf ~!Me,test1!~,==,aa2,
 		passTest Got value from nested setting.
-	else
-		failTest Got something entirely unexpected: "~!Me,test1!"
-
-defineTest Me Local - clean return,
-	unset Me,test1
-	isolate
-		set Me,test1,aa2
-	
-	if ~!Me,test1!~,==,aa1,
-		failTest WTF?! Where did that come from?
-	elseIf ~!Me,test1!~,==,aa2,
-		passTest Got value from nested setting.
-	if ~!Me,test1!~,==,,
-		failTest No value came back.
 	else
 		failTest Got something entirely unexpected: "~!Me,test1!"
 
