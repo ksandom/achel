@@ -1,0 +1,23 @@
+# Tests for passing variables to macros. ~ unitTest,parameters,hidden
+
+defineTest 1 parameter,
+	set Tmp,feature,
+		parameters variable1
+		expect abc123,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,abc123
+
+defineTest 2 parameters,
+	set Tmp,feature,
+		parameters variable1,variable2
+		expect abc123--def456,~!Me,variable1!~--~!Me,variable2!~
+	
+	callFeature ~!Tmp,feature!~,abc123,def456
+
+defineTest 3 parameters,
+	set Tmp,feature,
+		parameters variable1,variable2,variable3
+		expect abc123--def456--hij789,~!Me,variable1!~--~!Me,variable2!~--~!Me,variable3!~
+	
+	callFeature ~!Tmp,feature!~,abc123,def456,hij789
+

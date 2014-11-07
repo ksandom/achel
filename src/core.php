@@ -103,6 +103,7 @@ class core extends Module
 				$this->registerFeature($this, array('V'), 'V', 'Decrement verbosity.', array('debug', 'dev'));
 				$this->registerFeature($this, array('ping'), 'ping', 'Useful for debugging.', array('debug', 'dev'));
 				$this->registerFeature($this, array('cleanResults'), 'cleanResults', 'Cleans keys. Converts any objects to arrays.', array('resultSet'));
+				$this->registerFeature($this, array('parameters'), 'parameters', "Map the input parameters to more meaningful names. In the simplest for, this looks like --parameters=parameterName1,parameterName2,parameterName3,etc . But using json will give you access to all the features. See parameters.md", array('resultSet'));
 				$this->registerFeature($this, array('#'), '#', 'Comment.', array('systemInternal'));
 				$this->registerFeature($this, array('pass'), 'pass', "It's a place holder meaning that you will not get a message like \"Could not find macro 'default'. This can happen if you haven't asked me to do anything.\"", array('systemInternal'));
 				$this->registerFeature($this, array('	'), '	', 'Internally used for nesting.', array('systemInternal'));
@@ -223,6 +224,10 @@ class core extends Module
 				break;
 			case 'outNow':
 				$this->out($this->getResultSet());
+				break;
+			case 'parameters':
+				$parms=$this->interpretParms($this->get('Global', $event));
+				$this->parameters($parms);
 				break;
 			case 'pass':
 				break;
@@ -460,6 +465,9 @@ class core extends Module
 			$obj=&$this->core->get('Features', $argument);
 			if (is_array($obj))
 			{
+				# NOTE This has been done this way for performance. However it may be worth abstracting it out into setNestedViaPath.
+				$this->store[isolatedNestedPrivateVarsName][$nesting]['featureName']=$argument;
+				
 				$indentation=str_repeat('  ', $nesting);
 				$valueIn=$this->processValue($value);
 				
@@ -511,6 +519,24 @@ class core extends Module
 		}
 		else $this->debug(3,"Core->callFeature: Non executable code \"$argument\" sent. We shouldn't have got this.");
 		return false;
+	}
+	
+	function parameters($args)
+	{
+		$nesting=$this->get('Core', 'nesting');
+		$lastMacro=$this->store[isolatedNestedPrivateVarsName][$nesting-1]['featureName'];
+		$this->debug(4, "parameters: lastMacro=$lastMacro nesting=$nesting");
+		
+		$argsToUse=(is_array($args))?$args:array($args);
+		if (!isset($this->store[nestedPrivateVarsName][$nesting])) $this->store[nestedPrivateVarsName][$nesting]=array();
+		if (!is_array($this->store[nestedPrivateVarsName][$nesting])) $this->store[nestedPrivateVarsName][$nesting]=array();
+		
+		foreach ($argsToUse as $key=>$name)
+		{
+			$value=$this->core->get('Global',"$lastMacro-$key");
+			$this->store[nestedPrivateVarsName][$nesting-1][$name]=$value;
+			$this->debug(4,"parameters: name=$name key=$key value=$value");
+		}
 	}
 	
 	function makeArgsAvailableToTheScript($featureName, $args)

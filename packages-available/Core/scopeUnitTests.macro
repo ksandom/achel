@@ -1,4 +1,4 @@
-# Test that me scoping works. ~ unitTest,scope
+# Test that me scoping works. ~ unitTest,scope,hidden
 
 defineTest Isolated Local,
 	unset Isolated,test1
