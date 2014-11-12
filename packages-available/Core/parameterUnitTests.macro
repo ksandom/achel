@@ -1,23 +1,53 @@
 # Tests for passing variables to macros. ~ unitTest,parameters,hidden
 
-defineTest 1 parameter,
+defineTest 1 parameter (plain),
 	set Tmp,feature,
 		parameters variable1
 		expect abc123,~!Me,variable1!~
 	
 	callFeature ~!Tmp,feature!~,abc123
 
-defineTest 2 parameters,
+defineTest 2 parameters (plain),
 	set Tmp,feature,
 		parameters variable1,variable2
 		expect abc123--def456,~!Me,variable1!~--~!Me,variable2!~
 	
 	callFeature ~!Tmp,feature!~,abc123,def456
 
-defineTest 3 parameters,
+defineTest 3 parameters (plain),
 	set Tmp,feature,
 		parameters variable1,variable2,variable3
 		expect abc123--def456--hij789,~!Me,variable1!~--~!Me,variable2!~--~!Me,variable3!~
 	
 	callFeature ~!Tmp,feature!~,abc123,def456,hij789
+
+
+defineTest 2 parameters (json) - no default - filled in,
+	set Tmp,feature,
+		parameters ["variable1","variable2"]
+		expect abc123--def456,~!Me,variable1!~--~!Me,variable2!~
+	
+	callFeature ~!Tmp,feature!~,abc123,def456
+
+defineTest 2 parameters (json) - no default - missing value,
+	set Tmp,feature,
+		parameters ["variable1","variable2"]
+		expect --def456,~!Me,variable1!~--~!Me,variable2!~
+	
+	callFeature ~!Tmp,feature!~,,def456
+
+
+defineTest 2 parameters (json) - with defaults - filled in,
+	set Tmp,feature,
+		parameters {"variable1":"value1","variable2":"value2"}
+		expect abc123--def456,~!Me,variable1!~--~!Me,variable2!~
+	
+	callFeature ~!Tmp,feature!~,abc123,def456
+
+defineTest 2 parameters (json) - with defaults - missing value,
+	set Tmp,feature,
+		parameters {"variable1":"value1","variable2":"value2"}
+		expect value1--def456,~!Me,variable1!~--~!Me,variable2!~
+	
+	callFeature ~!Tmp,feature!~,,def456
 

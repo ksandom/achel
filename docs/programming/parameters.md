@@ -21,7 +21,7 @@ So calling it would look like this
 
 Nice and simple when your macro is small and simple. However it quickly became confusing in more complicated macros.
 
-## In the now!
+## In the now! - simple way
 
 Desired parameters are named as follows.
 
@@ -41,3 +41,28 @@ There are two advantages to doing this
 
 * Easier to read, especially as the code grows.
 * The variables are tidied away when they are no longer needed. So you don't need to worry about this yourself.
+
+## In the now! - better way
+
+Desired parameters are named as follows.
+
+example.macro
+
+    # This is an example. --example=name,thing where name is your name and thing is something you see. ~ example
+    parameters {"name":"noName","thing":"brick"}
+    
+    debug 1,Hello ~!Me,name!~. What does the ~!Me,thing!~ look like?
+
+So calling it would look like this
+
+    $ achel --example=Kevin,chain
+    [debug1]: Hello Kevin. What does the chair look like?
+    
+    $ achel --example=,chain
+    [debug1]: Hello noName. What does the chair look like?
+
+Now you can specify defaults for if a parameter is missing.
+
+
+
+

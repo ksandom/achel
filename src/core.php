@@ -531,12 +531,40 @@ class core extends Module
 		if (!isset($this->store[nestedPrivateVarsName][$nesting])) $this->store[nestedPrivateVarsName][$nesting]=array();
 		if (!is_array($this->store[nestedPrivateVarsName][$nesting])) $this->store[nestedPrivateVarsName][$nesting]=array();
 		
+		
+		$argKeys=array_keys($args);
+		foreach ($argKeys as $position => $key)
+		{
+			if (is_numeric($key))
+			{ // Basic name assignment
+				$value=$this->core->get('Global',"$lastMacro-$key");
+				$this->store[nestedPrivateVarsName][$nesting-1][$args[$key]]=$value;
+				$this->debug(4,"parameters: Simple. name={$args[$key]} key=$key value=$value");
+			}
+			else
+			{ // Key based assignment
+				if (is_array($args[$key]))
+				{ // TODO More advanced stuff
+				}
+				else
+				{ // Key with default
+					if (!$value=$this->core->get('Global',"$lastMacro-$position"))
+					{
+						$value=$args[$key];
+					}
+					$this->store[nestedPrivateVarsName][$nesting-1][$key]=$value;
+				}
+			}
+		}
+		
+		/*
 		foreach ($argsToUse as $key=>$name)
 		{
 			$value=$this->core->get('Global',"$lastMacro-$key");
 			$this->store[nestedPrivateVarsName][$nesting-1][$name]=$value;
 			$this->debug(4,"parameters: name=$name key=$key value=$value");
 		}
+		*/
 	}
 	
 	function makeArgsAvailableToTheScript($featureName, $args)
