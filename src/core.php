@@ -556,15 +556,6 @@ class core extends Module
 				}
 			}
 		}
-		
-		/*
-		foreach ($argsToUse as $key=>$name)
-		{
-			$value=$this->core->get('Global',"$lastMacro-$key");
-			$this->store[nestedPrivateVarsName][$nesting-1][$name]=$value;
-			$this->debug(4,"parameters: name=$name key=$key value=$value");
-		}
-		*/
 	}
 	
 	function makeArgsAvailableToTheScript($featureName, $args)
