@@ -151,6 +151,9 @@ class Condition extends Module
 	
 	function doIf($value1, $comparison, $value2)
 	{
+		if (is_bool($value1)) $value1=($value1)?'true':'false';
+		if (is_bool($value2)) $value2=($value2)?'true':'false';
+		
 		switch ($comparison)
 		{
 			case '==':

@@ -22,6 +22,7 @@ defineTest 3 parameters (plain),
 	callFeature ~!Tmp,feature!~,abc123,def456,hij789
 
 
+
 defineTest 2 parameters (json) - no default - filled in,
 	set Tmp,feature,
 		parameters ["variable1","variable2"]
@@ -35,6 +36,7 @@ defineTest 2 parameters (json) - no default - missing value,
 		expect --def456,~!Me,variable1!~--~!Me,variable2!~
 	
 	callFeature ~!Tmp,feature!~,,def456
+
 
 
 defineTest 2 parameters (json) - with defaults - filled in,
@@ -51,3 +53,31 @@ defineTest 2 parameters (json) - with defaults - missing value,
 	
 	callFeature ~!Tmp,feature!~,,def456
 
+
+
+defineTest 1 parameter (nested json) - string 6=>3,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"string","maxLength":"3"}}
+		expect def,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,def456
+
+defineTest 1 parameter (nested json) - string fail 6=>3 allowed,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"string","maxLengthAllowed":"3"}}
+		if ~!Isolated,pass!~,==,false,
+			passTest got false.
+		else
+			failTest did not get false.
+	
+	callFeature ~!Tmp,feature!~,def456
+
+defineTest 1 parameter (nested json) - string pass 3=>3 allowed,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"string","maxLengthAllowed":"3"}}
+		if ~!Isolated,pass!~,==,true,
+			passTest got true.
+		else
+			failTest did not get true.
+	
+	callFeature ~!Tmp,feature!~,def

@@ -22,6 +22,10 @@ define('workAroundIfBug', true); // See doc/bugs/ifBug.md
 
 define ('cleanupArgs', true); // Turn this off if you strike code that relies on arguments set for other macros. This is a bad way of programming and should serve as a severe warning that the code needs to be updated. This option will be removed soon.
 
+# TODO Once Achel better handels boolean values, these can be actual boolean values.
+define ('achelTrue', 'true');
+define ('achelFalse', 'false');
+
 
 /*
 	Debug levels
@@ -531,31 +535,162 @@ class core extends Module
 		if (!isset($this->store[nestedPrivateVarsName][$nesting])) $this->store[nestedPrivateVarsName][$nesting]=array();
 		if (!is_array($this->store[nestedPrivateVarsName][$nesting])) $this->store[nestedPrivateVarsName][$nesting]=array();
 		
+		if (!isset($this->store[isolatedNestedPrivateVarsName][$nesting])) $this->store[isolatedNestedPrivateVarsName][$nesting-1]=array();
+		if (!is_array($this->store[isolatedNestedPrivateVarsName][$nesting])) $this->store[isolatedNestedPrivateVarsName][$nesting-1]=array();
 		
+		$this->store[isolatedNestedPrivateVarsName][$nesting]['pass']=achelTrue;
 		$argKeys=array_keys($args);
-		foreach ($argKeys as $position => $key)
+		foreach ($argKeys as $position => $details)
 		{
-			if (is_numeric($key))
+			if (is_array($args[$details]))
+			{ // More flexible json/array based configuration
+				if (is_numeric($details))
+				{
+					$key=$args[$details];
+					$value=$this->core->get('Global',"$lastMacro-$details");
+				}
+				else
+				{
+					$key=$details;
+					$value=$this->core->get('Global',"$lastMacro-$position");
+				}
+				
+				$variableResult=$this->processVariableDefinition($details, $value, $args[$details]);
+				$this->store[nestedPrivateVarsName][$nesting-1][$key]=$variableResult['value'];
+				if (!$variableResult['pass']) $this->store[isolatedNestedPrivateVarsName][$nesting]['pass']=achelFalse;
+				
+				if ($variableResult['pass'])
+				{
+					$this->core->debug(4, "parameters: Parameter \"$key\" set to \"{$variableResult['value']}\"");
+				}
+				else
+				{
+					$this->core->debug(1, "parameters: Parameter \"$key\" failed a test with message \"{$variableResult['message']}\"");
+				}
+			}
+			else
+			{ // Simple position to name assignment.
+				if (is_numeric($details))
+				{ // Basic position->name assignment
+					$key=$args[$details];
+					$value=$this->core->get('Global',"$lastMacro-$details");
+					$default=false;
+					$this->debug(4,"parameters: Simple numeric. key=$key value=$value");
+				}
+				else
+				{ // Basic name assignment
+					$key=$details;
+					$value=$this->core->get('Global',"$lastMacro-$position");
+					$default=$args[$details];
+					$this->debug(4,"parameters: Simple name. key=$key value=$value default=$default");
+				}
+				$this->store[nestedPrivateVarsName][$nesting-1][$key]=($value)?$value:$default;
+			}
+			
+			/*
+			if (is_numeric($details))
 			{ // Basic name assignment
-				$value=$this->core->get('Global',"$lastMacro-$key");
-				$this->store[nestedPrivateVarsName][$nesting-1][$args[$key]]=$value;
-				$this->debug(4,"parameters: Simple. name={$args[$key]} key=$key value=$value");
+				$value=$this->core->get('Global',"$lastMacro-$details");
+				$this->store[nestedPrivateVarsName][$nesting-1][$args[$details]]=$value;
+				$this->debug(4,"parameters: Simple. name={$args[$details]} key=$details value=$value");
 			}
 			else
 			{ // Key based assignment
-				if (is_array($args[$key]))
+				if (is_array($args[$details]))
 				{ // TODO More advanced stuff
+					$this->store[isolatedNestedPrivateVarsName][$nesting-1]['passed']=true;
+					$variableResult=$this->processVariableDefinition($details, $value, $args[$details]);
+					#  TODO think this through some more.
 				}
 				else
 				{ // Key with default
 					if (!$value=$this->core->get('Global',"$lastMacro-$position"))
 					{
-						$value=$args[$key];
+						$value=$args[$details];
 					}
-					$this->store[nestedPrivateVarsName][$nesting-1][$key]=$value;
+					$this->store[nestedPrivateVarsName][$nesting-1][$details]=$value;
 				}
 			}
+			*/
 		}
+	}
+	
+	function processVariableDefinition($key, $value, $args)
+	{
+		$pass=true;
+		$message='';
+		
+		if (!isset($args['type'])) $args['type']='string';
+		switch ($args['type'])
+		{
+			case 'string':
+				$length=strlen($value);
+				// Tests
+				$maxLengthAllowed=(isset($args['maxLengthAllowed']))?$args['maxLengthAllowed']:false;
+				if ($maxLengthAllowed and $length>$maxLengthAllowed)
+				{
+					$pass=false;
+					$message="Length ($length) greater than allowed ($maxLengthAllowed).";
+				}
+				
+				$minLengthAllowed=(isset($args['minLengthAllowed']))?$args['minLengthAllowed']:false;
+				if ($minLengthAllowed and $length<$minLengthAllowed)
+				{
+					$pass=false;
+					$message="Length ($length) less than allowed ($minLengthAllowed).";
+				}
+				
+				// Manipulations
+				$maxLength=(isset($args['maxLength']))?$args['maxLength']:false;
+				if ($maxLength and $length>$maxLength) $value=substr($value, 0, $maxLength);
+				break;
+			case 'number':
+				if (is_numeric($value))
+				{
+					// Tests
+					$maxAllowed=(isset($args['maxAllowed']))?$args['maxAllowed']:false;
+					if ($maxAllowed and $length>$maxAllowed)
+					{
+						$pass=false;
+						$message="Value ($value) greater than allowed ($maxAllowed).";
+					}
+					
+					$minAllowed=(isset($args['minAllowed']))?$args['minAllowed']:false;
+					if ($minAllowed and $length<$minAllowed)
+					{
+						$pass=false;
+						$message="Value ($value) less than allowed ($minAllowed).";
+					}
+					
+					// Manipulations
+					# TODO there is a bug in these tests. If they are 0 they may not to the right thing.
+					$max=(isset($args['max']))?$args['max']:false;
+					if ($max and $value>$max) $value=$max;
+					
+					$min=(isset($args['min']))?$args['min']:false;
+					if ($min and $value>$min) $value=$min;
+				}
+				else
+				{
+					$pass=false;
+					$message="Not a number.";
+				}
+				break;
+			case 'boolean':
+				// Just assert that we have a boolean. Anything that is not 0, '', or 'false' will resolve to true.
+				$value=($value and $value!=='false');
+				break;
+			default:
+				$this->debug(1,"processVariableDefinition: Unknown type \"{$args['type']}\" in definition for \"$key\".");
+				break;
+		}
+		
+		return array('value'=>$value, 'pass'=>$pass, 'message'=>$message);
+	}
+	
+	function durableGet($key, $array)
+	{
+		return (isset($array[$key]))?$array[$key]:false;
 	}
 	
 	function makeArgsAvailableToTheScript($featureName, $args)
@@ -665,7 +800,6 @@ class core extends Module
 				{
 					$this->core->debug($debugLevel, "findAndProcessVariables: start=$startPos next=$nextStartPos end=$endPos Got $varValue");
 				}
-				
 				
 				if (!is_array($varValue)) $output=implode($varValue, explode(storeValueBegin.$varDef.storeValueEnd, $output));
 				else 

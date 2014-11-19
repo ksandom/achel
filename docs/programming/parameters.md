@@ -16,7 +16,7 @@ example.macro
 
 So calling it would look like this
 
-    $ achel --example=Kevin
+    $ achel -v --example=Kevin
     [debug1]: Hello Kevin.
 
 Nice and simple when your macro is small and simple. However it quickly became confusing in more complicated macros.
@@ -34,7 +34,7 @@ example.macro
 
 So calling it would look like this
 
-    $ achel --example=Kevin,chain
+    $ achel -v --example=Kevin,chain
     [debug1]: Hello Kevin. What does the chair look like?
 
 There are two advantages to doing this
@@ -55,11 +55,38 @@ example.macro
 
 So calling it would look like this
 
-    $ achel --example=Kevin,chain
+    $ achel -v --example=Kevin,chain
     [debug1]: Hello Kevin. What does the chair look like?
     
-    $ achel --example=,chain
+    $ achel -v --example=,chain
     [debug1]: Hello noName. What does the chair look like?
+
+Now you can specify defaults for if a parameter is missing.
+
+## In the now! - when you want to be precise
+
+Desired parameters are named as follows.
+
+example.macro
+
+    # This is an example. --example=name,thing where name is your name and thing is something you see. ~ example
+    parameters {"name":{"required":1},"thing":"brick","quantity":{"type":"number","min":"0","max":"10","default":"1"}}
+    
+    if ~!Isolated,passed!~,==,true,
+    	debug 1,Hello ~!Me,name!~. What does the ~!Me,thing!~ look like? You have selected to have ~!Me,quantity!~ of them.
+    else
+    	debug 1,Missing parameters :(
+
+So calling it would look like this
+
+    $ achel -v --example=Kevin,chain
+    debug 1,Hello Kevin. What does the chain look like? You have selected to have 1 of them.
+    
+    $ achel -v --example=Kevin,chain,4
+    debug 1,Hello Kevin. What does the chain look like? You have selected to have 4 of them.
+    
+    $ achel -v --example=,chain,4
+    debug 1,Missing parameters :(
 
 Now you can specify defaults for if a parameter is missing.
 
