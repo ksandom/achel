@@ -113,14 +113,14 @@ defineTest 1 parameter (nested json) - number pass 3<4<6,
 	
 	callFeature ~!Tmp,feature!~,4
 
-defineTest 1 parameter (nested json) - number pass 3<7!<6=6,
+defineTest 1 parameter (nested json) - number fail 3<7!<6=6,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"number","min":"3","max":"6"}}
 		expect 6,~!Me,variable1!~
 	
 	callFeature ~!Tmp,feature!~,7
 
-defineTest 1 parameter (nested json) - number pass 3!<2<6=3,
+defineTest 1 parameter (nested json) - number fail 3!<2<6=3,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"number","min":"3","max":"6"}}
 		expect 3,~!Me,variable1!~
@@ -135,19 +135,63 @@ defineTest 1 parameter (nested json) - number pass 3<4<6 allowed,
 	
 	callFeature ~!Tmp,feature!~,4
 
-defineTest 1 parameter (nested json) - number pass 3<7!<6=6 allowed,
+defineTest 1 parameter (nested json) - number fail 3<7!<6=6 allowed,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"number","minAllowed":"3","maxAllowed":"6"}}
 		expect false,~!Isolated,pass!~
 	
 	callFeature ~!Tmp,feature!~,7
 
-defineTest 1 parameter (nested json) - number pass 3!<2<6=3 allowed,
+defineTest 1 parameter (nested json) - number fail 3!<2<6=3 allowed,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"number","minAllowed":"3","maxAllowed":"6"}}
 		expect false,~!Isolated,pass!~
 	
 	callFeature ~!Tmp,feature!~,2
+
+
+
+defineTest 1 parameter (nested json) - boolean true true,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"boolean"}}
+		expect true,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,true
+
+defineTest 1 parameter (nested json) - boolean true 1,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"boolean"}}
+		expect true,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,1
+
+defineTest 1 parameter (nested json) - boolean true asdf,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"boolean"}}
+		expect true,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,asdf
+
+defineTest 1 parameter (nested json) - boolean false false,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"boolean"}}
+		expect false,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,false
+
+defineTest 1 parameter (nested json) - boolean false 0,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"boolean"}}
+		expect false,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,0
+
+defineTest 1 parameter (nested json) - boolean false "",
+	set Tmp,feature,
+		parameters {"variable1":{"type":"boolean"}}
+		expect false,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,
 
 
 

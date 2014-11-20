@@ -686,7 +686,7 @@ class core extends Module
 				break;
 			case 'boolean':
 				// Just assert that we have a boolean. Anything that is not 0, '', or 'false' will resolve to true.
-				$value=($value and $value!=='false');
+				$value=($value and $value!=='false')?achelTrue:achelFalse;
 				break;
 			default:
 				$this->debug(1,"processVariableDefinition: Unknown type \"{$args['type']}\" in definition for \"$key\".");
