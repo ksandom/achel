@@ -643,20 +643,28 @@ class core extends Module
 				// Manipulations
 				$maxLength=(isset($args['maxLength']))?$args['maxLength']:false;
 				if ($maxLength and $length>$maxLength) $value=substr($value, 0, $maxLength);
+				
+				$minLength=(isset($args['minLength']))?$args['minLength']:false;
+				if ($minLength and $length<$minLength)
+				{
+					$difference=$minLength-$length;
+					$padding=str_pad(' ',$difference);
+					$value=$value.$padding;
+				}
 				break;
 			case 'number':
 				if (is_numeric($value))
 				{
 					// Tests
 					$maxAllowed=(isset($args['maxAllowed']))?$args['maxAllowed']:false;
-					if ($maxAllowed and $length>$maxAllowed)
+					if ($maxAllowed and $value>$maxAllowed)
 					{
 						$pass=false;
 						$message="Value ($value) greater than allowed ($maxAllowed).";
 					}
 					
 					$minAllowed=(isset($args['minAllowed']))?$args['minAllowed']:false;
-					if ($minAllowed and $length<$minAllowed)
+					if ($minAllowed and $value<$minAllowed)
 					{
 						$pass=false;
 						$message="Value ($value) less than allowed ($minAllowed).";
@@ -668,7 +676,7 @@ class core extends Module
 					if ($max and $value>$max) $value=$max;
 					
 					$min=(isset($args['min']))?$args['min']:false;
-					if ($min and $value>$min) $value=$min;
+					if ($min and $value<$min) $value=$min;
 				}
 				else
 				{

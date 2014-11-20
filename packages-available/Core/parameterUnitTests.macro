@@ -55,29 +55,99 @@ defineTest 2 parameters (json) - with defaults - missing value,
 
 
 
-defineTest 1 parameter (nested json) - string 6=>3,
+defineTest 1 parameter (nested json) - string 6!>3,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"string","maxLength":"3"}}
 		expect def,~!Me,variable1!~
 	
 	callFeature ~!Tmp,feature!~,def456
 
-defineTest 1 parameter (nested json) - string fail 6=>3 allowed,
+defineTest 1 parameter (nested json) - string fail 6!>3 allowed,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"string","maxLengthAllowed":"3"}}
-		if ~!Isolated,pass!~,==,false,
-			passTest got false.
-		else
-			failTest did not get false.
+		expect false,~!Isolated,pass!~
 	
 	callFeature ~!Tmp,feature!~,def456
 
-defineTest 1 parameter (nested json) - string pass 3=>3 allowed,
+defineTest 1 parameter (nested json) - string pass 3!>3 allowed,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"string","maxLengthAllowed":"3"}}
-		if ~!Isolated,pass!~,==,true,
-			passTest got true.
-		else
-			failTest did not get true.
+		expect true,~!Isolated,pass!~
 	
 	callFeature ~!Tmp,feature!~,def
+
+defineTest 1 parameter (nested json) - string fail 3!<6,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"string","minLength":"6"}}
+		expect def   ,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,def
+
+defineTest 1 parameter (nested json) - string pass 3!<6,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"string","minLength":"6"}}
+		expect defasd,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,defasd
+
+defineTest 1 parameter (nested json) - string fail 3!<6 allowed,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"string","minLengthAllowed":"6"}}
+		expect false,~!Isolated,pass!~
+	
+	callFeature ~!Tmp,feature!~,def
+
+defineTest 1 parameter (nested json) - string pass 3!<6 allowed,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"string","minLengthAllowed":"6"}}
+		expect true,~!Isolated,pass!~
+	
+	callFeature ~!Tmp,feature!~,defasd
+
+
+
+defineTest 1 parameter (nested json) - number pass 3<4<6,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"number","min":"3","max":"6"}}
+		expect 4,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,4
+
+defineTest 1 parameter (nested json) - number pass 3<7!<6=6,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"number","min":"3","max":"6"}}
+		expect 6,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,7
+
+defineTest 1 parameter (nested json) - number pass 3!<2<6=3,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"number","min":"3","max":"6"}}
+		expect 3,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,2
+
+
+defineTest 1 parameter (nested json) - number pass 3<4<6 allowed,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"number","minAllowed":"3","maxAllowed":"6"}}
+		expect true,~!Isolated,pass!~
+	
+	callFeature ~!Tmp,feature!~,4
+
+defineTest 1 parameter (nested json) - number pass 3<7!<6=6 allowed,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"number","minAllowed":"3","maxAllowed":"6"}}
+		expect false,~!Isolated,pass!~
+	
+	callFeature ~!Tmp,feature!~,7
+
+defineTest 1 parameter (nested json) - number pass 3!<2<6=3 allowed,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"number","minAllowed":"3","maxAllowed":"6"}}
+		expect false,~!Isolated,pass!~
+	
+	callFeature ~!Tmp,feature!~,2
+
+
+
