@@ -21,7 +21,15 @@ So calling it would look like this
 
 Nice and simple when your macro is small and simple. However it quickly became confusing in more complicated macros.
 
-## In the now! - simple way
+## In the now!
+
+There are now three ways of doing this.
+
+* The simple way `parameters name,thing`. This is the really really simple and easy to read way of doing it, but doesn't give any flexibility for validation.
+* Flat JSON `parameters {"name":"noName","thing":"brick"}`. This is still pretty simple, but allows you to specify defaults.
+* Nested JSON `parameters {"name":{"default":"noName","minLengthAllowed":"3","maxLength":"40"},"thing":{"default":"brick","maxLength":"40"}}`. This method allows you validate date and take action based on the result. It can also automatically fix a few things like if the string is 45 characters, but you specified maxLength to be 40, it will truncate off the remainder.
+
+### The simple way
 
 Desired parameters are named as follows.
 
@@ -42,7 +50,7 @@ There are two advantages to doing this
 * Easier to read, especially as the code grows.
 * The variables are tidied away when they are no longer needed. So you don't need to worry about this yourself.
 
-## In the now! - better way
+### Flat JSON
 
 Desired parameters are named as follows.
 
@@ -63,7 +71,7 @@ So calling it would look like this
 
 Now you can specify defaults for if a parameter is missing.
 
-## In the now! - when you want to be precise
+### Nested JSON
 
 Desired parameters are named as follows.
 
