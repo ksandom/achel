@@ -104,6 +104,13 @@ defineTest 1 parameter (nested json) - string pass 3!<6 allowed,
 	
 	callFeature ~!Tmp,feature!~,defasd
 
+defineTest 1 parameter (nested json) - string (default),
+	set Tmp,feature,
+		parameters {"variable1":{"type":"string","minLengthAllowed":"6","default":"qwertyuiop"}}
+		expect qwertyuiop,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,
+
 
 
 defineTest 1 parameter (nested json) - number pass 3<4<6,
@@ -149,6 +156,13 @@ defineTest 1 parameter (nested json) - number fail 3!<2<6=3 allowed,
 	
 	callFeature ~!Tmp,feature!~,2
 
+defineTest 1 parameter (nested json) - number (default),
+	set Tmp,feature,
+		parameters {"variable1":{"type":"number","minAllowed":"3","maxAllowed":"6","default":"5"}}
+		expect 5,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,
+
 
 
 defineTest 1 parameter (nested json) - boolean true true,
@@ -186,10 +200,10 @@ defineTest 1 parameter (nested json) - boolean false 0,
 	
 	callFeature ~!Tmp,feature!~,0
 
-defineTest 1 parameter (nested json) - boolean false "",
+defineTest 1 parameter (nested json) - boolean false "" (default),
 	set Tmp,feature,
-		parameters {"variable1":{"type":"boolean"}}
-		expect false,~!Me,variable1!~
+		parameters {"variable1":{"type":"boolean","default":"true"}}
+		expect true,~!Me,variable1!~
 	
 	callFeature ~!Tmp,feature!~,
 

@@ -640,6 +640,8 @@ class core extends Module
 					$message="Length ($length) less than allowed ($minLengthAllowed).";
 				}
 				
+				if (!$length and isset($args['default'])) $value=$args['default'];
+				
 				// Manipulations
 				$maxLength=(isset($args['maxLength']))?$args['maxLength']:false;
 				if ($maxLength and $length>$maxLength) $value=substr($value, 0, $maxLength);
@@ -680,13 +682,15 @@ class core extends Module
 				}
 				else
 				{
-					$pass=false;
+					if (isset($args['default'])) $value=$args['default'];
+					else $pass=false;
 					$message="Not a number.";
 				}
 				break;
 			case 'boolean':
 				// Just assert that we have a boolean. Anything that is not 0, '', or 'false' will resolve to true.
-				$value=($value and $value!=='false')?achelTrue:achelFalse;
+				if ($value=='' and isset($args['default'])) $value=$args['default'];
+				else $value=($value and $value!=='false')?achelTrue:achelFalse;
 				break;
 			default:
 				$this->debug(1,"processVariableDefinition: Unknown type \"{$args['type']}\" in definition for \"$key\".");

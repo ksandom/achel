@@ -27,11 +27,11 @@ There are now three ways of doing this.
 
 * The simple way `parameters name,thing`. This is the really really simple and easy to read way of doing it, but doesn't give any flexibility for validation.
 * Flat JSON `parameters {"name":"noName","thing":"brick"}`. This is still pretty simple, but allows you to specify defaults.
-* Nested JSON `parameters {"name":{"default":"noName","minLengthAllowed":"3","maxLength":"40"},"thing":{"default":"brick","maxLength":"40"}}`. This method allows you validate date and take action based on the result. It can also automatically fix a few things like if the string is 45 characters, but you specified maxLength to be 40, it will truncate off the remainder.
+* **Nested JSON** `parameters {"name":{"default":"noName","minLengthAllowed":"3","maxLength":"40"},"thing":{"default":"brick","maxLength":"40"}}`. This method allows you validate date and take action based on the result. It can also automatically fix a few things like if the string is 45 characters, but you specified maxLength to be 40, it will truncate off the remainder.
 
 ### The simple way
 
-Desired parameters are named as follows.
+Use this for really basic, no frills parameter parsing. You should at least consider Flat JSON below.
 
 example.macro
 
@@ -52,7 +52,7 @@ There are two advantages to doing this
 
 ### Flat JSON
 
-Desired parameters are named as follows.
+Use this when you just want to set defaults for your parameters.
 
 example.macro
 
@@ -73,7 +73,7 @@ Now you can specify defaults for if a parameter is missing.
 
 ### Nested JSON
 
-Desired parameters are named as follows.
+Use this when you want to set detaults or add validation. If you only use one method, this is the one to use. It is the one that is likely to stick around for a while.
 
 example.macro
 
