@@ -209,3 +209,17 @@ defineTest 1 parameter (nested json) - boolean false "" (default),
 
 
 
+defineTest 1 parameter (nested json) - empty definition,
+	set Tmp,feature,
+		parameters {"variable1":{}}
+		expect abc,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,abc
+
+defineTest 1 parameter (nested json) - empty definition - no value,
+	set Tmp,feature,
+		parameters {"variable1":{}}
+		expect ,~!Me,variable1!~
+	
+	callFeature ~!Tmp,feature!~,
+

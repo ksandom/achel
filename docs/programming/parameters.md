@@ -23,7 +23,7 @@ This will stick around for a short time.
 
 It was nice and simple when your macro is small and simple. However it quickly became confusing in more complicated macros. 
 
-## In the now!
+## In the now! - The three amigos
 
 There are now three ways of doing this.
 
@@ -114,14 +114,80 @@ This line sets the default to blah. But you don't actually have to specify any m
 
     parameters {"name":{}}
 
-TODO Test this!!!
+Here `name` is assumed to be a string, has no default, no validation or manipulations. Everything that is passed to it will go straight through.
 
 But you may want to specify lots of things
 
-TODO write this
+    parameters {"name":{"default":"blah","minLength":"3",""maxLength:"40"}}
 
-### Data types
+In this case, the name will be truncated to 40 characters if it gets longer than 40 characters. And will be appended with spaces if it is shorter than 3.
 
-### Other parameters and what they do
+### Data types and their parameters
+
+All data types take (or at least accept)
+
+* default - What value to set in the absense of a value.
+
+#### String
+
+* minLength - If the length of the string is less than this value, it will be padded with spaces at the end until it reaches this length.
+* maxLength - If the length of the string is more than this value, it will be truncated to this length.
+* minLengthAllowed - If the length of the string is less than this value, the parameter will fail and a message will be returned accordingly. `maxLength` and `minLength` can still be applied.
+* maxLengthAllowed - If the length of the string is more than this value, the parameter will fail and a message will be returned accordingly. `maxLength` and `minLength` can still be applied.
+
+#### Number
+
+* min - If the number is less than this value, it will be set to it.
+* max - If the number is more than this value, it will be set to it.
+* minAllowed - If the number is less than this value, the parameter will fail and a message will be returned accordingly. `min` and `max` can still be used accordingly.
+* maxAllowed - If the number is more than this value, the parameter will fail and a message will be returned accordingly. `min` and `max` can still be used accordingly.
+
+#### Boolean
+
+*no extra parameters for now*
+
+### Getting the knowledge!
+
+#### Parameter values
+
+So we have all this information about our parameters. How do we get it?
+
+If you define `name` via one of these methods
+
+    parameters name
+
+    parameters {"name":"blah"}
+
+    parameters {"name":{"default":"blah"}}
+
+You can access it in the form `~!Me,parameterName!~`. Eg
+
+    debug 1,You name is ~!Me,name!~.
 
 
+Notice how the `Me` category is used. This is so that it will get inherited as your program moves up and down the stack. You can reference it from any point within your macro.
+
+#### Whether the parameter tests passed
+
+Let's say we have a test that fails that looks like this
+
+    parameters {"name":{"minLengthAllowed":"3"}}
+
+And no characters were passed to it. How do we test for it?
+
+You can use the `~!Isolated,pass!~` variable like so
+
+    if ~!Isolated,pass!~,==,true,
+    	debug 1,Yay!
+    else
+    	debug 1,Boo!
+
+**NOTE** It's really important to understand that an `Isolated` variable will not get inherited in either direction as your program goes up and down the stack. Therefore **the following will not work**.
+
+    if 1,==,1,
+    	if ~!Isolated,pass!~,==,true,
+    		debug 1,Yay!
+    	else
+    		debug 1,Boo!
+
+The reason for this is that we don't want the result to be interferred with as we move around the stack.
