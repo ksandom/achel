@@ -182,7 +182,7 @@ You can use the `~!Isolated,pass!~` variable like so
     else
     	debug 1,Boo!
 
-**NOTE** It's really important to understand that an `Isolated` variable will not get inherited in either direction as your program goes up and down the stack. Therefore **the following will not work**.
+**NOTE** It's really important to understand that an `Isolated` variable will not get inherited in either direction as your program goes up and down the stack. Therefore **the following will not work**, but the previous example will.
 
     if 1,==,1,
     	if ~!Isolated,pass!~,==,true,
