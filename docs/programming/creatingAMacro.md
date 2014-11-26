@@ -24,15 +24,17 @@ Assume we save that as `repos/custom/macros-available/listdbs.macro` and then sy
 See examples/example.macro for a working example.
 
 # Taking parameters
-If the macro was passed a parameter, it will show up in ~!Global,listdbs!~.
+If the macro was passed a parameter, you can map it with `parameters parameterName` it will show up in `~!Global,parameterName!~`.
 
 Say we want to list out all servers that begin with db and continue with what ever the user specifies, it could look like this:
 
     # List out all database servers setting IP to the value of externalIP, or internalIP if externalIP is not set. ~ dbs,database,user
+    parameters dbRegex
     
-    list db~!Global,listdbs!~
+    list db~!me,dbRegex!~
     chooseFirst IP,externalIP,internalIP
 
+There's so much more you can do with this. To learn more, read [parameters.md](parameters.md).
 
 # Variables
 There are currerntly two types of variables with very different purposes.
