@@ -29,6 +29,7 @@ if (isset($argv[1]))
 $core=core::assert($verbosity);
 $core->set('General', 'EOL', "\n");
 $core->set('General', 'configDir', configDir);
+$core->set('General', 'docsDir', docsDir);
 $core->set('General', 'storageDir', storageDir);
 $core->set('General', 'installType', installType);
 $core->set('General', 'binExec', binExec);
