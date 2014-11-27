@@ -1,5 +1,5 @@
 # Generate Pi and multiply it by a number. --pi=Category,variable,multiplier ~ maths
+parameters category,variable,multiplier
 
-pi Tmp,piBy
-basicMaths ~!Global,piBy-0!~,~!Global,piBy-1!~,~!Tmp,piBy!~,*,~!Global,piBy-2!~
-unset Tmp,piBy
+pi ~!Me,category!~,~!Me,variable!~
+basicMaths ~!Me,category!~,~!Me,variable!~,~!~!Me,category!~,~!Me,variable!~!~,*,~!Me,multiplier!~

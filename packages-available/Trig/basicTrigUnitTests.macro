@@ -357,3 +357,6 @@ defineTest get adjacent from angle and distance,
 	round Tmp,adjacent,~!Tmp,adjacent!~,2
 	expect 3,~!Tmp,adjacent!~
 
+
+
+

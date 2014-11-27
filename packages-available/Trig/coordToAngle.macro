@@ -1,4 +1,5 @@
 # Derive the angle from north when given one set of co-ordinates. The origin set of co-ordinates are assumed to be 0,0, so the destination will need to manipulated to work with that assumption. --coordToAngle=Category,variable,destinationX,destinationY ~ trig,coord,angle
+parameters category,variable,destinationX,destinationY
 
 pi Tmp,pi
 basicMaths Tmp,0.5Pi,~!Tmp,pi!~,*,0.5
@@ -11,35 +12,35 @@ if ~!Global,coordToAngle-2!~,<,0,
 		basicMaths Tmp,coordOpposite,~!Global,coordToAngle-2!~,*,-1
 		basicMaths Tmp,coordAdjacent,~!Global,coordToAngle-3!~,*,-1
 		
-		rightTriangleGetOppositeAngle ~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~,~!Tmp,coordOpposite!~,~!Tmp,coordAdjacent!~
+		rightTriangleGetOppositeAngle ~!Me,category!~,~!Me,variable!~,~!Tmp,coordOpposite!~,~!Tmp,coordAdjacent!~
 		
-		basicMaths ~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~,~!~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~!~,+,~!Tmp,pi!~
+		basicMaths ~!Me,category!~,~!Me,variable!~,~!~!Me,category!~,~!Me,variable!~!~,+,~!Tmp,pi!~
 		
 	elseIf ~!Global,coordToAngle-3!~,==,0,
 		# middle left
-		set ~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~,~!Tmp,1.5Pi!~
+		set ~!Me,category!~,~!Me,variable!~,~!Tmp,1.5Pi!~
 		
 	else
 		# upper left
 		set Tmp,coordOpposite,~!Global,coordToAngle-3!~
 		basicMaths Tmp,coordAdjacent,~!Global,coordToAngle-2!~,*,-1
 		
-		rightTriangleGetOppositeAngle ~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~,~!Tmp,coordOpposite!~,~!Tmp,coordAdjacent!~
+		rightTriangleGetOppositeAngle ~!Me,category!~,~!Me,variable!~,~!Tmp,coordOpposite!~,~!Tmp,coordAdjacent!~
 		
-		basicMaths ~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~,~!~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~!~,+,~!Tmp,1.5Pi!~
+		basicMaths ~!Me,category!~,~!Me,variable!~,~!~!Me,category!~,~!Me,variable!~!~,+,~!Tmp,1.5Pi!~
 		
 		
 
 elseIf ~!Global,coordToAngle-2!~,==,0,
 	if ~!Global,coordToAngle-3!~,<,0,
 		# lower middle
-		set ~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~,~!Tmp,pi!~
+		set ~!Me,category!~,~!Me,variable!~,~!Tmp,pi!~
 	elseIf ~!Global,coordToAngle-3!~,==,0,
 		# center
-		set ~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~,undefined
+		set ~!Me,category!~,~!Me,variable!~,undefined
 	else
 		# upper middle
-		set ~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~,0
+		set ~!Me,category!~,~!Me,variable!~,0
 
 else
 	if ~!Global,coordToAngle-3!~,<,0,
@@ -47,19 +48,19 @@ else
 		basicMaths Tmp,coordOpposite,~!Global,coordToAngle-3!~,*,-1
 		set Tmp,coordAdjacent,~!Global,coordToAngle-2!~
 		
-		rightTriangleGetOppositeAngle ~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~,~!Tmp,coordOpposite!~,~!Tmp,coordAdjacent!~
+		rightTriangleGetOppositeAngle ~!Me,category!~,~!Me,variable!~,~!Tmp,coordOpposite!~,~!Tmp,coordAdjacent!~
 		
-		basicMaths ~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~,~!~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~!~,+,~!Tmp,0.5Pi!~
+		basicMaths ~!Me,category!~,~!Me,variable!~,~!~!Me,category!~,~!Me,variable!~!~,+,~!Tmp,0.5Pi!~
 		
 	elseIf ~!Global,coordToAngle-3!~,==,0,
 		# middle right
-		set ~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~,~!Tmp,0.5Pi!~
+		set ~!Me,category!~,~!Me,variable!~,~!Tmp,0.5Pi!~
 		
 	else
 		# upper right
 		set Tmp,coordOpposite,~!Global,coordToAngle-2!~
 		set Tmp,coordAdjacent,~!Global,coordToAngle-3!~
-		rightTriangleGetOppositeAngle ~!Global,coordToAngle-0!~,~!Global,coordToAngle-1!~,~!Tmp,coordOpposite!~,~!Tmp,coordAdjacent!~
+		rightTriangleGetOppositeAngle ~!Me,category!~,~!Me,variable!~,~!Tmp,coordOpposite!~,~!Tmp,coordAdjacent!~
 
 unset Tmp,pi
 unset Tmp,0.5Pi
