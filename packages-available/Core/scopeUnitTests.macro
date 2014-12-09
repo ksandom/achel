@@ -90,3 +90,11 @@ defineTest Normal Local - repeat,
 	set Normal,test1,aa1
 	expect aa1,~!Normal,test1!~
 
+
+
+defineTest makeVarAvailable,
+	isolate
+		makeVarAvailable test1
+		set Me,test1,blah
+	expect blah,~!Me,test1!~
+

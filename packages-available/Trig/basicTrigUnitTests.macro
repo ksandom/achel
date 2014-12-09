@@ -241,6 +241,19 @@ defineTest Pi,
 		failTest got ~!Tmp,trig!~.
 unset Tmp,trig
 
+defineTest PiBy,
+	# debug 0,### PiBy begin
+	# verbosity 5
+	piBy Tmp,2Pi,2
+	round Tmp,trigRounded,~!Tmp,2Pi!~,2
+	# debug 0,### PiBy 2=~!Tmp,2Pi!~ rounded=~!Tmp,trigRounded!~ after
+	# verbosity 0
+	if ~!Tmp,trigRounded!~,==,6.28,
+		passTest got expected value.
+	else
+		failTest got ~!Tmp,trigRounded!~.
+	unset Tmp,2Pi
+
 
 
 defineTest Right angle triangle - opposite angle,

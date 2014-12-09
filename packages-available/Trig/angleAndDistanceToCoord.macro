@@ -3,6 +3,7 @@
 pi Tmp,pi
 piBy Tmp,0.5Pi,0.5
 piBy Tmp,1.5Pi,1.5
+# debug 0,1=~!Tmp,pi!~ 0.5=~!Tmp,0.5Pi!~ 1.5=~!Tmp,1.5Pi!~
 
 # TODO finish this
 

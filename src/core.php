@@ -83,6 +83,7 @@ class core extends Module
 				$this->registerFeature($this, array('getToResult', 'get'), 'get', 'Get a value and put it in an array so we can do stuff with it. --get=category'.valueSeparator.'variableName', array('storeVars'));
 				$this->registerFeature($this, array('getNested'), 'getNested', 'Get a value and put it in an array so we can do stuff with it. --getNested=category'.valueSeparator.'variableName', array('storeVars'));
 				$this->registerFeature($this, array('set'), 'set', 'set a value. All remaining values after the destination go into a string. --set=category'.valueSeparator.'variableName'.valueSeparator.'value', array('storeVars'));
+				$this->registerFeature($this, array('var', 'makeVarAvailable'), 'makeVarAvailable', 'Make a Me variable available to the calling scope. This is useful if you want to send data back via a variable which the calling scope is expecting you to initialise. Eg --makeVarAvailable=variableName would make Me,variableName available to the calling scope.', array('storeVars'));
 				$this->registerFeature($this, array('setNested'), 'setNested', 'set a value into a nested array, creating all the necessary sub arrays. The last parameter is the value. All the other parameters are the keys for each level. --setNested=StoreName'.valueSeparator.'category'.valueSeparator.'subcategory'.valueSeparator.'subsubcategory'.valueSeparator.'value. In this case an array would be created in StoreName,category that looks like this subcategory=>array(subsubcategory=>value)', array('storeVars'));
 				$this->registerFeature($this, array('setArray'), 'setArray', 'set a value. All remaining values after the destination go into an array. --set=category'.valueSeparator.'variableName'.valueSeparator.'value', array('storeVars'));
 				$this->registerFeature($this, array('setIfNotSet', 'setDefault'), 'setIfNotSet', 'set a value if none has been set. --setIfNotSet=category'.valueSeparator.'variableName'.valueSeparator.'defaultValue', array('storeVars'));
@@ -143,6 +144,10 @@ class core extends Module
 			case 'set':
 				$parms=$this->interpretParms($this->get('Global', $event), 3, 2, true);
 				$this->set($parms[0], $parms[1], $parms[2]);
+				break;
+			case 'makeVarAvailable':
+				$parms=$this->interpretParms($this->get('Global', $event), 1, 1, true);
+				$this->makeVarAvailable($parms[0]);
 				break;
 			case 'setNested':
 				$this->setNestedFromInterpreter($this->get('Global', $event));
@@ -800,7 +805,7 @@ class core extends Module
 					/*
 						This will slowly become irrelevant as new features take advantage of nesting deeper than two levels. But until then it's still a huge performance saver.
 					*/
-					$varValue=$this->get($varParts[0], $varParts[1]);
+					$varValue=$this->get($varParts[0], $varParts[1], false, 0);
 				}
 				else $varValue=$this->getNested($varParts);
 				
@@ -919,7 +924,7 @@ class core extends Module
 			}
 			elseIf ($this->lastMessage['count']==0)
 			{
-				echo "[$code$title$default]: Repeat";
+				echo "  {$code}Repeat{$default} ";
 				$this->lastMessage['count']++;
 			}
 			else
@@ -1081,7 +1086,7 @@ class core extends Module
 		unset($this->store[$category]);
 	}
 	
-	function &get($category, $valueName, $debug=true)
+	function &get($category, $valueName, $debug=true, $nestingOffset=0)
 	{
 		if ($debug) $this->debug(5,"get($category, $valueName, false)");
 		#print_r($this->store);
@@ -1092,18 +1097,19 @@ class core extends Module
 			{
 				case isolatedNestedPrivateVarsName:
 					$nesting=$this->get('Core', 'nesting');
-					if (isset($this->store[isolatedNestedPrivateVarsName][$nesting]))
+					if (isset($this->store[isolatedNestedPrivateVarsName][$nesting+$nestingOffset]))
 					{
-						if (isset($this->store[isolatedNestedPrivateVarsName][$nesting][$valueName]))
+						if (isset($this->store[isolatedNestedPrivateVarsName][$nesting+$nestingOffset][$valueName]))
 						{
-							$result=$this->store[isolatedNestedPrivateVarsName][$nesting][$valueName];
+							$result=$this->store[isolatedNestedPrivateVarsName][$nesting+$nestingOffset][$valueName];
 						}
 						else $result=null;
 					}
 					else $result=null;
+					$this->core->debug(5,"get (private): [$category][$nesting][$valueName] ".json_encode($result));
 					break;
 				case nestedPrivateVarsName:
-					$nesting=$this->get('Core', 'nesting');
+					$nesting=$this->get('Core', 'nesting')+$nestingOffset;
 					if (isset($this->store[nestedPrivateVarsName])) 
 					{
 						for ($i=$nesting;$i>0;$i--)
@@ -1117,6 +1123,7 @@ class core extends Module
 						}
 					}
 					else $result=null;
+					$this->core->debug(5,"get (public): [$category][$nesting][$valueName] ".json_encode($result));
 					break;
 				default:
 					if (isset($this->store[$category][$valueName])) return $this->store[$category][$valueName];
@@ -1233,7 +1240,18 @@ class core extends Module
 		if ($shouldSet) $this->set($category, $valueName, $value);
 	}
 	
-	function set($category, $valueName, $args)
+	function makeVarAvailable($variableName)
+	{
+		$nesting=$this->get('Core', 'nesting')-1;
+		$variableDetials=$this->getMeVariableLevel($variableName,$nesting);
+		
+		if (!is_array($variableDetials))
+		{ // It's not in scope, we need to make it so.
+			$this->store[nestedPrivateVarsName][$nesting][$variableName]=false;
+		}
+	}
+	
+	function set($category, $valueName, $args, $nestingOffset=0)
 	{ // set a variable for a module
 		if ($this->isVerboseEnough(5))
 		{
@@ -1246,26 +1264,28 @@ class core extends Module
 		if ($category==nestedPrivateVarsName or $category==isolatedNestedPrivateVarsName)
 		{
 			$nesting=$this->get('Core', 'nesting');
+			$this->core->debug(5,"set: [$category][$nesting-$nestingOffset][$valueName]");
 			if (!isset($this->store[$category][$nesting])) $this->store[$category][$nesting]=array();
-			$this->store[$category][$nesting][$valueName]=$args;
+			$this->store[$category][$nesting-$nestingOffset][$valueName]=$args;
 		}
 		else $this->store[$category][$valueName]=$args;
 		
 		$this->markCategory($category);
 	}
 
-	function setRef($category, $valueName, &$args)
+	function setRef($category, $valueName, &$args, $nestingOffset=0)
 	{ // set a variable for a module
 		$argString=(is_string($args))?$argString:'[non-string]';
 		$this->debug(5,"setRef($category, $valueName, $argString)");
 		if (!isset($this->store[$category])) $this->store[$category]=array();
 		
-		if ($category!=nestedPrivateVarsName) $this->store[$category][$valueName]=&$args;
+		if ($category!=nestedPrivateVarsName and $category!=isolatedNestedPrivateVarsName) $this->store[$category][$valueName]=&$args;
 		else
 		{
 			$nesting=$this->get('Core', 'nesting');
 			if (!isset($this->store[$category][$nesting])) $this->store[$category][$nesting]=array();
-			$this->store[$category][$nesting][$valueName]=$args;
+			$this->store[$category][$nesting-$nestingOffset][$valueName]=$args;
+			$this->core->debug(5,"setRef: [$category][$nesting-$nestingOffset][$valueName]");
 		}
 		
 		$this->markCategory($category);
