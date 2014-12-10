@@ -1,83 +1,82 @@
 # Take an angle (in radians) and a distance and calcuate the x,y co-ordinates from 0,0. --angleAndDistanceToCoord=Category,variable,angle,distance ~ trig,coord
+parameters category,coordVariable,angle,distance
 
+# TODO work out why Me doesn't work in place of Tmp.
 pi Tmp,pi
 piBy Tmp,0.5Pi,0.5
 piBy Tmp,1.5Pi,1.5
-# debug 0,1=~!Tmp,pi!~ 0.5=~!Tmp,0.5Pi!~ 1.5=~!Tmp,1.5Pi!~
 
-# TODO finish this
-
-if ~!Global,angleAndDistanceToCoord-3!~,==,0,
-	setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,x,0
-	setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,y,0
-elseIf ~!Global,angleAndDistanceToCoord-3!~,<,0,
-	setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,x,undef
-	setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,y,undef
+if ~!Me,distance!~,==,0,
+	setNested ~!Me,category!~,~!Me,coordVariable!~,x,0
+	setNested ~!Me,category!~,~!Me,coordVariable!~,y,0
+elseIf ~!Me,distance!~,<,0,
+	setNested ~!Me,category!~,~!Me,coordVariable!~,x,undef
+	setNested ~!Me,category!~,~!Me,coordVariable!~,y,undef
 else
-	if ~!Global,angleAndDistanceToCoord-2!~,==,0,
+	if ~!Me,angle!~,==,0,
 		# up
-		setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,x,0
-		setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,y,~!Global,angleAndDistanceToCoord-3!~
+		setNested ~!Me,category!~,~!Me,coordVariable!~,x,0
+		setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Me,distance!~
 		
-	elseIf ~!Global,angleAndDistanceToCoord-2!~,==,~!Tmp,0.5Pi!~,
+	elseIf ~!Me,angle!~,==,~!Tmp,0.5Pi!~,
 		# right
-		setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,x,~!Global,angleAndDistanceToCoord-3!~
-		setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,y,0
+		setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Me,distance!~
+		setNested ~!Me,category!~,~!Me,coordVariable!~,y,0
 		
-	elseIf ~!Global,angleAndDistanceToCoord-2!~,==,~!Tmp,pi!~,
+	elseIf ~!Me,angle!~,==,~!Tmp,pi!~,
 		# down
-		basicMaths Tmp,flipped,~!Global,angleAndDistanceToCoord-3!~,*,-1
-		setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,x,0
-		setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,y,~!Tmp,flipped!~
+		basicMaths Tmp,flipped,~!Me,distance!~,*,-1
+		setNested ~!Me,category!~,~!Me,coordVariable!~,x,0
+		setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Tmp,flipped!~
 		
-	elseIf ~!Global,angleAndDistanceToCoord-2!~,==,~!Tmp,1.5Pi!~,
+	elseIf ~!Me,angle!~,==,~!Tmp,1.5Pi!~,
 		# left
-		basicMaths Tmp,flipped,~!Global,angleAndDistanceToCoord-3!~,*,-1
-		setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,x,~!Tmp,flipped!~
-		setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,y,0
+		basicMaths Tmp,flipped,~!Me,distance!~,*,-1
+		setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Tmp,flipped!~
+		setNested ~!Me,category!~,~!Me,coordVariable!~,y,0
 		
 	else
-		if ~!Global,angleAndDistanceToCoord-2!~,<,~!Tmp,0.5Pi!~,
+		if ~!Me,angle!~,<,~!Tmp,0.5Pi!~,
 			# top right
 			
-			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Global,angleAndDistanceToCoord-2!~,~!Global,angleAndDistanceToCoord-3!~
-			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Global,angleAndDistanceToCoord-2!~,~!Global,angleAndDistanceToCoord-3!~
+			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Me,angle!~,~!Me,distance!~
+			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Me,angle!~,~!Me,distance!~
 			
-			setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,x,~!Tmp,opposite!~
-			setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,y,~!Tmp,adjacent!~
+			setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Tmp,opposite!~
+			setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Tmp,adjacent!~
 			
-		elseIf ~!Global,angleAndDistanceToCoord-2!~,<,~!Tmp,pi!~,
+		elseIf ~!Me,angle!~,<,~!Tmp,pi!~,
 			# bottom right
-			basicMaths Tmp,angle,~!Global,angleAndDistanceToCoord-2!~,-,~!Tmp,0.5Pi!~
-			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Tmp,angle!~,~!Global,angleAndDistanceToCoord-3!~
-			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Tmp,angle!~,~!Global,angleAndDistanceToCoord-3!~
+			basicMaths Tmp,angle,~!Me,angle!~,-,~!Tmp,0.5Pi!~
+			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Tmp,angle!~,~!Me,distance!~
+			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Tmp,angle!~,~!Me,distance!~
 			
 			basicMaths Tmp,opposite,~!Tmp,opposite!~,*,-1
-			setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,y,~!Tmp,opposite!~
-			setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,x,~!Tmp,adjacent!~
+			setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Tmp,opposite!~
+			setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Tmp,adjacent!~
 			
 			
-		elseIf ~!Global,angleAndDistanceToCoord-2!~,<,~!Tmp,1.5Pi!~,
+		elseIf ~!Me,angle!~,<,~!Tmp,1.5Pi!~,
 			# bottom left
-			basicMaths Tmp,angle,~!Global,angleAndDistanceToCoord-2!~,-,~!Tmp,pi!~
-			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Tmp,angle!~,~!Global,angleAndDistanceToCoord-3!~
-			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Tmp,angle!~,~!Global,angleAndDistanceToCoord-3!~
+			basicMaths Tmp,angle,~!Me,angle!~,-,~!Tmp,pi!~
+			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Tmp,angle!~,~!Me,distance!~
+			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Tmp,angle!~,~!Me,distance!~
 			
 			basicMaths Tmp,opposite,~!Tmp,opposite!~,*,-1
 			basicMaths Tmp,adjacent,~!Tmp,adjacent!~,*,-1
 			
-			setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,x,~!Tmp,opposite!~
-			setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,y,~!Tmp,adjacent!~
+			setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Tmp,opposite!~
+			setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Tmp,adjacent!~
 			
 		else
 			# top left
-			basicMaths Tmp,angle,~!Global,angleAndDistanceToCoord-2!~,-,~!Tmp,1.5Pi!~
-			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Tmp,angle!~,~!Global,angleAndDistanceToCoord-3!~
-			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Tmp,angle!~,~!Global,angleAndDistanceToCoord-3!~
+			basicMaths Tmp,angle,~!Me,angle!~,-,~!Tmp,1.5Pi!~
+			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Tmp,angle!~,~!Me,distance!~
+			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Tmp,angle!~,~!Me,distance!~
 			
 			basicMaths Tmp,adjacent,~!Tmp,adjacent!~,*,-1
 			
-			setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,y,~!Tmp,opposite!~
-			setNested ~!Global,angleAndDistanceToCoord-0!~,~!Global,angleAndDistanceToCoord-1!~,x,~!Tmp,adjacent!~
+			setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Tmp,opposite!~
+			setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Tmp,adjacent!~
 			
 
