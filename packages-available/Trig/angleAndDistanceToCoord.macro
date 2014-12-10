@@ -3,7 +3,8 @@ parameters category,coordVariable,angle,distance
 
 # TODO work out why Me doesn't work in place of Tmp.
 pi Tmp,pi
-piBy Tmp,0.5Pi,0.5
+piBy Me,0.5Pi,0.5
+piBy Me,1.5Pi,1.5
 piBy Tmp,1.5Pi,1.5
 
 if ~!Me,distance!~,==,0,
@@ -18,7 +19,7 @@ else
 		setNested ~!Me,category!~,~!Me,coordVariable!~,x,0
 		setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Me,distance!~
 		
-	elseIf ~!Me,angle!~,==,~!Tmp,0.5Pi!~,
+	elseIf ~!Me,angle!~,==,~!Me,0.5Pi!~,
 		# right
 		setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Me,distance!~
 		setNested ~!Me,category!~,~!Me,coordVariable!~,y,0
@@ -36,7 +37,7 @@ else
 		setNested ~!Me,category!~,~!Me,coordVariable!~,y,0
 		
 	else
-		if ~!Me,angle!~,<,~!Tmp,0.5Pi!~,
+		if ~!Me,angle!~,<,~!Me,0.5Pi!~,
 			# top right
 			
 			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Me,angle!~,~!Me,distance!~
@@ -47,7 +48,7 @@ else
 			
 		elseIf ~!Me,angle!~,<,~!Tmp,pi!~,
 			# bottom right
-			basicMaths Tmp,angle,~!Me,angle!~,-,~!Tmp,0.5Pi!~
+			basicMaths Tmp,angle,~!Me,angle!~,-,~!Me,0.5Pi!~
 			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Tmp,angle!~,~!Me,distance!~
 			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Tmp,angle!~,~!Me,distance!~
 			
@@ -56,7 +57,7 @@ else
 			setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Tmp,adjacent!~
 			
 			
-		elseIf ~!Me,angle!~,<,~!Tmp,1.5Pi!~,
+		elseIf ~!Me,angle!~,<,~!Me,1.5Pi!~,
 			# bottom left
 			basicMaths Tmp,angle,~!Me,angle!~,-,~!Tmp,pi!~
 			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Tmp,angle!~,~!Me,distance!~
@@ -70,7 +71,7 @@ else
 			
 		else
 			# top left
-			basicMaths Tmp,angle,~!Me,angle!~,-,~!Tmp,1.5Pi!~
+			basicMaths Tmp,angle,~!Me,angle!~,-,~!Me,1.5Pi!~
 			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Tmp,angle!~,~!Me,distance!~
 			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Tmp,angle!~,~!Me,distance!~
 			
