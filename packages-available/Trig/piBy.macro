@@ -2,9 +2,5 @@
 parameters piByCategory,variable,multiplier
 makeVarAvailable ~!Me,variable!~
 
-# pi ~!Me,piByCategory!~,~!Me,variable!~
-# basicMaths ~!Me,piByCategory!~,~!Me,variable!~,~!~!Me,piByCategory!~,~!Me,variable!~!~,*,~!Me,multiplier!~
-
-pi Me,piByPi
-basicMaths ~!Me,piByCategory!~,~!Me,variable!~,~!Me,piByPi!~,*,~!Me,multiplier!~
-# debug 0,piBy=~!Me,piByPi!~ ~!Me,piByCategory!~,~!Me,variable!~=~!~!Me,piByCategory!~,~!Me,variable!~!~
+pi ~!Me,piByCategory!~,~!Me,variable!~
+basicMaths ~!Me,piByCategory!~,~!Me,variable!~,~!~!Me,piByCategory!~,~!Me,variable!~!~,*,~!Me,multiplier!~
