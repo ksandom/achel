@@ -1,0 +1,7 @@
+# Assist with unit scope tests. --beInAnotherScope=varName,expectedValue,[==|!=] ~ hidden
+parameters {"category":"","varName":"","expectedValue":"","comparison":"=="}
+
+if ~!Me,expectedValue!~,~!Me,comparison!~,~!~!Me,category!~,~!Me,varName!~!~,
+	passTest Got expected result. Got ~!Me,expectedValue!~ ~!Me,comparison!~ ~!~!Me,category!~,~!Me,varName!~!~
+else
+	failTest Got unexpected result. Wanted "~!Me,expectedValue!~"  ~!Me,comparison!~ "~!~!Me,category!~,~!Me,varName!~!~"

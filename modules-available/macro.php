@@ -189,7 +189,7 @@ class Macro extends Module
 			{
 				$subName="$macroName--{$action['lineNumber']}";
 				
-				$this->core->registerFeature($this, array($subName), $subName, "Derived macro for $macroName", "$macroName,hidden", true, 'NA');
+				$this->core->registerFeature($this, array($subName), $subName, "Derived macro for $macroName", "$macroName,hidden", true, 'nesting');
 				$outputArray[$key]['nesting']=$this->compileFromArray($subName, $action['nesting']);
 				$this->core->addAction(trim($action['argument']), $action['value'].$subName, $macroName, $action['lineNumber']);
 			}

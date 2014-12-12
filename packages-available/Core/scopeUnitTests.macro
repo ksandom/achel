@@ -98,3 +98,20 @@ defineTest makeVarAvailable,
 		set Me,test1,blah
 	expect blah,~!Me,test1!~
 
+
+
+defineTest scopeName set,
+	if ~!General,scopeName!~,!=,,
+		passTest We have a scopeName.
+	else
+		failTest We don't have a scopeName.
+
+defineTest scopeName same scope,
+	set Me,startingScope,~!General,scopeName!~
+	if 1,==,1,
+		expect ~!Me,startingScope!~,~!General,scopeName!~
+
+defineTest scopeName different scope,
+	set Me,startingScope,~!General,scopeName!~
+	beInAnotherScope General,scopeName,~!Me,startingScope!~,!=,~!General,scopeName!~
+

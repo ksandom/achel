@@ -1008,35 +1008,45 @@ class core extends Module
 		{
 			if (count($this->store['Macros'][$macroName]))
 			{
-				# Set our shared memory location (this allows us to run macros within macros)
+				# Set our shared memory location (this allows us to run macros within macros) and manage the scope
 				$nesting=$this->incrementNesting();
+				
+				if (isset($this->store['Features'][$macroName]['source']))
+				{
+					if ($this->store['Features'][$macroName]['source']!='nesting')
+					{
+						$oldScope=$this->get('General', 'scopeName');
+						$scopeName="$macroName-$nesting";
+						$this->set('General', 'scopeName', $scopeName);
+					}
+				}
+				if (!isset($oldScope))
+				{
+					$oldScope=false;
+					$scopeName=$this->get('General', 'scopeName');
+				}
 				
 				# Iterate through the actions to be taken
 				foreach ($this->store['Macros'][$macroName] as $actionItem)
 				{
-					$nesting=$this->get('Core', 'nesting');
-					$this->debug(4, "ITER $macroName/$nesting - {$actionItem['name']}: Result count before invoking=".count($this->getResultSet()));
+					$entryNesting=$this->get('Core', 'nesting');
+					$this->debug(5, "ITER $macroName/$nesting - {$actionItem['name']}: Result count before invoking=".count($this->getResultSet()));
 					# $this->debugResultSet("$macroName - {$actionItem['name']}");
 					
-					# TODO The problem happens somewhere between here...
 					$returnedValue1=$this->callFeature($actionItem['name'], $actionItem['value']);
 					if (is_array($returnedValue1)) $returnedValue=$returnedValue1;
-					# and here
-					# $this->debug(5,"GOT HERE ALSO");
 					
-					# $this->debugResultSet("$macroName - {$actionItem['name']}");
-					
-					$nesting=$this->get('Core', 'nesting');
-					# $this->debug(5, "ITER $macroName/$nesting - {$actionItem['name']}: Restult count before set=".count($this->getResultSet()));
+					$exitNesting=$this->get('Core', 'nesting');
 					$this->setResultSet($returnedValue);
-					$this->debug(5, "ITER $macroName/$nesting - {$actionItem['name']}: Result count after set=".count($this->getResultSet()));
-					#echo "$macroName\n";
-					#print_r($returnedValue);
+					if ($entryNesting!=$nesting) $this->debug(0, "go: WARNING entryNesting($entryNesting) != exitNesting($exitNesting) for macro $macroName/{$actionItem['name']}. This is certainly a bug! $macroName began with $nesting.");
+					$this->debug(4, "ITER $macroName/$entryNesting -> $macroName/$exitNesting - {$actionItem['name']}: Result count after set=".count($this->getResultSet()));
 				}
 				$resultSet=$this->getResultSet();
 				
-				# Set the shared memory back to the previous nesting level
+				# Set the shared memory and scope back to the previous nesting level
 				$this->decrementNesting();
+				
+				if ($oldScope) $this->set('General', 'scopeName', $oldScope);
 				
 				# If this is the default macro, we need to run the cleanup stuff
 				if ($macroName=='default')
