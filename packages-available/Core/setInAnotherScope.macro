@@ -1,0 +1,4 @@
+# Used for unit tests. --setInAnotherScope=Category,variable,value ~ hidden,core,unit
+parameters Category,variable,value
+
+set ~!Me,Category!~,~!Me,variable!~,~!Me,value!~

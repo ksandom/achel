@@ -144,13 +144,17 @@ defineTest Local - inherit backwards,
 		set Local,test1,aa1
 	expect aa1,~!Local,test1!~
 
-defineTest Local - different scope,
+defineTest Local - different scope read,
 	unset Local,test1
 	set Local,test1,aa1
 	beInAnotherScope Local,test1,aa1,!=
+
+defineTest Local - different scope write,
+	unset Local,test2
+	setInAnotherScope Local,test2,aa2
+	expect ,~!Local,test2!~
 
 defineTest Local - repeat,
 	unset Local,test1
 	set Local,test1,aa1
 	expect aa1,~!Local,test1!~
-

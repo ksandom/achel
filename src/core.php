@@ -15,6 +15,7 @@ define('resultVarsDefaultRecusionWarn', 25); // If we get to this many (arbitrar
 define('resultVarsDefaultWarnDebugLevel', 2);
 define('resultVarsDefaultSevereDebugLevel', 1);
 
+define('localScopeVarName', 'Local');
 define('nestedPrivateVarsName', 'Me');
 define('isolatedNestedPrivateVarsName', 'Isolated');
 
@@ -1046,7 +1047,13 @@ class core extends Module
 				# Set the shared memory and scope back to the previous nesting level
 				$this->decrementNesting();
 				
-				if ($oldScope) $this->set('General', 'scopeName', $oldScope);
+				if ($oldScope)
+				{
+					# TODO write the set part.
+					# TODO finish this
+					$this->doUnset(array(localScopeVarName, $scopeName));
+					$this->set('General', 'scopeName', $oldScope);
+				}
 				
 				# If this is the default macro, we need to run the cleanup stuff
 				if ($macroName=='default')
