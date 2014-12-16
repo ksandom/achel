@@ -94,6 +94,7 @@ defineTest Normal - repeat,
 
 
 
+# Scope/availability modifications.
 defineTest makeVarAvailable - not available,
 	isolate
 		set Me,test1,blah
@@ -107,18 +108,49 @@ defineTest makeVarAvailable - available,
 
 
 
-defineTest scopeName set,
+# Foundations for more intellegent scoping.
+defineTest scopeName - set,
 	if ~!General,scopeName!~,!=,,
 		passTest We have a scopeName.
 	else
 		failTest We don't have a scopeName.
 
-defineTest scopeName same scope,
+defineTest scopeName - same scope,
 	set Me,startingScope,~!General,scopeName!~
 	if 1,==,1,
 		expect ~!Me,startingScope!~,~!General,scopeName!~
 
-defineTest scopeName different scope,
+defineTest scopeName - different scope,
 	set Me,startingScope,~!General,scopeName!~
-	beInAnotherScope General,scopeName,~!Me,startingScope!~,!=,~!General,scopeName!~
+	beInAnotherScope General,scopeName,~!Me,startingScope!~,!=
+
+
+
+# Local scope. This uses more intellegent scoping.
+defineTest Local,
+	unset Local,test1
+	set Local,test1,aa1
+	expect aa1,~!Local,test1!~
+
+defineTest Local - inherit forwards,
+	unset Local,test1
+	set Local,test1,aa1
+	isolate
+		expect aa1,~!Local,test1!~
+
+defineTest Local - inherit backwards,
+	unset Local,test1
+	isolate
+		set Local,test1,aa1
+	expect aa1,~!Local,test1!~
+
+defineTest Local - different scope,
+	unset Local,test1
+	set Local,test1,aa1
+	beInAnotherScope Local,test1,aa1,!=
+
+defineTest Local - repeat,
+	unset Local,test1
+	set Local,test1,aa1
+	expect aa1,~!Local,test1!~
 
