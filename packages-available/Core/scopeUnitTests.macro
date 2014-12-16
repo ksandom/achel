@@ -1,23 +1,25 @@
 # Test that me scoping works. ~ unitTest,scope,hidden
 
-defineTest Isolated Local,
+
+# Isolated is a special category that is visiable exactly in the current nesting level.
+defineTest Isolated,
 	unset Isolated,test1
 	set Isolated,test1,aa1
 	expect aa1,~!Isolated,test1!~
 
-defineTest Isolated Local - inherit forwards,
+defineTest Isolated - inherit forwards,
 	unset Isolated,test1
 	set Isolated,test1,aa1
 	isolate
 		expect ,~!Isolated,test1!~
 
-defineTest Isolated Local - inherit backwards,
+defineTest Isolated - inherit backwards,
 	unset Isolated,test1
 	isolate
 		set Isolated,test1,aa1
 	expect ,~!Isolated,test1!~
 
-defineTest Isolated Local - repeat,
+defineTest Isolated - repeat,
 	unset Isolated,test1
 	set Isolated,test1,aa1
 	expect aa1,~!Isolated,test1!~
@@ -27,30 +29,30 @@ defineTest Isolated Local - repeat,
 
 
 
-
-defineTest Me Local,
+# Me is a special category that will be visible in newer nestinng levels, but not older ones.
+defineTest Me,
 	unset Me,test1
 	set Me,test1,aa1
 	expect aa1,~!Me,test1!~
 
-defineTest Me Local - inherit forwards,
+defineTest Me - inherit forwards,
 	unset Me,testMeLocal
 	set Me,testMeLocal,aa1
 	isolate
 		expect aa1,~!Me,testMeLocal!~
 
-defineTest Me Local - inherit backwards,
+defineTest Me - inherit backwards,
 	unset Me,test1
 	isolate
 		set Me,test1,aa1
 	expect ,~!Me,test1!~
 
-defineTest Me Local - repeat,
+defineTest Me - repeat,
 	unset Me,test1
 	set Me,test1,aa1
 	expect aa1,~!Me,test1!~
 
-defineTest Me Local - return,
+defineTest Me - return,
 	unset Me,test1
 	set Me,test1,aa1
 	isolate
@@ -67,32 +69,37 @@ defineTest Me Local - return,
 
 
 
-
-defineTest Normal Local,
+# Normal is just any normal vairable without special treatment.
+defineTest Normal,
 	unset Normal,test1
 	set Normal,test1,aa1
 	expect aa1,~!Normal,test1!~
 
-defineTest Normal Local - inherit forwards,
+defineTest Normal - inherit forwards,
 	unset Normal,test1
 	set Normal,test1,aa1
 	isolate
 		expect aa1,~!Normal,test1!~
 
-defineTest Normal Local - inherit backwards,
+defineTest Normal - inherit backwards,
 	unset Normal,test1
 	isolate
 		set Normal,test1,aa1
 	expect aa1,~!Normal,test1!~
 
-defineTest Normal Local - repeat,
+defineTest Normal - repeat,
 	unset Normal,test1
 	set Normal,test1,aa1
 	expect aa1,~!Normal,test1!~
 
 
 
-defineTest makeVarAvailable,
+defineTest makeVarAvailable - not available,
+	isolate
+		set Me,test1,blah
+	expect ,~!Me,test1!~
+
+defineTest makeVarAvailable - available,
 	isolate
 		makeVarAvailable test1
 		set Me,test1,blah
