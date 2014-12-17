@@ -1110,6 +1110,8 @@ class core extends Module
 		#echo "m=$category, v=$valueName\n";
 		if (isset($this->store[$category]))
 		{
+			# TODO Can I use the key to refactor?
+			// if ($key=$this->getScopeForCategory($category, $nestingOffset))
 			switch ($category)
 			{
 				case isolatedNestedPrivateVarsName:
@@ -1268,6 +1270,15 @@ class core extends Module
 		}
 	}
 	
+	function getScopeForCategory($category, $nestingOffset=0)
+	{
+		if ($category==nestedPrivateVarsName or $category==isolatedNestedPrivateVarsName or $category==localScopeVarName)
+		{
+			return ($category==localScopeVarName)?$this->get('General', 'scopeName'):$this->get('Core', 'nesting')-$nestingOffset;
+		}
+		else return false;
+	}
+	
 	function set($category, $valueName, $args, $nestingOffset=0)
 	{ // set a variable for a module
 		if ($this->isVerboseEnough(5))
@@ -1278,14 +1289,16 @@ class core extends Module
 		
 		if (!isset($this->store[$category])) $this->store[$category]=array();
 		
-		if ($category==nestedPrivateVarsName or $category==isolatedNestedPrivateVarsName)
+		if ($key=$this->getScopeForCategory($category, $nestingOffset))
 		{
-			$nesting=$this->get('Core', 'nesting');
-			$this->core->debug(5,"set: [$category][$nesting-$nestingOffset][$valueName]");
-			if (!isset($this->store[$category][$nesting])) $this->store[$category][$nesting]=array();
-			$this->store[$category][$nesting-$nestingOffset][$valueName]=$args;
+			$this->core->debug(5,"set: [$category][$key][$valueName]");
+			if (!isset($this->store[$category][$key])) $this->store[$category][$key]=array();
+			$this->store[$category][$key][$valueName]=$args;
 		}
-		else $this->store[$category][$valueName]=$args;
+		else
+		{
+			$this->store[$category][$valueName]=$args;
+		}
 		
 		$this->markCategory($category);
 	}
@@ -1296,13 +1309,15 @@ class core extends Module
 		$this->debug(5,"setRef($category, $valueName, $argString)");
 		if (!isset($this->store[$category])) $this->store[$category]=array();
 		
-		if ($category!=nestedPrivateVarsName and $category!=isolatedNestedPrivateVarsName) $this->store[$category][$valueName]=&$args;
+		if ($key=$this->getScopeForCategory($category, $nestingOffset))
+		{
+			if (!isset($this->store[$category][$key])) $this->store[$category][$key]=array();
+			$this->store[$category][$key][$valueName]=&$args;
+			$this->core->debug(5,"setRef: [$category][$key][$valueName]");
+		}
 		else
 		{
-			$nesting=$this->get('Core', 'nesting');
-			if (!isset($this->store[$category][$nesting])) $this->store[$category][$nesting]=array();
-			$this->store[$category][$nesting-$nestingOffset][$valueName]=$args;
-			$this->core->debug(5,"setRef: [$category][$nesting-$nestingOffset][$valueName]");
+			$this->store[$category][$valueName]=&$args;
 		}
 		
 		$this->markCategory($category);
@@ -1315,6 +1330,17 @@ class core extends Module
 	
 	function doUnsetNested(&$currentScope, $deleteList, $position=0)
 	{
+		// Handel Local, Me and Isolated.
+		$listKeys=array_keys($deleteList);
+		if ($key=$this->getScopeForCategory($deleteList[$listKeys[0]]))
+		{
+			$category=$deleteList[$listKeys[0]];
+			$deleteList[$listKeys[0]]=$key;
+			
+			return $this->doUnsetNested($this->store[$category], $deleteList);
+		}
+		
+		// Handel everything else.
 		if (is_string($deleteList))
 		{
 			$this->debug(0, "doUnsetNested: WARNING! Converted string to array. The string was \"$deleteList\", which was expected to be an absolute path in the form of an array. You can do this in PHP like so: array('CategoryName', 'subCategory', 'variable'). Ideally execution should stop here, but it is being allowed incase there is still some old code relying on this behavior (PHP would have complained bitterly). This decision will be reversed very soon, so please fix the bug if it is yours. If you think the bug is in Achel, please get in contact via github.");
