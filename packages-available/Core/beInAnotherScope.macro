@@ -1,7 +1,13 @@
 # Assist with unit scope tests. --beInAnotherScope=varName,expectedValue,[==|!=] ~ hidden
-parameters {"category":"","varName":"","expectedValue":"","comparison":"=="}
+parameters {"category":"","varName":"","expectedValue":"","comparison":"==","extraParameter":""}
 
-if ~!Me,expectedValue!~,~!Me,comparison!~,~!~!Me,category!~,~!Me,varName!~!~,
-	passTest Got expected result. Got ~!Me,expectedValue!~ ~!Me,comparison!~ ~!~!Me,category!~,~!Me,varName!~!~
+if ~!Me,extraParameter!~,==,,
+	if ~!Me,expectedValue!~,~!Me,comparison!~,~!~!Me,category!~,~!Me,varName!~!~,
+		passTest Got expected result. Got ~!Me,expectedValue!~ ~!Me,comparison!~ ~!~!Me,category!~,~!Me,varName!~!~
+	else
+		failTest Got unexpected result. Wanted "~!Me,expectedValue!~"  ~!Me,comparison!~ "~!~!Me,category!~,~!Me,varName!~!~"
 else
-	failTest Got unexpected result. Wanted "~!Me,expectedValue!~"  ~!Me,comparison!~ "~!~!Me,category!~,~!Me,varName!~!~"
+	if ~!Me,expectedValue!~,~!Me,comparison!~,~!~!Me,category!~,~!Me,varName!~,~!Me,extraParameter!~!~,
+		passTest Got expected result. Got ~!Me,expectedValue!~ ~!Me,comparison!~ ~!~!Me,category!~,~!Me,varName!~,~!Me,extraParameter!~!~
+	else
+		failTest Got unexpected result. Wanted "~!Me,expectedValue!~"  ~!Me,comparison!~ "~!~!Me,category!~,~!Me,varName!~,~!Me,extraParameter!~!~"
