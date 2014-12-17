@@ -1111,7 +1111,55 @@ class core extends Module
 		if (isset($this->store[$category]))
 		{
 			# TODO Can I use the key to refactor?
-			// if ($key=$this->getScopeForCategory($category, $nestingOffset))
+			if ($key=$this->getScopeForCategory($category, $nestingOffset))
+			{
+				if ($category==nestedPrivateVarsName)
+				{
+					# TODO Is this really still needed?
+					$nesting=$this->get('Core', 'nesting')+$nestingOffset;
+					if (isset($this->store[$category])) 
+					{
+						for ($i=$nesting;$i>0;$i--)
+						{
+							if (isset($this->store[$category][$i][$valueName]))
+							{
+								$result=$this->store[$category][$i][$valueName];
+								break;
+							}
+							else $result=null;
+						}
+					}
+					else $result=null;
+					$this->core->debug(5,"get (public): [$category][$nesting][$valueName] ".json_encode($result));
+				}
+				else
+				{
+					if (isset($this->store[$category][$key]))
+					{
+						if (isset($this->store[$category][$key][$valueName]))
+						{
+							$result=$this->store[$category][$key][$valueName];
+						}
+						else $result=null;
+					}
+					else $result=null;
+				}
+			}
+			else
+			{
+				if (isset($this->store[$category][$valueName])) return $this->store[$category][$valueName];
+				else
+				{
+					$result=null;
+				}
+			}
+			
+			if ($this->isVerboseEnough(5))
+			{
+				$this->core->debug(5,"get: [$category][$key][$valueName] ".json_encode($result));
+			}
+			
+			/*
 			switch ($category)
 			{
 				case isolatedNestedPrivateVarsName:
@@ -1152,6 +1200,7 @@ class core extends Module
 					}
 					break;
 			}
+			*/
 		}
 		else
 		{
