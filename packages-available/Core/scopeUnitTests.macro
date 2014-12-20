@@ -160,14 +160,77 @@ defineTest Local set - repeat,
 	expect aa1,~!Local,test1!~
 
 
-defineTest Local setNested - different scope read,
+defineTest Local setNested - different scope read without variable nesting,
 	unset Local,test1
 	setNested Local,test1,aa1
 	beInAnotherScope Local,test1,aa1,!=
 
-defineTest Local setNested - different scope read with nesting,
+defineTest Local setNested - different scope read with variable nesting,
 	unset Local,test1,extraLevel
 	setNested Local,test1,extraLevel,aa1
 	beInAnotherScope Local,test1,aa1,!=,extraLevel
 
+defineTest Local setNested without nesting,
+	unset Local,test1
+	setNested Local,test1,aa1
+	expect aa1,~!Local,test1!~
+
+defineTest Local setNested without nesting - inherit forwards,
+	unset Local,test1
+	setNested Local,test1,aa1
+	isolate
+		expect aa1,~!Local,test1!~
+
+defineTest Local setNested without nesting - inherit backwards,
+	unset Local,test1
+	isolate
+		setNested Local,test1,aa1
+	expect aa1,~!Local,test1!~
+
+defineTest Local setNested without nesting - different scope read,
+	unset Local,test1
+	setNested Local,test1,aa1
+	beInAnotherScope Local,test1,aa1,!=
+
+defineTest Local setNested without nesting - different scope write,
+	unset Local,test2
+	setInAnotherScope Local,test2,aa2
+	expect ,~!Local,test2!~
+
+defineTest Local setNested without nesting - repeat,
+	unset Local,test1
+	setNested Local,test1,aa1
+	expect aa1,~!Local,test1!~
+
+defineTest Local setNested with nesting,
+	unset Local,test1
+	setNested Local,test1,bb2,aa1
+	expect aa1,~!Local,test1,bb2!~
+
+defineTest Local setNested with nesting - inherit forwards,
+	unset Local,test1
+	setNested Local,test1,bb2,aa1
+	isolate
+		expect aa1,~!Local,test1,bb2!~
+
+defineTest Local setNested with nesting - inherit backwards,
+	unset Local,test1
+	isolate
+		setNested Local,test1,bb2,aa1
+	expect aa1,~!Local,test1,bb2!~
+
+defineTest Local setNested with nesting - different scope read,
+	unset Local,test1
+	setNested Local,test1,bb2,aa1
+	beInAnotherScope Local,test1,aa1,!=
+
+defineTest Local setNested with nesting - different scope write,
+	unset Local,test2
+	setInAnotherScope Local,test2,aa2,bb2
+	expect ,~!Local,test2!~
+
+defineTest Local setNested with nesting - repeat,
+	unset Local,test1
+	setNested Local,test1,bb2,aa1
+	expect aa1,~!Local,test1,bb2!~
 

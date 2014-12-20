@@ -1134,6 +1134,7 @@ class core extends Module
 				}
 				else
 				{
+					$this->core->debug(3,"get ($key): [$category][$key][$valueName]");
 					if (isset($this->store[$category][$key]))
 					{
 						if (isset($this->store[$category][$key][$valueName]))
@@ -1428,6 +1429,29 @@ class core extends Module
 	function getNested($values)
 	{
 		$output=$this->store;
+		
+		// Handel variables with special scope.
+		$valueKeys=array_keys($values);
+		$category=$values[$valueKeys[0]];
+		if ($key=$this->getScopeForCategory($category))
+		{
+			if ($this->isVerboseEnough(3))
+			{
+				$this->core->debug(3,"getNested: $category,$key,".implode(',', $values));
+			}
+			if (isset($output[$category][$key])) $output=$output[$category][$key];
+			
+			# TODO There must be a better way to remove a key. unset() didn't work because it left the empty key and the index started at 1 instead of 0. Possibly the second part is actually what mattered.
+			$oldValues=$values;
+			$numberOfPathParts=count($values);
+			$values=array();
+			for ($i=1;$i<$numberOfPathParts;$i++)
+			{
+				$values[]=$oldValues[$i];
+			}
+		}
+		
+		// Do the normal nested lookup.
 		foreach ($values as $value)
 		{
 			if (isset($output[$value]))
@@ -1561,7 +1585,31 @@ class core extends Module
 		# $this->core->debug(0, implode(',', $pathParts));
 		# TODO Add shortcuts
 		
-		$this->setNestedWorker($this->store, $pathParts, $value, count($pathParts));
+		// Handel variables with special scope.
+		$pathKeys=array_keys($pathParts);
+		$category=$pathParts[$pathKeys[0]];
+		if ($key=$this->getScopeForCategory($category))
+		{
+			if (isset($this->store[$category][$key])) $this->store[$category][$key]=array();
+			
+			# TODO There must be a better way to remove a key. unset() didn't work because it left the empty key and the index started at 1 instead of 0. Possibly the second part is actually what mattered.
+			$oldPathPaths=$pathParts;
+			$numberOfPathParts=count($pathParts);
+			$pathParts=array();
+			for ($i=1;$i<$numberOfPathParts;$i++)
+			{
+				$pathParts[]=$oldPathPaths[$i];
+			}
+			
+			if ($this->isVerboseEnough(3))
+			{
+				$this->core->debug(3,"setNestedStart: Used $category,$key,".implode(',', $pathParts)).' '.json_encode($pathParts);
+			}
+			$output=&$this->store[$category][$key];
+		}
+		else $output=&$this->store;
+
+		$this->setNestedWorker($output, $pathParts, $value, count($pathParts));
 		
 		$this->markCategory($pathParts[0]);
 	}
