@@ -1,7 +1,5 @@
 # Calculate the oposite angle of a right angle triangle. --rightTriangleGetOppositeAngle=Category,variable,oppositeLength,adjacentLength ~ trig,rightAngle,opposite
 parameters category,variable,oppositeLength,adjacentLength
 
-debug 1,rightTriangleGetOppositeAngle: ~!Me,category!~,~!Me,variable!~,~!Me,input!~ ~!Me,oppositeLength!~,/,~!Me,adjacentLength!~
-makeMeAvailable input
 basicMaths Me,input,~!Me,oppositeLength!~,/,~!Me,adjacentLength!~
 atan ~!Me,category!~,~!Me,variable!~,~!Me,input!~
