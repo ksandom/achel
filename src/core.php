@@ -1607,7 +1607,7 @@ class core extends Module
 		$category=$pathParts[$pathKeys[0]];
 		if ($key=$this->getScopeForCategory($category))
 		{
-			if (isset($this->store[$category][$key])) $this->store[$category][$key]=array();
+			if (!isset($this->store[$category][$key])) $this->store[$category][$key]=array();
 			
 			# TODO There must be a better way to remove a key. unset() didn't work because it left the empty key and the index started at 1 instead of 0. Possibly the second part is actually what mattered.
 			$oldPathPaths=$pathParts;
