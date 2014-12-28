@@ -538,18 +538,31 @@ class core extends Module
 	
 	function parameters($args)
 	{
+		// localScopeVarName
+		$categoryForParameters=nestedPrivateVarsName;  //$categoryForParameters;
+		$categoryForFeedBack=isolatedNestedPrivateVarsName;
+		$categoryForKnowledge=isolatedNestedPrivateVarsName;
+		
 		$nesting=$this->get('Core', 'nesting');
-		$lastMacro=$this->store[isolatedNestedPrivateVarsName][$nesting-1]['featureName'];
-		$this->debug(4, "parameters: lastMacro=$lastMacro nesting=$nesting");
+		if (isset($this->store[$categoryForKnowledge][$nesting-1]['featureName']))
+		{
+			$lastMacro=$this->store[$categoryForKnowledge][$nesting-1]['featureName'];
+			$this->debug(4, "parameters: lastMacro=$lastMacro nesting=$nesting");
+		}
+		else
+		{
+			$this->debug(1, "parameters: Could not find lastMacro. This likely happened because the parameters command was called nested in some code. It should be called just under the comments section of the macro.");
+			return false;
+		}
 		
 		$argsToUse=(is_array($args))?$args:array($args);
-		if (!isset($this->store[nestedPrivateVarsName][$nesting])) $this->store[nestedPrivateVarsName][$nesting]=array();
-		if (!is_array($this->store[nestedPrivateVarsName][$nesting])) $this->store[nestedPrivateVarsName][$nesting]=array();
+		if (!isset($this->store[$categoryForParameters][$nesting])) $this->store[$categoryForParameters][$nesting]=array();
+		if (!is_array($this->store[$categoryForParameters][$nesting])) $this->store[$categoryForParameters][$nesting]=array();
 		
-		if (!isset($this->store[isolatedNestedPrivateVarsName][$nesting])) $this->store[isolatedNestedPrivateVarsName][$nesting-1]=array();
-		if (!is_array($this->store[isolatedNestedPrivateVarsName][$nesting])) $this->store[isolatedNestedPrivateVarsName][$nesting-1]=array();
+		if (!isset($this->store[$categoryForFeedBack][$nesting])) $this->store[$categoryForFeedBack][$nesting-1]=array();
+		if (!is_array($this->store[$categoryForFeedBack][$nesting])) $this->store[$categoryForFeedBack][$nesting-1]=array();
 		
-		$this->store[isolatedNestedPrivateVarsName][$nesting]['pass']=achelTrue;
+		$this->store[$categoryForFeedBack][$nesting]['pass']=achelTrue;
 		$argKeys=array_keys($args);
 		foreach ($argKeys as $position => $details)
 		{
@@ -567,8 +580,8 @@ class core extends Module
 				}
 				
 				$variableResult=$this->processVariableDefinition($details, $value, $args[$details]);
-				$this->store[nestedPrivateVarsName][$nesting-1][$key]=$variableResult['value'];
-				if (!$variableResult['pass']) $this->store[isolatedNestedPrivateVarsName][$nesting]['pass']=achelFalse;
+				$this->store[$categoryForParameters][$nesting-1][$key]=$variableResult['value'];
+				if (!$variableResult['pass']) $this->store[$categoryForFeedBack][$nesting]['pass']=achelFalse;
 				
 				if ($variableResult['pass'])
 				{
@@ -595,21 +608,21 @@ class core extends Module
 					$default=$args[$details];
 					$this->debug(4,"parameters: Simple name. key=$key value=$value default=$default");
 				}
-				$this->store[nestedPrivateVarsName][$nesting-1][$key]=($value)?$value:$default;
+				$this->store[$categoryForParameters][$nesting-1][$key]=($value)?$value:$default;
 			}
 			
 			/*
 			if (is_numeric($details))
 			{ // Basic name assignment
 				$value=$this->core->get('Global',"$lastMacro-$details");
-				$this->store[nestedPrivateVarsName][$nesting-1][$args[$details]]=$value;
+				$this->store[$categoryForParameters][$nesting-1][$args[$details]]=$value;
 				$this->debug(4,"parameters: Simple. name={$args[$details]} key=$details value=$value");
 			}
 			else
 			{ // Key based assignment
 				if (is_array($args[$details]))
 				{ // TODO More advanced stuff
-					$this->store[isolatedNestedPrivateVarsName][$nesting-1]['passed']=true;
+					$this->store[$categoryForFeedBack][$nesting-1]['passed']=true;
 					$variableResult=$this->processVariableDefinition($details, $value, $args[$details]);
 					#  TODO think this through some more.
 				}
@@ -619,7 +632,7 @@ class core extends Module
 					{
 						$value=$args[$details];
 					}
-					$this->store[nestedPrivateVarsName][$nesting-1][$details]=$value;
+					$this->store[$categoryForParameters][$nesting-1][$details]=$value;
 				}
 			}
 			*/
