@@ -244,3 +244,22 @@ defineTest Local setNested with nesting - repeat,
 	setNested Local,test1,bb2,aa1
 	expect aa1,~!Local,test1,bb2!~
 
+defineTest Local setNested overwrite bug,
+	unset Local,test1
+	setNested Local,test1,bb1,aa1
+	setNested Local,test1,bb2,aa2
+	expect aa1-aa2,~!Local,test1,bb1!~-~!Local,test1,bb2!~
+
+defineTest Me setNested overwrite bug,
+	unset Me,test1
+	set Me,test1,make sure the variable is available in the current nesting level.
+	setNested Me,test1,bb1,aa1
+	setNested Me,test1,bb2,aa2
+	expect aa1-aa2,~!Me,test1,bb1!~-~!Me,test1,bb2!~
+
+defineTest Normal setNested overwrite bug,
+	unset Normal,test1
+	setNested Normal,test1,bb1,aa1
+	setNested Normal,test1,bb2,aa2
+	expect aa1-aa2,~!Normal,test1,bb1!~-~!Normal,test1,bb2!~
+
