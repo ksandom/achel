@@ -36,58 +36,60 @@ class Trig extends Module
 			case 'sin':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
-					$this->core->set($parms[0], $parms[1], sin($parms[2]));
+					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], sin($parms[2]));
+					else $this->core->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 			case 'asin':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
-					$this->core->set($parms[0], $parms[1], asin($parms[2]));
+					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], asin($parms[2]));
+					else $this->core->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 			
 			case 'cos':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
-					$this->core->set($parms[0], $parms[1], cos($parms[2]));
+					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], cos($parms[2]));
+					else $this->core->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 			case 'acos':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
-					$this->core->set($parms[0], $parms[1], acos($parms[2]));
+					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], acos($parms[2]));
+					else $this->core->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 			
 			case 'tan':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
-					$this->core->set($parms[0], $parms[1], tan($parms[2]));
+					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], tan($parms[2]));
+					else $this->core->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 			case 'atan':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
-					$this->core->set($parms[0], $parms[1], atan($parms[2]));
+					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], atan($parms[2]));
+					else $this->core->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 			
 			case 'radiansToDegrees':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
-					if (is_numeric($parms[2]))
-					{
-						$this->core->set($parms[0], $parms[1], rad2deg($parms[2]));
-					}
+					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], rad2deg($parms[2]));
+					else $this->core->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 			case 'degreesToRadians':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
-					if (is_numeric($parms[2]))
-					{
-						$this->core->set($parms[0], $parms[1], deg2rad($parms[2]));
-					}
+					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], deg2rad($parms[2]));
+					else $this->core->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 			

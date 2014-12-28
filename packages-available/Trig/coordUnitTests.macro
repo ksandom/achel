@@ -106,6 +106,8 @@ loop
 		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		round Tmp,radianAngle,~!Tmp,radianAngle!~,2
+		debug 1,coorUnitTests: xof=~!Tmp,xOffset!~ yof=~!Tmp,yOffset!~ xor~!Tmp,xOrigin!~ yor~!Tmp,yOrigin!~ xde=~!Tmp,xDestination!~ yde=~!Tmp,yDestination!~ ang=~!Tmp,angle!~ ran=~!Tmp,radianAngle!~
+		
 		
 		expect 33.69,~!Tmp,radianAngle!~
 	

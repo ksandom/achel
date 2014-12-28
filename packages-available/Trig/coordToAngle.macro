@@ -9,9 +9,11 @@ if ~!Global,coordToAngle-2!~,<,0,
 	if ~!Global,coordToAngle-3!~,<,0,
 		# lower left
 		
+		debug 1,coordToAngle: dx=~!Me,destinationX!~ dy=~!Me,destinationY!~
 		basicMaths Tmp,coordOpposite,~!Global,coordToAngle-2!~,*,-1
 		basicMaths Tmp,coordAdjacent,~!Global,coordToAngle-3!~,*,-1
 		
+		debug 1,rightTriangleGetOppositeAngle ~!Me,category!~,~!Me,variable!~,~!Tmp,coordOpposite!~,~!Tmp,coordAdjacent!~
 		rightTriangleGetOppositeAngle ~!Me,category!~,~!Me,variable!~,~!Tmp,coordOpposite!~,~!Tmp,coordAdjacent!~
 		
 		basicMaths ~!Me,category!~,~!Me,variable!~,~!~!Me,category!~,~!Me,variable!~!~,+,~!Tmp,pi!~
@@ -62,8 +64,8 @@ else
 		set Tmp,coordAdjacent,~!Global,coordToAngle-3!~
 		rightTriangleGetOppositeAngle ~!Me,category!~,~!Me,variable!~,~!Tmp,coordOpposite!~,~!Tmp,coordAdjacent!~
 
-unset Tmp,pi
-unset Tmp,0.5Pi
-unset Tmp,1.5Pi
-unset Tmp,coordAdjacent
-unset Tmp,coordOpposite
+# unset Tmp,pi
+# unset Tmp,0.5Pi
+# unset Tmp,1.5Pi
+# unset Tmp,coordAdjacent
+# unset Tmp,coordOpposite

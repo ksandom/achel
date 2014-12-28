@@ -4,5 +4,9 @@ parameters ctcCategory,ctcVariable,x1,y1,x2,y2
 basicMaths Me,cox,~!Me,x2!~,-,~!Me,x1!~
 basicMaths Me,coy,~!Me,y2!~,-,~!Me,y1!~
 
+# TODO The problem is that the first line is getting overwritten by the second. Investivated setNestedFromCommandLine.
 setNested ~!Me,ctcCategory!~,~!Me,ctcVariable!~,x,~!Me,cox!~
 setNested ~!Me,ctcCategory!~,~!Me,ctcVariable!~,y,~!Me,coy!~
+
+if ~!Me,ctcCategory!~,==,Local,
+	makeLocalAvailable ~!Me,ctcVariable!~
