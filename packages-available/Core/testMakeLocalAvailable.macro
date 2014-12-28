@@ -1,0 +1,5 @@
+# Test setting a variable and making it available to the previous scope. ~ hidden,test
+parameters value
+
+set Local,test1,~!Me,value!~
+makeLocalAvailable test1

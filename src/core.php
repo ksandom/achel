@@ -84,7 +84,8 @@ class core extends Module
 				$this->registerFeature($this, array('getToResult', 'get'), 'get', 'Get a value and put it in an array so we can do stuff with it. --get=category'.valueSeparator.'variableName', array('storeVars'));
 				$this->registerFeature($this, array('getNested'), 'getNested', 'Get a value and put it in an array so we can do stuff with it. --getNested=category'.valueSeparator.'variableName', array('storeVars'));
 				$this->registerFeature($this, array('set'), 'set', 'set a value. All remaining values after the destination go into a string. --set=category'.valueSeparator.'variableName'.valueSeparator.'value', array('storeVars'));
-				$this->registerFeature($this, array('var', 'makeVarAvailable'), 'makeVarAvailable', 'Make a Me variable available to the calling scope. This is useful if you want to send data back via a variable which the calling scope is expecting you to initialise. Eg --makeVarAvailable=variableName would make Me,variableName available to the calling scope.', array('storeVars'));
+				$this->registerFeature($this, array('makeMeAvailable'), 'makeMeAvailable', 'Make a Me variable available to the calling scope. This is useful if you want to send data back via a variable which the calling scope is expecting you to initialise. Eg --makeMeAvailable=variableName would make Me,variableName available to the calling scope. You typically do this at the BEGINING of a macro.', array('storeVars'));
+				$this->registerFeature($this, array('makeLocalAvailable'), 'makeLocalAvailable', 'Make a Local variable available to the calling scope. This is useful if you want to send data back via a variable which the calling scope is expecting you to initialise. Eg --makeLocalAvailable=variableName would make Local,variableName available to the calling scope. You need to do this at the END of a macro.', array('storeVars'));
 				$this->registerFeature($this, array('setNested'), 'setNested', 'set a value into a nested array, creating all the necessary sub arrays. The last parameter is the value. All the other parameters are the keys for each level. --setNested=StoreName'.valueSeparator.'category'.valueSeparator.'subcategory'.valueSeparator.'subsubcategory'.valueSeparator.'value. In this case an array would be created in StoreName,category that looks like this subcategory=>array(subsubcategory=>value)', array('storeVars'));
 				$this->registerFeature($this, array('setArray'), 'setArray', 'set a value. All remaining values after the destination go into an array. --set=category'.valueSeparator.'variableName'.valueSeparator.'value', array('storeVars'));
 				$this->registerFeature($this, array('setIfNotSet', 'setDefault'), 'setIfNotSet', 'set a value if none has been set. --setIfNotSet=category'.valueSeparator.'variableName'.valueSeparator.'defaultValue', array('storeVars'));
@@ -146,9 +147,13 @@ class core extends Module
 				$parms=$this->interpretParms($this->get('Global', $event), 3, 2, true);
 				$this->set($parms[0], $parms[1], $parms[2]);
 				break;
-			case 'makeVarAvailable':
+			case 'makeMeAvailable':
 				$parms=$this->interpretParms($this->get('Global', $event), 1, 1, true);
-				$this->makeVarAvailable($parms[0]);
+				$this->makeMeAvailable($parms[0]);
+				break;
+			case 'makeLocalAvailable':
+				$parms=$this->interpretParms($this->get('Global', $event), 1, 1, true);
+				$this->makeLocalAvailable($parms[0]);
 				break;
 			case 'setNested':
 				$this->setNestedFromInterpreter($this->get('Global', $event));
@@ -1019,6 +1024,7 @@ class core extends Module
 						$oldScope=$this->get('General', 'scopeName');
 						$scopeName="$macroName-$nesting";
 						$this->set('General', 'scopeName', $scopeName);
+						$this->set('General', 'previousScopeName', $oldScope);
 					}
 				}
 				if (!isset($oldScope))
@@ -1309,7 +1315,7 @@ class core extends Module
 		if ($shouldSet) $this->set($category, $valueName, $value);
 	}
 	
-	function makeVarAvailable($variableName)
+	function makeMeAvailable($variableName)
 	{
 		$nesting=$this->get('Core', 'nesting')-1;
 		$variableDetials=$this->getMeVariableLevel($variableName,$nesting);
@@ -1320,11 +1326,22 @@ class core extends Module
 		}
 	}
 	
+	function makeLocalAvailable($variableName)
+	{
+		$value=$this->get(localScopeVarName, $variableName);
+		$this->set(localScopeVarName, $variableName, $value, true);
+	}
+	
 	function getScopeForCategory($category, $nestingOffset=0)
 	{
 		if ($category==nestedPrivateVarsName or $category==isolatedNestedPrivateVarsName or $category==localScopeVarName)
 		{
-			return ($category==localScopeVarName)?$this->get('General', 'scopeName'):$this->get('Core', 'nesting')-$nestingOffset;
+			if ($category==localScopeVarName)
+			{
+				if ($nestingOffset==true) return $this->get('General', 'previousScopeName');
+				else return $this->get('General', 'scopeName');
+			}
+			else return $this->get('Core', 'nesting')-$nestingOffset;
 		}
 		else return false;
 	}

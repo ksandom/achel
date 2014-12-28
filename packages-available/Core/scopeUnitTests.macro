@@ -95,17 +95,27 @@ defineTest Normal - repeat,
 
 
 # Scope/availability modifications.
-defineTest makeVarAvailable - not available,
+defineTest makeMeAvailable - not available,
 	isolate
 		set Me,test1,blah
 	expect ,~!Me,test1!~
 
-defineTest makeVarAvailable - available,
+defineTest makeMeAvailable - available,
 	isolate
-		makeVarAvailable test1
+		makeMeAvailable test1
 		set Me,test1,blah
 	expect blah,~!Me,test1!~
 
+
+defineTest makeLocalAvailable - not available,
+	unset Local,test1
+	testDontMakeLocalAvailable blah
+	expect ,~!Me,test1!~
+
+defineTest makeLocalAvailable - available,
+	unset Local,test1
+	testMakeLocalAvailable blah
+	expect blah,~!Local,test1!~
 
 
 # Foundations for more intellegent scoping.
