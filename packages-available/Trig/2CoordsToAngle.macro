@@ -1,6 +1,7 @@
 # Take 2 sets of coordinates and derive the angle (radians) from north and the distance to reach the destination. Note that both of these values will be put inside of the destination variable you specify. --2CoordsToAngle=Category,variable,originX,originY,destinationX,destinationY  ~ trig,coord,angle
 parameters ctaCategory,ctaValue,ctaOriginX,ctaOriginY,ctaDestinationX,ctaDestinationY
 
-2CoordsTo1Coord Local,cta,~!Me,ctaOriginX!~,~!Me,ctaOriginY!~,~!Me,ctaDestinationX!~,~!Me,ctaDestinationY!~
+2CoordsTo1Coord Local,cta,~!Local,ctaOriginX!~,~!Local,ctaOriginY!~,~!Local,ctaDestinationX!~,~!Local,ctaDestinationY!~
 
-coordToAngle ~!Me,ctaCategory!~,~!Me,ctaValue!~,~!Local,cta,x!~,~!Local,cta,y!~
+coordToAngle ~!Local,ctaCategory!~,~!Local,ctaValue!~,~!Local,cta,x!~,~!Local,cta,y!~
+makeLocalAvailable ctaValue

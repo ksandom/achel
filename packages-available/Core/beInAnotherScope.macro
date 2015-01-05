@@ -1,13 +1,13 @@
 # Assist with unit scope tests. --beInAnotherScope=varName,expectedValue,[==|!=] ~ hidden
 parameters {"category":"","varName":"","expectedValue":"","comparison":"==","extraParameter":""}
 
-if ~!Me,extraParameter!~,==,,
-	if ~!Me,expectedValue!~,~!Me,comparison!~,~!~!Me,category!~,~!Me,varName!~,~!Me,extraParameter!~!~,
-		passTest Got expected result. Got ~!Me,expectedValue!~ ~!Me,comparison!~ ~!~!Me,category!~,~!Me,varName!~,~!Me,extraParameter!~!~
+if ~!Local,extraParameter!~,==,,
+	if ~!Local,expectedValue!~,~!Local,comparison!~,~!~!Local,category!~,~!Local,varName!~,~!Local,extraParameter!~!~,
+		passTest Got expected result. Got ~!Local,expectedValue!~ ~!Local,comparison!~ ~!~!Local,category!~,~!Local,varName!~,~!Local,extraParameter!~!~
 	else
-		failTest Got unexpected result. Wanted "~!Me,expectedValue!~"  ~!Me,comparison!~ "~!~!Me,category!~,~!Me,varName!~!~"
+		failTest Got unexpected result. Wanted "~!Local,expectedValue!~"  ~!Local,comparison!~ "~!~!Local,category!~,~!Local,varName!~!~"
 else
-	if ~!Me,expectedValue!~,~!Me,comparison!~,~!~!Me,category!~,~!Me,varName!~,~!Me,extraParameter!~!~,
-		passTest Got expected result. Got ~!Me,expectedValue!~ ~!Me,comparison!~ ~!~!Me,category!~,~!Me,varName!~,~!Me,extraParameter!~!~
+	if ~!Local,expectedValue!~,~!Local,comparison!~,~!~!Local,category!~,~!Local,varName!~,~!Local,extraParameter!~!~,
+		passTest Got expected result. Got ~!Local,expectedValue!~ ~!Local,comparison!~ ~!~!Local,category!~,~!Local,varName!~,~!Local,extraParameter!~!~
 	else
-		failTest Got unexpected result. Wanted "~!Me,expectedValue!~"  ~!Me,comparison!~ "~!~!Me,category!~,~!Me,varName!~,~!Me,extraParameter!~!~"
+		failTest Got unexpected result. Wanted "~!Local,expectedValue!~"  ~!Local,comparison!~ "~!~!Local,category!~,~!Local,varName!~,~!Local,extraParameter!~!~"

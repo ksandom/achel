@@ -1,83 +1,84 @@
 # Take an angle (in radians) and a distance and calcuate the x,y co-ordinates from 0,0. --angleAndDistanceToCoord=Category,variable,angle,distance ~ trig,coord
 parameters category,coordVariable,angle,distance
 
-# TODO work out why Me doesn't work in place of Tmp.
-pi Tmp,pi
-piBy Me,0.5Pi,0.5
-piBy Me,1.5Pi,1.5
+pi Local,pi
+piBy Local,0.5Pi,0.5
+piBy Local,1.5Pi,1.5
 piBy Tmp,1.5Pi,1.5
 
-if ~!Me,distance!~,==,0,
-	setNested ~!Me,category!~,~!Me,coordVariable!~,x,0
-	setNested ~!Me,category!~,~!Me,coordVariable!~,y,0
-elseIf ~!Me,distance!~,<,0,
-	setNested ~!Me,category!~,~!Me,coordVariable!~,x,undef
-	setNested ~!Me,category!~,~!Me,coordVariable!~,y,undef
+debug 1,angleAndDistanceToCoord: 1=~!Local,pi!~ 0.5=~!Local,0.5Pi!~ 1.5=~!Local,1.5Pi!~
+
+if ~!Local,distance!~,==,0,
+	setNested ~!Local,category!~,~!Local,coordVariable!~,x,0
+	setNested ~!Local,category!~,~!Local,coordVariable!~,y,0
+elseIf ~!Local,distance!~,<,0,
+	setNested ~!Local,category!~,~!Local,coordVariable!~,x,undef
+	setNested ~!Local,category!~,~!Local,coordVariable!~,y,undef
 else
-	if ~!Me,angle!~,==,0,
+	if ~!Local,angle!~,==,0,
 		# up
-		setNested ~!Me,category!~,~!Me,coordVariable!~,x,0
-		setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Me,distance!~
+		setNested ~!Local,category!~,~!Local,coordVariable!~,x,0
+		setNested ~!Local,category!~,~!Local,coordVariable!~,y,~!Local,distance!~
 		
-	elseIf ~!Me,angle!~,==,~!Me,0.5Pi!~,
+	elseIf ~!Local,angle!~,==,~!Local,0.5Pi!~,
 		# right
-		setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Me,distance!~
-		setNested ~!Me,category!~,~!Me,coordVariable!~,y,0
+		setNested ~!Local,category!~,~!Local,coordVariable!~,x,~!Local,distance!~
+		setNested ~!Local,category!~,~!Local,coordVariable!~,y,0
 		
-	elseIf ~!Me,angle!~,==,~!Tmp,pi!~,
+	elseIf ~!Local,angle!~,==,~!Local,pi!~,
 		# down
-		basicMaths Tmp,flipped,~!Me,distance!~,*,-1
-		setNested ~!Me,category!~,~!Me,coordVariable!~,x,0
-		setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Tmp,flipped!~
+		basicMaths Local,flipped,~!Local,distance!~,*,-1
+		setNested ~!Local,category!~,~!Local,coordVariable!~,x,0
+		setNested ~!Local,category!~,~!Local,coordVariable!~,y,~!Local,flipped!~
 		
-	elseIf ~!Me,angle!~,==,~!Tmp,1.5Pi!~,
+	elseIf ~!Local,angle!~,==,~!Local,1.5Pi!~,
 		# left
-		basicMaths Tmp,flipped,~!Me,distance!~,*,-1
-		setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Tmp,flipped!~
-		setNested ~!Me,category!~,~!Me,coordVariable!~,y,0
+		basicMaths Local,flipped,~!Local,distance!~,*,-1
+		setNested ~!Local,category!~,~!Local,coordVariable!~,x,~!Local,flipped!~
+		setNested ~!Local,category!~,~!Local,coordVariable!~,y,0
 		
 	else
-		if ~!Me,angle!~,<,~!Me,0.5Pi!~,
+		if ~!Local,angle!~,<,~!Local,0.5Pi!~,
 			# top right
 			
-			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Me,angle!~,~!Me,distance!~
-			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Me,angle!~,~!Me,distance!~
+			rightTriangleGetOppositeFromAngle Local,opposite,~!Local,angle!~,~!Local,distance!~
+			rightTriangleGetAdjacentFromAngle Local,adjacent,~!Local,angle!~,~!Local,distance!~
 			
-			setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Tmp,opposite!~
-			setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Tmp,adjacent!~
+			setNested ~!Local,category!~,~!Local,coordVariable!~,x,~!Local,opposite!~
+			setNested ~!Local,category!~,~!Local,coordVariable!~,y,~!Local,adjacent!~
 			
-		elseIf ~!Me,angle!~,<,~!Tmp,pi!~,
+		elseIf ~!Local,angle!~,<,~!Local,pi!~,
 			# bottom right
-			basicMaths Tmp,angle,~!Me,angle!~,-,~!Me,0.5Pi!~
-			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Tmp,angle!~,~!Me,distance!~
-			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Tmp,angle!~,~!Me,distance!~
+			basicMaths Local,angle,~!Local,angle!~,-,~!Local,0.5Pi!~
+			rightTriangleGetOppositeFromAngle Local,opposite,~!Local,angle!~,~!Local,distance!~
+			rightTriangleGetAdjacentFromAngle Local,adjacent,~!Local,angle!~,~!Local,distance!~
 			
-			basicMaths Tmp,opposite,~!Tmp,opposite!~,*,-1
-			setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Tmp,opposite!~
-			setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Tmp,adjacent!~
+			basicMaths Local,opposite,~!Local,opposite!~,*,-1
+			setNested ~!Local,category!~,~!Local,coordVariable!~,y,~!Local,opposite!~
+			setNested ~!Local,category!~,~!Local,coordVariable!~,x,~!Local,adjacent!~
 			
 			
-		elseIf ~!Me,angle!~,<,~!Me,1.5Pi!~,
+		elseIf ~!Local,angle!~,<,~!Local,1.5Pi!~,
 			# bottom left
-			basicMaths Tmp,angle,~!Me,angle!~,-,~!Tmp,pi!~
-			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Tmp,angle!~,~!Me,distance!~
-			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Tmp,angle!~,~!Me,distance!~
+			basicMaths Local,angle,~!Local,angle!~,-,~!Local,pi!~
+			rightTriangleGetOppositeFromAngle Local,opposite,~!Local,angle!~,~!Local,distance!~
+			rightTriangleGetAdjacentFromAngle Local,adjacent,~!Local,angle!~,~!Local,distance!~
 			
-			basicMaths Tmp,opposite,~!Tmp,opposite!~,*,-1
-			basicMaths Tmp,adjacent,~!Tmp,adjacent!~,*,-1
+			basicMaths Local,opposite,~!Local,opposite!~,*,-1
+			basicMaths Local,adjacent,~!Local,adjacent!~,*,-1
 			
-			setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Tmp,opposite!~
-			setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Tmp,adjacent!~
+			setNested ~!Local,category!~,~!Local,coordVariable!~,x,~!Local,opposite!~
+			setNested ~!Local,category!~,~!Local,coordVariable!~,y,~!Local,adjacent!~
 			
 		else
 			# top left
-			basicMaths Tmp,angle,~!Me,angle!~,-,~!Me,1.5Pi!~
-			rightTriangleGetOppositeFromAngle Tmp,opposite,~!Tmp,angle!~,~!Me,distance!~
-			rightTriangleGetAdjacentFromAngle Tmp,adjacent,~!Tmp,angle!~,~!Me,distance!~
+			basicMaths Local,angle,~!Local,angle!~,-,~!Local,1.5Pi!~
+			rightTriangleGetOppositeFromAngle Local,opposite,~!Local,angle!~,~!Local,distance!~
+			rightTriangleGetAdjacentFromAngle Local,adjacent,~!Local,angle!~,~!Local,distance!~
 			
-			basicMaths Tmp,adjacent,~!Tmp,adjacent!~,*,-1
+			basicMaths Local,adjacent,~!Local,adjacent!~,*,-1
 			
-			setNested ~!Me,category!~,~!Me,coordVariable!~,y,~!Tmp,opposite!~
-			setNested ~!Me,category!~,~!Me,coordVariable!~,x,~!Tmp,adjacent!~
+			setNested ~!Local,category!~,~!Local,coordVariable!~,y,~!Local,opposite!~
+			setNested ~!Local,category!~,~!Local,coordVariable!~,x,~!Local,adjacent!~
 			
 

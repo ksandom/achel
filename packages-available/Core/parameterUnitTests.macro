@@ -1,5 +1,8 @@
 # Tests for passing variables to macros. ~ unitTest,parameters,hidden
 
+defineTest send ABC123 using parameters,
+	expectABC123 ABC123
+
 defineTest 1 parameter (plain),
 	set Tmp,feature,
 		parameters variable1

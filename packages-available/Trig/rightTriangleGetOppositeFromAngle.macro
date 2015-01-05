@@ -1,5 +1,6 @@
 # Get the adjacent edge from the angle and the hypotenuse. --rightTriangleGetOppositeFromAngle=Category,variable,angle,hypotenuse ~ trig,rightAngleTriangle
 parameters category,variable,angle,hypotenuse
 
-sin Me,asin,~!Me,angle!~
-basicMaths ~!Me,category!~,~!Me,variable!~,~!Me,asin!~,*,~!Me,hypotenuse!~
+sin Local,asin,~!Local,angle!~
+basicMaths ~!Local,category!~,~!Local,variable!~,~!Local,asin!~,*,~!Local,hypotenuse!~
+makeLocalAvailable ~!Local,variable!~

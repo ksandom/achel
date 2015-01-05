@@ -3,8 +3,8 @@
 # #onDefine aliasFeature getHypotenuse,coordToDistance
 parameters category,variable,oposite,adjacent
 
-basicMaths Isolated,aSquared,~!Me,oposite!~,^,2
-basicMaths Isolated,bSquared,~!Me,adjacent!~,^,2
+basicMaths Isolated,aSquared,~!Local,oposite!~,^,2
+basicMaths Isolated,bSquared,~!Local,adjacent!~,^,2
 basicMaths Isolated,cSquared,~!Isolated,aSquared!~,+,~!Isolated,bSquared!~
 
-basicMaths ~!Me,category!~,~!Me,variable!~,~!Isolated,cSquared!~,sr,
+basicMaths ~!Local,category!~,~!Local,variable!~,~!Isolated,cSquared!~,sr,

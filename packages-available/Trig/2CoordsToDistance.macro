@@ -1,6 +1,7 @@
 # Calculate the distance between two co-ordinates. The returned distance is in the same unit as the co-ordinates. --2CoordsToDistance=Category,variable,originX,originY,destinationX,destinationY  ~ trig,coord,distance
 parameters 2coordsCategory,2coordsVariable,originX,originY,destinationX,destinationY
 
-2CoordsTo1Coord Local,ctd,~!Me,originX!~,~!Me,originY!~,~!Me,destinationX!~,~!Me,destinationY!~
+2CoordsTo1Coord Local,ctd,~!Local,originX!~,~!Local,originY!~,~!Local,destinationX!~,~!Local,destinationY!~
 
-getHypotenuse ~!Me,2coordsCategory!~,~!Me,2coordsVariable!~,~!Local,ctd,x!~,~!Local,ctd,y!~
+getHypotenuse ~!Local,2coordsCategory!~,~!Local,2coordsVariable!~,~!Local,ctd,x!~,~!Local,ctd,y!~
+makeLocalAvailable ~!Local,2coordsVariable!~

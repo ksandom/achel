@@ -397,17 +397,16 @@ class core extends Module
 			}
 			
 			$nesting=$this->get('Core', 'nesting');
-			if ($this->isVerboseEnough(4))
+			if ($this->isVerboseEnough(5))
 			{
 				$arrayString=($numberOfEntries==1)?json_encode($value):'NA';
-				$this->debug(4, "setResultSet(value=$valueText($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET json=$arrayString");
+				$this->debug(5, "setResultSet(value=$valueText($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET json=$arrayString");
 				if ($this->isVerboseEnough(6)) 
 				{
 					print_r($value);
 					$this->debug(6, "setResultSet(value=$value($numberOfEntries), src=$src)/$nesting - exiting from var dump.");
 				}
 				$serial=$this->get('Core', 'serial');
-				$this->debugResultSet("setResultSet $src/$serial");
 			}
 			#$this->setNestedViaPath(array('Core', 'resultSet', $nesting), $value);
 			$this->set('Core', 'shared'.$nesting, $value);
@@ -538,10 +537,12 @@ class core extends Module
 	
 	function parameters($args)
 	{
-		// localScopeVarName
-		$categoryForParameters=nestedPrivateVarsName;  //$categoryForParameters;
+		// localScopeVarName vs nestedPrivateVarsName
+		$categoryForParameters=localScopeVarName;
 		$categoryForFeedBack=isolatedNestedPrivateVarsName;
 		$categoryForKnowledge=isolatedNestedPrivateVarsName;
+		if ($categoryForParameters=='Local') $scopeKey=$this->getScopeForCategory($categoryForParameters);
+		else $scopeKey=$this->getScopeForCategory($categoryForParameters, 1);
 		
 		$nesting=$this->get('Core', 'nesting');
 		if (isset($this->store[$categoryForKnowledge][$nesting-1]['featureName']))
@@ -556,8 +557,8 @@ class core extends Module
 		}
 		
 		$argsToUse=(is_array($args))?$args:array($args);
-		if (!isset($this->store[$categoryForParameters][$nesting])) $this->store[$categoryForParameters][$nesting]=array();
-		if (!is_array($this->store[$categoryForParameters][$nesting])) $this->store[$categoryForParameters][$nesting]=array();
+		if (!isset($this->store[$categoryForParameters][$scopeKey])) $this->store[$categoryForParameters][$scopeKey]=array();
+		if (!is_array($this->store[$categoryForParameters][$scopeKey])) $this->store[$categoryForParameters][$scopeKey]=array();
 		
 		if (!isset($this->store[$categoryForFeedBack][$nesting])) $this->store[$categoryForFeedBack][$nesting-1]=array();
 		if (!is_array($this->store[$categoryForFeedBack][$nesting])) $this->store[$categoryForFeedBack][$nesting-1]=array();
@@ -580,12 +581,12 @@ class core extends Module
 				}
 				
 				$variableResult=$this->processVariableDefinition($details, $value, $args[$details]);
-				$this->store[$categoryForParameters][$nesting-1][$key]=$variableResult['value'];
+				$this->store[$categoryForParameters][$scopeKey][$key]=$variableResult['value'];
 				if (!$variableResult['pass']) $this->store[$categoryForFeedBack][$nesting]['pass']=achelFalse;
 				
 				if ($variableResult['pass'])
 				{
-					$this->core->debug(4, "parameters: Parameter \"$key\" set to \"{$variableResult['value']}\"");
+					$this->core->debug(3, "parameters: Parameter \"$key\" set to \"{$variableResult['value']}\"");
 				}
 				else
 				{
@@ -598,17 +599,18 @@ class core extends Module
 				{ // Basic position->name assignment
 					$key=$args[$details];
 					$value=$this->core->get('Global',"$lastMacro-$details");
-					$default=false;
-					$this->debug(4,"parameters: Simple numeric. key=$key value=$value");
+					# TODO This was false. Double check this change hasn't broken any assumptions.
+					$default=$value;
+					$this->debug(3,"parameters: Simple numeric. [$categoryForParameters][$scopeKey][$key] value=$value nesting=$nesting");
 				}
 				else
 				{ // Basic name assignment
 					$key=$details;
 					$value=$this->core->get('Global',"$lastMacro-$position");
 					$default=$args[$details];
-					$this->debug(4,"parameters: Simple name. key=$key value=$value default=$default");
+					$this->debug(3,"parameters: Simple name. [$categoryForParameters][$scopeKey][$key] value=$value nesting=$nesting default=$default");
 				}
-				$this->store[$categoryForParameters][$nesting-1][$key]=($value)?$value:$default;
+				$this->store[$categoryForParameters][$scopeKey][$key]=($value)?$value:$default;
 			}
 			
 			/*
@@ -934,10 +936,13 @@ class core extends Module
 			$default=$this->get('Codes', 'default', false);
 			$eol=$this->get('General', 'EOL', false); # TODO This can be improved
 			
+			$scopeName=$this->get('General', 'scopeName');
+			$output="$scopeName: ".$output;
+			
 			if ($output!=$this->lastMessage['value'])
 			{
 				if ($this->lastMessage['count']>0) echo "$eol";
-				echo "[$code$title$default]: $output$eol";
+				echo "[$code$title$default] $output$eol";
 				$this->lastMessage['value']=$output;
 				$this->lastMessage['count']=0;
 			}
@@ -1034,10 +1039,12 @@ class core extends Module
 				{
 					if ($this->store['Features'][$macroName]['source']!='nesting')
 					{
+						$oldOldScope=$this->get('General', 'previousScopeName');
 						$oldScope=$this->get('General', 'scopeName');
 						$scopeName="$macroName-$nesting";
 						$this->set('General', 'scopeName', $scopeName);
 						$this->set('General', 'previousScopeName', $oldScope);
+						$this->debug(2, "go: Scope enter $oldScope -> $scopeName,  $oldOldScope -> $oldScope");
 					}
 				}
 				if (!isset($oldScope))
@@ -1072,6 +1079,8 @@ class core extends Module
 					# TODO finish this
 					$this->doUnset(array(localScopeVarName, $scopeName));
 					$this->set('General', 'scopeName', $oldScope);
+					$this->set('General', 'previousScopeName', $oldOldScope);
+					$this->debug(2, "go: Scope exit $scopeName -> $oldScope,  $oldScope -> $oldOldScope");
 				}
 				
 				# If this is the default macro, we need to run the cleanup stuff
@@ -1445,7 +1454,6 @@ class core extends Module
 		$newPosition=$position+1;
 		if (count($deleteList)>$newPosition)
 		{ // Recurse into the currentScope
-			$this->debug(4, "doUnsetNested: Recuring for {$deleteList[$position]} in $fullChain");
 			return $this->doUnsetNested($currentScope[$deleteList[$position]], $deleteList, $newPosition);
 		}
 		else

@@ -1,5 +1,6 @@
 # Get the adjacent edge from the angle and the opposite. --rightTriangleGetAdjacentFromAngleAndOpposite=Category,variable,angle,opposite ~ trig,rightAngleTriangle
 parameters category,variable,angle,opposite
 
-tan Me,atan,~!Me,angle!~
-basicMaths ~!Me,category!~,~!Me,variable!~,~!Me,opposite!~,/,~!Me,atan!~
+tan Local,atan,~!Local,angle!~
+basicMaths ~!Local,category!~,~!Local,variable!~,~!Local,opposite!~,/,~!Local,atan!~
+makeLocalAvailable ~!Local,variable!~

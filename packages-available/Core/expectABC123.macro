@@ -1,0 +1,6 @@
+# Expect ABC123 to be passed. This is for testing if parameters are being passed correctly. --expectABC123=ABC123 ~ hidden,core
+parameters input
+
+if ~!Local,input!~,!=,ABC123,
+	debug 3,expectABC123: Local=~!Local,input!~ Me=~!Me,input!~ Legacy=~!Global,expectABC123!~ Legacy-0=~!Gloabl,expectABC123-0!~ Legacy-1=~!Gloabl,expectABC123-1!~ scopeName=~!General,scopeName!~
+expect ABC123,~!Local,input!~

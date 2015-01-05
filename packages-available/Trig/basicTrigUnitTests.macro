@@ -242,18 +242,22 @@ defineTest Pi,
 unset Tmp,trig
 
 defineTest PiBy,
-	# debug 0,### PiBy begin
-	# verbosity 5
 	piBy Tmp,2Pi,2
 	round Tmp,trigRounded,~!Tmp,2Pi!~,2
-	# debug 0,### PiBy 2=~!Tmp,2Pi!~ rounded=~!Tmp,trigRounded!~ after
-	# verbosity 0
-	if ~!Tmp,trigRounded!~,==,6.28,
-		passTest got expected value.
-	else
-		failTest got ~!Tmp,trigRounded!~.
+	expect 6.28,~!Tmp,trigRounded!~
 	unset Tmp,2Pi
 
+defineTest PiBy - Local,
+	piBy Local,2Pi,2
+	round Local,trigRounded,~!Tmp,2Pi!~,2
+	expect 6.28,~!Local,trigRounded!~
+
+defineTest PiBy - Pure Local scoping,
+	piBy Local,2Pi,2
+	if ~!Local,2Pi!~,!=,,
+		passTest Got a value.
+	else
+		failTest Did not get a value.
 
 
 defineTest Right angle triangle - opposite angle,
@@ -282,6 +286,7 @@ defineTest getHypotenuse 3.4 6.8,
 
 pi Tmp,pi
 basicMaths Tmp,0.25Pi,~!Tmp,pi!~,*,0.25
+
 
 defineTest angle and distance to co-ordinates 180,
 	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,pi!~,5
