@@ -3,3 +3,4 @@ parameters category,variable,angle,hypotenuse
 
 cos Local,acos,~!Local,angle!~
 basicMaths ~!Local,category!~,~!Local,variable!~,~!Local,acos!~,*,~!Local,hypotenuse!~
+makeLocalAvailable ~!Local,variable!~

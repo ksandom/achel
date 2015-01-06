@@ -1,0 +1,5 @@
+# Write a Local variable from out of scope. For use with scope unit testing. ~ hidden
+parameters Category,value
+
+set ~!Local,Category!~,testVariable,~!Local,value!~
+makeLocalAvailable testVariable

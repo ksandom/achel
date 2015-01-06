@@ -117,6 +117,12 @@ defineTest makeLocalAvailable - available,
 	testMakeLocalAvailable blah
 	expect blah,~!Local,test1!~
 
+defineTest makeLocalAvailable - interference,
+	writeLocalFromOutOfScope Local,4
+	writeLocalFromOutOfScope Tmp,5
+	expect 4,~!Local,testVariable!~
+	
+	unset Tmp,testVariable
 
 # Foundations for more intellegent scoping.
 defineTest scopeName - set,

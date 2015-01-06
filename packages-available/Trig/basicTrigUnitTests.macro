@@ -241,7 +241,19 @@ defineTest Pi,
 		failTest got ~!Tmp,trig!~.
 unset Tmp,trig
 
-defineTest PiBy,
+defineTest PiBy 1,
+	piBy Tmp,2Pi,1
+	round Tmp,trigRounded,~!Tmp,2Pi!~,2
+	expect 3.14,~!Tmp,trigRounded!~
+	unset Tmp,2Pi
+
+defineTest PiBy 1.5,
+	piBy Tmp,2Pi,1.5
+	round Tmp,trigRounded,~!Tmp,2Pi!~,2
+	expect 4.71,~!Tmp,trigRounded!~
+	unset Tmp,2Pi
+
+defineTest PiBy 2,
 	piBy Tmp,2Pi,2
 	round Tmp,trigRounded,~!Tmp,2Pi!~,2
 	expect 6.28,~!Tmp,trigRounded!~
@@ -249,7 +261,7 @@ defineTest PiBy,
 
 defineTest PiBy - Local,
 	piBy Local,2Pi,2
-	round Local,trigRounded,~!Tmp,2Pi!~,2
+	round Local,trigRounded,~!Local,2Pi!~,2
 	expect 6.28,~!Local,trigRounded!~
 
 defineTest PiBy - Pure Local scoping,
@@ -258,6 +270,8 @@ defineTest PiBy - Pure Local scoping,
 		passTest Got a value.
 	else
 		failTest Did not get a value.
+
+
 
 
 defineTest Right angle triangle - opposite angle,
@@ -284,19 +298,26 @@ defineTest getHypotenuse 3.4 6.8,
 
 
 
-pi Tmp,pi
-basicMaths Tmp,0.25Pi,~!Tmp,pi!~,*,0.25
 
+defineTest angle and distance to co-ordinates 0,
+	pi Local,pi
+	angleAndDistanceToCoord Tmp,aadtc,0,5
+	
+	expect 0 5,~!Tmp,aadtc,x!~ ~!Tmp,aadtc,y!~
+	
+	unset Tmp,aadtc
 
 defineTest angle and distance to co-ordinates 180,
-	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,pi!~,5
+	pi Local,pi
+	angleAndDistanceToCoord Tmp,aadtc,~!Local,pi!~,5
 	
 	expect 0 -5,~!Tmp,aadtc,x!~ ~!Tmp,aadtc,y!~
 	
 	unset Tmp,aadtc
 
 defineTest angle and distance to co-ordinates 45,
-	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,0.25Pi!~,5
+	piBy Local,0.25Pi,0.25
+	angleAndDistanceToCoord Tmp,aadtc,~!Local,0.25Pi!~,5
 	
 	round Tmp,x,~!Tmp,aadtc,x!~,2
 	round Tmp,y,~!Tmp,aadtc,y!~,2
@@ -334,6 +355,7 @@ defineTest angle and distance to co-ordinates 123.69,
 	unset Tmp,aadtc
 
 defineTest angle and distance to co-ordinates 213.69,
+	debug 1,angle and distance to co-ordinates 213.69: here!
 	degreesToRadians Tmp,degrees,213.69
 	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,degrees!~,3.61
 	
@@ -347,6 +369,7 @@ defineTest angle and distance to co-ordinates 213.69,
 	unset Tmp,aadtc
 
 defineTest angle and distance to co-ordinates 303.69,
+	debug 1,angle and distance to co-ordinates 303.69: here!
 	degreesToRadians Tmp,degrees,303.69
 	angleAndDistanceToCoord Tmp,aadtc,~!Tmp,degrees!~,3.61
 	
