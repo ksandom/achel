@@ -117,10 +117,23 @@ defineTest makeLocalAvailable - available,
 	testMakeLocalAvailable blah
 	expect blah,~!Local,test1!~
 
+defineTest makeLocalAvailable - interference - integrity check 1,
+	writeLocalFromOutOfScope Local,testVariable,2
+	expect 3.14,~!Local,testVariable!~
+	
+	unset Tmp,testVariable
+
+defineTest makeLocalAvailable - interference - integrity check 2,
+	writeLocalFromOutOfScope Tmp,testVariable,3
+	writeLocalFromOutOfScope Local,testVariable,2
+	expect 3.14,~!Local,testVariable!~
+	
+	unset Tmp,testVariable
+
 defineTest makeLocalAvailable - interference,
-	writeLocalFromOutOfScope Local,4
-	writeLocalFromOutOfScope Tmp,5
-	expect 4,~!Local,testVariable!~
+	writeLocalFromOutOfScope Local,testVariable,2
+	writeLocalFromOutOfScope Tmp,testVariable,3
+	expect 3.14,~!Local,testVariable!~
 	
 	unset Tmp,testVariable
 
@@ -268,4 +281,42 @@ defineTest Normal setNested overwrite bug,
 	setNested Normal,test1,bb1,aa1
 	setNested Normal,test1,bb2,aa2
 	expect aa1-aa2,~!Normal,test1,bb1!~-~!Normal,test1,bb2!~
+
+
+defineTest Normal unset - integrity check,
+	set Tmp,unsetTest,aa1
+	
+	expect aa1,~!Tmp,unsetTest!~
+	unset Tmp,unsetTest
+
+defineTest Normal unset,
+	set Tmp,unsetTest,aa1
+	unset Tmp,unsetTest
+	
+	expect ,~!Tmp,unsetTest!~
+
+defineTest Isolated unset,
+	set Isolated,unsetTest,aa1
+	unset Isolated,unsetTest
+	
+	expect ,~!Isolated,unsetTest!~
+
+defineTest Me unset,
+	set Me,unsetTest,aa1
+	unset Me,unsetTest
+	
+	expect ,~!Me,unsetTest!~
+
+defineTest Local unset - integrity check,
+	set Local,unsetTest,aa1
+	
+	expect aa1,~!Local,unsetTest!~
+	unset Local,unsetTest
+
+defineTest Local unset,
+	set Local,unsetTest,aa1
+	unset Local,unsetTest
+	
+	expect ,~!Local,unsetTest!~
+
 

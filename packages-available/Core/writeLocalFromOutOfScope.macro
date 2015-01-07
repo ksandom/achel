@@ -1,5 +1,6 @@
 # Write a Local variable from out of scope. For use with scope unit testing. ~ hidden
-parameters Category,value
+parameters Category,variable,multiplier
 
-set ~!Local,Category!~,testVariable,~!Local,value!~
-makeLocalAvailable testVariable
+pi ~!Local,Category!~,~!Local,variable!~
+round ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,~!Local,multiplier!~
+makeLocalAvailable ~!Local,variable!~
