@@ -1,0 +1,4 @@
+# Component of unit test "is Local clean?". Saves a local variable, makes it available, then exits. ~ hidden
+
+set Local,cleanTest,abc
+makeLocalAvailable cleanTest

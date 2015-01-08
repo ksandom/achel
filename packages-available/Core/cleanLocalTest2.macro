@@ -1,0 +1,3 @@
+# Component of unit test "is Local clean?". Tests to see if it has a clean local variable. ~ hidden
+
+expect ,~!Local,cleanTest!~

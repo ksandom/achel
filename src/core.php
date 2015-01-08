@@ -1141,6 +1141,7 @@ class core extends Module
 			# TODO Can I use the key to refactor?
 			if ($key=$this->getScopeForCategory($category, $nestingOffset))
 			{
+				$this->core->debug(1, "get: ($category, $valueName) key=$key nestingOffset=$nestingOffset");
 				if ($category==nestedPrivateVarsName)
 				{
 					# TODO Is this really still needed?
@@ -1350,12 +1351,17 @@ class core extends Module
 	
 	function makeLocalAvailable($variableName)
 	{
+		# TODO It's picking up the wrong value somewhere here... Maybe Local isn't been cleaned up when going out of scope?
+		# TODO test re-used scope.
+		$this->core->debug(1, "makeLocalAvailable($variableName): before problem");
 		$value=$this->get(localScopeVarName, $variableName);
+		$this->core->debug(1, "makeLocalAvailable($variableName): after problem. value=$value");
 		if ($value!=null)
 		{
-			$this->set(localScopeVarName, $variableName, $value, true);
 			$key=$this->getScopeForCategory(localScopeVarName);
 			$this->doUnSet(array(localScopeVarName, $key, $variableName));
+			$this->set(localScopeVarName, $variableName, $value, true);
+			$this->core->debug(1,"makeLocalAvailable: name=$variableName key/scope=$key value=$value");
 		}
 	}
 	
