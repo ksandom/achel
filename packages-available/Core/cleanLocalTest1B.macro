@@ -1,5 +1,5 @@
 # Component of unit test "is Local clean?". Saves a local variable, makes it available, then exits. ~ hidden
 parameters Category,variable
 
-writeHardCodedPi
+writeHardCodedPi ~!Local,Category!~,~!Local,variable!~
 makeLocalAvailable cleanTest

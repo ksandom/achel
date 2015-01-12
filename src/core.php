@@ -1044,7 +1044,7 @@ class core extends Module
 						$scopeName="$macroName-$nesting";
 						$this->set('General', 'scopeName', $scopeName);
 						$this->set('General', 'previousScopeName', $oldScope);
-						$this->debug(2, "go: Scope enter $oldScope -> $scopeName,  $oldOldScope -> $oldScope");
+						$this->debug(3, "go: Scope enter $oldScope -> $scopeName,  $oldOldScope -> $oldScope");
 					}
 				}
 				if (!isset($oldScope))
@@ -1075,14 +1075,12 @@ class core extends Module
 				
 				if ($oldScope)
 				{
-					# TODO write the set part.
-					# TODO finish this
-					#$this->doUnset(array(localScopeVarName, $scopeName));
 					# TODO a more long term soltion needs to be found to this. The correct way breaks because it is double handeling the special scope case.
+					#$this->doUnset(array(localScopeVarName, $scopeName));
 					unset ($this->store[localScopeVarName][$scopeName]);
 					$this->set('General', 'scopeName', $oldScope);
 					$this->set('General', 'previousScopeName', $oldOldScope);
-					$this->debug(1, "go: Scope exit $scopeName -> $oldScope,  $oldScope -> $oldOldScope");
+					$this->debug(4, "go: Scope exit $scopeName -> $oldScope,  $oldScope -> $oldOldScope");
 				}
 				
 				# If this is the default macro, we need to run the cleanup stuff
@@ -1353,17 +1351,13 @@ class core extends Module
 	
 	function makeLocalAvailable($variableName)
 	{
-		# TODO It's picking up the wrong value somewhere here... Maybe Local isn't been cleaned up when going out of scope?
-		# TODO test re-used scope.
-		$this->core->debug(1, "makeLocalAvailable($variableName): before problem");
 		$value=$this->get(localScopeVarName, $variableName);
-		$this->core->debug(1, "makeLocalAvailable($variableName): after problem. value=$value");
 		if ($value!=null)
 		{
 			$key=$this->getScopeForCategory(localScopeVarName);
 			$this->doUnSet(array(localScopeVarName, $key, $variableName));
 			$this->set(localScopeVarName, $variableName, $value, true);
-			$this->core->debug(1,"makeLocalAvailable: name=$variableName key/scope=$key value=$value");
+			$this->core->debug(4,"makeLocalAvailable: name=$variableName key/scope=$key value=$value");
 		}
 	}
 	

@@ -131,28 +131,23 @@ defineTest makeLocalAvailable - interference - integrity check 2,
 	unset Tmp,testVariable
 
 defineTest makeLocalAvailable - interference,
-	verbosity 1
-	debug 1,Begin
 	writeLocalFromOutOfScope Local,testVariable,2
 	writeLocalFromOutOfScope Tmp,testVariable,3
 	expect 3.14,~!Local,testVariable!~
 	
 	unset Tmp,testVariable
-	debug 1,End
-	verbosity 0
 
 defineTest is Local clean?,
-	cleanLocalTest1
-	cleanLocalTest2
+	cleanLocalTest1 Local,testVariable
+	cleanLocalTest2 Local,testVariable
 
 defineTest is Local clean with makeLocalAvailable?,
-	cleanLocalTest1B
-	cleanLocalTest2
+	cleanLocalTest1B Local,testVariable
+	cleanLocalTest2 Local,testVariable
 
 defineTest is a nested Local clean with makeLocalAvailable?,
-	wrapCleanLocalTest1B
-	wrapCleanLocalTest2
-
+	wrapCleanLocalTest1B Local,testVariable
+	wrapCleanLocalTest2 Local,testVariable
 
 
 

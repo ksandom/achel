@@ -1,4 +1,5 @@
 # Component of unit test "is Local clean?". Saves a local variable, makes it available, then exits. ~ hidden
+parameters category,variable
 
-cleanLocalTest1B
+cleanLocalTest1B ~!Local,category!~,~!Local,variable!~
 makeLocalAvailable cleanTest
