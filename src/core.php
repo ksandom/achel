@@ -1357,7 +1357,7 @@ class core extends Module
 			$key=$this->getScopeForCategory(localScopeVarName);
 			$this->doUnSet(array(localScopeVarName, $key, $variableName));
 			$this->set(localScopeVarName, $variableName, $value, true);
-			$this->core->debug(4,"makeLocalAvailable: name=$variableName key/scope=$key value=$value");
+			$this->core->debug(4,"makeLocalAvailable: name=$variableName key/scope=$key");
 		}
 	}
 	
