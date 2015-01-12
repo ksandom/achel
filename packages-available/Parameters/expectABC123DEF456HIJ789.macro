@@ -1,0 +1,4 @@
+# Expect ABC123 and DEF456 and HIJ789 to be passed. This is for testing if parameters are being passed correctly. --expectABC123=ABC123 ~ hidden,core
+parameters input1,input2,input3
+
+expect ABC123--DEF456--HIJ789,~!Local,input1!~--~!Local,input2!~--~!Local,input3!~
