@@ -1,9 +1,9 @@
 # Send a hard-coded Pi to a variable. This is for testing scope and not intended for normal use. Use --pi instead. ~ hidden,scope
 
-parameters category,piVariable
+parameters category,variable
 
-debug 1,set ~!Local,category!~,~!Local,piVariable!~,3.1415926535898
-set ~!Local,category!~,~!Local,piVariable!~,3.1415926535898
+debug 1,set ~!Local,category!~,~!Local,variable!~,3.1415926535898
+set ~!Local,category!~,~!Local,variable!~,3.1415926535898
 
-debug 1,makeLocalAvailable ~!Local,piVariable!~
-makeLocalAvailable ~!Local,piVariable!~
+debug 1,makeLocalAvailable ~!Local,variable!~
+makeLocalAvailable ~!Local,variable!~

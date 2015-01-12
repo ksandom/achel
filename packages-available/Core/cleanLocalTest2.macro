@@ -1,3 +1,4 @@
 # Component of unit test "is Local clean?". Tests to see if it has a clean local variable. ~ hidden
+parameters Category,variable
 
 expect ,~!Local,cleanTest!~

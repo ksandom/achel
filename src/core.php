@@ -1077,10 +1077,12 @@ class core extends Module
 				{
 					# TODO write the set part.
 					# TODO finish this
-					$this->doUnset(array(localScopeVarName, $scopeName));
+					#$this->doUnset(array(localScopeVarName, $scopeName));
+					# TODO a more long term soltion needs to be found to this. The correct way breaks because it is double handeling the special scope case.
+					unset ($this->store[localScopeVarName][$scopeName]);
 					$this->set('General', 'scopeName', $oldScope);
 					$this->set('General', 'previousScopeName', $oldOldScope);
-					$this->debug(2, "go: Scope exit $scopeName -> $oldScope,  $oldScope -> $oldOldScope");
+					$this->debug(1, "go: Scope exit $scopeName -> $oldScope,  $oldScope -> $oldOldScope");
 				}
 				
 				# If this is the default macro, we need to run the cleanup stuff
@@ -1141,7 +1143,7 @@ class core extends Module
 			# TODO Can I use the key to refactor?
 			if ($key=$this->getScopeForCategory($category, $nestingOffset))
 			{
-				$this->core->debug(1, "get: ($category, $valueName) key=$key nestingOffset=$nestingOffset");
+				$this->core->debug(2, "get: ($category, $valueName) key=$key nestingOffset=$nestingOffset");
 				if ($category==nestedPrivateVarsName)
 				{
 					# TODO Is this really still needed?

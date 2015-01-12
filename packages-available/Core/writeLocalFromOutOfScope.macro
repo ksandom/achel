@@ -1,14 +1,19 @@
 # Write a Local variable from out of scope. For use with scope unit testing. ~ hidden
 parameters Category,variable,multiplier
 
-debug 1,writeHardCodedPi ~!Local,Category!~,~!Local,variable!~
+debug 1,A writeHardCodedPi ~!Local,Category!~,~!Local,variable!~ ~!Local,Category!~,~!Local,variable!~=~!~!Local,Category!~,~!Local,variable!~!~ Local,~!Local,variable!~=~!Local,~!Local,variable!~!~
+
 writeHardCodedPi ~!Local,Category!~,~!Local,variable!~
 
-debug 1,round ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,~!Local,multiplier!~
-round ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,~!Local,multiplier!~
-debug 1,result=~!~!Local,Category!~,~!Local,variable!~!~
+debug 1,B round ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,~!Local,multiplier!~ ~!Local,Category!~,~!Local,variable!~=~!~!Local,Category!~,~!Local,variable!~!~ Local,~!Local,variable!~=~!Local,~!Local,variable!~!~
 
-debug 1,makeLocalAvailable ~!Local,variable!~
+round ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,~!Local,multiplier!~
+
+debug 1,C result=~!~!Local,Category!~,~!Local,variable!~!~ ~!Local,Category!~,~!Local,variable!~=~!~!Local,Category!~,~!Local,variable!~!~ Local,~!Local,variable!~=~!Local,~!Local,variable!~!~
+
+debug 1,D makeLocalAvailable ~!Local,variable!~ ~!Local,Category!~,~!Local,variable!~=~!~!Local,Category!~,~!Local,variable!~!~ Local,~!Local,variable!~=~!Local,~!Local,variable!~!~
+
 makeLocalAvailable ~!Local,variable!~
-debug 1,after available=~!~!Local,Category!~,~!Local,variable!~!~ localScope=~!General,scopeName!~ previousScope=~!General,previousScopeName!~
+
+debug 1,E after available=~!~!Local,Category!~,~!Local,variable!~!~ localScope=~!General,scopeName!~ previousScope=~!General,previousScopeName!~
 

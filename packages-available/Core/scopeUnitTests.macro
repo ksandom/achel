@@ -153,6 +153,9 @@ defineTest is a nested Local clean with makeLocalAvailable?,
 	wrapCleanLocalTest1B
 	wrapCleanLocalTest2
 
+
+
+
 # Foundations for more intellegent scoping.
 defineTest scopeName - set,
 	if ~!General,scopeName!~,!=,,
