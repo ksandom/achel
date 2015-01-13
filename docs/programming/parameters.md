@@ -28,7 +28,7 @@ It was nice and simple when your macro is small and simple. However it quickly b
 There are now three ways of doing this.
 
 * The simple way `parameters name,thing`. This is the really really simple and easy to read way of doing it, but doesn't give any flexibility for validation.
-* Flat JSON `parameters {"name":"noName","thing":"brick"}`. This is still pretty simple, but allows you to specify default values.
+* Flat JSON `parameters {"name":"noName","thing":"brick"}`. This is still pretty simple, and allows you to specify default values.
 * **Nested JSON** `parameters {"name":{"default":"noName","minLengthAllowed":"3","maxLength":"40"},"thing":{"default":"brick","maxLength":"40"}}`. This method allows you validate data and take action based on the result. It can also automatically fix a few things like if the string is 45 characters, but you specified maxLength to be 40, it will truncate off the remainder.
 
 ### The simple way
@@ -40,7 +40,7 @@ example.macro
     This is an example. --example=name,thing,quantity where name is your name, thing is something you see and quanitity is how many you see. ~ example
     parameters name,thing,quantity
     
-    debug 1,Hello ~!Me,name!~. What does the ~!Me,thing!~ look like? You have selected to have ~!Me,quantity!~ of them.
+    debug 1,Hello ~!Local,name!~. What does the ~!Local,thing!~ look like? You have selected to have ~!Local,quantity!~ of them.
 
 So calling it would look like this
 
@@ -61,7 +61,7 @@ example.macro
     # This is an example. --example=name,thing,quantity where name is your name, thing is something you see and quanitity is how many you see. ~ example
     parameters {"name":"noName","thing":"brick","quantity":"0"}
     
-    debug 1,Hello ~!Me,name!~. What does the ~!Me,thing!~ look like? You have selected to have ~!Me,quantity!~ of them.
+    debug 1,Hello ~!Local,name!~. What does the ~!Local,thing!~ look like? You have selected to have ~!Local,quantity!~ of them.
 
 So calling it would look like this
 
@@ -83,7 +83,7 @@ example.macro
     parameters {"name":{"required":1},"thing":"brick","quantity":{"type":"number","min":"0","max":"10","default":"1"}}
     
     if ~!Isolated,passed!~,==,true,
-    	debug 1,Hello ~!Me,name!~. What does the ~!Me,thing!~ look like? You have selected to have ~!Me,quantity!~ of them.
+    	debug 1,Hello ~!Local,name!~. What does the ~!Local,thing!~ look like? You have selected to have ~!Local,quantity!~ of them.
     else
     	debug 1,Missing parameters :(
 
@@ -106,7 +106,7 @@ This is where the future and power lies. So let's understand it a little better.
 
 ### Basics
 
-Generally you'll have a parameters line that looks like this
+Generally you'll have a `parameters` line that looks like this
 
     parameters {"name":{"default":"blah"}}
 
@@ -160,12 +160,12 @@ If you define `name` via one of these methods
 
     parameters {"name":{"default":"blah"}}
 
-You can access it in the form `~!Me,parameterName!~`. Eg
+You can access it in the form `~!Local,parameterName!~`. Eg
 
-    debug 1,You name is ~!Me,name!~.
+    debug 1,You name is ~!Local,name!~.
 
 
-Notice how the `Me` category is used. This is so that it will get inherited as your program moves up and down the stack. You can reference it from any point within your macro.
+Notice how the `Local` category is used. This is so that it will only be visible within the current scope. At the moment this equates to the current macro. See [scope.md](scope.md) for more information.
 
 #### Whether the parameter tests passed
 
