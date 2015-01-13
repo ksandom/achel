@@ -14,14 +14,14 @@ defineTest 3 parameters (plain),
 defineTest 2 parameters (json) - no default - filled in,
 	set Tmp,feature,
 		parameters ["variable1","variable2"]
-		expect abc123--def456,~!Me,variable1!~--~!Me,variable2!~
+		expect abc123--def456,~!Local,variable1!~--~!Local,variable2!~
 	
 	callFeature ~!Tmp,feature!~,abc123,def456
 
 defineTest 2 parameters (json) - no default - missing value,
 	set Tmp,feature,
 		parameters ["variable1","variable2"]
-		expect --def456,~!Me,variable1!~--~!Me,variable2!~
+		expect --def456,~!Local,variable1!~--~!Local,variable2!~
 	
 	callFeature ~!Tmp,feature!~,,def456
 
@@ -30,14 +30,14 @@ defineTest 2 parameters (json) - no default - missing value,
 defineTest 2 parameters (json) - with defaults - filled in,
 	set Tmp,feature,
 		parameters {"variable1":"value1","variable2":"value2"}
-		expect abc123--def456,~!Me,variable1!~--~!Me,variable2!~
+		expect abc123--def456,~!Local,variable1!~--~!Local,variable2!~
 	
 	callFeature ~!Tmp,feature!~,abc123,def456
 
 defineTest 2 parameters (json) - with defaults - missing value,
 	set Tmp,feature,
 		parameters {"variable1":"value1","variable2":"value2"}
-		expect value1--def456,~!Me,variable1!~--~!Me,variable2!~
+		expect value1--def456,~!Local,variable1!~--~!Local,variable2!~
 	
 	callFeature ~!Tmp,feature!~,,def456
 
@@ -46,7 +46,7 @@ defineTest 2 parameters (json) - with defaults - missing value,
 defineTest 1 parameter (nested json) - string 6!>3,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"string","maxLength":"3"}}
-		expect def,~!Me,variable1!~
+		expect def,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,def456
 
@@ -67,14 +67,14 @@ defineTest 1 parameter (nested json) - string pass 3!>3 allowed,
 defineTest 1 parameter (nested json) - string fail 3!<6,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"string","minLength":"6"}}
-		expect def   ,~!Me,variable1!~
+		expect def   ,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,def
 
 defineTest 1 parameter (nested json) - string pass 3!<6,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"string","minLength":"6"}}
-		expect defasd,~!Me,variable1!~
+		expect defasd,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,defasd
 
@@ -95,7 +95,7 @@ defineTest 1 parameter (nested json) - string pass 3!<6 allowed,
 defineTest 1 parameter (nested json) - string (default),
 	set Tmp,feature,
 		parameters {"variable1":{"type":"string","minLengthAllowed":"6","default":"qwertyuiop"}}
-		expect qwertyuiop,~!Me,variable1!~
+		expect qwertyuiop,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,
 
@@ -104,21 +104,21 @@ defineTest 1 parameter (nested json) - string (default),
 defineTest 1 parameter (nested json) - number pass 3<4<6,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"number","min":"3","max":"6"}}
-		expect 4,~!Me,variable1!~
+		expect 4,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,4
 
 defineTest 1 parameter (nested json) - number fail 3<7!<6=6,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"number","min":"3","max":"6"}}
-		expect 6,~!Me,variable1!~
+		expect 6,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,7
 
 defineTest 1 parameter (nested json) - number fail 3!<2<6=3,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"number","min":"3","max":"6"}}
-		expect 3,~!Me,variable1!~
+		expect 3,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,2
 
@@ -147,7 +147,7 @@ defineTest 1 parameter (nested json) - number fail 3!<2<6=3 allowed,
 defineTest 1 parameter (nested json) - number (default),
 	set Tmp,feature,
 		parameters {"variable1":{"type":"number","minAllowed":"3","maxAllowed":"6","default":"5"}}
-		expect 5,~!Me,variable1!~
+		expect 5,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,
 
@@ -156,42 +156,42 @@ defineTest 1 parameter (nested json) - number (default),
 defineTest 1 parameter (nested json) - boolean true true,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"boolean"}}
-		expect true,~!Me,variable1!~
+		expect true,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,true
 
 defineTest 1 parameter (nested json) - boolean true 1,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"boolean"}}
-		expect true,~!Me,variable1!~
+		expect true,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,1
 
 defineTest 1 parameter (nested json) - boolean true asdf,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"boolean"}}
-		expect true,~!Me,variable1!~
+		expect true,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,asdf
 
 defineTest 1 parameter (nested json) - boolean false false,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"boolean"}}
-		expect false,~!Me,variable1!~
+		expect false,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,false
 
 defineTest 1 parameter (nested json) - boolean false 0,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"boolean"}}
-		expect false,~!Me,variable1!~
+		expect false,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,0
 
 defineTest 1 parameter (nested json) - boolean false "" (default),
 	set Tmp,feature,
 		parameters {"variable1":{"type":"boolean","default":"true"}}
-		expect true,~!Me,variable1!~
+		expect true,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,
 
@@ -200,14 +200,14 @@ defineTest 1 parameter (nested json) - boolean false "" (default),
 defineTest 1 parameter (nested json) - empty definition,
 	set Tmp,feature,
 		parameters {"variable1":{}}
-		expect abc,~!Me,variable1!~
+		expect abc,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,abc
 
 defineTest 1 parameter (nested json) - empty definition - no value,
 	set Tmp,feature,
 		parameters {"variable1":{}}
-		expect ,~!Me,variable1!~
+		expect ,~!Local,variable1!~
 	
 	callFeature ~!Tmp,feature!~,
 
