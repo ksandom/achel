@@ -1,6 +1,7 @@
 # Expect a particular value. --expect=expectedValue,actualValue ~ unit,result
+parameters expectedValue,actualValue
 
-if ~!Global,expect-0!~,==,~!Global,expect-1!~,
-	passTest Got expected result ("~!Global,expect-1!~").
+if ~!Local,expectedValue!~,==,~!Local,actualValue!~,
+	passTest Got expected result ("~!Local,actualValue!~").
 else
-	failTest Expected "~!Global,expect-0!~" but got "~!Global,expect-1!~".
+	failTest Expected "~!Local,expectedValue!~" but got "~!Local,actualValue!~".

@@ -1,3 +1,4 @@
 # Indicate that the current test has failed ~ unit,result
+parameters message
 
-setTestResult fail,~!Global,failTest!~
+setTestResult fail,~!Local,message!~

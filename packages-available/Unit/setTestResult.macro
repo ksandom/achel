@@ -1,10 +1,8 @@
 # Set the result of the current unitTest. --setTestResult=pass|fail|warn,comment ~ unit,hidden
+parameters result,comment
 
-set UnitResults,currentResult,~!Global,setTestResult-0!~
-set UnitResults,currentComment,~!Global,setTestResult-1!~
-set UnitResults,currentColor,~!UnitResults,~!Global,setTestResult-0!~Color!~
+set UnitResults,currentResult,~!Local,result!~
+set UnitResults,currentComment,~!Local,comment!~
+set UnitResults,currentColor,~!UnitResults,~!Local,result!~Color!~
 
 debug 2,setTestResult: Recieved result=~!UnitResults,currentResult!~ comment==~!UnitResults,currentComment!~
-
-unset Global,setTestResult-0
-unset Global,setTestResult-1

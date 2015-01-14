@@ -1,9 +1,10 @@
-# Define a unit test. --defineTest=description . Code to be tested should be nested and --passTest, --failTest or --warnTest should be included in that logic. Description MUST be unique to the test. ~ unit
+# Define a unit test. --defineTest=description, . Code to be tested should be nested and --passTest, --failTest or --warnTest should be included in that logic. Description MUST be unique to the test. ~ unit
+parameters description,featureName
 
-set Tmp,defineTest-description,~!Global,defineTest-0!~
+set Local,defineTest-description,~!Local,description!~
 
-if ~!Global,defineTest-1!~,!=,,
-	callFeatureNoReturn ~!Global,defineTest-1!~
+if ~!Local,featureName!~,!=,,
+	callFeatureNoReturn ~!Local,featureName!~
 else
 	failTest There doesn't appear to be any code for this test. Check that the defineTest line ends in a comma.
 
@@ -19,13 +20,11 @@ else
 
 basicMaths UnitResults,~!UnitResults,currentResult!~,~!UnitResults,~!UnitResults,currentResult!~!~,+,1
 
-setNested UnitResults,results,~!Global,defineTest-0!~,description,~!Global,defineTest-0!~
-setNested UnitResults,results,~!Global,defineTest-0!~,result,~!UnitResults,currentResult!~
-setNested UnitResults,results,~!Global,defineTest-0!~,resultComment,~!UnitResults,currentComment!~
-setNested UnitResults,results,~!Global,defineTest-0!~,resultColor,~!UnitResults,currentColor!~
+setNested UnitResults,results,~!Local,description!~,description,~!Local,description!~
+setNested UnitResults,results,~!Local,description!~,result,~!UnitResults,currentResult!~
+setNested UnitResults,results,~!Local,description!~,resultComment,~!UnitResults,currentComment!~
+setNested UnitResults,results,~!Local,description!~,resultColor,~!UnitResults,currentColor!~
 
 
-# TODO the problem is here
 resetTest
-unset Tmp,defineTest-description
-unset Global,defineTest-1
+unset Local,defineTest-description
