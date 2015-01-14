@@ -1,3 +1,4 @@
 # Complain to the user. --complain='message to the user'
+parameters message
 
-debug 0,Comlaint: ~!Global,complain!~
+debug 0,Comlaint: ~!Local,message!~
