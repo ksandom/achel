@@ -3,12 +3,7 @@ parameters category,variable,angle,distance
 
 pi Local,pi
 piBy Local,0.5Pi,0.5
-
-# TODO the problem can be worked around by swapping these two lines.
 piBy Local,1.5Pi,1.5
-piBy Tmp,1.5Pi,1.5
-
-debug 1,angleAndDistanceToCoord: 1=~!Local,pi!~ 0.5=~!Local,0.5Pi!~ 1.5=~!Local,1.5Pi!~ Tmp1.5=~!Tmp,1.5Pi!~
 
 if ~!Local,distance!~,==,0,
 	setNested ~!Local,category!~,~!Local,variable!~,x,0
