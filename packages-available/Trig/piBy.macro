@@ -1,7 +1,7 @@
 # Generate Pi and multiply it by a number. --pi=Category,variable,multiplier ~ maths
-parameters piByCategory,variable,multiplier
+parameters category,variable,multiplier
 
-pi ~!Local,piByCategory!~,~!Local,variable!~
-basicMaths ~!Local,piByCategory!~,~!Local,variable!~,~!~!Local,piByCategory!~,~!Local,variable!~!~,*,~!Local,multiplier!~
-debug 1,piBy: ~!Local,piByCategory!~,~!Local,variable!~=~!~!Local,piByCategory!~,~!Local,variable!~!~ scope=~!General,scopeName!~ previousScope=~!General,previousScopeName!~
+pi ~!Local,category!~,~!Local,variable!~
+basicMaths ~!Local,category!~,~!Local,variable!~,~!~!Local,category!~,~!Local,variable!~!~,*,~!Local,multiplier!~
+debug 1,piBy: ~!Local,category!~,~!Local,variable!~=~!~!Local,category!~,~!Local,variable!~!~ scope=~!General,scopeName!~ previousScope=~!General,previousScopeName!~
 makeLocalAvailable ~!Local,variable!~

@@ -1,11 +1,10 @@
 # Take two sets of co-ordinates and give one set of co-ordinates where the origin has become 0,0 and the destination has had the origin subtracted from it --2CoordsTo1Coord=Category,variable,x1,y1,x2,y2. ~ trig
-parameters ctcCategory,ctcVariable,x1,y1,x2,y2
+parameters category,variable,x1,y1,x2,y2
 
 basicMaths Local,cox,~!Local,x2!~,-,~!Local,x1!~
 basicMaths Local,coy,~!Local,y2!~,-,~!Local,y1!~
 
-# TODO The problem is that the first line is getting overwritten by the second. Investivated setNestedFromCommandLine.
-setNested ~!Local,ctcCategory!~,~!Local,ctcVariable!~,x,~!Local,cox!~
-setNested ~!Local,ctcCategory!~,~!Local,ctcVariable!~,y,~!Local,coy!~
+setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,cox!~
+setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,coy!~
 
-makeLocalAvailable ~!Local,ctcVariable!~
+makeLocalAvailable ~!Local,variable!~

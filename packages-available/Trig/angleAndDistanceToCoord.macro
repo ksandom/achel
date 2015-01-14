@@ -1,5 +1,5 @@
 # Take an angle (in radians) and a distance and calcuate the x,y co-ordinates from 0,0. --angleAndDistanceToCoord=Category,variable,angle,distance ~ trig,coord
-parameters category,coordVariable,angle,distance
+parameters category,variable,angle,distance
 
 pi Local,pi
 piBy Local,0.5Pi,0.5
@@ -11,33 +11,33 @@ piBy Tmp,1.5Pi,1.5
 debug 1,angleAndDistanceToCoord: 1=~!Local,pi!~ 0.5=~!Local,0.5Pi!~ 1.5=~!Local,1.5Pi!~ Tmp1.5=~!Tmp,1.5Pi!~
 
 if ~!Local,distance!~,==,0,
-	setNested ~!Local,category!~,~!Local,coordVariable!~,x,0
-	setNested ~!Local,category!~,~!Local,coordVariable!~,y,0
+	setNested ~!Local,category!~,~!Local,variable!~,x,0
+	setNested ~!Local,category!~,~!Local,variable!~,y,0
 elseIf ~!Local,distance!~,<,0,
-	setNested ~!Local,category!~,~!Local,coordVariable!~,x,undef
-	setNested ~!Local,category!~,~!Local,coordVariable!~,y,undef
+	setNested ~!Local,category!~,~!Local,variable!~,x,undef
+	setNested ~!Local,category!~,~!Local,variable!~,y,undef
 else
 	if ~!Local,angle!~,==,0,
 		# up
-		setNested ~!Local,category!~,~!Local,coordVariable!~,x,0
-		setNested ~!Local,category!~,~!Local,coordVariable!~,y,~!Local,distance!~
+		setNested ~!Local,category!~,~!Local,variable!~,x,0
+		setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,distance!~
 		
 	elseIf ~!Local,angle!~,==,~!Local,0.5Pi!~,
 		# right
-		setNested ~!Local,category!~,~!Local,coordVariable!~,x,~!Local,distance!~
-		setNested ~!Local,category!~,~!Local,coordVariable!~,y,0
+		setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,distance!~
+		setNested ~!Local,category!~,~!Local,variable!~,y,0
 		
 	elseIf ~!Local,angle!~,==,~!Local,pi!~,
 		# down
 		basicMaths Local,flipped,~!Local,distance!~,*,-1
-		setNested ~!Local,category!~,~!Local,coordVariable!~,x,0
-		setNested ~!Local,category!~,~!Local,coordVariable!~,y,~!Local,flipped!~
+		setNested ~!Local,category!~,~!Local,variable!~,x,0
+		setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,flipped!~
 		
 	elseIf ~!Local,angle!~,==,~!Local,1.5Pi!~,
 		# left
 		basicMaths Local,flipped,~!Local,distance!~,*,-1
-		setNested ~!Local,category!~,~!Local,coordVariable!~,x,~!Local,flipped!~
-		setNested ~!Local,category!~,~!Local,coordVariable!~,y,0
+		setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,flipped!~
+		setNested ~!Local,category!~,~!Local,variable!~,y,0
 		
 	else
 		if ~!Local,angle!~,<,~!Local,0.5Pi!~,
@@ -47,8 +47,8 @@ else
 			# TOOD the problem is in this line
 			rightTriangleGetAdjacentFromAngle Local,adjacent,~!Local,angle!~,~!Local,distance!~
 			
-			setNested ~!Local,category!~,~!Local,coordVariable!~,x,~!Local,opposite!~
-			setNested ~!Local,category!~,~!Local,coordVariable!~,y,~!Local,adjacent!~
+			setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,opposite!~
+			setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,adjacent!~
 			debug 1,branch A
 			
 		elseIf ~!Local,angle!~,<,~!Local,pi!~,
@@ -58,8 +58,8 @@ else
 			rightTriangleGetAdjacentFromAngle Local,adjacent,~!Local,angle!~,~!Local,distance!~
 			
 			basicMaths Local,opposite,~!Local,opposite!~,*,-1
-			setNested ~!Local,category!~,~!Local,coordVariable!~,y,~!Local,opposite!~
-			setNested ~!Local,category!~,~!Local,coordVariable!~,x,~!Local,adjacent!~
+			setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,opposite!~
+			setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,adjacent!~
 			
 			debug 1,branch B
 			
@@ -72,8 +72,8 @@ else
 			basicMaths Local,opposite,~!Local,opposite!~,*,-1
 			basicMaths Local,adjacent,~!Local,adjacent!~,*,-1
 			
-			setNested ~!Local,category!~,~!Local,coordVariable!~,x,~!Local,opposite!~
-			setNested ~!Local,category!~,~!Local,coordVariable!~,y,~!Local,adjacent!~
+			setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,opposite!~
+			setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,adjacent!~
 			
 			debug 1,branch C
 		else
@@ -84,9 +84,9 @@ else
 			
 			basicMaths Local,adjacent,~!Local,adjacent!~,*,-1
 			
-			setNested ~!Local,category!~,~!Local,coordVariable!~,y,~!Local,opposite!~
-			setNested ~!Local,category!~,~!Local,coordVariable!~,x,~!Local,adjacent!~
+			setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,opposite!~
+			setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,adjacent!~
 			
 			debug 1,branch D
 
-debug 1,angleAndDistanceToCoord: return ~!~!Local,category!~,~!Local,coordVariable!~!~ angle=~!Local,angle!~
+debug 1,angleAndDistanceToCoord: return ~!~!Local,category!~,~!Local,variable!~!~ angle=~!Local,angle!~
