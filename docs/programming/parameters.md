@@ -82,7 +82,7 @@ example.macro
     # This is an example. --example=name,thing,quantity where name is your name, thing is something you see and quanitity is how many you see. ~ example
     parameters {"name":{"required":1},"thing":"brick","quantity":{"type":"number","min":"0","max":"10","default":"1"}}
     
-    if ~!Isolated,passed!~,==,true,
+    if ~!Local,passed!~,==,true,
     	debug 1,Hello ~!Local,name!~. What does the ~!Local,thing!~ look like? You have selected to have ~!Local,quantity!~ of them.
     else
     	debug 1,Missing parameters :(
@@ -175,19 +175,10 @@ Let's say we have a test that fails that looks like this
 
 And no characters were passed to it. How do we test for it?
 
-You can use the `~!Isolated,pass!~` variable like so
+You can use the `~!Local,pass!~` variable like so
 
-    if ~!Isolated,pass!~,==,true,
+    if ~!Local,pass!~,==,true,
     	debug 1,Yay!
     else
     	debug 1,Boo!
 
-**NOTE** It's really important to understand that an `Isolated` variable will not get inherited in either direction as your program goes up and down the stack. Therefore **the following will not work**, but the previous example will.
-
-    if 1,==,1,
-    	if ~!Isolated,pass!~,==,true,
-    		debug 1,Yay!
-    	else
-    		debug 1,Boo!
-
-The reason for this is that we don't want the result to be interferred with as we move around the stack.

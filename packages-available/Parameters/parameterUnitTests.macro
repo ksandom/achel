@@ -53,14 +53,14 @@ defineTest 1 parameter (nested json) - string 6!>3,
 defineTest 1 parameter (nested json) - string fail 6!>3 allowed,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"string","maxLengthAllowed":"3"}}
-		expect false,~!Isolated,pass!~
+		expect false,~!Local,pass!~
 	
 	callFeature ~!Tmp,feature!~,def456
 
 defineTest 1 parameter (nested json) - string pass 3!>3 allowed,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"string","maxLengthAllowed":"3"}}
-		expect true,~!Isolated,pass!~
+		expect true,~!Local,pass!~
 	
 	callFeature ~!Tmp,feature!~,def
 
@@ -81,14 +81,14 @@ defineTest 1 parameter (nested json) - string pass 3!<6,
 defineTest 1 parameter (nested json) - string fail 3!<6 allowed,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"string","minLengthAllowed":"6"}}
-		expect false,~!Isolated,pass!~
+		expect false,~!Local,pass!~
 	
 	callFeature ~!Tmp,feature!~,def
 
 defineTest 1 parameter (nested json) - string pass 3!<6 allowed,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"string","minLengthAllowed":"6"}}
-		expect true,~!Isolated,pass!~
+		expect true,~!Local,pass!~
 	
 	callFeature ~!Tmp,feature!~,defasd
 
@@ -126,21 +126,21 @@ defineTest 1 parameter (nested json) - number fail 3!<2<6=3,
 defineTest 1 parameter (nested json) - number pass 3<4<6 allowed,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"number","minAllowed":"3","maxAllowed":"6"}}
-		expect true,~!Isolated,pass!~
+		expect true,~!Local,pass!~
 	
 	callFeature ~!Tmp,feature!~,4
 
 defineTest 1 parameter (nested json) - number fail 3<7!<6=6 allowed,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"number","minAllowed":"3","maxAllowed":"6"}}
-		expect false,~!Isolated,pass!~
+		expect false,~!Local,pass!~
 	
 	callFeature ~!Tmp,feature!~,7
 
 defineTest 1 parameter (nested json) - number fail 3!<2<6=3 allowed,
 	set Tmp,feature,
 		parameters {"variable1":{"type":"number","minAllowed":"3","maxAllowed":"6"}}
-		expect false,~!Isolated,pass!~
+		expect false,~!Local,pass!~
 	
 	callFeature ~!Tmp,feature!~,2
 

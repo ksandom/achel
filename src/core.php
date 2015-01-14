@@ -539,7 +539,7 @@ class core extends Module
 	{
 		// localScopeVarName vs nestedPrivateVarsName
 		$categoryForParameters=localScopeVarName;
-		$categoryForFeedBack=isolatedNestedPrivateVarsName;
+		$categoryForFeedBack=localScopeVarName;
 		$categoryForKnowledge=isolatedNestedPrivateVarsName;
 		if ($categoryForParameters=='Local') $scopeKey=$this->getScopeForCategory($categoryForParameters);
 		else $scopeKey=$this->getScopeForCategory($categoryForParameters, 1);
@@ -560,10 +560,10 @@ class core extends Module
 		if (!isset($this->store[$categoryForParameters][$scopeKey])) $this->store[$categoryForParameters][$scopeKey]=array();
 		if (!is_array($this->store[$categoryForParameters][$scopeKey])) $this->store[$categoryForParameters][$scopeKey]=array();
 		
-		if (!isset($this->store[$categoryForFeedBack][$nesting])) $this->store[$categoryForFeedBack][$nesting-1]=array();
-		if (!is_array($this->store[$categoryForFeedBack][$nesting])) $this->store[$categoryForFeedBack][$nesting-1]=array();
+		if (!isset($this->store[$categoryForFeedBack][$scopeKey])) $this->store[$categoryForFeedBack][$scopeKey]=array();
+		if (!is_array($this->store[$categoryForFeedBack][$scopeKey])) $this->store[$categoryForFeedBack][$scopeKey]=array();
 		
-		$this->store[$categoryForFeedBack][$nesting]['pass']=achelTrue;
+		$this->store[$categoryForFeedBack][$scopeKey]['pass']=achelTrue;
 		$argKeys=array_keys($args);
 		foreach ($argKeys as $position => $details)
 		{
@@ -582,7 +582,7 @@ class core extends Module
 				
 				$variableResult=$this->processVariableDefinition($details, $value, $args[$details]);
 				$this->store[$categoryForParameters][$scopeKey][$key]=$variableResult['value'];
-				if (!$variableResult['pass']) $this->store[$categoryForFeedBack][$nesting]['pass']=achelFalse;
+				if (!$variableResult['pass']) $this->store[$categoryForFeedBack][$scopeKey]['pass']=achelFalse;
 				
 				if ($variableResult['pass'])
 				{
@@ -624,7 +624,7 @@ class core extends Module
 			{ // Key based assignment
 				if (is_array($args[$details]))
 				{ // TODO More advanced stuff
-					$this->store[$categoryForFeedBack][$nesting-1]['passed']=true;
+					$this->store[$categoryForFeedBack][$scopeKey]['passed']=true;
 					$variableResult=$this->processVariableDefinition($details, $value, $args[$details]);
 					#  TODO think this through some more.
 				}
