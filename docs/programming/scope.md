@@ -21,22 +21,6 @@ If you want to make a variable available to the calling scope, you can use `make
     debug 1,And I said "~!Local,test1!~"
     makeLocalAvailable test1
 
-## Isolated (DEPRECATED)
-
-**It is not recommended to use Isolated**
-
-Isolated was an interesting idea in that the code behind it is very basic, but using it is very un-intuitive and so it will probably be removed very soon.
-
-For Isolated variables, a change in nesting level is a change of scope. Eg
-
-    set Isolated,test1,blah
-    if 1,==,1,
-    	set Isolated,test1,wheee
-    
-    debug 1,~!Isolated,test1!~ == blah
-    
-    # Outputs: blah == blah
-
 ## Me
 
 *WARNING: As you'll see below; Me has a definite, well defined scope. However its nature is easy to lead to bugs if you are using it in the wrong situation. Eg If you have two Macros unintentionally both using the same variable name, they will step on each other's toes. You will almost always be better off with using **Local** instead.*
@@ -91,4 +75,20 @@ The better way is to use `makeMeAvailable`
     debug 1,value=~!Me,test1!~
     # Outputs: value=wobble
 
+
+## Isolated
+
+**It is not recommended to use Isolated**
+
+Isolated is used by the Core for handeling parameters. Early attempts to refactor it out have shown that it is probably the best tool for the job at this time. However for normal programming; Local and possibly Me will be your best choices.
+
+For Isolated variables, a change in nesting level is a change of scope. Eg
+
+    set Isolated,test1,blah
+    if 1,==,1,
+    	set Isolated,test1,wheee
+    
+    debug 1,~!Isolated,test1!~ == blah
+    
+    # Outputs: blah == blah
 
