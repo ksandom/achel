@@ -612,32 +612,6 @@ class core extends Module
 				}
 				$this->store[$categoryForParameters][$scopeKey][$key]=($value)?$value:$default;
 			}
-			
-			/*
-			if (is_numeric($details))
-			{ // Basic name assignment
-				$value=$this->core->get('Global',"$lastMacro-$details");
-				$this->store[$categoryForParameters][$nesting-1][$args[$details]]=$value;
-				$this->debug(4,"parameters: Simple. name={$args[$details]} key=$details value=$value");
-			}
-			else
-			{ // Key based assignment
-				if (is_array($args[$details]))
-				{ // TODO More advanced stuff
-					$this->store[$categoryForFeedBack][$scopeKey]['passed']=true;
-					$variableResult=$this->processVariableDefinition($details, $value, $args[$details]);
-					#  TODO think this through some more.
-				}
-				else
-				{ // Key with default
-					if (!$value=$this->core->get('Global',"$lastMacro-$position"))
-					{
-						$value=$args[$details];
-					}
-					$this->store[$categoryForParameters][$nesting-1][$details]=$value;
-				}
-			}
-			*/
 		}
 	}
 	
