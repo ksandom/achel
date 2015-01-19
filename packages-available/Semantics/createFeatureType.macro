@@ -1,21 +1,13 @@
 # Create a feature type. --createFeatureType=typeName,inDataType,outDataType,description ~ feature,definition,semantics
+parameters typeName,inDataType,outDataType,description
 
 # TODO Document this further.
 
-set DefineFeatureType,featureTypeName,~!Global,createFeatureType-0!~
-set DefineFeatureType,inDataType,~!Global,createFeatureType-1!~
-set DefineFeatureType,outDataType,~!Global,createFeatureType-2!~
-set DefineFeatureType,description,~!Global,createFeatureType-3!~
-
-# Apply defaults if necessary
-
 # Set the details and cleanup
-setNested Semantics,featureTypes,~!DefineFeatureType,featureTypeName!~,featureTypeName,~!DefineFeatureType,featureTypeName!~
-setNested Semantics,featureTypes,~!DefineFeatureType,featureTypeName!~,inDataType,~!DefineFeatureType,inDataType!~
-setNested Semantics,featureTypes,~!DefineFeatureType,featureTypeName!~,outDataType,~!DefineFeatureType,outDataType!~
-setNested Semantics,featureTypes,~!DefineFeatureType,featureTypeName!~,description,~!DefineFeatureType,description!~
-
-unsetCategory DefineFeatureType
+setNested Semantics,featureTypes,~!Local,typeName!~,typeName,~!Local,typeName!~
+setNested Semantics,featureTypes,~!Local,typeName!~,inDataType,~!Local,inDataType!~
+setNested Semantics,featureTypes,~!Local,typeName!~,outDataType,~!Local,outDataType!~
+setNested Semantics,featureTypes,~!Local,typeName!~,description,~!Local,description!~
 
 retrieveResults Semantics,featureTypes
 
