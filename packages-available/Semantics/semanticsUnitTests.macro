@@ -1,0 +1,60 @@
+# Unit tests for the semantics package. ~ hidden,unitTests,semantics
+
+defineTest dataType does not exist yet,
+	listDataTypes
+	refine test123ut
+	countToVar Local,count
+	expect 0,~!Local,count!~
+
+defineTest createDataType,
+	createDataType test123ut,testut,,,,A testing data type
+	
+	listDataTypes
+	refine test123ut
+	countToVar Local,count
+	expect 1,~!Local,count!~
+
+defineTest deleteDataType,
+	createDataType test123ut,testut,,,,A testing data type
+	countToVar Local,count
+	
+	if ~!Local,count!~,!=,0,
+		deleteDataType test123ut
+		
+		listDataTypes
+		refine test123ut
+		countToVar Local,count
+		expect 0,~!Local,count!~
+	else
+		failTest Could not create the dataType.
+
+
+
+defineTest featureType does not exist yet,
+	listFeatureTypes
+	refine test123ut
+	countToVar Local,count
+	expect 0,~!Local,count!~
+
+defineTest createFeatureType,
+	createFeatureType test123ut,,,A testing feature type
+	
+	listFeatureTypes
+	refine test123ut
+	countToVar Local,count
+	expect 1,~!Local,count!~
+
+defineTest deleteFeatureType,
+	createFeatureType test123ut,testut,,,,A testing data type
+	countToVar Local,count
+	
+	if ~!Local,count!~,!=,0,
+		deleteFeatureType test123ut
+		
+		listFeatureTypes
+		refine test123ut
+		countToVar Local,count
+		expect 0,~!Local,count!~
+	else
+		failTest Could not create the dataType.
+

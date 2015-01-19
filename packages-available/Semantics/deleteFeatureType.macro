@@ -1,0 +1,4 @@
+# Delete a feature type. --deleteFeatureType=typeName ~ data,definition,semantics
+parameters typeName
+
+unset Semantics,featureTypes,~!Local,typeName!~

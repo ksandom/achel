@@ -1,0 +1,4 @@
+# Delete a data type. --deleteDataType=typeName ~ data,definition,semantics
+parameters typeName
+
+unset Semantics,dataTypes,~!Local,typeName!~
