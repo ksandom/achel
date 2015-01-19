@@ -81,3 +81,16 @@ defineTest listFeatureType,
 	deleteFeatureType test123ut
 
 
+
+defineTest setFeatureType,
+	failTest No feature types???
+	createFeatureType test123ut,,,A testing feature type
+	setFeatureType semanticsUnitTests,test123ut
+	
+	searchHelp all
+	requireEach semanticsUnitTests
+	first
+	loop
+		expect test123ut,~!Result,featureType!~
+	
+	deleteFeatureType test123ut
