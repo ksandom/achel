@@ -13,6 +13,7 @@ defineTest createDataType,
 	refine test123ut
 	countToVar Local,count
 	expect 1,~!Local,count!~
+	deleteDataType test123ut
 
 defineTest deleteDataType,
 	createDataType test123ut,testut,,,,A testing data type
@@ -27,6 +28,17 @@ defineTest deleteDataType,
 		expect 0,~!Local,count!~
 	else
 		failTest Could not create the dataType.
+
+defineTest listDataType,
+	createDataType test123ut,testut,,,,A testing data type
+	
+	listDataTypes
+	refine test123ut
+	countToVar Local,count
+	expect 1,~!Local,count!~
+	deleteDataType test123ut
+
+
 
 
 
@@ -43,6 +55,7 @@ defineTest createFeatureType,
 	refine test123ut
 	countToVar Local,count
 	expect 1,~!Local,count!~
+	deleteFeatureType test123ut
 
 defineTest deleteFeatureType,
 	createFeatureType test123ut,testut,,,,A testing data type
@@ -57,4 +70,14 @@ defineTest deleteFeatureType,
 		expect 0,~!Local,count!~
 	else
 		failTest Could not create the dataType.
+
+defineTest listFeatureType,
+	createFeatureType test123ut,,,A testing feature type
+	
+	listFeatureTypes
+	refine test123ut
+	countToVar Local,count
+	expect 1,~!Local,count!~
+	deleteFeatureType test123ut
+
 
