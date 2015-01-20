@@ -1,5 +1,6 @@
 # Set a repository parameter. --setRepoParm=repoName,parmName,parmValue ~ repoParms,RepoParms
+parameters repoName,parmName,parmValue
 
-loadRepoParms ~!Global,setRepParm-0!~
+loadRepoParms ~!Local,repoName!~
 
-set RepoParms ~!Global,setRepParm-0!~,~!Global,setRepParm-1!~,~!Global,setRepParm-2!~
+set RepoParms~!Local,repoName!~,~!Local,parmName!~,~!Local,parmValue!~

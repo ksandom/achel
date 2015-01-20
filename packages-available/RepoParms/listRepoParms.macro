@@ -1,5 +1,6 @@
 # List parameters for repo --listRepoParms=repoName ~ RepoParms
+parameters repoName
 
-loadRepoParms ~!Global,listRepoParms!~
+loadRepoParms ~!Local,repoName!~
 
-getCategory RepoParms~!Global,listRepoParms!~
+getCategory RepoParms~!Local,repoName!~

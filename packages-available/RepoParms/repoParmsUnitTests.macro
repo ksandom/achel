@@ -1,0 +1,26 @@
+# Repoparms unit tests. ~ hidden,repoParms,unitTests
+
+defineTest before loadRepoParms,
+	expect ,~!RepoParmsachel,name!~
+	
+
+defineTest loadRepoParms,
+	loadRepoParms achel
+	expect achel,~!RepoParmsachel,name!~
+
+defineTest setRepoParm,
+	setRepoParm achel,test,blah
+	
+	expect blah,~!RepoParmsachel,test!~
+	
+	getCategory RepoParmsachel
+	unset RepoParmsachel,test
+
+defineTest listRepoParms,
+	listRepoParms achel
+	expect achel,~!RepoParmsachel,name!~
+
+defineTest getRepoParm,
+	getRepoParm achel,name
+	loop
+		expect achel,~!Result,line!~
