@@ -247,8 +247,10 @@ class Macro extends Module
 				$this->core->setResultSetNoRef(array(), 'loop');
 			}
 			
+			$this->initProgress($input);
 			foreach ($input as $key=>$in)
 			{
+				$this->updateProgress();
 				$this->core->debug(5, "loopMacro iterated for key $key");
 				if (is_array($in)) $this->core->setCategoryModule('Result', $in);
 				else
@@ -273,6 +275,7 @@ class Macro extends Module
 					else $this->core->debug(4, "loopMacro: Skipped key \"$key\" since it looks like it has been unset.");
 				}
 			}
+			$this->removeProgress();
 		}
 		else $this->core->debug(5, "loopMacro: No input!");
 		
@@ -283,16 +286,37 @@ class Macro extends Module
 	{
 		$output=array();
 		
+		$this->initProgress($data);
 		foreach ($data as $line)
 		{
+			$this->updateProgress();
 			if ($returnValue=$this->core->callFeatureWithDataset($feature, $value, $line))
 			{
 				$output[]=$returnValue;
 			}
 			else $output[]=$line;
 		}
+		$this->removeProgress();
 		
 		return $output;
+	}
+	
+	function initProgress(&$data)
+	{
+		$this->core->set('Local', 'progress', array('position'=>0, 'total'=>count($data), 'remaining'=>0));
+	}
+	
+	function updateProgress()
+	{
+		$progress=$this->core->get('Local', 'progress');
+		$progress['position']++;
+		$progress['remaining']=$progress['total']-$progress['position'];
+		$this->core->set('Local', 'progress', $progress);
+	}
+	
+	function removeProgress()
+	{
+		$this->core->doUnset(array('Local', 'progress'));
 	}
 	
 	function loadSavedMacros()

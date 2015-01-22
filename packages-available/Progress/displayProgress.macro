@@ -1,0 +1,13 @@
+# Display progress ~ progress
+
+# Get the data
+set ["Local","progress",~!Global,displayProgress!~]
+
+# Calculate stuff
+basicMaths Local,progressPercent,~!Local,progress,position!~,/,~!Local,progress,total!~
+basicMaths Local,progressPercent,~!Local,progressPercent!~,*,100
+round Local,progressPercent,~!Local,progressPercent!~,0
+
+# Output
+templateOutNoNewLine progress
+outNow

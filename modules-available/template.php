@@ -24,6 +24,7 @@ class Template extends Module
 			case 'init':
 				$this->core->registerFeature($this, array('template'), 'template', 'Specify a templte to use to display the output. This will replace the result with an array containing a single string. --template=templateName . eg --template=screen');
 				$this->core->registerFeature($this, array('templateOut'), 'templateOut', 'Use a template to display the output before '.programName.' terminates. --templateOut=templateName . eg --templateOut=screen');
+				$this->core->registerFeature($this, array('templateOutNoNewLine'), 'templateOutNoNewLine', 'Use a template to display the output before '.programName.' terminates. --templateOutNoNewLine=templateName . eg --templateOutNoNewLine=screen');
 				$this->core->registerFeature($this, array('noTemplateOut'), 'noTemplateOut', 'Do not allow futue --templateOutIfNotSet to be set. It will not have effect if one has already been set.');
 				$this->core->registerFeature($this, array('unsetTemplateOut'), 'unsetTemplateOut', 'Unset the current templateOut. This disables the output, but allows --templateOutIfNotSet to be used again.');
 				$this->core->registerFeature($this, array('templateOutIfNotSet'), 'templateOutIfNotSet', "Same as --templateOut, but will only be set if it hasn't been already.");
@@ -42,7 +43,13 @@ class Template extends Module
 				break;
 			case 'templateOut':
 				$this->core->setRef('General', 'outputObject', $this);
-				$this->templateOut=$this->core->get('Global', 'templateOut');
+				$this->templateOut=$this->core->get('Global', $event);
+				$this->core->debug(4, "--templateOut: set \$this->templateOut to {$this->templateOut}.");
+				break;
+			case 'templateOutNoNewLine':
+				$this->core->setRef('General', 'outputObject', $this);
+				$this->core->setRef('General', 'echoObject', $this);
+				$this->templateOut=$this->core->get('Global', $event);
 				$this->core->debug(4, "--templateOut: set \$this->templateOut to {$this->templateOut}.");
 				break;
 			case 'noTemplateOut':
@@ -288,7 +295,11 @@ class Template extends Module
 	
 	function put($output)
 	{
-		echo $output;
+		if (is_array($output))
+		{
+			foreach ($output as $line) $this->put($line);
+		}
+		else echo $output;
 	}
 }
 

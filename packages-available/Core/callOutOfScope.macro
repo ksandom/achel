@@ -1,0 +1,3 @@
+# Call a feature out of the current scope. ~ core,scope
+
+callFeature ~!Global,callOutOfScope!~

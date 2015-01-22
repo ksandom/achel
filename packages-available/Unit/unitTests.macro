@@ -23,7 +23,8 @@ if ~!Local,regex!~,!=,,
 	refine ~!Local,regex!~
 
 loop
-	callFeatureNoReturn ~!Result,name!~
+	displayProgress ~!Local,progress!~
+	callOutOfScope ~!Result,name!~
 
 retrieveResults UnitResults,results
 templateOut unitTestResults
