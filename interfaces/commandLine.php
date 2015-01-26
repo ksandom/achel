@@ -26,6 +26,7 @@ class CommandLine extends Module
 				$this->core->setRef('General', 'echoObject', $this);
 				break;
 			case 'followup':
+				$this->core->callFeature('registerForEvent','Int,resetOutput,setCliOutput');
 				break;
 			case 'last':
 				$this->core->callFeature('triggerEvent', 'CommandLine,startup');
@@ -38,6 +39,10 @@ class CommandLine extends Module
 			case 'nested':
 				$this->core->setRef('General', 'outputObject', $this);
 				$this->core->set('General', 'outputStyle', 'nested');
+				break;
+			case 'setCliOutput':
+				$this->core->setRef('General', 'outputObject', $this);
+				$this->core->setRef('General', 'echoObject', $this);
 				break;
 			default:
 				$this->core->complain($this, 'Unknown event', $event);

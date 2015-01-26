@@ -11,3 +11,4 @@ round Local,progressPercent,~!Local,progressPercent!~,0
 # Output
 templateOutNoNewLine progress
 outNow
+triggerEvent Int,resetOutput

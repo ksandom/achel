@@ -25,6 +25,7 @@ if ~!Local,regex!~,!=,,
 loop
 	displayProgress ~!Local,progress!~
 	callOutOfScope ~!Result,name!~
+finishProgress
 
 retrieveResults UnitResults,results
 templateOut unitTestResults
