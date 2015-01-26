@@ -1,0 +1,3 @@
+# Remove the test colour. ~ improveColors
+
+removeColor testColor

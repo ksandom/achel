@@ -7,5 +7,6 @@ triggerEvent Color,generate
 
 # TODO this will need to be done smarter
 improveColorsNoBlink
+improveColorsNoTest
 
 saveStoreToConfig Color

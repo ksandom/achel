@@ -149,8 +149,6 @@ class Codes extends Module
 		
 		$colorCode=($useColor)?"\033[0;0m":'';
 		$this->core->set('Color', 'default', $colorCode);
-		
-		$this->core->set('Color', 'testColor', "{$colorCode}This shows that the color codes have been loaded.");
 	}
 	
 	function loadDefaultAliases()
