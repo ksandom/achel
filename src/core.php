@@ -1115,7 +1115,7 @@ class core extends Module
 			# TODO Can I use the key to refactor?
 			if ($key=$this->getScopeForCategory($category, $nestingOffset))
 			{
-				$this->core->debug(2, "get: ($category, $valueName) key=$key nestingOffset=$nestingOffset");
+				$this->core->debug(4, "get: ($category, $valueName) key=$key nestingOffset=$nestingOffset");
 				if ($category==nestedPrivateVarsName)
 				{
 					# TODO Is this really still needed?
@@ -1137,7 +1137,7 @@ class core extends Module
 				}
 				else
 				{
-					$this->core->debug(3,"get ($key): [$category][$key][$valueName]");
+					$this->core->debug(4,"get ($key): [$category][$key][$valueName]");
 					if (isset($this->store[$category][$key]))
 					{
 						if (isset($this->store[$category][$key][$valueName]))
@@ -1620,9 +1620,9 @@ class core extends Module
 				$pathParts[]=$oldPathPaths[$i];
 			}
 			
-			if ($this->isVerboseEnough(3))
+			if ($this->isVerboseEnough(4))
 			{
-				$this->core->debug(3,"setNestedStart: Used $category,$key,".implode(',', $pathParts)).' '.json_encode($pathParts);
+				$this->core->debug(4,"setNestedStart: Used $category,$key,".implode(',', $pathParts)).' '.json_encode($pathParts);
 			}
 			$output=&$this->store[$category][$key];
 		}
