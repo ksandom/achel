@@ -1,0 +1,13 @@
+# Calculate the latest progress statistics. --calculateProgressStats=done,total,width ~ progress
+parameters done,total,width
+
+basicMaths Local,rebased,~!Local,done!~,*,~!Local,width!~
+basicMaths Local,rebased,~!Local,rebased!~,/,~!Local,total!~
+round Local,rebased,~!Local,rebased!~,0
+basicMaths Local,rebasedRemainder,~!Local,width!~,-,~!Local,rebased!~
+
+generateChars Local,doneChars,~!Local,rebased!~,#
+generateChars Local,rebasedRemainderChars,~!Local,rebasedRemainder!~,.
+
+set Local,bar,~!Local,doneChars!~~!Local,rebasedRemainderChars!~
+makeLocalAvailable bar

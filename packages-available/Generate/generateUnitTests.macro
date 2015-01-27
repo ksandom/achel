@@ -1,0 +1,6 @@
+# Unit tests for generate functionality. ~ generate,unitTest,hidden
+
+defineTest generateChars 5 #,
+	generateChars Local,fiveChars,5,#
+	expect #####,~!Local,fiveChars!~
+

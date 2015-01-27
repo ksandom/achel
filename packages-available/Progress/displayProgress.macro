@@ -8,7 +8,12 @@ basicMaths Local,progressPercent,~!Local,progress,position!~,/,~!Local,progress,
 basicMaths Local,progressPercent,~!Local,progressPercent!~,*,100
 round Local,progressPercent,~!Local,progressPercent!~,0
 
+# TODO this should only be done every few goes.
+# TODO choose a more intellegent width
+calculateProgressStats ~!Local,progress,position!~,~!Local,progress,total!~,30
+
 # Output
+# TODO update template for progress bar.
 templateOutNoNewLine progress
 outNow
 triggerEvent Int,resetOutput
