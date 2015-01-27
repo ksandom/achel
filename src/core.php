@@ -1108,8 +1108,6 @@ class core extends Module
 	function &get($category, $valueName, $debug=true, $nestingOffset=0)
 	{
 		if ($debug) $this->debug(5,"get($category, $valueName, false)");
-		#print_r($this->store);
-		#echo "m=$category, v=$valueName\n";
 		if (isset($this->store[$category]))
 		{
 			# TODO Can I use the key to refactor?
@@ -1162,49 +1160,6 @@ class core extends Module
 			{
 				$this->core->debug(5,"get: [$category][$key][$valueName] ".json_encode($result));
 			}
-			
-			/*
-			switch ($category)
-			{
-				case isolatedNestedPrivateVarsName:
-					$nesting=$this->get('Core', 'nesting');
-					if (isset($this->store[isolatedNestedPrivateVarsName][$nesting+$nestingOffset]))
-					{
-						if (isset($this->store[isolatedNestedPrivateVarsName][$nesting+$nestingOffset][$valueName]))
-						{
-							$result=$this->store[isolatedNestedPrivateVarsName][$nesting+$nestingOffset][$valueName];
-						}
-						else $result=null;
-					}
-					else $result=null;
-					$this->core->debug(5,"get (private): [$category][$nesting][$valueName] ".json_encode($result));
-					break;
-				case nestedPrivateVarsName:
-					$nesting=$this->get('Core', 'nesting')+$nestingOffset;
-					if (isset($this->store[nestedPrivateVarsName])) 
-					{
-						for ($i=$nesting;$i>0;$i--)
-						{
-							if (isset($this->store[nestedPrivateVarsName][$i][$valueName]))
-							{
-								$result=$this->store[nestedPrivateVarsName][$i][$valueName];
-								break;
-							}
-							else $result=null;
-						}
-					}
-					else $result=null;
-					$this->core->debug(5,"get (public): [$category][$nesting][$valueName] ".json_encode($result));
-					break;
-				default:
-					if (isset($this->store[$category][$valueName])) return $this->store[$category][$valueName];
-					else 
-					{
-						$result=null;
-					}
-					break;
-			}
-			*/
 		}
 		else
 		{
