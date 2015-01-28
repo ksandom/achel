@@ -13,7 +13,6 @@ round Local,progressPercent,~!Local,progressPercent!~,0
 calculateProgressStats ~!Local,progress,position!~,~!Local,progress,total!~,30
 
 # Output
-# TODO update template for progress bar.
 templateOutNoNewLine progress
 outNow
 triggerEvent Int,resetOutput
