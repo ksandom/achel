@@ -15,6 +15,7 @@ class TimeThing extends Module
 	private $track=null;
 	private $store=null;
 	private $codes=false;
+	private $throttle=0;
 	
 	function __construct()
 	{
@@ -31,6 +32,7 @@ class TimeThing extends Module
 				$this->core->registerFeature($this, array('fuzzyTime'), 'fuzzyTime', 'Put the fuzzyTime (eg "5 hours") into a store variable. --fuzzyTime=Category,variableName,inputTime[,maxUnit] . inputTime is time represented in seconds. maxUnit', array('help'));
 				$this->core->registerFeature($this, array('fullTimeStamp'), 'fullTimeStamp', 'Put a full timestamp (eg "2013-04-17--20:12:10") into a store variable. --fullTimeStamp=Category,variableName,[inputTime][,format] . inputTime is time represented in seconds, and will default to now if omitted. format is defined in http://php.net/manual/en/function.date.php and defaults to ~!Settings,timestampFormat!~.', array('help'));
 				$this->core->registerFeature($this, array('strToTime'), 'strToTime', "Uses PHP's strtotime() function to get a timestamp that is useable by the other functions. --strToTime=Category,variableName,string[,baseTime]. string is something like \"yesterday\" or \"-1 day\".", array('help'));
+				$this->core->registerFeature($this, array('throttle'), 'throttle', "Will only run a feature if it hasn't been run in the last x milliseconds --throttle=x, . This is useful for periodically running something in a loop such as showing the progress to a user, without slowing down the process too much. Note that the comma at the end is important.", array('help'));
 				
 				# TODO This is probably better in config. Then we could do some funky things with configuring fuzzy timestamps.
 				$this->core->set('Time', 'fuzzyTimeThreshold', fuzzyTimeThreshold);
@@ -60,6 +62,10 @@ class TimeThing extends Module
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 4, 3, true);
 				if ($parms[3]) $this->core->set($parms[0], $parms[1], strToTime($parms[2], $parms[3]));
 				else $this->core->set($parms[0], $parms[1], strToTime($parms[2]));
+				break;
+			case 'throttle':
+				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
+				$this->throttle($parms[0], $parms[1]);
 				break;
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
@@ -146,6 +152,18 @@ class TimeThing extends Module
 	{
 		$time=($inputTime)?$inputTime:$this->now();
 		return date($this->core->get('Settings','timestampFormat'), $time);
+	}
+	
+	function throttle($milliseconds, $feature)
+	{
+		$now=microtime(true);
+		
+		if ($now-$this->throttle > $milliseconds/1000)
+		{
+			$this->core->callFeature($feature, '');
+			$this->throttle=$now;
+		}
+		
 	}
 }
 

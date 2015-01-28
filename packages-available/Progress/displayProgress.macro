@@ -1,18 +1,19 @@
 # Display progress ~ progress
 
-# Get the data
-set ["Local","progress",~!Global,displayProgress!~]
+throttle 1000,
+	# Get the data
+	set ["Local","progress",~!Global,displayProgress!~]
 
-# Calculate stuff
-basicMaths Local,progressPercent,~!Local,progress,position!~,/,~!Local,progress,total!~
-basicMaths Local,progressPercent,~!Local,progressPercent!~,*,100
-round Local,progressPercent,~!Local,progressPercent!~,0
+	# Calculate stuff
+	basicMaths Local,progressPercent,~!Local,progress,position!~,/,~!Local,progress,total!~
+	basicMaths Local,progressPercent,~!Local,progressPercent!~,*,100
+	round Local,progressPercent,~!Local,progressPercent!~,0
 
-# TODO this should only be done every few goes.
-# TODO choose a more intellegent width
-calculateProgressStats ~!Local,progress,position!~,~!Local,progress,total!~,30
+	# TODO this should only be done every few goes.
+	# TODO choose a more intellegent width
+	calculateProgressStats ~!Local,progress,position!~,~!Local,progress,total!~,30
 
-# Output
-templateOutNoNewLine progress
-outNow
-triggerEvent Int,resetOutput
+	# Output
+	templateOutNoNewLine progress
+	outNow
+	triggerEvent Int,resetOutput
