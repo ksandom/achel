@@ -4,3 +4,11 @@ defineTest generateChars 5 #,
 	generateChars Local,fiveChars,5,#
 	expect #####,~!Local,fiveChars!~
 
+defineTest generateChars 2 b,
+	generateChars Local,bees,2,b
+	expect bb,~!Local,bees!~
+
+defineTest generateChars 6 -,
+	generateChars Local,fiveChars,6,-
+	expect ------,~!Local,fiveChars!~
+
