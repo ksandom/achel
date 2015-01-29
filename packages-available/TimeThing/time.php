@@ -28,6 +28,7 @@ class TimeThing extends Module
 		{
 			case 'init':
 				$this->core->registerFeature($this, array('now'), 'now', 'Put the current time in seconds into a store variable. --now=Category,variableName', array('time'));
+				$this->core->registerFeature($this, array('microNow'), 'microNow', 'Put a decimal seconds offset into a store variable. --now=Category,variableName', array('time'));
 				$this->core->registerFeature($this, array('timeDiff'), 'timeDiff', 'Put the difference of two times into a store variable. --timeDiff=Category,variableName,inputTime1,inputTime2 . inputTime 1 and 2 are time represented in seconds.', array('help'));
 				$this->core->registerFeature($this, array('fuzzyTime'), 'fuzzyTime', 'Put the fuzzyTime (eg "5 hours") into a store variable. --fuzzyTime=Category,variableName,inputTime[,maxUnit] . inputTime is time represented in seconds. maxUnit', array('help'));
 				$this->core->registerFeature($this, array('fullTimeStamp'), 'fullTimeStamp', 'Put a full timestamp (eg "2013-04-17--20:12:10") into a store variable. --fullTimeStamp=Category,variableName,[inputTime][,format] . inputTime is time represented in seconds, and will default to now if omitted. format is defined in http://php.net/manual/en/function.date.php and defaults to ~!Settings,timestampFormat!~.', array('help'));
@@ -44,6 +45,10 @@ class TimeThing extends Module
 			case 'now':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
 				$this->core->set($parms[0], $parms[1], $this->now());
+				break;
+			case 'microNow':
+				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
+				$this->core->set($parms[0], $parms[1], $this->now(true));
 				break;
 			case 'timeDiff':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 4, 4, true);
@@ -73,9 +78,10 @@ class TimeThing extends Module
 		}
 	}
 	
-	function now()
+	function now($microTime=false)
 	{
-		return time();
+		if ($microTime) return microtime();
+		else return time();
 	}
 	
 	function timeDiff($inputTime1, $inputTime2)
