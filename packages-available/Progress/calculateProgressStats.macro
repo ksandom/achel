@@ -1,6 +1,8 @@
 # Calculate the latest progress statistics. --calculateProgressStats=done,total,width ~ progress
 parameters done,total,width
 
+
+# Calculate progress bar
 basicMaths Local,rebased,~!Local,done!~,*,~!Local,width!~
 basicMaths Local,rebased,~!Local,rebased!~,/,~!Local,total!~
 round Local,rebased,~!Local,rebased!~,0
@@ -10,4 +12,42 @@ generateChars Local,doneChars,~!Local,rebased!~,#
 generateChars Local,rebasedRemainderChars,~!Local,rebasedRemainder!~,.
 
 set Local,bar,~!Local,doneChars!~~!Local,rebasedRemainderChars!~
+
+
+# Calculate statistics
+if ~!Local,done!~,>,0,
+	# Calculate rate
+	if ~!Progress,lastTime!~,>,0,
+		# Calculate samples per second
+		microNow Progress,thisTime
+		basicMaths Progress,timeDiff,~!Progress,thisTime!~,-,~!Progress,lastTime!~
+		basicMaths Progress,doneDiff,~!Local,done!~,-,~!Progress,lastDone!~
+		set Progress,lastTime,~!Progress,thisTime!~
+		
+		if ~!Progress,timeDiff!~,!=,0,
+			basicMaths Progress,rate,~!Progress,doneDiff!~,/,~!Progress,timeDiff!~
+			round Progress,rate,~!Progress,rate!~,0
+			
+			# Calculate time remaining
+			basicMaths Progress,remaining,~!Local,total!~,-,~!Local,done!~
+			basicMaths Progress,timeRemainingSeconds,~!Progress,remaining!~,/,~!Progress,rate!~
+			round Progress,timeRemainingSeconds,~!Progress,timeRemainingSeconds!~,0
+			fuzzyTime Progress,timeRemaining,~!Progress,timeRemainingSeconds!~
+		else
+			set Progress,rate,INF
+			set Progress,timeRemaining,INF
+	else
+		microNow Progress,lastTime
+	
+	set Progress,lastDone,~!Local,done!~
+	
+
+
+
+
 makeLocalAvailable bar
+makeLocalAvailable lastTime
+makeLocalAvailable lastDone
+makeLocalAvailable rate
+makeLocalAvailable timeRemainingSeconds
+makeLocalAvailable timeRemaining

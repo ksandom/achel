@@ -9,7 +9,6 @@ set Local,update,
 	basicMaths Local,progressPercent,~!Local,progressPercent!~,*,100
 	round Local,progressPercent,~!Local,progressPercent!~,0
 	
-	# TODO this should only be done every few goes.
 	# TODO choose a more intellegent width
 	calculateProgressStats ~!Local,progress,position!~,~!Local,progress,total!~,30
 	
@@ -19,6 +18,6 @@ set Local,update,
 	triggerEvent Int,resetOutput
 
 
-throttle 700,~!Local,update!~
+throttle 2000,~!Local,update!~
 if ~!Local,progress,position!~,==,~!Local,progress,total!~,~!Local,update!~
 

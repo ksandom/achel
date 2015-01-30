@@ -1,1 +1,1 @@
-<~~ ~!Codes,r!~[~!Color,green!~~!Local,bar!~~!Color,default!~] ~!Local,progress,position!~/~!Local,progress,total!~ ~!Color,brightBlack!~r=~!Local,progress,remaining!~~!Color,default!~  ~!Local,progressPercent!~%  ~>
+<~~ ~!Codes,r!~[~!Color,green!~~!Local,bar!~~!Color,default!~] ~!Local,progress,position!~/~!Local,progress,total!~ ~!Color,brightBlack!~r=~!Local,progress,remaining!~~!Color,default!~  ~!Local,progressPercent!~% ~!Progress,rate!~/s ~!Progress,timeRemaining!~ remaining  ~!Codes,r!~ ~>

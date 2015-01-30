@@ -80,7 +80,7 @@ class TimeThing extends Module
 	
 	function now($microTime=false)
 	{
-		if ($microTime) return microtime();
+		if ($microTime) return microtime(true);
 		else return time();
 	}
 	
