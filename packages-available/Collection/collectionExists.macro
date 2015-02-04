@@ -1,0 +1,5 @@
+# Test whether a collection exists. --collectionExists=Category,variable,collectionName You should not need to use this in normal programming since the --collectionLoad and --collectionSave are designed to be robust. ~ collection,hidden
+parameters Category,variable,collectionName
+
+dataExists ~!Local,Category!~,~!Local,variable!~,~!Local,collectionName!~
+makeLocalAvailable ~!Local,variable!~

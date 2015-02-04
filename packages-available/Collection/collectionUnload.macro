@@ -1,0 +1,5 @@
+# Unload a collection. --collectionUnload=collectionName ~ hidden,collection
+parameters collectionName
+
+unregisterForEvent Achel,finishGeneral,collectionSave,~!Local,collectionName!~
+unsetCategory ~!Local,collectionName!~

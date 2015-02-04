@@ -1,0 +1,9 @@
+# Delete a collection from disk. --collectionDelete=collectionName  ~ collection
+parameters collectionName
+
+dataDelete ~!Local,collectionName!~
+
+collectionExists Local,collectionExists,~!Local,collectionName!~
+if ~!Local,collectionExists!~,==,false,
+	collectionUnload ~!Local,collectionName!~
+

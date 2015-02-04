@@ -1,0 +1,42 @@
+# UnitTests for collections ~ unitTests,hidden
+
+defineTest collectionLoad - No clobber!,
+	collectionLoad UnitTest
+	set UnitTest,variable2,blah
+	collectionLoad UnitTest
+	expect blah,~!UnitTest,variable2!~
+	unset UnitTest,variable2
+
+defineTest collectionDelete - Is it still there?,
+	collectionLoad UnitTest
+	set UnitTest,variable1,blah
+	collectionDelete UnitTest
+	collectionLoad UnitTest
+	expect ,~!UnitTest,variable1!~
+
+defineTest collectionDelete - Is the data unset?,
+	collectionLoad UnitTest
+	set UnitTest,variable1,blah
+	collectionDelete UnitTest
+	expect ,~!UnitTest,variable1!~
+
+defineTest collectionUnload - Is the data gone from memory?,
+	collectionLoad UnitTest
+	set UnitTest,variable3,blah
+	collectionUnload UnitTest
+	expect ,~!UnitTest,variable3!~
+	
+	collectionDelete UnitTest
+
+defineTest collectionExists - Non-existent,
+	collectionDelete nonExistent
+	collectionExists Local,collectionExists,nonExistent
+	expect false,~!Local,collectionExists!~
+
+defineTest collectionExists - Exists,
+	collectionLoad UnitTest
+	set UnitTest,variable4,blah
+	collectionSave UnitTest
+	
+	collectionExists Local,collectionExists,UnitTest
+	expect true,~!Local,collectionExists!~
