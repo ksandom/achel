@@ -1,4 +1,4 @@
-# Save a specified collection. --collectionSave=collectionName ~ collection
+# Save a specified collection. --collectionSave=collectionName . It's rare that you'll need this because it is automatically executed every time achel terminates. Use it for very specific situations such as exporting to another program but wanting to stay running. ~ collection
 
 if ~!~!Core,categoryMarker!~,~!Global,collectionSave!~!~,!=,,
 	if ~!Global,collectionSave!~,!=,,

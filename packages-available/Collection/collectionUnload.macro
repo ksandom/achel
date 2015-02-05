@@ -3,3 +3,4 @@ parameters collectionName
 
 unregisterForEvent Achel,finishGeneral,collectionSave,~!Local,collectionName!~
 unsetCategory ~!Local,collectionName!~
+unload loadStoreFromData ~!Local,collectionName!~

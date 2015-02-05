@@ -40,3 +40,15 @@ defineTest collectionExists - Exists,
 	
 	collectionExists Local,collectionExists,UnitTest
 	expect true,~!Local,collectionExists!~
+
+defineTest collectionSave - Is the data there?,
+	collectionLoad UnitTest
+	set UnitTest,variable2,blah
+	collectionSave UnitTest
+	
+	collectionUnload UnitTest
+	
+	collectionLoad UnitTest
+	expect blah,~!UnitTest,variable2!~
+	collectionDelete UnitTest
+

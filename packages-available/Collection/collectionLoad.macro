@@ -1,9 +1,10 @@
 # Load a specified collection --collectionLoad=collectionName ~ collection
+parameters collectionName
 
-if ~!Global,collectionLoad!~,!=,,
-	registerForEvent Achel,finishGeneral,collectionSave,~!Global,collectionLoad!~
+if ~!Local,collectionName!~,!=,,
+	registerForEvent Achel,finishGeneral,collectionSave,~!Local,collectionName!~
 	
-	load loadStoreFromData ~!Global,collectionLoad!~
-	unset ~!Core,categoryMarker!~,~!Global,collectionLoad!~
+	load loadStoreFromData ~!Local,collectionName!~
+	unset ~!Core,categoryMarker!~,~!Local,collectionName!~
 else
 	complain Collection: No collection specified.
