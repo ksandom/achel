@@ -1,0 +1,36 @@
+# Unit tests for load. ~ load,unitTest,hidden
+
+
+defineTest Load - executes,
+	set Local,addIt,
+		basicMaths Me,load,~!Me,load!~,+,1
+		makeLocalAvailable load
+	
+	set Me,load,0
+	load ~!Local,addIt!~
+	expect 1,~!Me,load!~
+
+defineTest Load - executes only once,
+	set Local,addIt,
+		basicMaths Me,load,~!Me,load!~,+,1
+		makeLocalAvailable load
+	
+	set Me,load,0
+	load ~!Local,addIt!~
+	load ~!Local,addIt!~
+	load ~!Local,addIt!~
+	expect 1,~!Me,load!~
+
+defineTest Unload - can allow an extra execution,
+	set Local,addIt,
+		basicMaths Me,load,~!Me,load!~,+,1
+		makeLocalAvailable load
+	
+	set Me,load,0
+	load ~!Local,addIt!~
+	load ~!Local,addIt!~
+	unload ~!Local,addIt!~
+	load ~!Local,addIt!~
+	load ~!Local,addIt!~
+	expect 2,~!Me,load!~
+

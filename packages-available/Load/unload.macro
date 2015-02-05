@@ -1,0 +1,3 @@
+# The counter-part to --load. Note that --unload does not actually undo the action taken by --load, but it does remove the references saying that it has done it. This will not be useful byitself for users, but for progreammers it will be useful for allowing a command to be run again. --unload= ~ safe,load
+
+unset Loaded,~!Global,unload!~
