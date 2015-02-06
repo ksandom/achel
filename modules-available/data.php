@@ -195,10 +195,7 @@ class Data extends Module
 		$fullPath="{$this->storageDir}/$source/$storeName.$source.json";
 		if (file_exists($fullPath))
 		{
-			# TODO This needs to be converted to native PHP.
-			# bool unlink ( string $filename [, resource $context ] )
-			$result=`rm "$fullPath"`;
-			if ($result)
+			if (!unlink($fullPath))
 			{
 				$this->core->debug(1, "deleteData: Failed to delete \"$fullPath\" with error \"$result\".");
 			}
