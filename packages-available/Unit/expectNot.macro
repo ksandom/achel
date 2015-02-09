@@ -1,0 +1,10 @@
+# Expect to not get a particular value. --expectNot=expectedValue,actualValue ~ unit,result
+parameters expectedValue,actualValue
+
+if ~!Local,expectedValue!~,!=,~!Local,actualValue!~,
+	if ~!UnitResults,currentResult!~,==,,
+		passTest Got expected result (!="~!Local,actualValue!~").
+	else
+		debug 1,Got expected result (!="~!Local,actualValue!~"), but already have a result. So not setting again.
+else
+	failTest Expected !="~!Local,expectedValue!~" but got =="~!Local,actualValue!~".

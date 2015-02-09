@@ -1,0 +1,15 @@
+# Unit tests for the file system functionality provided in the core. ~ core,hidden,unitTests,fileSystem
+
+defineTest getFileList - get some the right number of entries,
+	getFileList ~!General,configDir!~/repos/achel/testing/filesystem/tree
+	countToVar Local,results
+	expect 3,~!Local,results!~
+
+defineTest getFileList - get the right entries,
+	getFileList ~!General,configDir!~/repos/achel/testing/filesystem/tree
+	stashResults Local,results
+	
+	passTest No incorrect keys
+	expectNot ,~!Local,results,1!~
+	expectNot ,~!Local,results,2!~
+	expectNot ,~!Local,results,3!~

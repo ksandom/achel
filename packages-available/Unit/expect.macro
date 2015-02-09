@@ -2,6 +2,9 @@
 parameters expectedValue,actualValue
 
 if ~!Local,expectedValue!~,==,~!Local,actualValue!~,
-	passTest Got expected result ("~!Local,actualValue!~").
+	if ~!UnitResults,currentResult!~,==,,
+		passTest Got expected result ("~!Local,actualValue!~").
+	else
+		debug 1,Got expected result ("~!Local,actualValue!~"), but already set result. So not setting again.
 else
 	failTest Expected "~!Local,expectedValue!~" but got "~!Local,actualValue!~".

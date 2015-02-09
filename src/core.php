@@ -104,6 +104,10 @@ class core extends Module
 				$this->registerFeature($this, array('callFeature', 'callFeatureReturn'), 'callFeatureReturn', "Call a feature. This essentially allows you to execute what ever is in a variable. Take a lot of care to make sure your variables contain what you think they do as you could introduce a lot of pain here. --callFeature=feature[,parm1[,parm2..etc]]", array('dangerous'));
 				$this->registerFeature($this, array('callFeatureNoReturn', 'isolate'), 'callFeatureNoReturn', "Call a feature but don't return the results. There's two main uses for this. 1) Call something that would normally interfere with the result set. 2) Execute what ever is in a variable without affecting what is in the resultSet. Take a lot of care to make sure your variables contain what you think they do as you could introduce a lot of pain here. This can also be used to isolate a feature so that it doesn't affect the following feature calls. --callFeatureNoReturn=feature[,parm1[,parm2..etc]]", array('dangerous'));
 				
+				
+				$this->registerFeature($this, array('getFileList'), 'getFileList', "Get a simple list of items in a given directory. --getFileList=fullDirectoryPath .", array('filesystem'));
+				$this->registerFeature($this, array('getFileTree'), 'getFileTree', "Get a direcotry tree of items in a given directory. --getFileTree=fullDirectoryPath,[withAttributes] . withAttributes can be true or false (default).", array('filesystem'));
+				
 				$this->registerFeature($this, array('dump'), 'dump', 'Dump internal state.', array('debug', 'dev'));
 				$this->registerFeature($this, array('debug'), 'debug', 'Send parameters to stdout. --debug=debugLevel,outputText eg --debug=0,StuffToWriteOut . DebugLevel is not implemented yet, but 0 will be "always", and above that will only show as the verbosity level is incremented with -v or --verbose.', array('debug', 'dev'));
 				$this->registerFeature($this, array('verbose', 'v', 'verbosity'), 'verbose', 'Increment/set the verbosity. --verbose[=verbosityLevel] where verbosityLevel is an integer starting from 0 (default)', array('debug', 'dev'));
@@ -244,6 +248,13 @@ class core extends Module
 				$parms=$this->interpretParms($this->get('Global', $event));
 				$this->parameters($parms);
 				break;
+			case 'getFileList':
+				return $this->getFileList($this->get('Global', $event));
+				break;
+			case 'getFileTree':
+				$parms=$this->interpretParms($this->get('Global', $event), 2, 1, true);
+				return $this->getFileTree($parms[0], $parms[1]);
+				break;
 			case 'pass':
 				break;
 			case '#':
@@ -366,6 +377,43 @@ class core extends Module
 			}
 		}
 		return $output;
+	}
+	
+	function getFileTree($path, $withAttributes=false)
+	{
+		$entries=$this->getFileList($path);
+		
+		foreach ($entries as $filename=>&$entry)
+		{
+			if (!is_file($entry))
+			{
+				$subEntries=$this->getFileList($entry);
+				if ($withAttributes)
+				{
+					$entry=array(
+						'path' => $entry,
+						'type' => 'directory',
+						'subEntries' => $subEntries
+						);
+				}
+				else
+				{
+					$entry=$subEntries;
+				}
+			}
+			else
+			{
+				if ($withAttributes)
+				{
+					$entry=array(
+						'path' => $entry,
+						'type' => 'file'
+						);
+				}
+			}
+		}
+		
+		return $entries;
 	}
 	
 	function getModules($path)
