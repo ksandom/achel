@@ -13,3 +13,44 @@ defineTest getFileList - get the right entries,
 	expectNot ,~!Local,results,1!~
 	expectNot ,~!Local,results,2!~
 	expectNot ,~!Local,results,3!~
+
+defineTest getFileTree - get some the right number of entries,
+	getFileTree ~!General,configDir!~/repos/achel/testing/filesystem/tree
+	countToVar Local,results
+	expect 3,~!Local,results!~
+
+defineTest getFileTree - get the right entries,
+	getFileTree ~!General,configDir!~/repos/achel/testing/filesystem/tree
+	stashResults Local,results
+	
+	passTest No incorrect keys
+	expectNot ,~!Local,results,1,a.txt!~,1a
+	expectNot ,~!Local,results,1,b.txt!~,1b
+	expectNot ,~!Local,results,1,c.txt!~,1c
+	
+	expectNot ,~!Local,results,2,4,d.txt!~,24d
+	
+	expectNot ,~!Local,results,2,5,e.txt!~,25e
+	expectNot ,~!Local,results,2,5,f.txt!~,25f
+	
+	expectNot ,~!Local,results,2,6,g.txt!~,26g
+	
+	expectNot ,~!Local,results,3,h.txt!~,3h
+	expectNot ,~!Local,results,3,i.txt!~,3i
+	expectNot ,~!Local,results,3,j.txt!~,3j
+	expectNot ,~!Local,results,3,k.txt!~,3k
+	expectNot ,~!Local,results,3,l.txt!~,3l
+	
+	expectNot ,~!Local,results,3,7,8,m.txt!~,378m
+	expectNot ,~!Local,results,3,7,8,n.txt!~,378n
+	expectNot ,~!Local,results,3,7,8,o.txt!~,378o
+	
+	expectNot ,~!Local,results,3,7,p.txt!~,37p
+	expectNot ,~!Local,results,3,7,q.txt!~,37q
+	
+	expectNot ,~!Local,results,3,7,9,r.txt!~,379r
+	expectNot ,~!Local,results,3,7,9,s.txt!~,379s
+	expectNot ,~!Local,results,3,7,9,t.txt!~,379t
+	expectNot ,~!Local,results,3,7,9,u.txt!~,379u
+	
+	

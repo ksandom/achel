@@ -387,7 +387,7 @@ class core extends Module
 		{
 			if (!is_file($entry))
 			{
-				$subEntries=$this->getFileList($entry);
+				$subEntries=$this->getFileTree($entry, $withAttributes);
 				if ($withAttributes)
 				{
 					$entry=array(
