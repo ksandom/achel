@@ -18,6 +18,6 @@ set Local,update,
 	triggerEvent Int,resetOutput
 
 
-throttle 2000,~!Local,update!~
+throttleBetween 100,2000,50,~!Local,update!~
 if ~!Local,progress,position!~,==,~!Local,progress,total!~,~!Local,update!~
 
