@@ -53,4 +53,27 @@ defineTest getFileTree - get the right entries,
 	expectNot ,~!Local,results,3,7,9,t.txt!~,379t
 	expectNot ,~!Local,results,3,7,9,u.txt!~,379u
 	
+
+defineTest getFileTree with attributes - get some the right number of entries,
+	getFileTree ~!General,configDir!~/repos/achel/testing/filesystem/tree,true
+	countToVar Local,results
+	expect 3,~!Local,results!~
+
+defineTest getFileTree with attributes - get the right entries,
+	getFileTree ~!General,configDir!~/repos/achel/testing/filesystem/tree,true
+	stashResults Local,results1
+	
+	passTest Found some correct entries
+	expectNot ,~!Local,results1,1,subEntries,a.txt!~,1a
+	expectNot ,~!Local,results1,1,subEntries,b.txt!~,1b
+	expectNot ,~!Local,results1,1,subEntries,c.txt!~,1c
+	
+	expectNot ,~!Local,results1,3,subEntries,7,subEntries,8,subEntries,m.txt!~,378m
+	expectNot ,~!Local,results1,3,subEntries,7,subEntries,8,subEntries,n.txt!~,378n
+	expectNot ,~!Local,results1,3,subEntries,7,subEntries,8,subEntries,o.txt!~,378o
+	
+	expect file,~!Local,results1,3,subEntries,7,subEntries,8,subEntries,o.txt,type!~
+	expect directory,~!Local,results1,3,subEntries,7,subEntries,8,type!~
+	
+	
 	
