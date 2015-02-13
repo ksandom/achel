@@ -518,6 +518,20 @@ class core extends Module
 		return $output;
 	}
 	
+	private function setStackEntry($nesting, $argument, $value)
+	{
+		$this->setNestedViaPath(array("Core", "stack", $nesting), array(
+			'feature'=>$argument,
+			'value'=>$value,
+			'nesting'=>$nesting
+			));
+	}
+	
+	private function unsetStackEntry($nesting)
+	{
+		$this->doUnset(array("Core", "stack", $nesting));
+	}
+	
 	function callFeature($argument, $value='')
 	{
 		$nesting=$this->get('Core', 'nesting');
@@ -534,6 +548,8 @@ class core extends Module
 				$valueIn=$this->processValue($value);
 				
 				$this->debug(4, "INVOKE-Enter {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn");
+				
+				$this->setStackEntry($nesting, $argument, $value);
 				
 				if ($this->isVerboseEnough(5))
 				{
@@ -566,6 +582,8 @@ class core extends Module
 				{
 					$this->removeArgs($obj['name'], $numberOfArgs);
 				}
+				
+				$this->unsetStackEntry($nesting);
 				
 				if ($this->isVerboseEnough(4))
 				{
@@ -1078,6 +1096,7 @@ class core extends Module
 				# Iterate through the actions to be taken
 				foreach ($this->store['Macros'][$macroName] as $actionItem)
 				{
+					$this->setStackEntry($nesting, $actionItem['name'], $actionItem['value']);
 					$entryNesting=$this->get('Core', 'nesting');
 					$this->debug(5, "ITER $macroName/$nesting - {$actionItem['name']}: Result count before invoking=".count($this->getResultSet()));
 					# $this->debugResultSet("$macroName - {$actionItem['name']}");
@@ -1091,6 +1110,8 @@ class core extends Module
 					$this->debug(4, "ITER $macroName/$entryNesting -> $macroName/$exitNesting - {$actionItem['name']}: Result count after set=".count($this->getResultSet()));
 				}
 				$resultSet=$this->getResultSet();
+				
+				$this->unsetStackEntry($nesting);
 				
 				# Set the shared memory and scope back to the previous nesting level
 				$this->decrementNesting();
