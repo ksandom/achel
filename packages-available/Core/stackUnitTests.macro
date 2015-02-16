@@ -4,8 +4,8 @@ defineTest getPreviousStackData default,
 	getPreviousStackData Local,previousStackData
 	expect stackUnitTests--3,~!Local,previousStackData,feature!~
 
-defineTest getPreviousStackData - TODO,
-	getPreviousStackData Local,previousStackData
+defineTest getPreviousStackData - 2,
+	getPreviousStackData Local,previousStackData,3
 	expect stackUnitTests,~!Local,previousStackData,feature!~
 
 defineTest stackTrace - Do we get results?,

@@ -1,12 +1,11 @@
-# Get the stack data for the previously run feature. --getPreviousStackData=Category,variable,[nestingOffset] . nestingOffset defaults to 2. Increasing the nestingOffset will take you further into the stack. ~ core,stack
-parameters {"Category":{"required":"1"},"variable":{"required":"1"},"nestingOffset":{"default":"2"}}
+# Get the stack data for the previously run feature. --getPreviousStackData=Category,variable,[nestingOffset] . nestingOffset defaults to 0. Increasing the nestingOffset will take you further down the stack. Much beyond 3 probably isn't sensible. ~ core,stack
+parameters {"Category":{"required":"1"},"variable":{"required":"1"},"nestingOffset":{"default":0}}
 
-# ~!Core,stack,~!Core,nesting!~!~
 retrieveResults Core,stack
 
-# TODO it looks like it's not working because the nesting level has not been decremeneted.
 basicMaths Local,nesting,~!Core,nesting!~,-,~!Local,nestingOffset!~
+basicMaths Local,nesting,~!Local,nesting!~,-,2
 
-# debug 0,coreNesting=~!Local,nesting!~ feature=~!Core,stack,~!Local,nesting!~,feature!~ nesting=~!Core,stack,~!Local,nesting!~,nesting!~ entry=~!Core,stack,~!Local,nesting!~!~ everything=~!Core,stack!~
+entry=~!Core,stack,~!Local,nesting!~!~ everything=~!Core,stack!~
 set ["~!Local,Category!~","~!Local,variable!~",~!Core,stack,~!Local,nesting!~!~]
 makeLocalAvailable ~!Local,variable!~
