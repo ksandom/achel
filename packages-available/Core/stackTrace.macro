@@ -1,0 +1,20 @@
+# Dump stack ~ core,debugging,debug
+
+templateOut stackTrace
+
+# Get the stack
+retrieveResults Core,stack
+
+# Set the default color
+resultSet color,~!Color,default!~
+
+
+# Manipulate it and bring it back
+stashResults Local,setColor
+
+# Highlight the place where the stacktrace was invoked
+basicMaths Local,nesting,~!Core,nesting!~,-,2
+setNested Local,setColor,~!Local,nesting!~,color,~!Color,reverseWhite!~
+
+retrieveResults Local,setColor
+

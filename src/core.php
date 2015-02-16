@@ -202,6 +202,7 @@ class core extends Module
 			case 'retrieveResults':
 				$originalParms=$this->get('Global', 'retrieveResults');
 				$parms=$this->interpretParms($originalParms);
+				# TODO this should be in an If condition like stashResults
 				$this->requireNumParms($this, 2, $event, $originalParms, $parms);
 				return $this->getNested($parms);
 				break;
@@ -291,7 +292,7 @@ class core extends Module
 				$parts=json_decode($parms, 1);
 				if (!count($parts))
 				{
-					$this->debug(0, "interpretParms: Got 0 parts back from json \"$parms\" which usually means invalid json. I've caused this myself when chosing the wrong combination of { vs [.");
+					$this->debug(0, "interpretParms: Got 0 parts back from json \"$parms\" which usually means invalid json.");
 					
 					# TODO Do we want to do some other clean up here.
 					$parts=array(); // Prevent stuff from breaking since they always expect an array.
@@ -549,7 +550,7 @@ class core extends Module
 				
 				$this->debug(4, "INVOKE-Enter {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn");
 				
-				$this->setStackEntry($nesting, $argument, $value);
+				$this->setStackEntry($nesting, $argument, $valueIn);
 				
 				if ($this->isVerboseEnough(5))
 				{
@@ -1096,7 +1097,6 @@ class core extends Module
 				# Iterate through the actions to be taken
 				foreach ($this->store['Macros'][$macroName] as $actionItem)
 				{
-					$this->setStackEntry($nesting, $actionItem['name'], $actionItem['value']);
 					$entryNesting=$this->get('Core', 'nesting');
 					$this->debug(5, "ITER $macroName/$nesting - {$actionItem['name']}: Result count before invoking=".count($this->getResultSet()));
 					# $this->debugResultSet("$macroName - {$actionItem['name']}");
