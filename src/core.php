@@ -740,12 +740,11 @@ class core extends Module
 					}
 					
 					// Manipulations
-					# TODO there is a bug in these tests. If they are 0 they may not to the right thing.
 					$max=(isset($args['max']))?$args['max']:false;
-					if ($max and $value>$max) $value=$max;
+					if (($max or $max == 0) and $value>$max) $value=$max;
 					
 					$min=(isset($args['min']))?$args['min']:false;
-					if ($min and $value<$min) $value=$min;
+					if (($min or $min == 0) and $value<$min) $value=$min;
 				}
 				else
 				{

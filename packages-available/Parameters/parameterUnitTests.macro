@@ -122,6 +122,20 @@ defineTest 1 parameter (nested json) - number fail 3!<2<6=3,
 	
 	callFeature ~!Tmp,feature!~,2
 
+defineTest 1 parameter (nested json) - number fail 0<-1<6=0,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"number","min":"0","max":"6"}}
+		expect 0,~!Local,variable1!~
+	
+	callFeature ~!Tmp,feature!~,-1
+
+defineTest 1 parameter (nested json) - number fail -3<2<0=0,
+	set Tmp,feature,
+		parameters {"variable1":{"type":"number","min":"-3","max":"0"}}
+		expect 0,~!Local,variable1!~
+	
+	callFeature ~!Tmp,feature!~,2
+
 
 defineTest 1 parameter (nested json) - number pass 3<4<6 allowed,
 	set Tmp,feature,
