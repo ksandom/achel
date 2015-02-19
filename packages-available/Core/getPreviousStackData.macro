@@ -1,10 +1,11 @@
 # Get the stack data for the previously run feature. --getPreviousStackData=Category,variable,[nestingOffset] . nestingOffset defaults to 0. Increasing the nestingOffset will take you further down the stack. Much beyond 3 probably isn't sensible. ~ core,stack
-parameters {"Category":{"required":"1"},"variable":{"required":"1"},"nestingOffset":{"default":0,"type":"number","minValue":"0"}}
 
+parameters {"Category":{"required":"1"},"variable":{"required":"1"},"nestingOffset":{"default":0,"type":"number","min":"0"}}
 retrieveResults Core,stack
 
 basicMaths Local,nesting,~!Core,nesting!~,-,~!Local,nestingOffset!~
 basicMaths Local,nesting,~!Local,nesting!~,-,2
+debug 0,c=~!Core,nesting!~ l=~!Local,nesting!~ o=~!Local,nestingOffset!~
 
 set ["~!Local,Category!~","~!Local,variable!~",~!Core,stack,~!Local,nesting!~!~]
 makeLocalAvailable ~!Local,variable!~

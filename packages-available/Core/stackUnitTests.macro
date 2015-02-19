@@ -1,16 +1,18 @@
 # Unit tests for debugging the stack ~ hidden,unitTest
 
-defineTest getPreviousStackData default,
+defineTest getPreviousStackData - default,
 	getPreviousStackData Local,previousStackData
 	expect stackUnitTests--3,~!Local,previousStackData,feature!~
 
-defineTest getPreviousStackData -2,
-	getPreviousStackData Local,previousStackData
+defineTest getPreviousStackData - -2,
+	getPreviousStackData Local,previousStackData,-2
 	expect stackUnitTests--7,~!Local,previousStackData,feature!~
 
-defineTest getPreviousStackData - 2,
+defineTest getPreviousStackData - 3,
 	getPreviousStackData Local,previousStackData,3
 	expect stackUnitTests,~!Local,previousStackData,feature!~
+	stackTrace
+	outNow
 
 defineTest stackTrace - Do we get results?,
 	clearResultset
