@@ -5,4 +5,10 @@ set UnitResults,currentResult,~!Local,result!~
 set UnitResults,currentComment,~!Local,comment!~
 set UnitResults,currentColor,~!UnitResults,~!Local,result!~Color!~
 
+if ~!Local,result!~,!=,pass,
+	stackTrace
+	stashResults UnitResults,currentStackTrace
+else
+	setNested UnitResults,currentStackTrace,na,NA
+
 debug 2,setTestResult: Recieved result=~!UnitResults,currentResult!~ comment==~!UnitResults,currentComment!~

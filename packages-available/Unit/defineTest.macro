@@ -24,6 +24,8 @@ setNested UnitResults,results,~!Local,description!~,description,~!Local,descript
 setNested UnitResults,results,~!Local,description!~,result,~!UnitResults,currentResult!~
 setNested UnitResults,results,~!Local,description!~,resultComment,~!UnitResults,currentComment!~
 setNested UnitResults,results,~!Local,description!~,resultColor,~!UnitResults,currentColor!~
+setNested ["UnitResults","results","~!Local,description!~","stackTrace",~!UnitResults,currentStackTrace!~]
+
 
 
 resetTest
