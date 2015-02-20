@@ -210,7 +210,7 @@ defineTest 1 parameter (nested json) - boolean false 0,
 	
 	callFeature ~!Tmp,feature!~,0
 
-defineTest 1 parameter (nested json) - boolean false "" (default),
+defineTest 1 parameter (nested json) - boolean false '' (default),
 	set Tmp,feature,
 		parameters {"variable1":{"type":"boolean","default":"true"}}
 		expect true,~!Local,variable1!~
