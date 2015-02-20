@@ -7,9 +7,9 @@ set UnitResults,pass,0
 set UnitResults,fail,0
 set UnitResults,warn,0
 
-set UnitResults,passColor,~!Color,green!~
-set UnitResults,failColor,~!Color,red!~
-set UnitResults,warnColor,~!Color,yellow!~
+set UnitResults,passColor,green
+set UnitResults,failColor,red
+set UnitResults,warnColor,yellow
 
 debug 3,unitTests: Set colours ~!UnitResults,passColor!~pass~!Color,brightBlack!~, ~!UnitResults,failColor!~fail~!Color,brightBlack!~, ~!UnitResults,warnColor!~warn~!Color,default!~.
 

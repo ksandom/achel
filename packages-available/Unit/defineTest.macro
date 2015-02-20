@@ -1,6 +1,7 @@
 # Define a unit test. --defineTest=description, . Code to be tested should be nested and --passTest, --failTest or --warnTest should be included in that logic. Description MUST be unique to the test. ~ unit
 parameters description,featureName
 
+debug 1,defineTest: Begin test "~!Local,description!~"
 set Local,defineTest-description,~!Local,description!~
 
 if ~!Local,featureName!~,!=,,
@@ -30,3 +31,5 @@ setNested ["UnitResults","results","~!Local,description!~","stackTrace",~!UnitRe
 
 resetTest
 unset Local,defineTest-description
+
+debug 2,defineTest: End test "~!Local,description!~"

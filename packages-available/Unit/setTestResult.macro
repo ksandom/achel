@@ -9,6 +9,7 @@ if ~!Local,result!~,!=,pass,
 	stackTrace
 	stashResults UnitResults,currentStackTrace
 else
+	unset UnitResults,currentStackTrace
 	setNested UnitResults,currentStackTrace,na,NA
 
 debug 2,setTestResult: Recieved result=~!UnitResults,currentResult!~ comment==~!UnitResults,currentComment!~
