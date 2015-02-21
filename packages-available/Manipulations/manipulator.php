@@ -46,6 +46,8 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('chooseBasedOn'), 'chooseBasedOn', 'For each item in the result set, choose the value of an array based on the modulous of a named value in the result set and the number of items in the array. This would naturally work well with --pos. --chooseBasedOn=inputValueName,outputValueName,inputCategory[,inputValueName,[subInputValueName,[etc,[etc]]]]', array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('crc'), 'crc', "For each item in the result set, calculate the CRC of a specified value and set a specified value to that CRC. --crc=inputValueName,outputValueName . Please see the warning on http://uk3.php.net/crc32 for information about it's acuracy. You may want to check out --positiveCRC which is good enough for what I want.", array('result', 'crc', 'Manipulations'));
 				$this->core->registerFeature($this, array('positiveCRC'), 'positiveCRC', "For each item in the result set, calculate the CRC of a specified value and set a specified value to that CRC. --positiveCRC=inputValueName,outputValueName . If the result is negative, take the absolute value. Please see the warning on http://uk3.php.net/crc32 for why this is useful. Note that this output may not be consistent with other applications generating a CRC. If you need that consistency, then you probably want --crc.", array('result', 'crc', 'Manipulations'));
+				$this->core->registerFeature($this, array('escape'), 'escape', "Escape a string to be used is something like manually created json. --escape=Category,variable,value . Note that this currently doesn't handle a comma (,) very well.", array('Manipulations'));
+				
 				
 				$this->core->registerFeature($this, array('firstResult', 'firstResults', 'first'), 'firstResult', "Take the first x results, where x is one if not specified. --firstResult[=x]", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('lastResult', 'lastResults', 'last'), 'lastResult', "Take the last x results, where x is one if not specified. --lastResult=x", array('result', 'Manipulations'));
@@ -180,6 +182,12 @@ class Manipulator extends Module
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 2, 2, true);
 				return $this->crc($this->core->getResultSet(), $parms[0], $parms[1], true);;
 				break;
+			
+			case 'escape':
+				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3, true);
+				$this->core->set($parms[0], $parms[1], $this->escape($parms[2]));
+				break;
+			
 			case 'firstResult':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 1, 0);
 				return $this->offsetResult($this->core->getResultSet(), 0, $parms[0]);
@@ -270,6 +278,11 @@ class Manipulator extends Module
 		}
 		
 		return $output;
+	}
+	
+	function escape($value)
+	{
+		return addslashes($value);
 	}
 	
 	function processResultVarsInString($input, $string)

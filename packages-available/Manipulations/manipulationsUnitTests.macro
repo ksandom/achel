@@ -1,0 +1,5 @@
+# Unit tests for doing manipulations ~ unitTest,hidden,manipulations
+
+defineTest write a test for escape,
+	escape Local,escaped,a"b
+	expect a\"b,~!Local,escaped!~
