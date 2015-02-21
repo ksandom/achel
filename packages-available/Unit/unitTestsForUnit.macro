@@ -1,0 +1,7 @@
+# Unit tests for the Unit testing framework. ~ hidden,unitTest,ut
+
+defineTest Stub test with " in it,
+	passTest This test is used for reference.
+
+defineTest Did the stub test get referenced correctly?,
+	expect pass,~!UnitResults,results,Stub test with " in it,result!~

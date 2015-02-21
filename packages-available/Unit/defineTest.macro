@@ -1,8 +1,9 @@
 # Define a unit test. --defineTest=description, . Code to be tested should be nested and --passTest, --failTest or --warnTest should be included in that logic. Description MUST be unique to the test. ~ unit
 parameters description,featureName
 
-debug 1,defineTest: Begin test "~!Local,description!~"
-set Local,defineTest-description,~!Local,description!~
+set Tmp,defineTest-description,~!Local,description!~
+escape Local,escapedDescription,~!Local,description!~
+debug 1,defineTest: Begin test "~!Local,description!~" key="~!Local,escapedDescription!~"
 
 if ~!Local,featureName!~,!=,,
 	callFeatureNoReturn ~!Local,featureName!~
@@ -21,11 +22,13 @@ else
 
 basicMaths UnitResults,~!UnitResults,currentResult!~,~!UnitResults,~!UnitResults,currentResult!~!~,+,1
 
-setNested UnitResults,results,~!Local,description!~,description,~!Local,description!~
-setNested UnitResults,results,~!Local,description!~,result,~!UnitResults,currentResult!~
-setNested UnitResults,results,~!Local,description!~,resultComment,~!UnitResults,currentComment!~
-setNested UnitResults,results,~!Local,description!~,resultColor,~!UnitResults,currentColor!~
-setNested ["UnitResults","results","~!Local,description!~","stackTrace",~!UnitResults,currentStackTrace!~]
+escape Local,escapedComment,~!UnitResults,currentComment!~
+
+setNested ["UnitResults","results","~!Local,escapedDescription!~","description","~!Local,escapedDescription!~"]
+setNested ["UnitResults","results","~!Local,escapedDescription!~","result","~!UnitResults,currentResult!~"]
+setNested ["UnitResults","results","~!Local,escapedDescription!~","resultComment","~!UnitResults,escapedComment!~"]
+setNested ["UnitResults","results","~!Local,escapedDescription!~","resultColor","~!UnitResults,currentColor!~"]
+setNested ["UnitResults","results","~!Local,escapedDescription!~","stackTrace",~!UnitResults,currentStackTrace!~]
 
 
 
