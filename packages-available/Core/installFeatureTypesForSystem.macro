@@ -2,3 +2,5 @@
 #onDefine registerForEvent Install,featureTypes,installFeatureTypesForSystem
 
 createFeatureType feature,,feature,Generates a list of features.
+createFeatureType stackTrace,,stackTrace,Generates a stack trace at the current execution point.
+createFeatureType stackTraceWithValues,,stackTraceWithValues,Generates a stack trace  at the current execution point including the parameters passed at each leap.

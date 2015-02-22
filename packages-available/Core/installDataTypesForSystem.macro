@@ -2,3 +2,5 @@
 #onDefine registerForEvent Install,dataTypes,installDataTypesForSystem
 
 createDataType feature,feature,feature,feature,,Features
+createDataType stackTrace,stackTrace,,,,Stack trace
+createDataType stackTraceWithValues,stackTraceWithValues,,,,Stack trace with the parameters used in each leap.

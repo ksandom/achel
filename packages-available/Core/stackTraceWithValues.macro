@@ -1,6 +1,5 @@
-# Dump stack ~ core,debugging,debug
-
-templateOut stackTraceWithValues
+# Dump stack with the parameters that were used at each leap. ~ core,debugging,debug
+#onLoaded setFeatureType stackTraceWithValues,stackTraceWithValues
 
 # Get the stack
 retrieveResults Core,stack
