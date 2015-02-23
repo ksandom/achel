@@ -26,7 +26,7 @@ escape Local,escapedComment,~!UnitResults,currentComment!~
 
 setNested ["UnitResults","results","~!Local,escapedDescription!~","description","~!Local,escapedDescription!~"]
 setNested ["UnitResults","results","~!Local,escapedDescription!~","result","~!UnitResults,currentResult!~"]
-setNested ["UnitResults","results","~!Local,escapedDescription!~","resultComment","~!UnitResults,escapedComment!~"]
+setNested ["UnitResults","results","~!Local,escapedDescription!~","resultComment","~!Local,escapedComment!~"]
 setNested ["UnitResults","results","~!Local,escapedDescription!~","resultColor","~!UnitResults,currentColor!~"]
 setNested ["UnitResults","results","~!Local,escapedDescription!~","stackTrace",~!UnitResults,currentStackTrace!~]
 
