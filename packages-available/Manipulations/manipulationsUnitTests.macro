@@ -1,5 +1,17 @@
 # Unit tests for doing manipulations ~ unitTest,hidden,manipulations
 
-defineTest write a test for escape,
+defineTest escape,
 	escape Local,escaped,a"b
 	expect a\"b,~!Local,escaped!~
+
+defineTest escapeForJson,
+	escapeForJson Local,escaped,a"b'c
+	expect a\"b'c,~!Local,escaped!~
+
+defineTest replaceInString,
+	replaceInString Local,replaced,silly,good,a silly string
+	expect a good string,~!Local,replaced!~
+
+defineTest replaceRegexInString,
+	replaceRegexInString Local,replaced,b[0-9],censored,a2-b3-c4
+	expect a2-censored-c4,~!Local,replaced!~

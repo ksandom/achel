@@ -1,0 +1,5 @@
+# Escape a string to be encoded in a manually crafted json string. --escape=Category,variable,inputString
+parameters Category,variable,inputString
+
+replaceInString ~!Local,Category!~,~!Local,variable!~,",\",~!Local,inputString!~
+makeLocalAvailable ~!Local,variable!~

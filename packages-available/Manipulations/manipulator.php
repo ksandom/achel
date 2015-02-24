@@ -20,6 +20,9 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('f', 'flatten'), 'flatten', 'Flatten an array of arrays into a keyed array of values. --flatten[=limit] (default:-1). Note that "limit" specifies how far to go into the nesting before simply returning what ever is below. Choosing a negative number specifies how many levels to go in before beginning to flatten. Choosing 0 sets no limit.', array('array', 'string', 'Manipulations'));
 				$this->core->registerFeature($this, array('finalFlatten'), 'finalFlatten', 'To be used after a --flatten as gone as far as it can.', array('array', 'string', 'Manipulations'));
 				$this->core->registerFeature($this, array('replace'), 'replace', 'Replace a pattern matching a regular expression and replace it with something defined. --replace=searchRegex,replacement', array('array', 'string', 'Manipulations'));
+				$this->core->registerFeature($this, array('replaceInString'), 'replaceInString', "Replace a string within a string. --replaceInString=Category,variable,search,replace,inputString", array('Manipulations'));
+				$this->core->registerFeature($this, array('replaceRegexInString'), 'replaceRegexInString', "Replace a regex matched string within a string. --replaceRegexInString=Category,variable,search,replace,inputString", array('Manipulations'));
+
 				$this->core->registerFeature($this, array('unique'), 'unique', 'Only keep unique entries. The exception is non-string values will simply be kept without being compared.', array('array', 'string', 'Manipulations'));
 				$this->core->registerFeature($this, array('requireEach', 'refine'), 'requireEach', 'Require each entry to match this regular expression. --requireEach=regex', array('array', 'result', 'Manipulations'));
 				$this->core->registerFeature($this, array('recursiveRequireEach', 'recursiveRefine'), 'recursiveRequireEach', 'Require each entry to match this regular expression somewhere in its dataset. --requireEach=regex', array('array', 'result', 'Manipulations'));
@@ -114,6 +117,14 @@ class Manipulator extends Module
 			case 'replace':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2);
 				return $this->replaceUsingRegex($this->core->getResultSet(), $parms[0], $parms[1]);
+				break;
+			case 'replaceInString':
+				$parms=$this->core->interpretParms($this->core->get('Global', $event), 5, 5);
+				$this->core->set($parms[0], $parms[1], str_replace($parms[2], $parms[3], $parms[4]));
+				break;
+			case 'replaceRegexInString':
+				$parms=$this->core->interpretParms($this->core->get('Global', $event), 5, 5);
+				$this->core->set($parms[0], $parms[1], $this->replaceUsingRegex($parms[4], $parms[2], $parms[3]));
 				break;
 			case 'unique':
 				return $this->unique($this->core->getResultSet());
@@ -372,12 +383,19 @@ class Manipulator extends Module
 		$replaceArray=array($replace);
 		$output=array();
 		
-		foreach ($dataIn as $line)
+		if (is_array($dataIn))
 		{
-			$output[]=preg_replace($searchArray, $replaceArray, $line);
+			foreach ($dataIn as $line)
+			{
+				$output[]=preg_replace($searchArray, $replaceArray, $line);
+			}
+			
+			return $output;
 		}
-		
-		return $output;
+		else
+		{
+			return preg_replace($searchArray, $replaceArray, $dataIn);
+		}
 	}
 	
 	function unique($dataIn)
