@@ -22,7 +22,7 @@ else
 
 basicMaths UnitResults,~!UnitResults,currentResult!~,~!UnitResults,~!UnitResults,currentResult!~!~,+,1
 
-escape Local,escapedComment,~!UnitResults,currentComment!~
+escapeForJson Local,escapedComment,~!UnitResults,currentComment!~
 
 setNested ["UnitResults","results","~!Local,escapedDescription!~","description","~!Local,escapedDescription!~"]
 setNested ["UnitResults","results","~!Local,escapedDescription!~","result","~!UnitResults,currentResult!~"]
