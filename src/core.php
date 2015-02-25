@@ -741,10 +741,10 @@ class core extends Module
 					
 					// Manipulations
 					$max=(isset($args['max']))?$args['max']:false;
-					if (($max or $max == 0) and $value>$max) $value=$max;
+					if (($max !== false) and $value>$max) $value=$max;
 					
 					$min=(isset($args['min']))?$args['min']:false;
-					if (($min or $min == 0) and $value<$min) $value=$min;
+					if (($min !== false) and $value<$min) $value=$min;
 				}
 				else
 				{
