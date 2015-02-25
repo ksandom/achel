@@ -2,7 +2,7 @@
 parameters description,featureName
 
 set Tmp,defineTest-description,~!Local,description!~
-escape Local,escapedDescription,~!Local,description!~
+escapeForJson Local,escapedDescription,~!Local,description!~
 debug 1,defineTest: Begin test "~!Local,description!~" key="~!Local,escapedDescription!~"
 
 if ~!Local,featureName!~,!=,,
