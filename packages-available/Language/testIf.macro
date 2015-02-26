@@ -121,6 +121,6 @@ defineTest ifNested false,
 	unset Tmp,a,b
 	failTest no result??
 	ifNested Tmp,a,b,
-		failTest Found a non-existent variable.
+		failTest Found a non-existent variable="~!Tmp,a,b!~".
 	else
 		passTest false.

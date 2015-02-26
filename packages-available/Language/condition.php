@@ -33,7 +33,7 @@ class Condition extends Module
 				$this->core->setFeatureAttribute('elseIf', 'indentFeature', 'lastIf');
 				$this->core->registerFeature($this, array('else'), 'else', 'Do the inverse of the last condition. Currently only supported by --if --else=command[, arguments] .', array('language'));
 				$this->core->setFeatureAttribute('else', 'indentFeature', 'else');
-				$this->core->registerFeature($this, array('ifNested'), 'ifNested', 'Checks for the existence of a nested variable. ifNested', '--ifNested=Category,variable1[,variable2[,variable3[,...]]], . It is expected that this will be used with indented code. Therefore a comma is required at the end of the line. It is also possible to put a command without parameters as the last parameter the end instead. For the sake of readability this is not recommended. --ifNested is compatible with --else and --elseIf.', array('language'));
+				$this->core->registerFeature($this, array('ifNested'), 'ifNested', 'Checks for the existence of a nested variable. --ifNested=Category,variable1[,variable2[,variable3[,...]]], . It is expected that this will be used with indented code. Therefore a comma is required at the end of the line. It is also possible to put a command without parameters as the last parameter the end instead. For the sake of readability this is not recommended. --ifNested is compatible with --else and --elseIf.', array('language'));
 				$this->core->registerFeature($this, array('resetIf'), 'resetIf', 'Reset the status of the last --if. This means that both --lastIf and --else will not evaluate to true.', array('language'));
 				break;
 			case 'followup':
@@ -198,7 +198,7 @@ class Condition extends Module
 		
 		$result=($value!==false);
 		$this->core->set('Me', 'conditionMatched', $result);
-		return $lastValue;
+		if ($result) return $lastValue;
 	}
 	
 	function takeAction($parms)
