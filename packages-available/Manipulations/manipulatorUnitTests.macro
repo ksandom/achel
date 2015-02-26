@@ -19,23 +19,24 @@ set Tmp,destoryDataSet,
 	unset Tmp,dataSet
 
 defineTest copyResultVar,
+	failTest no results.
 	callFeature ~!Tmp,createDataSet!~
 	
-	failTest no results.
 	copyResultVar A,D
+	first
 	loop
-		expect 1,~!Result,D!~
+		expect 1,~!Result,D!~,,true
 	
 	
 	callFeature ~!Tmp,destroyDataSet!~
 
 defineTest moveResultVar - destination,
+	failTest no results.
 	callFeature ~!Tmp,createDataSet!~
 	
-	failTest no results.
 	moveResultVar B,E
 	loop
-		expect 2,~!Result,E!~
+		expect 2,~!Result,E!~,,true
 	
 	
 	callFeature ~!Tmp,destroyDataSet!~
@@ -46,7 +47,7 @@ defineTest moveResultVar - source,
 	failTest no results.
 	moveResultVar B,E
 	loop
-		expect ,~!Result,B!~
+		expect ,~!Result,B!~,,true
 	
 	
 	callFeature ~!Tmp,destroyDataSet!~
