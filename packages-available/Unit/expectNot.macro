@@ -1,10 +1,13 @@
-# Expect to not get a particular value. --expectNot=expectedValue,actualValue ~ unit,result
-parameters expectedValue,actualValue,comment
+# Expect to not get a particular value. --expectNot=expectedValue,actualValue,[authoritive] . If authoritive is true, this test will override previous results. Default is false. ~ unit,result
+parameters expectedValue,actualValue,comment,authoritive
 
 if ~!Local,expectedValue!~,!=,~!Local,actualValue!~,
 	if ~!UnitResults,currentResult!~,==,,
 		passTest Got expected result (!="~!Local,actualValue!~"). ~!Local,comment!~
 	else
-		debug 1,Got expected result (!="~!Local,actualValue!~"), but already have a result. So not setting again.
+		if ~!Local,authoritive!~,==,true,
+			passTest Got expected result ("~!Local,actualValue!~"). ~!Local,comment!~
+		else
+			debug 1,Got expected result (!="~!Local,actualValue!~"), but already have a result. So not setting again.
 else
 	failTest Expected !="~!Local,expectedValue!~" but got =="~!Local,actualValue!~". ~!Local,comment!~
