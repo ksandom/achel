@@ -247,24 +247,42 @@ class Macro extends Module
 				$this->core->setResultSetNoRef(array(), 'loop');
 			}
 			
+			
+			# TODO track previous and next
 			$this->initProgress($input);
-			foreach ($input as $key=>$in)
+			$keys=array_keys($input);
+			foreach ($keys as $position=>$key)
 			{
+				$in=$input[$key];
 				$this->updateProgress();
 				$this->core->debug(5, "loopMacro iterated for key $key");
+				
+				# Create Result category for referencing the current position in the resultSet.
 				if (is_array($in)) $this->core->setCategoryModule('Result', $in);
 				else
 				{
 					$this->core->setCategoryModule('Result', array());
 					$this->core->set('Result', 'line', $in);
 				}
+				
+				# Add the current key
 				$this->core->set('Result', 'key', $key);
 				
+				# Add the surrounding keys
+				if (isset($keys[$position-1])) $this->core->set('Result', 'previousKey', $keys[$position-1]);
+				if (isset($keys[$position+1])) $this->core->set('Result', 'nextKey', $keys[$position+1]);
+				
+				# The environment is setup. Let's do the work.
 				$this->core->callFeature($macroName, $macroParms);
 				$result=$this->core->getCategoryModule('Result');
 				if (count($result)==1) $single=(isset($result['line']));
 				else $single=false;
 				
+				# This data is unlikely to be useful in most situations. So we shouldn't polute arbitrary data with it.
+				$this->core->doUnset(array('Result', 'previousKey'));
+				$this->core->doUnset(array('Result', 'nextKey'));
+				
+				# Put the data back ready to be sent back to the ResultSet
 				if ($single)
 				{
 					$output[$key]=$result['line'];
@@ -276,6 +294,8 @@ class Macro extends Module
 				}
 			}
 			$this->removeProgress();
+			
+			# TODO remove Result
 		}
 		else $this->core->debug(5, "loopMacro: No input!");
 		

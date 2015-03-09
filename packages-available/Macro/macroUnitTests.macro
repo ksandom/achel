@@ -1,0 +1,39 @@
+# Unit tests for the macro module. ~ unitTest,module,hidden,macro,macroUnit
+
+set Me,getTestData,
+	setNested Local,testData,a,1
+	setNested Local,testData,b,2
+	setNested Local,testData,c,3
+	setNested Local,testData,d,4
+	setNested Local,testData,e,5
+	# retrieveResults Local,testData
+	makeLocalAvailable testData
+
+
+
+defineTest macro - loop does iterations,
+	set Local,iteractionsCount,0
+	
+	callFeature ~!Me,getTestData!~
+	retrieveResults Local,testData
+	
+	loop
+		basicMaths Local,iteractionsCount,~!Local,iteractionsCount!~,+,1
+	
+	expect 5,~!Local,iteractionsCount!~
+
+defineTest macro - loop gets correct data,
+	unset Local,testResult
+	
+	callFeature ~!Me,getTestData!~
+	retrieveResults Local,testData
+	
+	loop
+		setNested Local,testResult,a~!Result,key!~,~!Result,line!~
+	
+	expect 1,~!Local,testResult,aa!~
+	expect 2,~!Local,testResult,ab!~
+	expect 3,~!Local,testResult,ac!~
+	expect 4,~!Local,testResult,ad!~
+	expect 5,~!Local,testResult,ae!~
+
