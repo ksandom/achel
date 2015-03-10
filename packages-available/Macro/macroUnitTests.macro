@@ -37,3 +37,33 @@ defineTest macro - loop gets correct data,
 	expect 4,~!Local,testResult,ad!~
 	expect 5,~!Local,testResult,ae!~
 
+defineTest macro - loop gets correct next data,
+	unset Local,testResult
+	
+	callFeature ~!Me,getTestData!~
+	retrieveResults Local,testData
+	
+	loop
+		setNested Local,testResult,a~!Result,key!~,~!Result,nextKey!~
+	
+	expect b,~!Local,testResult,aa!~
+	expect c,~!Local,testResult,ab!~
+	expect d,~!Local,testResult,ac!~
+	expect e,~!Local,testResult,ad!~
+	expect ,~!Local,testResult,ae!~
+
+defineTest macro - loop gets correct previous data,
+	unset Local,testResult
+	
+	callFeature ~!Me,getTestData!~
+	retrieveResults Local,testData
+	
+	loop
+		setNested Local,testResult,a~!Result,key!~,~!Result,previousKey!~
+	
+	expect ,~!Local,testResult,aa!~
+	expect a,~!Local,testResult,ab!~
+	expect b,~!Local,testResult,ac!~
+	expect c,~!Local,testResult,ad!~
+	expect d,~!Local,testResult,ae!~
+
