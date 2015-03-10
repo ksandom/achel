@@ -111,7 +111,7 @@ class core extends Module
 				$this->registerFeature($this, array('dump'), 'dump', 'Dump internal state.', array('debug', 'dev'));
 				$this->registerFeature($this, array('debug'), 'debug', 'Send parameters to stdout. --debug=debugLevel,outputText eg --debug=0,StuffToWriteOut . DebugLevel is not implemented yet, but 0 will be "always", and above that will only show as the verbosity level is incremented with -v or --verbose.', array('debug', 'dev'));
 				$this->registerFeature($this, array('verbose', 'v', 'verbosity'), 'verbose', 'Increment/set the verbosity. --verbose[=verbosityLevel] where verbosityLevel is an integer starting from 0 (default)', array('debug', 'dev'));
-				$this->registerFeature($this, array('V'), 'V', 'Decrement verbosity.', array('debug', 'dev'));
+				$this->registerFeature($this, array('lessVerbose', 'V'), 'V', 'Decrement verbosity.', array('debug', 'dev'));
 				$this->registerFeature($this, array('ping'), 'ping', 'Useful for debugging.', array('debug', 'dev'));
 				$this->registerFeature($this, array('cleanResults'), 'cleanResults', 'Cleans keys. Converts any objects to arrays.', array('resultSet'));
 				$this->registerFeature($this, array('parameters'), 'parameters', "Map the input parameters to more meaningful names. In the simplest for, this looks like --parameters=parameterName1,parameterName2,parameterName3,etc . But using json will give you access to all the features. See parameters.md", array('resultSet'));
