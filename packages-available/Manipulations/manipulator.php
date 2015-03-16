@@ -41,7 +41,8 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('addSlashes'), 'addSlashes', 'Put extra backslashes before certain characters to escape them to allow nesting of quoted strings. --addSlashes=srcVar,dstVar', array('array', 'escaping', 'result', 'Manipulations'));
 				$this->core->registerFeature($this, array('cleanUnresolvedResultVars'), 'cleanUnresolvedResultVars', 'Clean out any result variables that have not been resolved. This is important when a default should be blank.', array('array', 'escaping', 'result', 'Manipulations'));
 				$this->core->registerFeature($this, array('take'), 'take', 'Take only a single key from each entry in a result set --take=key.', array('array', 'result', 'Manipulations'));
-				$this->core->registerFeature($this, array('takeSubResult'), 'takeSubResult', 'Take only a single entry in a result set and make that the entrie resultSet. --takeSubResult=key.', array('array', 'result', 'Manipulations'));
+				$this->core->registerFeature($this, array('takeSubResult'), 'takeSubResult', "Take only a single entry in a result set and make that the entrie resultSet. --takeSubResult=key . Note that it will looks it's containing array entry. If you want that, use --chooseSubResult instead.", array('array', 'result', 'Manipulations'));
+				$this->core->registerFeature($this, array('chooseSubResult'), 'chooseSubResult', 'Take only a single entry in a result set and make that the entrie resultSet, but keep the original containing array entry. --chooseSubResult=key.', array('array', 'result', 'Manipulations'));
 				$this->core->registerFeature($this, array('duplicate', 'dup'), 'duplicate', 'Duplicate the result set. --duplicate[=numberOfTimesToDuplicate]Eg --duplicate=3 would take a result set of [a,b,c] and give [a,b,c,a,b,c,a,b,c]. The original intended use for this was to open extra terminals for each host when using --term or --cssh. Note that --dup --dup is not the same as --dup=2 !', array('array', 'result', 'Manipulations'));
 				$this->core->registerFeature($this, array('count'), 'count', 'Replace the reseulSet with the count of the resultSet. --count', array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('countToVar'), 'countToVar', 'Count the number of results and stick the answer in a variable. --countToVar=CategoryName,variableName', array('result', 'Manipulations'));
@@ -160,7 +161,11 @@ class Manipulator extends Module
 				break;
 			case 'takeSubResult':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event));
-				return $this->takeSubResult($parms[0], $this->core->getResultSet());;
+				return $this->takeSubResult($parms[0], $this->core->getResultSet());
+				break;
+			case 'chooseSubResult':
+				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event));
+				return array($parms[0]=>$this->takeSubResult($parms[0], $this->core->getResultSet()));
 				break;
 			case 'addSlashes':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event));
