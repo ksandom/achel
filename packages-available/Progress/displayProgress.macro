@@ -1,23 +1,24 @@
 # Display progress ~ progress
 
-set ["Local","progress",~!Global,displayProgress!~]
-set Local,update,
-	# Get the data
+if ~!Progress,noProgress!~,!=,true,
+	set ["Local","progress",~!Global,displayProgress!~]
+	set Local,update,
+		# Get the data
+		
+		# Calculate stuff
+		basicMaths Local,progressPercent,~!Local,progress,position!~,/,~!Local,progress,total!~
+		basicMaths Local,progressPercent,~!Local,progressPercent!~,*,100
+		round Local,progressPercent,~!Local,progressPercent!~,0
+		
+		# TODO choose a more intellegent width
+		calculateProgressStats ~!Local,progress,position!~,~!Local,progress,total!~,30
+		
+		# Output
+		templateOutNoNewLine progress
+		outNow
+		triggerEvent Int,resetOutput
 	
-	# Calculate stuff
-	basicMaths Local,progressPercent,~!Local,progress,position!~,/,~!Local,progress,total!~
-	basicMaths Local,progressPercent,~!Local,progressPercent!~,*,100
-	round Local,progressPercent,~!Local,progressPercent!~,0
 	
-	# TODO choose a more intellegent width
-	calculateProgressStats ~!Local,progress,position!~,~!Local,progress,total!~,30
-	
-	# Output
-	templateOutNoNewLine progress
-	outNow
-	triggerEvent Int,resetOutput
-
-
-throttleBetween 100,2000,50,~!Local,update!~
-if ~!Local,progress,position!~,==,~!Local,progress,total!~,~!Local,update!~
+	throttleBetween 100,2000,50,~!Local,update!~
+	if ~!Local,progress,position!~,==,~!Local,progress,total!~,~!Local,update!~
 

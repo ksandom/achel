@@ -1,0 +1,4 @@
+# Don't show progress bar. ~ progress
+
+# TODO implement this
+set Progress,noProgress,true

@@ -1,5 +1,5 @@
 # Finish displaying progress ~ progress
 
-templateOut finish
-outNow
-
+if ~!Progress,noProgress!~,!=,true,
+	templateOut finish
+	outNow

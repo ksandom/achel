@@ -1,0 +1,3 @@
+# Show a progress bar. (default if it is applicable) ~ progress
+
+unset Progress,noProgress
