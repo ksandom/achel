@@ -1,0 +1,22 @@
+# Unit tests for phpEnv functionality. ~ hidden,phpEnv,unitTest
+
+defineTest getPHPServer - gets results,
+	getPHPServer Local,env
+	retrieveResults Local,env
+	countToVar Local,env
+	
+	if ~!Local,env!~,<,5,
+		failTest There are less than ~!Local,env!~<5 environment variables. It is very unlikely that this is correct.
+	else
+		passTest Got ~!Local,env!~>5 results. This is probably working.
+
+defineTest getEnv/getPHPServer - gets results using the alias,
+	getEnv Local,env
+	retrieveResults Local,env
+	countToVar Local,env
+	
+	if ~!Local,env!~,<,5,
+		failTest There are less than ~!Local,env!~<5 environment variables. It is very unlikely that this is correct.
+	else
+		passTest Got ~!Local,env!~>5 results. This is probably working.
+
