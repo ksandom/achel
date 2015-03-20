@@ -41,6 +41,12 @@ defineTest getFileTree - get the right entries,
 	expectNot ,~!Local,results,3,k.txt!~,3k
 	expectNot ,~!Local,results,3,l.txt!~,3l
 	
+	expectNot ,~!Local,results,3,file withASpace!~,filename with a space
+	expectNot ,~!Local,results,3,file with spaces!~,filename with spaces
+	
+	expectNot ,~!Local,results,3,directory withASpace,w.txt!~,directory with a space
+	expectNot ,~!Local,results,3,directory with spaces,v.txt!~,directory with spaces
+	
 	expectNot ,~!Local,results,3,7,8,m.txt!~,378m
 	expectNot ,~!Local,results,3,7,8,n.txt!~,378n
 	expectNot ,~!Local,results,3,7,8,o.txt!~,378o

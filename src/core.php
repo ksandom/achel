@@ -370,7 +370,7 @@ class core extends Module
 		else
 		{
 			$output=array();
-			$files=explode("\n", `ls -1 $path`);
+			$files=explode("\n", `ls -1 "$path"`);
 			foreach ($files as $file)
 			{
 				$trimmedFile=trim($file);
