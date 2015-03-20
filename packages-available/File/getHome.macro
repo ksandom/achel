@@ -1,0 +1,19 @@
+# Get the home directory of the current user. --getHome=Category,variable ~ file,home
+parameters Category,variable
+
+pass
+
+getHomeUsingDirectEnv ~!Local,Category!~,~!Local,variable!~
+# Try using HOME variable
+if ~!~!Local,Category!~,~!Local,variable!~!~,!=,,
+	debug 3,Got the home directory using the HOME environment variable.
+else
+	getHomeUsingUserName ~!Local,Category!~,~!Local,variable!~
+	# TODO fall back to username
+	if ~!~!Local,Category!~,~!Local,variable!~!~,!=,,
+		debug 2,Derived the home directory using the USER environment variable.
+	else
+		# complain
+		debug 1,Could not get or derive home directory. I'm sure this could be done better. If you know, please take a look at getHome.macro.
+
+makeLocalAvailable ~!Local,variable!~

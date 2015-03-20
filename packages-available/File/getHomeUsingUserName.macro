@@ -1,0 +1,8 @@
+# Derive the home directory using the USER environment variable. --getHomeUsingUserName=Category,variable  ~ hidden,file,home
+parameters Category,variable
+
+getEnv Local,env
+if ~!Local,env,USER!~,!=,,
+	set ~!Local,Category!~,~!Local,variable!~,/home/~!Local,env,USER!~
+
+makeLocalAvailable ~!Local,variable!~

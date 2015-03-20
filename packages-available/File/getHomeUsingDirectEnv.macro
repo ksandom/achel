@@ -1,0 +1,7 @@
+# Get the home directory directly using the HOME environment variable. --getHomeUsingDirectEnv=Category,variable  ~ hidden,file,home
+parameters Category,variable
+
+getEnv Local,env
+set ~!Local,Category!~,~!Local,variable!~,~!Local,env,HOME!~
+
+makeLocalAvailable ~!Local,variable!~

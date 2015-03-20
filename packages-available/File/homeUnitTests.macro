@@ -1,0 +1,22 @@
+# Unit tests for finding the home ~ hidden,home,getHome,unitTest
+
+defineTest getHomeUsingDirectEnv,
+	getHomeUsingDirectEnv Local,home
+	if ~!Local,home!~,!=,,
+		passTest Got a home value.
+	else
+		warnTest Didn't get a home value. This is not fatal; but not ideal either. Can you see a better way to do it? Start at getHome.macro.
+
+defineTest getHomeUsingUserName,
+	getHomeUsingUserName Local,home
+	if ~!Local,home!~,!=,,
+		passTest Got a home value.
+	else
+		warnTest Didn't get a home value. This is not fatal; but not ideal either. Can you see a better way to do it? Start at getHome.macro.
+
+defineTest getHome,
+	getHome Local,home
+	if ~!Local,home!~,!=,,
+		passTest Got a home value.
+	else
+		failTest Didn't get a home value.
