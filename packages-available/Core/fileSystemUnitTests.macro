@@ -53,6 +53,9 @@ defineTest getFileTree - get the right entries,
 	expectNot ,~!Local,results,3,symlink withASpace,w.txt!~,symlink with a space
 	expectNot ,~!Local,results,3,symlink with spaces,v.txt!~,symlink with spaces
 	
+	expect ,~!Local,results,3,brokenSymlink!~,broken symlink
+	
+	
 	
 	expectNot ,~!Local,results,3,7,8,m.txt!~,378m
 	expectNot ,~!Local,results,3,7,8,n.txt!~,378n

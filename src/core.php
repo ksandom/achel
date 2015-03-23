@@ -369,13 +369,17 @@ class core extends Module
 		}
 		else
 		{
-			$output=array();
-			$files=explode("\n", `ls -1 "$path"`);
-			foreach ($files as $file)
+			if (file_exists($path))
 			{
-				$trimmedFile=trim($file);
-				if ($trimmedFile) $output[$trimmedFile]="$path/$trimmedFile";
+				$output=array();
+				$files=explode("\n", `ls -1 "$path" 2> /dev/null`);
+				foreach ($files as $file)
+				{
+					$trimmedFile=trim($file);
+					if ($trimmedFile) $output[$trimmedFile]="$path/$trimmedFile";
+				}
 			}
+			else return false;
 		}
 		return $output;
 	}
@@ -383,6 +387,7 @@ class core extends Module
 	function getFileTree($path, $withAttributes=false)
 	{
 		$entries=$this->getFileList($path);
+		if (!$entries) return false;
 		
 		foreach ($entries as $filename=>&$entry)
 		{
