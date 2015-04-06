@@ -1,0 +1,4 @@
+#!/bin/bash
+
+nc -l 1040 | sudo ./servo1-stdin.py $1
+
