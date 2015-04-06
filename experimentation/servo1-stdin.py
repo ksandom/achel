@@ -30,84 +30,87 @@ except:
 
 
 
-
-def scale(value, inMin, inMax, outMin, outMax):
-	# Takes a value, checks it's within bounds and scales accordingly.
+class AchelRealityBridge:
+	def __init__(self):
+		pass
 	
-	# Sanity
-	if not (inMax > inMin):
-		raise ValueError("inMax not greater than inMin")
-	if not (outMax > outMin):
-		raise ValueError("outMax not greater than outtMin")
-	
-	# Check bounds
-	if value < inMin:
-		print "OOB " + str(value) + " < " + str(inMin)
-		return outMin
-	if value > inMax:
-		print "OOB " + str(value) + " > " + str(inMax)
-		return outMax
-	
-	# Derive scales
-	inScale=inMax-inMin
-	outScale=outMax-outMin
+	def scale(self, value, inMin, inMax, outMin, outMax):
+		# Takes a value, checks it's within bounds and scales accordingly.
+		
+		# Sanity
+		if not (inMax > inMin):
+			raise ValueError("inMax not greater than inMin")
+		if not (outMax > outMin):
+			raise ValueError("outMax not greater than outtMin")
+		
+		# Check bounds
+		if value < inMin:
+			print "OOB " + str(value) + " < " + str(inMin)
+			return outMin
+		if value > inMax:
+			print "OOB " + str(value) + " > " + str(inMax)
+			return outMax
+		
+		# Derive scales
+		inScale=inMax-inMin
+		outScale=outMax-outMin
 
-	# Derive final value
-	finalValue=(value-inMin)/inScale*outScale+outMin
-	print str(finalValue) +"=("+str(value) +"-"+ str(inMin) +")/"+ str(inScale)+ "*" + str(outScale)+ "+" +str(outMin)
-	
-	return finalValue
+		# Derive final value
+		finalValue=(value-inMin)/inScale*outScale+outMin
+		print str(finalValue) +"=("+str(value) +"-"+ str(inMin) +")/"+ str(inScale)+ "*" + str(outScale)+ "+" +str(outMin)
+		
+		return finalValue
+
+	def quit(self):
+		p.stop()
+		GPIO.cleanup()
 
 
+	def main(self):
+		# Startup
+		GPIO.setmode(GPIO.BOARD)
+		GPIO.setup(pin,GPIO.OUT)
 
+		p = GPIO.PWM(pin,50)
+		p.start(outCenter)
 
-
-# Startup
-GPIO.setmode(GPIO.BOARD)
-GPIO.setup(pin,GPIO.OUT)
-
-p = GPIO.PWM(pin,50)
-p.start(outCenter)
-
-try:
-	print "Entering loop"
-	# for line in sys.stdin.readline():
-	while True:
 		try:
-			line = raw_input()
-		except EOFError:
-			print "EOF"
-			break
-			#time.sleep (0.5)
-			#continue
-			#line=''
-		
-		if line == '':
-			print "no input"
-			time.sleep(0.5)
-			continue
-		
-		try:
-			floater=float(line)
-		except ValueError:
-			time.sleep(0.2)
-			continue
-		
-		floater=scale(floater, 0, inMax, outMin, outMax)
-		
-		print "input=" + line + " scaled="+str(floater)
-		p.ChangeDutyCycle(floater)
-		time.sleep(0.5)
-		
-		if line == "quit":
-			print "requested quit"
-			break;
-	print "clean exit"
-	p.stop()
-	GPIO.cleanup()
-	
+			print "Entering loop"
+			# for line in sys.stdin.readline():
+			while True:
+				try:
+					line = raw_input()
+				except EOFError:
+					print "EOF"
+					break
+					#time.sleep (0.5)
+					#continue
+					#line=''
+				
+				if line == '':
+					print "no input"
+					time.sleep(0.5)
+					continue
+				
+				try:
+					floater=float(line)
+				except ValueError:
+					time.sleep(0.2)
+					continue
+				
+				floater=self.scale(floater, 0, inMax, outMin, outMax)
+				
+				print "input=" + line + " scaled="+str(floater)
+				p.ChangeDutyCycle(floater)
+				time.sleep(0.5)
+				
+				if line == "quit":
+					print "requested quit"
+					break;
+			print "clean exit"
 
-except KeyboardInterrupt:
-	p.stop()
-	GPIO.cleanup()
+		except KeyboardInterrupt:
+			self.quit
 
+arb = AchelRealityBridge()
+arb.main()
