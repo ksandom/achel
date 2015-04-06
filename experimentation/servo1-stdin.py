@@ -16,6 +16,21 @@ Pins
 	22
 '''
 
+# Set some defaults
+pin = 7
+outMin = 3.0
+outCenter = 7.5
+outMax = 11.0
+
+inMin=0
+try:
+	inMax=float(sys.argv[1])
+except:
+	inMax=100
+
+
+
+
 def scale(value, inMin, inMax, outMin, outMax):
 	# Takes a value, checks it's within bounds and scales accordingly.
 	
@@ -26,11 +41,11 @@ def scale(value, inMin, inMax, outMin, outMax):
 		raise ValueError("outMax not greater than outtMin")
 	
 	# Check bounds
-	if (value<inMin):
+	if value < inMin:
 		print "OOB " + str(value) + " < " + str(inMin)
 		return outMin
-	if (value > outMax):
-		print "OOB " + str(value)+str(type(value)) + " > " + str(inMax)+str(type(inMax))
+	if value > inMax:
+		print "OOB " + str(value) + " > " + str(inMax)
 		return outMax
 	
 	# Derive scales
@@ -44,17 +59,15 @@ def scale(value, inMin, inMax, outMin, outMax):
 	return finalValue
 
 
-pin = 7
-min = 3.0
-center = 7.5
-max = 11.0
 
+
+
+# Startup
 GPIO.setmode(GPIO.BOARD)
-
 GPIO.setup(pin,GPIO.OUT)
 
 p = GPIO.PWM(pin,50)
-p.start(center)
+p.start(outCenter)
 
 try:
 	print "Entering loop"
@@ -64,10 +77,10 @@ try:
 			line = raw_input()
 		except EOFError:
 			print "EOF"
-			# break
-			time.sleep (0.5)
-			continue
-			line=''
+			break
+			#time.sleep (0.5)
+			#continue
+			#line=''
 		
 		if line == '':
 			print "no input"
@@ -80,14 +93,7 @@ try:
 			time.sleep(0.2)
 			continue
 		
-		floater=scale(floater, 0, 1, min, max)
-		#if floater < min:
-		#	print "OOB < min"
-		#	continue
-		
-		#if floater > max:
-		#	print "OOB > max"
-		#	continue
+		floater=scale(floater, 0, inMax, outMin, outMax)
 		
 		print "input=" + line + " scaled="+str(floater)
 		p.ChangeDutyCycle(floater)
