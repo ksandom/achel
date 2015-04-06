@@ -21,6 +21,8 @@ Pins
 class AchelRealityBridge:
 	def __init__(self):
 		self.pins={}
+		self.inputData={}
+		
 		GPIO.setmode(GPIO.BOARD)
 		outMin = 3.0
 		outCenter = 7.5
@@ -54,6 +56,10 @@ class AchelRealityBridge:
 		
 		print 'registering pin ' + str(pinID)
 		
+		# TODO Refactor so that it doesn't stamp on previously written values.
+		# TODO add the possibility for a default value.
+		self.inputData[inputBinding]=inMin
+		
 		GPIO.setup(pinID,GPIO.OUT)
 		self.pins[pinID]['physicalPin'] = GPIO.PWM(pinID, 50)
 		self.pins[pinID]['physicalPin'].start(outCenter)
@@ -84,57 +90,69 @@ class AchelRealityBridge:
 		print str(finalValue) +"=("+str(value) +"-"+ str(inMin) +")/"+ str(inScale)+ "*" + str(outScale)+ "+" +str(outMin)
 		
 		return finalValue
+	
+	def getRawInput(self):
+		try:
+			line = raw_input()
+		except EOFError:
+			return "EOF"
+		
+		if line == '':
+			print "no input"
+		elif line == "quit":
+			return "quit";
+		
+		self.inputData = line.split(',')
+	
+	def getInput(self, inputID):
+		try:
+			value=self.inputData[inputID]
+		except IndexError:
+			return False
+		
+		try:
+			floater=float(value)
+			return floater
+		except ValueError:
+			return False
 
-	def quit(self):
+	def quit(self, message):
+		print message
 		for pin in self.pins:
-			pin['physicalPin'].stop()
+			self.pins[pin]['physicalPin'].stop()
 		
 		GPIO.cleanup()
 
 
 	def main(self):
 		# Startup
-
+		
 		try:
 			print "Entering loop"
-			# for line in sys.stdin.readline():
 			while True:
-				try:
-					line = raw_input()
-				except EOFError:
-					print "EOF"
+				gotInput = self.getRawInput()
+				if gotInput == 'EOF':
+					self.quit("EOF")
 					break
-					#time.sleep (0.5)
-					#continue
-					#line=''
-				
-				if line == '':
-					print "no input"
-					time.sleep(0.5)
-					continue
-				if line == "quit":
-					print "requested quit"
-					break;
-				
-				try:
-					floater=float(line)
-				except ValueError:
-					time.sleep(0.2)
-					continue
-				
+				elif gotInput == 'quit':
+					self.quit("quit")
+					break
 				
 				for pin in self.pins:
-					scaled=self.scale(floater, 0, self.pins[pin]['inMax'], self.pins[pin]['outMin'], self.pins[pin]['outMax'])
-					
-					print str(pin) + " " + "input=" + line + " scaled="+str(scaled)
-					self.pins[pin]['physicalPin'].ChangeDutyCycle(scaled)
+					# print self.pins[pin]['inputBinding']
+					floater=self.getInput(self.pins[pin]['inputBinding'])
+					if not (floater == False) or floater == 0:
+						scaled=self.scale(floater, 0, self.pins[pin]['inMax'], self.pins[pin]['outMin'], self.pins[pin]['outMax'])
+						self.pins[pin]['physicalPin'].ChangeDutyCycle(scaled)
+					else:
+						pass
 				
 				time.sleep(0.5)
 				
 			print "clean exit"
 
 		except KeyboardInterrupt:
-			self.quit
+			self.quit("Keyboard intrerupt")
 
 arb = AchelRealityBridge()
 arb.main()
