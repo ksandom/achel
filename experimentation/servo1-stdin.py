@@ -38,10 +38,10 @@ class AchelRealityBridge:
 		self.registerPin(11, 0, 0, inMax, outMin, outMax, outCenter)
 		self.registerPin(12, 0, 0, inMax, outMin, outMax, outCenter)
 		self.registerPin(13, 0, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(15, 0, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(16, 0, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(18, 0, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(22, 0, 0, inMax, outMin, outMax, outCenter)
+		self.registerPin(15, 1, 0, inMax, outMin, outMax, outCenter)
+		self.registerPin(16, 1, 0, inMax, outMin, outMax, outCenter)
+		self.registerPin(18, 1, 0, inMax, outMin, outMax, outCenter)
+		self.registerPin(22, 1, 0, inMax, outMin, outMax, outCenter)
 
 	def registerPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter):
 		
@@ -131,21 +131,22 @@ class AchelRealityBridge:
 			print "Entering loop"
 			while True:
 				gotInput = self.getRawInput()
-				if gotInput == 'EOF':
-					self.quit("EOF")
-					break
-				elif gotInput == 'quit':
-					self.quit("quit")
-					break
-				
-				for pin in self.pins:
-					# print self.pins[pin]['inputBinding']
-					floater=self.getInput(self.pins[pin]['inputBinding'])
-					if not (floater == False) or floater == 0:
-						scaled=self.scale(floater, 0, self.pins[pin]['inMax'], self.pins[pin]['outMin'], self.pins[pin]['outMax'])
-						self.pins[pin]['physicalPin'].ChangeDutyCycle(scaled)
-					else:
-						pass
+				if isinstance(gotInput, (bool, str)):
+					if gotInput == 'EOF':
+						self.quit("EOF")
+						break
+					elif gotInput == 'quit':
+						self.quit("quit")
+						break
+				else:
+					for pin in self.pins:
+						# print self.pins[pin]['inputBinding']
+						floater=self.getInput(self.pins[pin]['inputBinding'])
+						if isinstance(floater, (float)):
+							scaled=self.scale(floater, 0, self.pins[pin]['inMax'], self.pins[pin]['outMin'], self.pins[pin]['outMax'])
+							self.pins[pin]['physicalPin'].ChangeDutyCycle(scaled)
+						else:
+							pass
 				
 				time.sleep(0.5)
 				
