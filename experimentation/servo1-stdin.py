@@ -28,20 +28,31 @@ class AchelRealityBridge:
 		outCenter = 7.5
 		outMax = 11.0
 		
-		inMin=0
+		# Get a max value if we have it.
 		try:
 			inMax=float(sys.argv[1])
 		except:
 			inMax=100
 		
-		self.registerPin(7, 0, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(11, 1, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(12, 2, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(13, 3, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(15, 4, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(16, 5, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(18, 6, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(22, 7, 0, inMax, outMin, outMax, outCenter)
+		# Get a min value if we have it and move the max value out of the way if it's relevant
+		try:
+			tmp=float(sys.argv[2])
+			inMin=inMax
+			inMax=tmp
+		except:
+			inMin=0
+		
+		print "Debug: Got range " + str(inMin) + " - " + str(inMax)
+		
+		
+		self.registerPin(7, 0, inMin, inMax, outMin, outMax, outCenter)
+		self.registerPin(11, 1, inMin, inMax, outMin, outMax, outCenter)
+		self.registerPin(12, 2, inMin, inMax, outMin, outMax, outCenter)
+		self.registerPin(13, 3, inMin, inMax, outMin, outMax, outCenter)
+		self.registerPin(15, 4, inMin, inMax, outMin, outMax, outCenter)
+		self.registerPin(16, 5, inMin, inMax, outMin, outMax, outCenter)
+		self.registerPin(18, 6, inMin, inMax, outMin, outMax, outCenter)
+		self.registerPin(22, 7, inMin, inMax, outMin, outMax, outCenter)
 
 	def registerPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter):
 		
@@ -54,7 +65,7 @@ class AchelRealityBridge:
 			'outCenter':outCenter,
 			'outMax':outMax}
 		
-		print 'registering pin ' + str(pinID)
+		print 'Debug: registering pin ' + str(pinID)
 		
 		# TODO Refactor so that it doesn't stamp on previously written values.
 		# TODO add the possibility for a default value.
@@ -92,6 +103,7 @@ class AchelRealityBridge:
 		return finalValue
 	
 	def getRawInput(self):
+		line = "nothing"
 		try:
 			line = raw_input()
 		except EOFError:
@@ -117,7 +129,7 @@ class AchelRealityBridge:
 			return False
 
 	def quit(self, message):
-		print message
+		print "Debug: "+message
 		for pin in self.pins:
 			self.pins[pin]['physicalPin'].stop()
 		
@@ -128,7 +140,7 @@ class AchelRealityBridge:
 		# Startup
 		
 		try:
-			print "Entering loop"
+			print "Debug: Entering loop"
 			while True:
 				gotInput = self.getRawInput()
 				if isinstance(gotInput, (bool, str)):
@@ -143,14 +155,14 @@ class AchelRealityBridge:
 						# print self.pins[pin]['inputBinding']
 						floater=self.getInput(self.pins[pin]['inputBinding'])
 						if isinstance(floater, (float)):
-							scaled=self.scale(floater, 0, self.pins[pin]['inMax'], self.pins[pin]['outMin'], self.pins[pin]['outMax'])
+							scaled=self.scale(floater, self.pins[pin]['inMin'], self.pins[pin]['inMax'], self.pins[pin]['outMin'], self.pins[pin]['outMax'])
 							self.pins[pin]['physicalPin'].ChangeDutyCycle(scaled)
 						else:
 							pass
 				
-				time.sleep(0.5)
+				# time.sleep(0.1)
 				
-			print "clean exit"
+			print "Debug: clean exit"
 
 		except KeyboardInterrupt:
 			self.quit("Keyboard intrerupt")
