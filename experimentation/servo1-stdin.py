@@ -35,13 +35,13 @@ class AchelRealityBridge:
 			inMax=100
 		
 		self.registerPin(7, 0, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(11, 0, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(12, 0, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(13, 0, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(15, 1, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(16, 1, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(18, 1, 0, inMax, outMin, outMax, outCenter)
-		self.registerPin(22, 1, 0, inMax, outMin, outMax, outCenter)
+		self.registerPin(11, 1, 0, inMax, outMin, outMax, outCenter)
+		self.registerPin(12, 2, 0, inMax, outMin, outMax, outCenter)
+		self.registerPin(13, 3, 0, inMax, outMin, outMax, outCenter)
+		self.registerPin(15, 4, 0, inMax, outMin, outMax, outCenter)
+		self.registerPin(16, 5, 0, inMax, outMin, outMax, outCenter)
+		self.registerPin(18, 6, 0, inMax, outMin, outMax, outCenter)
+		self.registerPin(22, 7, 0, inMax, outMin, outMax, outCenter)
 
 	def registerPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter):
 		
