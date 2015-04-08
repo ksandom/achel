@@ -1,0 +1,5 @@
+#!/bin/bash
+# Listen for UDP packets on port 1040
+
+nc -ul 1040 | sudo ./servo1-stdin.py $1 $2
+
