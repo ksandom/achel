@@ -123,3 +123,20 @@ You can have as many insertion blocks as you want. The only limitation right now
 # Quirks and limitations
 
 Non-embedded blocks take their input from the data that was handed to the template when it was called. Therefore if there is a `<~` embedded macro block before a `<~~` non embedded macro block,  the non-embedded block will not reflect any changes the embedded macro may have made. But multiple embedded macros will affect each other.
+
+# Doing stuff when a templatte is executed
+
+Sometimes you want to do stuff just before or after a template is executed. Before is the the most common usecase. Eg couting the number of results and putting it in a variable which the template will look at.
+
+Assuming
+
+* The template is aTemplate.template
+* The macro to get called is doSomething.macro
+
+The before code would look like this inside doSomething.macro
+
+    #onDefine registerForEvent Template,beforeProcessing-aTemplace,doSomething
+
+And the after code would look like this inside doSomething.macro
+
+    #onDefine registerForEvent Template,afterProcessing-aTemplace,doSomething
