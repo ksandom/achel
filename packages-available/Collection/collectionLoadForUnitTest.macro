@@ -1,0 +1,5 @@
+# Load a collection, but unregister from the saving event. This is useful for unitTests. ~ collection,unit,test
+parameters collectionName
+
+collectionLoad ~!Local,collectionName!~
+unregisterForEvent Achel,finishGeneral,collectionSave,~!Local,collectionName!~
