@@ -50,3 +50,37 @@ defineTest TimeThing - tsDay/yesterday and today,
 	tsDay 1,2,ts
 	expectNumberOfResults 3,~!Tmp,defineTest-description!~,name,(yesterday|today|now),
 		passTest yay
+
+
+defineTest TimeThing - convertWhenToTimeStamp defaults,
+	setNested Local,testData,value,when,1391040000
+	
+	retrieveResults Local,testData
+	convertWhenToTimeStamp
+	loop
+		expect 2014-01-30--0:00:00,~!Result,whenTimeStamp!~
+
+defineTest TimeThing - convertWhenToTimeStamp anotherField (in),
+	setNested Local,testData,value,anotherField,1391040001
+	
+	retrieveResults Local,testData
+	convertWhenToTimeStamp anotherField
+	loop
+		expect 2014-01-30--0:00:01,~!Result,whenTimeStamp!~
+
+defineTest TimeThing - convertWhenToTimeStamp andAnotherField (out),
+	setNested Local,testData,value,when,1391040002
+	
+	retrieveResults Local,testData
+	convertWhenToTimeStamp ,andAnotherField
+	loop
+		expect 2014-01-30--0:00:02,~!Result,andAnotherField!~
+
+defineTest TimeThing - convertWhenToTimeStamp both in and out,
+	setNested Local,testData,value,inField,1391040003
+	
+	retrieveResults Local,testData
+	convertWhenToTimeStamp inField,outField
+	loop
+		expect 2014-01-30--0:00:03,~!Result,outField!~
+

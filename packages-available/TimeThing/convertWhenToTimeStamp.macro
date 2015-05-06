@@ -1,0 +1,5 @@
+# Convert a field in the resultSet to a timeStamp in a few field. --convertNowToTimeStamp=[inFieldName],[outFieldName] . inFieldName defaults to "when". outFieldName defaults to "whenTimeStamp"  ~ time,now
+parameters {"inFieldName":"when","outFieldName":"whenTimeStamp"}
+
+loop
+	fuzzyTime Result,~!Local,outFieldName!~,~!Result,~!Local,inFieldName!~!~
