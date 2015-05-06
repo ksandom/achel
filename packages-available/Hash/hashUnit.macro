@@ -1,0 +1,14 @@
+# Unit tests for the Hash package. ~ Hash,hash,unitTest,hidden
+
+defineTest crcVar,
+	crcVar Local,CRCedValue,hello
+	if ~!Local,CRCedValue!~,==,907060870,
+		passTest got expected value.
+	else
+		# TODO find an input value that results in a negative hash.
+		warnTest This warning happens if the current installation of PHP is unable to correctly produce CRC values. --positiveCRCVar is not a correct solution since it halves the possible values. But it is a reliable one.
+
+defineTest positiveCRCVar,
+	positiveCRCVar Local,CRCedValue,hello
+	expect 907060870,~!Local,CRCedValue!~
+
