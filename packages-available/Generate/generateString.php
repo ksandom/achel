@@ -32,7 +32,8 @@ class GenerateStrings extends Module
 	
 	function generateStringFromChar($length, $char)
 	{
-		return str_pad('', $length, $char);
+		if (!is_numeric($length)) $this->core->complain($this, "Length $length is not a number. It should be.", __FUNCTION__);
+		else return str_pad('', $length, $char);
 	}
 }
 
