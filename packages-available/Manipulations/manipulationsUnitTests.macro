@@ -17,7 +17,7 @@ defineTest replaceRegexInString,
 	expect a2-censored-c4,~!Local,replaced!~
 
 
-defineTest keyPositionToKey,
+defineTest keyPositionToKey - 2,
 	setNested Local,testData,a,123
 	setNested Local,testData,b,321
 	setNested Local,testData,c,456
@@ -27,6 +27,28 @@ defineTest keyPositionToKey,
 	
 	keyPositionToKey Local,key,2
 	expect c,~!Local,key!~
+
+defineTest keyPositionToKey - 2 repeat,
+	setNested Local,testData,a,123
+	setNested Local,testData,b,321
+	setNested Local,testData,c,456
+	setNested Local,testData,d,654
+	
+	retrieveResults Local,testData
+	
+	keyPositionToKey Local,key,2
+	expect c,~!Local,key!~
+
+defineTest keyPositionToKey - 3 repeat,
+	setNested Local,testData,a,123
+	setNested Local,testData,b,321
+	setNested Local,testData,c,456
+	setNested Local,testData,d,654
+	
+	retrieveResults Local,testData
+	
+	keyPositionToKey Local,key,3
+	expect d,~!Local,key!~
 
 
 
