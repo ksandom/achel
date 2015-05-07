@@ -67,6 +67,8 @@ class Manipulator extends Module
 				#$this->core->registerFeature($this, array('cleanUnresolvedStoreVars'), 'cleanUnresolvedStoreVars', 'Clean out any store variables that have not been resolved. This is important when a default should be blank.', array('array', 'escaping', 'result'));
 				
 				$this->core->registerFeature($this, array('createOneResult'), 'createOneResult', 'Replaces the resultSet with a single entry that can then be manipulated using features like --resultSet.', array('array', 'result', 'Manipulations'));
+				
+				$this->core->registerFeature($this, array('getKeysNumericallyIndexed'), 'getKeysNumericallyIndexed', 'Replaces the resultSet numerically indexed set of keys from the previous resultSet. This is the faster cousin of --getKeys .', array('array', 'result', 'Manipulations'));
 				break;
 			case 'followup':
 				break;
@@ -240,6 +242,9 @@ class Manipulator extends Module
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3);
 				return $this->between($this->core->getResultSet(), $parms[0], $parms[1], $parms[2]);
 				break;
+			
+			case 'getKeysNumericallyIndexed':
+				return array_keys($this->core->getResultSet());
 			
 			default:
 				$this->core->complain($this, 'Unknown event', $event);

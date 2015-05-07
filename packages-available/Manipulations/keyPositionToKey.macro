@@ -1,0 +1,9 @@
+# Take a key position (integer starting at 0) and give the corresponding key. --keyPositionToKey=Category,variable,keyPosition ~ Manipulations,key
+parameters category,variable,keyPosition
+
+isolate
+	getKeysNumericallyIndexed
+	stashResults Local,keys
+	set ~!Local,category!~,~!Local,variable!~,~!Local,keys,~!Local,keyPosition!~!~
+
+makeLocalAvailable ~!Local,variable!~
