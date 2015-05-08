@@ -1,5 +1,7 @@
 # Unit tests for the Codes package. ~ Codes,unitTest,codes,hidden
 
+unsetCategory ColorCache
+
 defineTest colorText - simple,
 	colorText Local,colorCode,hello
 	expectNot ,~!Local,colorCode!~
@@ -13,3 +15,9 @@ defineTest colorText - not the same,
 	colorText Local,colorCode2,hi
 	expectNot ~!Local,colorCode1!~,~!Local,colorCode2!~
 
+defineTest colorText - empty cache,
+	expect ,~!ColorCache,hey!~
+
+defineTest colorText - filled cache,
+	colorText Local,colorCode,hey
+	expectNot ,~!ColorCache,hey!~
