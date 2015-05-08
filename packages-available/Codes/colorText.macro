@@ -1,0 +1,20 @@
+# Given some text, choose a color key name. --colorText=Category,variable,text. ~ Codes,color,colour
+parameters category,variable,text
+
+unset ~!Local,category!~,~!Local,variable!~
+isolate
+	getCategory Color
+	
+	# Work out how many colours we have
+	if ~!Global,numOfColors!~,==,,
+		countToVar Global,numOfColors
+	
+	# Create a key position for the text in the color category
+	positiveCRCVar Local,hash,~!Local,text!~
+	basicMaths Local,keyPosition,~!Local,hash!~,%,~!Global,numOfColors!~
+	
+	# Convert this key position to a key
+	keyPositionToKey ~!Local,category!~,~!Local,variable!~,~!Local,keyPosition!~
+	
+
+makeLocalAvailable ~!Local,variable!~

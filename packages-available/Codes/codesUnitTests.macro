@@ -1,0 +1,15 @@
+# Unit tests for the Codes package. ~ Codes,unitTest,codes,hidden
+
+defineTest colorText - simple,
+	colorText Local,colorCode,hello
+	expectNot ,~!Local,colorCode!~
+
+defineTest colorText - simple repeat,
+	colorText Local,colorCode,hello
+	expectNot ,~!Local,colorCode!~
+
+defineTest colorText - not the same,
+	colorText Local,colorCode1,hello
+	colorText Local,colorCode2,hi
+	expectNot ~!Local,colorCode1!~,~!Local,colorCode2!~
+
