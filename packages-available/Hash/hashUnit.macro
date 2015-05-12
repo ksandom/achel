@@ -12,3 +12,21 @@ defineTest positiveCRCVar,
 	positiveCRCVar Local,CRCedValue,hello
 	expect 907060870,~!Local,CRCedValue!~
 
+defineTest crcResultVar,
+	setNested Local,testData,a,greeting,hello
+	retrieveResults Local,testData
+	crcResultVar greeting,crc
+	loop
+		if ~!Result,crc!~,==,907060870,
+			passTest got expected value.
+		else
+			# TODO find an input value that results in a negative hash.
+			warnTest "~!Result,crc!~" != 907060870 This warning happens if the current installation of PHP is unable to correctly produce CRC values. --crCResultVar is not a correct solution since it halves the possible values. But it is a reliable one.
+
+defineTest positiveCRCResultVar,
+	setNested Local,testData,a,greeting,hello
+	retrieveResults Local,testData
+	positiveCRCResultVar greeting,crc
+	loop
+		expect 907060870,~!Result,crc!~
+
