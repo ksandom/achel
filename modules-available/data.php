@@ -19,16 +19,15 @@ class Data extends Module
 			case 'init':
 				$this->core->registerFeature($this, array('saveStoreToConfig'), 'saveStoreToConfig', 'Save all store values for a particular module name. Will be auto-loaded. --saveStoreToConfig=storeName');
 				$this->core->registerFeature($this, array('loadStoreFromConfig'), 'loadStoreFromConfig', 'Load all store values for a particular module name. --loadStoreFromConfig=storeName');
-				$this->core->registerFeature($this, array('deleteConfig'), 'deleteConfig', 'Deletes the json file storing the config for a particular store. --deleteConfig=StoreName . NOTE This will not ask twice. Use care that you are deleting the right thing.');
+				$this->core->registerFeature($this, array('deleteData', 'dataDelete'), 'deleteData', 'Deletes the json file storing the data for a particular store. --deleteData=StoreName . NOTE This will not ask for confirmation. Use care that you are deleting the right thing.');
+				$this->core->registerFeature($this, array('deleteConfig'), 'deleteConfig', 'Deletes the json file storing the config for a particular store. --deleteConfig=StoreName . NOTE This will not ask for confirmation. Use care that you are deleting the right thing.');
 				
-				$this->core->registerFeature($this, array('configExists'), 'configExists', 'Returns whether a named config store exists in the config directory. --configExists=Category,variable,namedStore .', array('data', 'delete', 'filesystem'));
+				$this->core->registerFeature($this, array('dataExists'), 'dataExists', 'Returns whether a named data store exists in the data directory. --dataExists=Category,variable,namedStore .', array('data', 'exists', 'filesystem'));
+				$this->core->registerFeature($this, array('configExists'), 'configExists', 'Returns whether a named config store exists in the config directory. --configExists=Category,variable,namedStore .', array('data', 'exists', 'filesystem'));
 				
 				$this->core->registerFeature($this, array('saveStoreToData'), 'saveStoreToData', 'Save all store values for a particular module name. --saveStoreToData=storeName');
 				$this->core->registerFeature($this, array('loadStoreFromData'), 'loadStoreFromData', 'Load all store values for a particular module name. --loadStoreFromData=storeName');
 				$this->core->registerFeature($this, array('loadStoreFromDataDir'), 'loadStoreFromDataDir', 'Load all store values for a particular module name using a directory of json files. --loadStoreFromDataDir=storeName,dirName (dirName is automatically prefixed with the mass data directory, so you would put in something like --loadStoreFromDataDir=Hosts,1LayerHosts)');
-				$this->core->registerFeature($this, array('dataDelete'), 'dataDelete', 'Deletes the json file storing the data for a particular store. --dataDelete=StoreName . NOTE This will not ask twice. Use care that you are deleting the right thing.');
-				
-				$this->core->registerFeature($this, array('dataExists'), 'dataExists', 'Returns whether a named data store exists in the data directory. --dataExists=Category,variable,namedStore .', array('data', 'delete', 'filesystem'));
 				
 				$this->core->registerFeature($this, array('loadStoreVariableFromFile'), 'loadStoreVariableFromFile', 'Load the contents of a json file into a store variable. --loadStoreVariableFromFile=fileName,StoreName,variableName . This is basically the same as--loadStoreFromFile=filename except for the destination. Note that the file name MUST be in the form storeName.config.json where storeName is the destination name of the store that you want to save.');
 				$this->core->registerFeature($this, array('loadStoreFromFile'), 'loadStoreFromFile', 'Load all store values for a particular name from a file. Note that the file name MUST be in the form storeName.config.json where storeName is the destination name of the store that you want to save. This can be useful for importing config. --loadStoreFromFile=filename[,StoreName]');
@@ -48,10 +47,17 @@ class Data extends Module
 			case 'loadStoreFromConfig':
 				$this->loadStoreEntryFromName($this->core->get('Global', $event), 'config');
 				break;
+			case 'deleteData':
+				$this->deleteData($this->core->get('Global', $event), 'data');
+				break;
 			case 'deleteConfig':
 				$this->deleteData($this->core->get('Global', $event), 'config');
 				break;
 			
+			case 'dataExists':
+				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 3);
+				$this->dataExists($parms[0], $parms[1], $parms[2], 'data');
+				break;
 			case 'configExists':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 3);
 				$this->dataExists($parms[0], $parms[1], $parms[2], 'config');
@@ -70,14 +76,6 @@ class Data extends Module
 			case 'loadStoreFromFile':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 1);
 				$this->loadStoreEntryFromFilename($parms[0], $parms[1]);
-				break;
-			case 'dataDelete':
-				$this->deleteData($this->core->get('Global', $event), 'data');
-				break;
-			
-			case 'dataExists':
-				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 3);
-				$this->dataExists($parms[0], $parms[1], $parms[2], 'data');
 				break;
 			
 			case 'loadStoreVariableFromFile':

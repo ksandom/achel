@@ -1,0 +1,54 @@
+# Unit tests for data. ~ data,unitTest,hidden
+
+defineTest dataExists - false 1,
+	dataExists Local,exists,DataUnitTest
+	expect false,~!Local,exists!~
+
+defineTest saveStoreToData 1,
+	set DataUnitTest,test1,a
+	saveStoreToData DataUnitTest
+	dataExists Local,exists,DataUnitTest
+	expect true,~!Local,exists!~
+
+defineTest loadStoreFromData,
+	unsetCategory DataUnitTest
+	loadStoreFromData DataUnitTest
+	expect a,~!DataUnitTest,test1!~
+
+defineTest deleteData,
+	deleteData DataUnitTest
+	dataExists Local,exists,DataUnitTest
+	expect false,~!Local,exists!~
+
+defineTest saveStoreToData 2,
+	set DataUnitTest,test1,a
+	saveStoreToData DataUnitTest
+	dataExists Local,exists,DataUnitTest
+	expect true,~!Local,exists!~
+
+defineTest dataDelete,
+	dataDelete DataUnitTest
+	dataExists Local,exists,DataUnitTest
+	expect false,~!Local,exists!~
+
+
+defineTest configExists - false 1,
+	configExists Local,exists,ConfigUnitTest
+	expect false,~!Local,exists!~
+
+defineTest saveStoreToConfig,
+	set ConfigUnitTest,test1,a
+	saveStoreToConfig ConfigUnitTest
+	configExists Local,exists,ConfigUnitTest
+	expect true,~!Local,exists!~
+
+defineTest loadStoreFromConfig,
+	unsetCategory ConfigUnitTest
+	loadStoreFromConfig ConfigUnitTest
+	expect a,~!ConfigUnitTest,test1!~
+
+defineTest deleteConfig,
+	deleteConfig ConfigUnitTest
+	configExists Local,exists,ConfigUnitTest
+	expect false,~!Local,exists!~
+
