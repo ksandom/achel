@@ -25,11 +25,25 @@ class AchelRealityBridge:
 		
 		GPIO.setmode(GPIO.BOARD)
 		
-		frequency=50
+		minMS=0.5
+		centerMS=1.5
+		maxMS=2.5
 		
-		outMin = 3.0
-		outCenter = 7.5
-		outMax = 11.0
+		# Get a frequency if we have it.
+		try:
+			frequency=int(sys.argv[3])
+		except:
+			frequency=15
+		
+		# Calculate timings
+		divisor=1000/frequency
+		
+		outMin = minMS/divisor*100
+		outCenter = centerMS/divisor*100
+		outMax = maxMS/divisor*100
+		
+		print "Debug: frequency " + str(frequency)
+		print "Debug: Out range " + str(outMin) + " - " + str(outCenter) + " - " + str(outMax)
 		
 		# Get a max value if we have it.
 		try:
@@ -45,7 +59,7 @@ class AchelRealityBridge:
 		except:
 			inMin=0
 		
-		print "Debug: Got range " + str(inMin) + " - " + str(inMax)
+		print "Debug: In range " + str(inMin) + " - " + str(inMax)
 		
 		
 		self.registerPin(7, 0, inMin, inMax, outMin, outMax, outCenter, frequency)
