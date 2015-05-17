@@ -24,6 +24,9 @@ class AchelRealityBridge:
 		self.inputData={}
 		
 		GPIO.setmode(GPIO.BOARD)
+		
+		frequency=50
+		
 		outMin = 3.0
 		outCenter = 7.5
 		outMax = 11.0
@@ -45,16 +48,16 @@ class AchelRealityBridge:
 		print "Debug: Got range " + str(inMin) + " - " + str(inMax)
 		
 		
-		self.registerPin(7, 0, inMin, inMax, outMin, outMax, outCenter)
-		self.registerPin(11, 1, inMin, inMax, outMin, outMax, outCenter)
-		self.registerPin(12, 2, inMin, inMax, outMin, outMax, outCenter)
-		self.registerPin(13, 3, inMin, inMax, outMin, outMax, outCenter)
-		self.registerPin(15, 4, inMin, inMax, outMin, outMax, outCenter)
-		self.registerPin(16, 5, inMin, inMax, outMin, outMax, outCenter)
-		self.registerPin(18, 6, inMin, inMax, outMin, outMax, outCenter)
-		self.registerPin(22, 7, inMin, inMax, outMin, outMax, outCenter)
+		self.registerPin(7, 0, inMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(11, 1, inMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(12, 2, inMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(13, 3, inMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(15, 4, inMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(16, 5, inMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(18, 6, inMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(22, 7, inMin, inMax, outMin, outMax, outCenter, frequency)
 
-	def registerPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter):
+	def registerPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter, frequency):
 		
 		self.pins[pinID] = {
 			'pinID':pinID,
@@ -72,7 +75,7 @@ class AchelRealityBridge:
 		self.inputData[inputBinding]=inMin
 		
 		GPIO.setup(pinID,GPIO.OUT)
-		self.pins[pinID]['physicalPin'] = GPIO.PWM(pinID, 50)
+		self.pins[pinID]['physicalPin'] = GPIO.PWM(pinID, frequency)
 		self.pins[pinID]['physicalPin'].start(outCenter)
 	
 	def scale(self, value, inMin, inMax, outMin, outMax):
