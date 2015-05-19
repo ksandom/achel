@@ -62,6 +62,7 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('between'), 'between', "Restrict the resultset to items where a named result value is between two specified values. --between=valueName,smallValue,largeValue", array('result', 'Manipulations'));
 				
 				$this->core->registerFeature($this, array('sortOnKey'), 'sortOnKey', "Sort items by the key of each result in the result set. This is not to be confused with --sortOnItemKey which is slower, but probably what you want.", array('result', 'sort', 'Manipulations'));
+				$this->core->registerFeature($this, array('sortOnValue'), 'sortOnValue', "Sort items by the value of each result in the result set. This will not work with resultSets containing arrays as the results. For that use --sortOnItemKey . --sortOnValue may not perform well with larger resultSets.", array('result', 'sort', 'Manipulations'));
 				$this->core->registerFeature($this, array('sortOnItemKey'), 'sortOnItemKey', "Sort items by a named item. You can sort on multiple fields. --sortOnItemKey=itemKey1[,itemKey2[,itemKey3[,...]]]", array('result', 'sort', 'Manipulations'));
 				
 				#$this->core->registerFeature($this, array('cleanUnresolvedStoreVars'), 'cleanUnresolvedStoreVars', 'Clean out any store variables that have not been resolved. This is important when a default should be blank.', array('array', 'escaping', 'result'));
@@ -226,6 +227,11 @@ class Manipulator extends Module
 				break;
 			case 'sortOnKey':
 				return ksort($this->core->getResultSet());
+				break;
+			case 'sortOnValue':
+				$resultSet=$this->core->getResultSet();
+				sort($resultSet);
+				return $resultSet;
 				break;
 			case 'sortOnItemKey':
 				return $this->sortOnItemKey($this->core->getResultSet(), $this->core->interpretParms($this->core->get('Global', $event)));
