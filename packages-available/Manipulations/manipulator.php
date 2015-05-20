@@ -882,6 +882,13 @@ class Manipulator extends Module
 		
 		while ($interations<$total)
 		{
+			if (!isset($resultSet[$keys[$half]][$valueName]))
+			{
+				$this->core->debug(1, "findPoint: Result with key \"{$keys[$half]}\" does not have a value named $valueName. This could be a bug in the macro, or corrupted data.");
+				$half++;
+				continue;
+			}
+			
 			$iterationValue=$resultSet[$keys[$half]][$valueName];
 			$maxValue=$resultSet[$keys[$max]][$valueName];
 			$minValue=$resultSet[$keys[$min]][$valueName];
