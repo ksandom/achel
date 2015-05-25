@@ -232,6 +232,9 @@ function doInstall
 	
 	# Linking like there's no tomorrow.
 	cd "$configDir"
+	if [ -d interfaces ]; then
+		rm -Rf interfaces
+	fi
 	ln -sf "$repoDir/src/core.php" "$repoDir"/interfaces .
 	
 	# Remove legacy supplimentary symlink and create a directory instead.
