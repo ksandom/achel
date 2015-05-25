@@ -21,6 +21,7 @@ class CommandLine extends Module
 			case 'init':
 				$this->core->registerFeature($this, array('printr', 'print_r'), 'printr', 'Print output using the print_r() function. Particularly useful for debugging.', array('debug', 'dev', 'output'));
 				$this->core->registerFeature($this, array('nested'), 'nested', 'Print output using a simple nested format. Particularly useful for debugging.', array('debug', 'dev', 'output'));
+				$this->core->registerFeature($this, array('setCliOutput'), 'setCliOutput', 'Reset the output to the natural state of the currnet interface.', array('debug', 'dev', 'output', 'hidden'));
 				
 				$this->core->setRef('General', 'outputObject', $this);
 				$this->core->setRef('General', 'echoObject', $this);
@@ -127,7 +128,23 @@ class CommandLine extends Module
 		if (!$this->codes)
 		{
 			$this->codes=$this->core->getCategoryModule('Color');
+			
+			# If we still don't have the colour codes, create some empty values for things that we use or are likely to use.
+			if (!isset($this->codes['default']))
+			{
+				$this->codes=array(
+					'default'=>'',
+					'blue'=>'',
+					'green'=>'',
+					'red'=>'',
+					'yellow'=>'',
+					'purple'=>'',
+					'cyan'=>'',
+					'brightBlack'=>''
+				);
+			}
 		}
+		
 	}
 	
 	function out($output, $indent='', $prefix=false)
