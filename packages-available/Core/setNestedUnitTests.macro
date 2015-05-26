@@ -54,10 +54,6 @@ setNested ["Tmp","setNested","default","",{"instanceName":"default","longitude":
 setNested ["Tmp","setNested","default","",{"instanceName":"default","longitude":"2","latitude":"2"}]
 setNested ["Tmp","setNested","default","",{"instanceName":"default","longitude":"3","latitude":"3"}]
 
-getCategory Tmp,setNested
-nested
-outNow
-
 defineTest setNested - reproduced addressing bug - 0,
 	expect 1,~!Tmp,setNested,default,0,longitude!~
 

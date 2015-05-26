@@ -11,8 +11,6 @@ defineTest getPreviousStackData - -2,
 defineTest getPreviousStackData - 3,
 	getPreviousStackData Local,previousStackData,3
 	expect stackUnitTests,~!Local,previousStackData,feature!~
-	# stackTrace
-	# outNow
 
 defineTest stackTrace - Do we get results?,
 	clearResultset
