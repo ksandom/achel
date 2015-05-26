@@ -1,0 +1,4 @@
+# Install the data types for unit.
+#onDefine registerForEvent Install,dataTypes,installUnitTestDataTypes
+
+createDataType unitTestCollection,unitTestCollection,,,,A collection of unit tests.

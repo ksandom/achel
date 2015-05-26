@@ -13,9 +13,7 @@ set UnitResults,warnColor,yellow
 
 debug 3,unitTests: Set colours ~!UnitResults,passColor!~pass~!Color,brightBlack!~, ~!UnitResults,failColor!~fail~!Color,brightBlack!~, ~!UnitResults,warnColor!~warn~!Color,default!~.
 
-searchFeatures unitTest
-requireItem tagString,unitTest
-excludeItem name,--
+listUnitTestCollections
 
 set Local,wrongNumberMessage,Wrong number of results. Use -v  (eg achel -v --unitTests) to see what went wrong and -vv to see the actual results that came back. Look for
 

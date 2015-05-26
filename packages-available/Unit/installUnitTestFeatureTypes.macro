@@ -1,0 +1,4 @@
+# Install the feature types for unit.
+#onDefine registerForEvent Install,featureTypes,installUnitTestFeatureTypes
+
+createFeatureType generateUnitTestCollections,,unitTestCollection,Generates a list of unit test collections.
