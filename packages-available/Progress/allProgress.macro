@@ -1,0 +1,3 @@
+# Show every step of the way when showing progress. You shouldn't ever use this except in debugging because it is a massive performance hog. ~ progress,debug,slow
+
+set Progress,all,true

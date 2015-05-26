@@ -19,6 +19,9 @@ if ~!Progress,noProgress!~,!=,true,
 		triggerEvent Int,resetOutput
 	
 	
-	throttleBetween 100,2000,50,~!Local,update!~
+	if ~!Progress,all!~,!=,true,
+		throttleBetween 100,2000,50,~!Local,update!~
+	else
+		callFeature ~!Local,update!~
 	if ~!Local,progress,position!~,==,~!Local,progress,total!~,~!Local,update!~
 
