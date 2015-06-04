@@ -27,6 +27,8 @@ class Macro extends Module
 				$this->core->registerFeature($this, array('loop', 'loopMacro'), 'loop', 'Loop through a resultSet. The current iteration of the resultSet is accessed via STORE variables under the category Result. The key for a given iteration will be stored in Result,key and if the value is a string it will be stored in Result,line. Otherwise all array entries will be directly accessile directly in Result. See loopMacro.md for more information. --loop=macroName[,parametersForTheMacro]', array('loop', 'iterate', 'resultset')); # TODO This should probably move to a language module
 				$this->core->registerFeature($this, array('loopLite'), 'loopLite', 'Loop through a resultSet without passing the whole source resultSet arround in each iteration. For most use-cases, this will be what you want. The current iteration of the resultSet is accessed via STORE variables under the category Result. See loopMacro.md for more information. --loop=macroName[,parametersForTheMacro]', array('loop', 'iterate', 'resultset'));
 				$this->core->registerFeature($this, array('forEach'), 'forEach', "For each result in the resultSet, run this command. The whole resultSet will temporarily be set to the result in the current iteration, and the resultSet of that iteration will replace the original result in the original resultSet. Basically it's a way to work with nested results and be able to send their results back. --foreEach=feature,value", array('loop', 'iterate', 'resultset')); # TODO This should probably move to a language module
+				
+				$this->core->registerFeature($this, array('getProgressKey'), 'getProgressKey', "Progress information is now stored in a unique location for each level nesting so that nested loops in the same macro can operate without interfereing with each others' progress information.", array('loop', 'iterate', 'resultset'));
 				break;
 			case 'singleLineMacro':
 				$this->defineMacro($this->core->get('Global', $event), true);
@@ -56,6 +58,10 @@ class Macro extends Module
 				return $this->doForEach($this->core->getResultSet(), $parms[0], $parms[1]);
 			case 'followup':
 				$this->loadSavedMacros();
+				break;
+			case 'getProgressKey':
+				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2);
+				$this->core->set($parms[0], $parms[1], $this->getProgressKey('previousScopeName'));
 				break;
 			case 'last':
 				break;
@@ -302,6 +308,11 @@ class Macro extends Module
 		return $output;
 	}
 	
+	function getProgressKey($scopeNameKey='scopeName')
+	{
+		return 'progress-'.$this->core->get('General', $scopeNameKey);
+	}
+	
 	function doForEach($data, $feature, $value)
 	{
 		$output=array();
@@ -323,20 +334,21 @@ class Macro extends Module
 	
 	function initProgress(&$data)
 	{
-		$this->core->set('Local', 'progress', array('position'=>0, 'total'=>count($data), 'remaining'=>0));
+		$this->core->set('ProgressData', $this->getProgressKey(), array('position'=>0, 'total'=>count($data), 'remaining'=>0));
 	}
 	
 	function updateProgress()
 	{
-		$progress=$this->core->get('Local', 'progress');
+		$progressKey=$this->getProgressKey();
+		$progress=$this->core->get('ProgressData', $progressKey);
 		$progress['position']++;
 		$progress['remaining']=$progress['total']-$progress['position'];
-		$this->core->set('Local', 'progress', $progress);
+		$this->core->set('ProgressData', $progressKey, $progress);
 	}
 	
 	function removeProgress()
 	{
-		$this->core->doUnset(array('Local', 'progress'));
+		$this->core->doUnset(array('ProgressData', $this->getProgressKey()));
 	}
 	
 	function loadSavedMacros()

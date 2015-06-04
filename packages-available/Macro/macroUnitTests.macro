@@ -67,3 +67,7 @@ defineTest macro - loop gets correct previous data,
 	expect c,~!Local,testResult,ad!~
 	expect d,~!Local,testResult,ae!~
 
+
+defineTest getProgressKey,
+	getProgressKey Local,progressKey
+	expect progress-macroUnitTests-6,~!Local,progressKey!~

@@ -21,7 +21,7 @@ if ~!Local,regex!~,!=,,
 	refine ~!Local,regex!~
 
 loop
-	displayProgress ~!Local,progress!~
+	displayProgress
 	callOutOfScope ~!Result,name!~
 	# setNested UnitResults,testSetName,~!Result,name!~
 finishProgress

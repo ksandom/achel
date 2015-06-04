@@ -514,7 +514,10 @@ class Manipulator extends Module
 		
 		if ($feature)
 		{
-			$this->core->debug(3, 'requireEach: Matched '.count($outputMatch).". Didn't match ".count($outputNoMatch.". For search $search")); # TODO Optimise this so that the counts are not done if the debugging isn't going to be seen
+			if ($this->core->isVerboseEnough(3))
+			{
+				$this->core->debug(3, 'requireEach: Matched '.count($outputMatch).". Didn't match ".count($outputNoMatch.". For search $search"));
+			}
 			return $this->mixResults($outputMatch, $outputNoMatch, $feature);
 		}
 		else
