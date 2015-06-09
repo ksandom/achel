@@ -1,0 +1,4 @@
+# Tag the current item in a loop. --tagResult=value[,tagSet=tags] ~ tags
+parameters {"tagValue":"","tagGroup":"tags"}
+
+setNested Result,~!Local,tagGroup!~,,~!Local,tagValue!~

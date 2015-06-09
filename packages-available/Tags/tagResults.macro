@@ -1,0 +1,5 @@
+# Add a tag to a tagSet in each item of the resultSet. --tagResults=value[,tagSetName=tags] ~ tags
+parameters {"tagValue":"","tagGroup":"tags"}
+
+loop
+	tagResult ["~!Local,tagValue!~","~!Local,tagGroup!~"]
