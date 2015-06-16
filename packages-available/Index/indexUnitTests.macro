@@ -1,0 +1,60 @@
+# Unit tests for Index. ~ unitTest,index,hidden
+
+defineTest Index - add all items,
+	setNested Local,testData,a,name,do1
+	setNested Local,testData,b,name,do2
+	setNested Local,testData,c,name,do3
+	setNested Local,testData,d,name,dad1
+	setNested Local,testData,e,name,dad2
+	setNested Local,testData,f,name,dad3
+	
+	retrieveResults Local,testData
+	
+	addToIndex Local,test1
+	
+	retrieveResults Local,test1
+	countToVar Local,numOfResults
+	
+	expect 6,~!Local,numOfResults!~
+
+defineTest Index - add some items,
+	setNested Local,testData,a,name,do1
+	setNested Local,testData,b,name,do2
+	setNested Local,testData,c,name,do3
+	setNested Local,testData,d,name,dad1
+	setNested Local,testData,e,name,dad2
+	setNested Local,testData,f,name,dad3
+	
+	retrieveResults Local,testData
+	
+	manipulateItem name,do,
+		addToIndex Local,test2
+		
+	retrieveResults Local,test2
+	
+	countToVar Local,numOfResults2
+	
+	expect 3,~!Local,numOfResults2!~
+
+defineTest Index - get the items,
+	setNested Local,testData,a,name,do1
+	setNested Local,testData,b,name,do2
+	setNested Local,testData,c,name,do3
+	setNested Local,testData,d,name,dad1
+	setNested Local,testData,e,name,dad2
+	setNested Local,testData,f,name,dad3
+	
+	retrieveResults Local,testData
+	
+	unset Example,test3
+	
+	manipulateItem name,^do,
+		addToIndex Example,test3
+	
+	getIndexed Example,test3
+	
+	countToVar Local,numOfResults3
+	
+	expect 3,~!Local,numOfResults3!~
+	
+# TODO test that get works with a resultSet of simple strings

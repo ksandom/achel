@@ -1,0 +1,16 @@
+# Get a subSet of the resultSet using an index. --getIndexed=Category,indexName
+parameters category,indexName
+
+stashResults Local,originalResults
+clear
+
+retrieveResults ~!Local,category!~,~!Local,indexName!~
+
+loop
+	set Local,key,~!Result,key!~
+	# Get the appropriate entry from the original resultSet
+	set ["Local","results","",~!Local,originalResults,~!Result,key!~!~]
+
+retrieveResults Local,results
+
+makeMeAvailable ~!Local,indexName!~

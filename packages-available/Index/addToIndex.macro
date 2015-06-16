@@ -1,0 +1,11 @@
+# Add all the items in the result set to the specified index. --addToIndex=Category,indexName ~ index
+parameters category,indexName
+
+countToVar Local,numOfEntries
+debug 3,addToIndex: Adding ~!Local,numOfEntries!~ entries to index ~!Local,category!~,~!Local,indexName!~
+loop
+	debug 4,addToIndex: key=~!Result,key!~ ["~!Local,category!~","~!Local,indexName!~","~!Result,key!~","~!Result,key!~"]
+	setNested ["~!Local,category!~","~!Local,indexName!~","~!Result,key!~","~!Result,key!~"]
+
+makeLocalAvailable ~!Local,indexName!~
+makeMeAvailable ~!Local,indexName!~
