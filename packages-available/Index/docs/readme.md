@@ -4,7 +4,7 @@ For indexing stuff so that it can be quickly found later on.
 
 ## Important notes
 
-* `--getIndexe` is not currently compatible with scoped variables such as `Me` and `Local`. Therefore it is recommended to store your indexes in a more permanent way, and unset them if you no longer need them.
+* `--getIndexe` is not currently compatible with scoped variables such as `Me` and `Local`. Therefore it is recommended to store your indexes in a more permanent way such as Example or Blah, and unset them if you no longer need them. This does not mean you have to use a collection, but you can if you wish.
 
 ## How to use it
 
