@@ -272,6 +272,39 @@ class core extends Module
 		return self::$singleton;
 	}
 	
+	function separateStringAppendedToJson($input)
+	{
+		$firstChar=substr($input, 0, 1);
+		$lastChar=substr($input, -1, 1);
+		
+		if (($firstChar=='[' or $firstChar=='{') and ($lastChar==']') or $lastChar=='}')
+		{ # There is no extra string. Just return the json as is
+			
+			return array('firstPart'=>$input, 'lastPart'=>null);
+		}
+		else
+		{ # We have some work to do
+			# Find where the split is
+			if ($firstChar=='[') $searchFor='],';
+			elseIf ($firstChar=='{') $searchFor='},';
+			
+			$lastFoundPos=0;
+			$tmpFound=0;
+			while ($tmpFound!==false)
+			{
+				$tmpFound=strpos($input, $searchFor, $lastFoundPos+1);
+				if ($tmpFound) $lastFoundPos=$tmpFound;
+			}
+			
+			# Split it
+			$lastFoundPos++;
+			$firstPart=substr($input, 0, $lastFoundPos);
+			$lastPart=substr($input, $lastFoundPos+1, strlen($input)-strlen($lastFoundPos)-1);
+			
+			return array('firstPart'=>$firstPart, 'lastPart'=>$lastPart);
+		}
+	}
+	
 	function interpretParms($parms, $limit=0, $require=null, $reassemble=true)
 	{
 		if (is_array($parms)) return $parms;
@@ -289,14 +322,17 @@ class core extends Module
 			$firstChar=substr($parms, 0, 1);
 			if ($firstChar=='[' or $firstChar=='{')
 			{ // Json
-				$parts=json_decode($parms, 1);
+				$mixedParts=$this->separateStringAppendedToJson($parms);
+				$parts=json_decode($mixedParts['firstPart'], 1);
 				if (!count($parts))
 				{
-					$this->debug(0, "interpretParms: Got 0 parts back from json \"$parms\" which usually means invalid json.");
+					$this->debug(0, "interpretParms: Got 0 parts back from json \"${mixedParts['firstPart']}\" originalInput=$parms which usually means invalid json.");
 					
 					# TODO Do we want to do some other clean up here.
 					$parts=array(); // Prevent stuff from breaking since they always expect an array.
 				}
+				
+				if ($mixedParts['lastPart']!='') $parts[]=$mixedParts['lastPart'];
 			}
 			else
 			{ // Legacy comma separated format

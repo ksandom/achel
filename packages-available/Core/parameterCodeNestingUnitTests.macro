@@ -1,0 +1,40 @@
+# Unit tests for parameters ~ unitTest,parameters,parameterNesting,hidden
+
+defineTest parameter handeling with nesting - simple hit,
+	if 1,==,1,
+		passTest got to expected location
+	else
+		failTest got to unexpected location
+
+defineTest parameter handeling with nesting - simple miss,
+	if 1,!=,1,
+		failTest got to unexpected location
+	else
+		passTest got to expected location
+
+defineTest parameter handeling with nesting - json [ hit,
+	if ["1","==","1"],
+		passTest got to expected location
+	else
+		failTest got to unexpected location
+
+defineTest parameter handeling with nesting - json [ miss,
+	if ["1","!=","1"],
+		failTest got to unexpected location
+	else
+		passTest got to expected location
+
+defineTest parameter handeling with nesting - json [ hit,
+	# NOTE Don't write code like this. I'm doing it here to make sure that the underlying code is working correctly, and this was a simple test.
+	if {"0":"1","1":"==","2":"1"},
+		passTest got to expected location
+	else
+		failTest got to unexpected location
+
+defineTest parameter handeling with nesting - json [ miss,
+	# NOTE Don't write code like this. I'm doing it here to make sure that the underlying code is working correctly, and this was a simple test.
+	if {"0":"1","1":"!=","2":"1"},
+		failTest got to unexpected location
+	else
+		passTest got to expected location
+

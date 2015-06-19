@@ -1,15 +1,19 @@
-# Get a subSet of the resultSet using an index. --getIndexed=Category,indexName . --getIndexe is not currently compatible with scoped variables such as `Me` and `Local`. Therefore it is recommended to store your indexes in a more permanent way such as Example or Blah, and unset them if you no longer need them. This does not mean you have to use a collection, but you can if you wish. ~ index
+# Get a subSet of the resultSet using an index. --getIndexed=Category,indexName . --getIndexed is not currently compatible with scoped variables such as `Me` and `Local`. Therefore it is recommended to store your indexes in a more permanent way such as Example or Blah, and unset them if you no longer need them. This does not mean you have to use a collection, but you can if you wish. ~ index
 parameters category,indexName
 
-stashResults Local,originalResults
+stashResults Local,originalResultSet
 clear
 
 retrieveResults ~!Local,category!~,~!Local,indexName!~
 
 loop
 	set Local,key,~!Result,key!~
-	# Get the appropriate entry from the original resultSet
-	set ["Local","results","",~!Local,originalResults,~!Result,key!~!~]
+	escapeForJson Local,resultToTest,~!Local,originalResultSet,~!Result,key!~!~
+	if ["~!Local,resultToTest!~","!=",""],
+		# Get the appropriate entry from the original resultSet
+		set ["Local","results","",~!Local,originalResultSet,~!Local,key!~!~]
+	else
+		debug 0,Skipped ~!Local,key!~ because it is not in the originalResultSet.
 
 retrieveResults Local,results
 
