@@ -341,6 +341,16 @@ class Macro extends Module
 	{
 		$progressKey=$this->getProgressKey();
 		$progress=$this->core->get('ProgressData', $progressKey);
+		
+		# Work around corner cases which cause progress data to be missing.
+		if (!$progress) # TODO It would be better to find all the cases where this is needed, as this will currently leave to unusual progress in those cases.
+		{
+			$emptyData=array();
+			$this->initProgress($emptyData);
+			$progress=$this->core->get('ProgressData', $progressKey);
+			$progress['notes']="Fudged progress data to cover corner cases. Grep for this string to find it.";
+		}
+		
 		$progress['position']++;
 		$progress['remaining']=$progress['total']-$progress['position'];
 		$this->core->set('ProgressData', $progressKey, $progress);
