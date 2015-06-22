@@ -10,8 +10,8 @@ loop
 	set Local,key,~!Result,key!~
 	escapeForJson Local,resultToTest,~!Local,originalResultSet,~!Result,key!~!~
 	if ["~!Local,resultToTest!~","!=",""],
-		# Get the appropriate entry from the original resultSet
-		set ["Local","results","",~!Local,originalResultSet,~!Local,key!~!~]
+		# Get the appropriate entry from the original resultSet 
+		setNested ["Local","results","~!Local,key!~",~!Local,originalResultSet,~!Local,key!~!~]
 	else
 		debug 0,Skipped ~!Local,key!~ because it is not in the originalResultSet.
 

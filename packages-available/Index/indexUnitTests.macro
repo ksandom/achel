@@ -54,7 +54,30 @@ defineTest Index - get the items,
 	getIndexed Example,test3
 	
 	countToVar Local,numOfResults3
-	
 	expect 3,~!Local,numOfResults3!~
+	
+defineTest Index - get the right items,
+	
+	setNested Local,testData,a,name,do1
+	setNested Local,testData,b,name,do2
+	setNested Local,testData,c,name,do3
+	setNested Local,testData,d,name,dad1
+	setNested Local,testData,e,name,dad2
+	setNested Local,testData,f,name,dad3
+	
+	retrieveResults Local,testData
+	
+	unset Example,test3
+	
+	manipulateItem name,^do,
+		addToIndex Example,test3
+	
+	getIndexed Example,test3
+	
+	stashResults Local,results
+	expect do1,~!Local,results,a,name!~
+	expect do2,~!Local,results,b,name!~
+	expect do3,~!Local,results,c,name!~
+	
 	
 # TODO test that get works with a resultSet of simple strings
