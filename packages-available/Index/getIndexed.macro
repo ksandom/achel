@@ -6,14 +6,18 @@ clear
 
 retrieveResults ~!Local,category!~,~!Local,indexName!~
 
+unset Local,results
+
 loop
 	set Local,key,~!Result,key!~
+	set Local,resultToTest,
 	escapeForJson Local,resultToTest,~!Local,originalResultSet,~!Result,key!~!~
+	debug 3, ----------- ~!Result,key!~ ========= ~!Local,originalResultSet,~!Result,key!~!~
 	if ["~!Local,resultToTest!~","!=",""],
 		# Get the appropriate entry from the original resultSet 
 		setNested ["Local","results","~!Local,key!~",~!Local,originalResultSet,~!Local,key!~!~]
 	else
-		debug 0,Skipped ~!Local,key!~ because it is not in the originalResultSet.
+		debug 1,Skipped ~!Local,key!~ because it is not in the originalResultSet.
 
 retrieveResults Local,results
 
