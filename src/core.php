@@ -1022,23 +1022,28 @@ class core extends Module
 			
 			if ($output!=$this->lastMessage['value'])
 			{
-				if ($this->lastMessage['count']>0) echo "$eol";
-				echo "[$code$title$default] $output$eol";
+				if ($this->lastMessage['count']>0) $this->debugOutput("$eol");
+				$this->debugOutput("[$code$title$default] $output$eol");
 				$this->lastMessage['value']=$output;
 				$this->lastMessage['count']=0;
 			}
 			elseIf ($this->lastMessage['count']==0)
 			{
-				echo "  {$code}Repeat{$default} ";
+				$this->debugOutput("  {$code}Repeat{$default} ");
 				$this->lastMessage['count']++;
 			}
 			else
 			{
-				echo ".";
+				$this->debugOutput(".");
 				$this->lastMessage['count']++;
 			}
 			# return false;
 		}
+	}
+	
+	private function debugOutput($message)
+	{
+		fwrite(STDERR, $message);
 	}
 	
 	function isVerboseEnough($verbosityLevel=0)
