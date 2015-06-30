@@ -285,8 +285,8 @@ class Macro extends Module
 				else $single=false;
 				
 				# This data is unlikely to be useful in most situations. So we shouldn't polute arbitrary data with it.
-				$this->core->doUnset(array('Result', 'previousKey'));
-				$this->core->doUnset(array('Result', 'nextKey'));
+				if (isset($result['previousKey'])) unset ($result['previousKey']);
+				if (isset($result['nextKey'])) unset ($result['nextKey']);
 				
 				# Put the data back ready to be sent back to the ResultSet
 				if ($single)

@@ -1,0 +1,3 @@
+# Show just the failed unit tests. --showFailed . ~ unit,results
+
+requireItem result,fail
