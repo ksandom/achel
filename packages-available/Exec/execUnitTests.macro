@@ -1,0 +1,22 @@
+# Unit tests for exec. ~ hidden,unitTest,exec
+
+defineTest exExec - no command,
+	clear
+	exExec
+	stashResults Local,noCommand
+	
+	expect ,~!Local,noCommand,0!~
+
+
+defineTest exExec - simple to self,
+	exExec achel --set=UnitTmp,a,1 --set=UnitTmp,b,2 --getCategory=UnitTmp --json
+	stashResults Local,simpleToSelf
+	
+	expect 1,~!Local,simpleToSelf,a!~
+	expect 2,~!Local,simpleToSelf,b!~
+
+defineTest exExec - simple echo,
+	exExec echo -n "Dream a dream"
+	stashResults Local,simpleEcho
+	
+	expect Dream a dream,~!Local,simpleEcho,0!~
