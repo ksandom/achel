@@ -1,0 +1,3 @@
+# Force the exit status at this moment to be 1 (failure). Force (eg --forceFailureStatus) should only be used when there is really good reason to override a set. (eg --setFailureStatus) ~ ExitStatus
+
+set General,exitCode,1

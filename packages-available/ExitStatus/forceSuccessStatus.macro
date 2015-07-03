@@ -1,0 +1,3 @@
+# Force the exit status at this moment to be 0 (success). ~ ExitStatus
+
+set General,exitCode,0

@@ -1,0 +1,4 @@
+# Set the exit status at this moment to be 2 (warning). ~ ExitStatus
+
+if ~!General,exitCode!~,==,0,
+	forceWarningStatus

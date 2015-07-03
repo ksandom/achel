@@ -1,0 +1,3 @@
+# Set the exit status at this moment to be 1 (failure). ~ ExitStatus
+
+forceFailureStatus

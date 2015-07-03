@@ -37,11 +37,20 @@ $core->set('General', 'profile', $profile);
 $core->set('General', 'hostsDir', storageDir.'/data/1LayerHosts');
 $core->set('General', 'programName', programName);
 $core->set('General', 'description', $description);
+$core->set('General', 'exitCode', 0);
 include (configDir.'/interfaces/commandLine.php');
 $core->setRef('CommandLine', 'arguments', $argv);
 loadModules($core, configDir."/profiles/$profile/modules");
 $core->callFeature("registerForEvent", "Achel,finishLate,outNow");
 
+# Make it happen!
 $core->go();
+
+# We're finished, return an exit code to the command line.
+$exitCode=$core->get('General', 'exitCode');
+if (is_numeric($exitCode))
+{
+	exit(intval($exitCode));
+}
 
 ?>

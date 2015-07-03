@@ -1,0 +1,3 @@
+# Force the exit status at this moment to be 2 (warning). Note that 2 is often used, but not standardised. For Achel 2 is warning. ~ ExitStatus
+
+set General,exitCode,2

@@ -1,0 +1,32 @@
+# Unit tests for ExitStatus ~ hidden,exit,status,exitStatus,exitCode,code,unitTest
+
+defineTest forceFailureStatus,
+	set General,exitCode,0
+	forceFailureStatus
+	expect 1,~!General,exitCode!~
+
+defineTest setFailureStatus,
+	set General,exitCode,0
+	setFailureStatus
+	expect 1,~!General,exitCode!~
+
+defineTest forceWarningStatus,
+	set General,exitCode,0
+	forceWarningStatus
+	expect 2,~!General,exitCode!~
+
+defineTest setWarningStatus - from success,
+	set General,exitCode,0
+	setWarningStatus
+	expect 2,~!General,exitCode!~
+
+defineTest setWarningStatus - from failure,
+	set General,exitCode,1
+	setWarningStatus
+	expect 1,~!General,exitCode!~
+
+defineTest forceSuccessStatus,
+	set General,exitCode,1
+	forceSuccessStatus
+	expect 0,~!General,exitCode!~
+
