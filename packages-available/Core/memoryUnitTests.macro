@@ -1,0 +1,15 @@
+# Unit tests for memory features ~ unitTest,memory,hidden
+
+defineTest copyCategory,
+	unsetCategory Test1
+	unsetCategory Test2
+	
+	set Test1,a,1
+	set Test1,b,2
+	set Test1,c,3
+	
+	copyCategory Test1,Test2
+	
+	expect 1,~!Test2,a!~
+	expect 2,~!Test2,b!~
+	expect 3,~!Test2,c!~
