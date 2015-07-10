@@ -183,14 +183,14 @@ function fileRepAddFile
 function fileRepRemoveFile
 {
 	local fileToRemove="$1"
-	
-	if ! assertFileRepSetup; then return 1; fi
-	
-	# Resolve the symlink
-	read fileName	destinationPath < <(resolveSymlinks "$configDir/$fileToRemove")
-	
-	# Do the work. NOTE that we are not deleting the destination file. This is because we can not be sure that deleteing it will not incorrectly affect other users. If you know it's not needed any more, it's easy to remove the file yourself.
-	rm "$fileName"
-	cp "$destinationPath" "$fileName"
-	
+	if [ "$fileToRemove" != '' ]; then
+		if [ -e "$fileToRemove" ]; then
+			if ! assertFileRepSetup; then return 1; fi
+			# Resolve the symlink
+			read fileName	destinationPath < <(resolveSymlinks "$configDir/$fileToRemove")
+			# Do the work. NOTE that we are not deleting the destination file. This is because we can not be sure that deleteing it will not incorrectly affect other users. If you know it's not needed any more, it's easy to remove the file yourself.
+			rm "$fileName"
+			cp "$destinationPath" "$fileName"
+		fi
+	fi
 }
