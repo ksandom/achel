@@ -13,7 +13,6 @@ generateChars Local,rebasedRemainderChars,~!Local,rebasedRemainder!~,.
 
 set Local,bar,~!Local,doneChars!~~!Local,rebasedRemainderChars!~
 
-
 # Calculate statistics
 if ~!Local,done!~,>,0,
 	# Calculate rate
@@ -25,14 +24,21 @@ if ~!Local,done!~,>,0,
 		set Progress,lastTime,~!Progress,thisTime!~
 		
 		if ~!Progress,timeDiff!~,!=,0,
-			basicMaths Progress,rate,~!Progress,doneDiff!~,/,~!Progress,timeDiff!~
-			round Progress,rate,~!Progress,rate!~,0
+			if ~!Progress,timeDiff!~,>,0,
+				basicMaths Progress,rate,~!Progress,doneDiff!~,/,~!Progress,timeDiff!~
+				round Progress,rate,~!Progress,rate!~,0
+			else
+				set Progress,rate,0
 			
 			# Calculate time remaining
 			basicMaths Progress,remaining,~!Local,total!~,-,~!Local,done!~
-			basicMaths Progress,timeRemainingSeconds,~!Progress,remaining!~,/,~!Progress,rate!~
-			round Progress,timeRemainingSeconds,~!Progress,timeRemainingSeconds!~,0
-			fuzzyTime Progress,timeRemaining,~!Progress,timeRemainingSeconds!~
+			if ~!Progress,rate!~,>,0,
+				basicMaths Progress,timeRemainingSeconds,~!Progress,remaining!~,/,~!Progress,rate!~
+				round Progress,timeRemainingSeconds,~!Progress,timeRemainingSeconds!~,0
+				fuzzyTime Progress,timeRemaining,~!Progress,timeRemainingSeconds!~
+			else
+				set Progress,timeRemainingSeconds,9999
+				set Progress,timeRemaining,---
 		else
 			set Progress,rate,INF
 			set Progress,timeRemaining,INF
