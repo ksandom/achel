@@ -37,10 +37,12 @@ $core->set('General', 'profile', $profile);
 $core->set('General', 'hostsDir', storageDir.'/data/1LayerHosts');
 $core->set('General', 'programName', programName);
 $core->set('General', 'description', $description);
+$core->set('General', 'delayProcessingArgs', true);
 $core->set('General', 'exitCode', 0);
 include (configDir.'/interfaces/commandLine.php');
 $core->setRef('CommandLine', 'arguments', $argv);
 loadModules($core, configDir."/profiles/$profile/modules");
+$core->callFeature("triggerEvent", "Achel,interfaceStartup");
 $core->callFeature("registerForEvent", "Achel,finishLate,outNow");
 
 # Make it happen!

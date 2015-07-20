@@ -22,6 +22,7 @@ class CommandLine extends Module
 				$this->core->registerFeature($this, array('printr', 'print_r'), 'printr', 'Print output using the print_r() function. Particularly useful for debugging.', array('debug', 'dev', 'output'));
 				$this->core->registerFeature($this, array('nested'), 'nested', 'Print output using a simple nested format. Particularly useful for debugging.', array('debug', 'dev', 'output'));
 				$this->core->registerFeature($this, array('setCliOutput'), 'setCliOutput', 'Reset the output to the natural state of the currnet interface.', array('debug', 'dev', 'output', 'hidden'));
+				$this->core->registerFeature($this, array('processArgs'), 'processArgs', 'Process command line arguments.', array('startup', 'hidden'));
 				
 				$this->core->setRef('General', 'outputObject', $this);
 				$this->core->setRef('General', 'echoObject', $this);
@@ -30,6 +31,18 @@ class CommandLine extends Module
 				$this->core->callFeature('registerForEvent','Int,resetOutput,setCliOutput');
 				break;
 			case 'last':
+				if ($this->core->get('General', 'delayProcessingArgs'))
+				{
+					# The new code is in place, delay it until the last moment. This fixes command line feature aliases.
+					$this->core->callFeature('registerForEvent', 'Achel,interfaceStartup,processArgs');
+				}
+				else
+				{
+					# Call it right now so that stuff doesn't break
+					$this->event('processArgs');
+				}
+				break;
+			case 'processArgs':
 				$this->core->callFeature('triggerEvent', 'CommandLine,startup');
 				$this->processArgs();
 				break;
