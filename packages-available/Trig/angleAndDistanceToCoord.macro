@@ -44,7 +44,7 @@ else
 			
 			setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,opposite!~
 			setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,adjacent!~
-			debug 1,branch A
+			debug 4,branch A
 			
 		elseIf ~!Local,angle!~,<,~!Local,pi!~,
 			# bottom right
@@ -56,7 +56,7 @@ else
 			setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,opposite!~
 			setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,adjacent!~
 			
-			debug 1,branch B
+			debug 4,branch B
 			
 		elseIf ~!Local,angle!~,<,~!Local,1.5Pi!~,
 			# bottom left
@@ -70,7 +70,7 @@ else
 			setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,opposite!~
 			setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,adjacent!~
 			
-			debug 1,branch C
+			debug 4,branch C
 		else
 			# top left
 			basicMaths Local,angle,~!Local,angle!~,-,~!Local,1.5Pi!~
@@ -82,6 +82,6 @@ else
 			setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,opposite!~
 			setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,adjacent!~
 			
-			debug 1,branch D
+			debug 4,branch D
 
-debug 1,angleAndDistanceToCoord: return ~!~!Local,category!~,~!Local,variable!~!~ angle=~!Local,angle!~
+debug 3,angleAndDistanceToCoord: return ~!~!Local,category!~,~!Local,variable!~!~ angle=~!Local,angle!~
