@@ -3,4 +3,5 @@
 # TODO Migrate Settings,semanticsTemplate => SemanticsState,semanticsTemplate
 # TODO create lookup to resolve the actual template that Settings,semanticsTemplate references. Settings,semanticsTemplate currently points to the
 
+debug 1,Semantics: Going to run ~!SemanticsState,currentDataType,action!~,~!SemanticsState,currentDataType,~!Settings,semanticsTemplate!~!~
 callFeatureNoReturn ~!SemanticsState,currentDataType,action!~,~!SemanticsState,currentDataType,~!Settings,semanticsTemplate!~!~

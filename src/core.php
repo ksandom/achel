@@ -1367,6 +1367,7 @@ class core extends Module
 	
 	function setIfNotSet($category, $valueName, $value, $orNothing=false)
 	{
+		# TODO this needs to be adapted to work with scoping.
 		$shouldSet=false;
 		if ($category!=nestedPrivateVarsName)
 		{

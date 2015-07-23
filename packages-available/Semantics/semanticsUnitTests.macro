@@ -15,6 +15,17 @@ defineTest createDataType,
 	expect 1,~!Local,count!~
 	deleteDataType test123ut
 
+defineTest createDataType - amend more template,
+	createDataType test123ut,testut,testutMore,,,A testing data type
+	
+	listDataTypes
+	refine test123ut
+	first
+	loop
+		expect testutMore,~!Result,more!~
+	
+	deleteDataType test123ut
+
 defineTest deleteDataType,
 	createDataType test123ut,testut,,,,A testing data type
 	countToVar Local,count

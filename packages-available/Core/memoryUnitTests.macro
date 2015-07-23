@@ -13,3 +13,104 @@ defineTest copyCategory,
 	expect 1,~!Test2,a!~
 	expect 2,~!Test2,b!~
 	expect 3,~!Test2,c!~
+
+
+defineTest setIfNothing Tmp - happy day,
+	unset Tmp,setIfNothing
+	
+	setIfNothing Tmp,setIfNothing,asdf
+	expect asdf,~!Tmp,setIfNothing!~
+	
+	unset Tmp,setIfNothing
+
+defineTest setIfNothing Tmp - already set,
+	unset Tmp,setIfNothing
+	
+	set Tmp,setIfNothing,already set
+	setIfNothing Tmp,setIfNothing,should not have got this.
+	expect already set,~!Tmp,setIfNothing!~
+	unset Tmp,setIfNothing
+
+defineTest setIfNothing Tmp - already set by setIfNothing,
+	unset Tmp,setIfNothing
+	
+	setIfNothing Tmp,setIfNothing,already set
+	setIfNothing Tmp,setIfNothing,should not have got this.
+	expect already set,~!Tmp,setIfNothing!~
+	unset Tmp,setIfNothing
+
+
+defineTest setIfNothing Local - happy day,
+	unset Local,setIfNothing
+	
+	setIfNothing Local,setIfNothing,asdf
+	expect asdf,~!Local,setIfNothing!~
+	
+	unset Local,setIfNothing
+
+defineTest setIfNothing Local - already set,
+	unset Local,setIfNothing
+	
+	set Local,setIfNothing,already set
+	setIfNothing Local,setIfNothing,should not have got this.
+	expect already set,~!Local,setIfNothing!~
+	unset Local,setIfNothing
+
+defineTest setIfNothing Local - already set by setIfNothing,
+	unset Local,setIfNothing
+	
+	setIfNothing Local,setIfNothing,already set
+	setIfNothing Local,setIfNothing,should not have got this.
+	expect already set,~!Local,setIfNothing!~
+	unset Local,setIfNothing
+
+
+defineTest setIfNothing Me - happy day,
+	unset Me,setIfNothing
+	
+	setIfNothing Me,setIfNothing,asdf
+	expect asdf,~!Me,setIfNothing!~
+	
+	unset Me,setIfNothing
+
+defineTest setIfNothing Me - already set,
+	unset Me,setIfNothing
+	
+	set Me,setIfNothing,already set
+	setIfNothing Me,setIfNothing,should not have got this.
+	expect already set,~!Me,setIfNothing!~
+	unset Me,setIfNothing
+
+defineTest setIfNothing Me - already set by setIfNothing,
+	unset Me,setIfNothing
+	
+	setIfNothing Me,setIfNothing,already set
+	setIfNothing Me,setIfNothing,should not have got this.
+	expect already set,~!Me,setIfNothing!~
+	unset Me,setIfNothing
+
+
+defineTest setIfNothing Isolated - happy day,
+	unset Isolated,setIfNothing
+	
+	setIfNothing Isolated,setIfNothing,asdf
+	expect asdf,~!Isolated,setIfNothing!~
+	
+	unset Isolated,setIfNothing
+
+defineTest setIfNothing Isolated - already set,
+	unset Isolated,setIfNothing
+	
+	set Isolated,setIfNothing,already set
+	setIfNothing Isolated,setIfNothing,should not have got this.
+	expect already set,~!Isolated,setIfNothing!~
+	unset Isolated,setIfNothing
+
+defineTest setIfNothing Isolated - already set by setIfNothing,
+	unset Isolated,setIfNothing
+	
+	setIfNothing Isolated,setIfNothing,already set
+	setIfNothing Isolated,setIfNothing,should not have got this.
+	expect already set,~!Isolated,setIfNothing!~
+	unset Isolated,setIfNothing
+
