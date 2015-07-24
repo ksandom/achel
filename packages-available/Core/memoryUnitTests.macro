@@ -31,6 +31,14 @@ defineTest setIfNothing Tmp - already set,
 	expect already set,~!Tmp,setIfNothing!~
 	unset Tmp,setIfNothing
 
+defineTest setIfNothing Tmp - already set but empty,
+	unset Tmp,setIfNothing
+	
+	set Tmp,setIfNothing,
+	setIfNothing Tmp,setIfNothing,should get this.
+	expect should get this.,~!Tmp,setIfNothing!~
+	unset Tmp,setIfNothing
+
 defineTest setIfNothing Tmp - already set by setIfNothing,
 	unset Tmp,setIfNothing
 	
@@ -54,6 +62,14 @@ defineTest setIfNothing Local - already set,
 	set Local,setIfNothing,already set
 	setIfNothing Local,setIfNothing,should not have got this.
 	expect already set,~!Local,setIfNothing!~
+	unset Local,setIfNothing
+
+defineTest setIfNothing Local - already set but empty,
+	unset Local,setIfNothing
+	
+	set Local,setIfNothing,
+	setIfNothing Local,setIfNothing,should get this.
+	expect should get this.,~!Local,setIfNothing!~
 	unset Local,setIfNothing
 
 defineTest setIfNothing Local - already set by setIfNothing,
@@ -81,6 +97,14 @@ defineTest setIfNothing Me - already set,
 	expect already set,~!Me,setIfNothing!~
 	unset Me,setIfNothing
 
+defineTest setIfNothing Me - already set but empty,
+	unset Me,setIfNothing
+	
+	set Me,setIfNothing,
+	setIfNothing Me,setIfNothing,should get this.
+	expect should get this.,~!Me,setIfNothing!~
+	unset Me,setIfNothing
+
 defineTest setIfNothing Me - already set by setIfNothing,
 	unset Me,setIfNothing
 	
@@ -106,6 +130,14 @@ defineTest setIfNothing Isolated - already set,
 	expect already set,~!Isolated,setIfNothing!~
 	unset Isolated,setIfNothing
 
+defineTest setIfNothing Isolated - already set but empty,
+	unset Isolated,setIfNothing
+	
+	set Isolated,setIfNothing,already set
+	setIfNothing Isolated,setIfNothing,should get this.
+	expect should get this.,~!Isolated,setIfNothing!~
+	unset Isolated,setIfNothing
+
 defineTest setIfNothing Isolated - already set by setIfNothing,
 	unset Isolated,setIfNothing
 	
@@ -114,3 +146,56 @@ defineTest setIfNothing Isolated - already set by setIfNothing,
 	expect already set,~!Isolated,setIfNothing!~
 	unset Isolated,setIfNothing
 
+
+defineTest setIfNotSet Tmp - happy day,
+	unset Tmp,setIfNotSet
+	
+	setIfNotSet Tmp,setIfNotSet,asdf
+	expect asdf,~!Tmp,setIfNotSet!~
+	
+	unset Tmp,setIfNotSet
+
+defineTest setIfNotSet Tmp - already set,
+	unset Tmp,setIfNotSet
+	
+	set Tmp,setIfNotSet,already set
+	setIfNotSet Tmp,setIfNotSet,should not have got this.
+	expect already set,~!Tmp,setIfNotSet!~
+	unset Tmp,setIfNotSet
+
+defineTest setIfNotSet Tmp - already set but empty,
+	unset Tmp,setIfNotSet
+	
+	set Tmp,setIfNotSet,
+	setIfNotSet Tmp,setIfNotSet,should not have got this.
+	expect ,~!Tmp,setIfNotSet!~
+	unset Tmp,setIfNotSet
+
+defineTest setIfNotSet Tmp - already set by setIfNotSet,
+	unset Tmp,setIfNotSet
+	
+	setIfNotSet Tmp,setIfNotSet,already set
+	setIfNotSet Tmp,setIfNotSet,should not have got this.
+	expect already set,~!Tmp,setIfNotSet!~
+	unset Tmp,setIfNotSet
+
+
+
+
+
+
+defineTest copy,
+	setNested Local,a,b,a,1
+	setNested Local,a,b,b,2
+	setNested Local,a,b,c,3
+	setNested Local,a,b,d,4
+	
+	copy ["Local,a,b","Local,b,a,c"]
+	
+	expect 4,~!Local,b,a,c,d!~
+	expect 3,~!Local,b,a,c,c!~
+	expect 2,~!Local,b,a,c,b!~
+	expect 1,~!Local,b,a,c,a!~
+	
+	
+	
