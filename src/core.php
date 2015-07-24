@@ -95,6 +95,7 @@ class core extends Module
 				$this->registerFeature($this, array('setCategory'), 'setCategory', 'Set an entire store to the current state of the result set. --setCategory=category', array('storeVars', 'store', 'dev'));
 				$this->registerFeature($this, array('unsetCategory'), 'unsetCategory', 'Un set/delete an entire store. --unsetCategory=category', array('storeVars', 'store', 'dev'));
 				$this->registerFeature($this, array('copyCategory'), 'copyCategory', 'Copy an entire store to another store. --copyCategory=fromModuleName,toModuleName', array('storeVars', 'store', 'dev'));
+				$this->registerFeature($this, array('copy'), 'copy', "Copy the contents of any nested variable to any nested location. --copy='[\"Path,to,variable\",\"Path,to,destination,variable\"]' or in a macro: copy [\"Path,to,variable\",\"Path,to,destination,variable\"]", array('storeVars', 'store', 'dev'));
 				$this->registerFeature($this, array('stashResults'), 'stashResults', 'Put the current result set into a memory slot. --stashResults=category'.valueSeparator.'variableName');
 				$this->registerFeature($this, array('retrieveResults'), 'retrieveResults', 'Retrieve a result set that has been stored. This will replace the current result set with the retrieved one --retrieveResults=category'.valueSeparator.'variableName');
 				$this->registerFeature($this, array('getPID'), 'getPID', 'Save the process ID to a variable. --getPID=category'.valueSeparator.'variableName');
@@ -195,6 +196,13 @@ class core extends Module
 			case 'copyCategory':
 				$parms=$this->interpretParms($this->get('Global', $event), 2);
 				$this->setCategoryModule($parms[1], $this->getCategoryModule($parms[0]));
+				break;
+			case 'copy':
+				# TODO Do this
+				$originalParms=$this->get('Global', $event);
+				$parms=$this->interpretParms($originalParms);
+				$this->debug(4,"copy: get={$parms[1]} set={$parms[0]}");
+				$this->setNestedViaPath($parms[1], $this->getNested(explode(',',$parms[0])));
 				break;
 			case 'stashResults':
 				$originalParms=$this->get('Global', 'stashResults');
