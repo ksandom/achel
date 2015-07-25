@@ -133,7 +133,7 @@ defineTest setIfNothing Isolated - already set,
 defineTest setIfNothing Isolated - already set but empty,
 	unset Isolated,setIfNothing
 	
-	set Isolated,setIfNothing,already set
+	set Isolated,setIfNothing,
 	setIfNothing Isolated,setIfNothing,should get this.
 	expect should get this.,~!Isolated,setIfNothing!~
 	unset Isolated,setIfNothing

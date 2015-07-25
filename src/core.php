@@ -1375,24 +1375,17 @@ class core extends Module
 	
 	function setIfNotSet($category, $valueName, $value, $orNothing=false)
 	{
-		# TODO this needs to be adapted to work with scoping.
-		$shouldSet=false;
-		if ($category!=nestedPrivateVarsName)
-		{
-			if (!isset($this->store[$category])) $shouldSet=true;
-			elseif (!isset($this->store[$category][$valueName])) $shouldSet=true;
-			elseif (!$this->store[$category][$valueName] and $orNothing)  $shouldSet=true;
-		}
-		else
-		{
-			$nesting=$this->get('Core', 'nesting');
-			if (!isset($this->store[$category])) $shouldSet=true;
-			elseif(!isset($this->store[$category][$nesting])) $shouldSet=true;
-			elseif (!isset($this->store[$category][$nesting][$valueName])) $shouldSet=true;
-			elseif (!$this->store[$category][$nesting][$valueName] and $orNothing)  $shouldSet=true;
-		}
+		$existingValue=$this->get($category, $valueName);
 		
-		if ($shouldSet) $this->set($category, $valueName, $value);
+		if (
+			(!$existingValue and $orNothing == true) or # setIfNothing
+			(!$existingValue and $orNothing == false and $existingValue===null) # setIfNotSet
+			)
+		{
+			$this->set($category, $valueName, $value);
+			return true;
+		}
+		else return false;
 	}
 	
 	function makeMeAvailable($variableName)
@@ -1563,7 +1556,7 @@ class core extends Module
 			else
 			{
 				$this->core->debug(4, "getNested: Could not find \"$value\" using key ".implode(',', $values));
-				$output=false;
+				$output=null;
 				return $output;
 			}
 		}
