@@ -196,7 +196,7 @@ class Condition extends Module
 		
 		$value=$this->core->getNested($parts);
 		
-		$result=($value!==false);
+		$result=($value!==null);
 		$this->core->set('Me', 'conditionMatched', $result);
 		if ($result) return $lastValue;
 	}
