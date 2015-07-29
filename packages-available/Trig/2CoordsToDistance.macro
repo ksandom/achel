@@ -4,4 +4,6 @@ parameters category,variable,originX,originY,destinationX,destinationY
 2CoordsTo1Coord Local,ctd,~!Local,originX!~,~!Local,originY!~,~!Local,destinationX!~,~!Local,destinationY!~
 
 getHypotenuse ~!Local,category!~,~!Local,variable!~,~!Local,ctd,x!~,~!Local,ctd,y!~
+
+# debug 0,~!Local,category!~,~!Local,variable!~=~!~!Local,category!~,~!Local,variable!~!~ x,y=~!Local,ctd,x!~,~!Local,ctd,y!~
 makeLocalAvailable ~!Local,variable!~

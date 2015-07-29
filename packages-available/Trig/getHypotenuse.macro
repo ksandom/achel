@@ -8,3 +8,11 @@ basicMaths Isolated,bSquared,~!Local,adjacent!~,^,2
 basicMaths Isolated,cSquared,~!Isolated,aSquared!~,+,~!Isolated,bSquared!~
 
 basicMaths ~!Local,category!~,~!Local,variable!~,~!Isolated,cSquared!~,sr,
+
+# Cater for 0-length things.
+if ~!~!Local,category!~,~!Local,variable!~!~,==,,
+	set ~!Local,category!~,~!Local,variable!~,0
+
+# debug 0,basicMaths ~!Local,category!~,~!Local,variable!~,~!Isolated,cSquared!~,sr,   ~!Local,category!~,~!Local,variable!~=~!~!Local,category!~,~!Local,variable!~!~
+
+makeLocalAvailable ~!Local,variable!~
