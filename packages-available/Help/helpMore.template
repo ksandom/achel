@@ -1,0 +1,7 @@
+Available features:
+<~~ ~!Color,default!~~%commandLineFlags%~ ~!Color,brightBlack!~~ ~!Color,brightBlack!~~%tagString%~
+  ~!Color,green!~~%description%~~!Color,default!~
+  ~%provider%~  ~!Color,yellow!~~%source%~~!Color,default!~
+
+~>
+Full documentation lives at ~!General,docsDir!~

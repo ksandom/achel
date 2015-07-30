@@ -1,6 +1,6 @@
 Available features:
-<~~ ~!Color,cyan!~~%commandLineFlags%~ ~!Color,brightBlack!~~ ~!Color,green!~~%tagString%~ ~!Color,brightBlack!~(~%category%~)
-  ~!Color,default!~~%description%~
+<~~ ~!Color,default!~~%commandLineFlags%~
+  ~!Color,green!~~%description%~~!Color,default!~
 
 ~>
 Full documentation lives at ~!General,docsDir!~

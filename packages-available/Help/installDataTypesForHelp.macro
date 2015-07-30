@@ -1,0 +1,4 @@
+# Install the data types to be used with help. ~ semantics,internal,install
+#onDefine registerForEvent Install,dataTypes,installDataTypesForHelp
+
+createDataType help,help,helpMore,helpLess,,Help

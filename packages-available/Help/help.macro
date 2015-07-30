@@ -1,7 +1,8 @@
 # Display this help ~ user
 #onDefine aliasFeature help,h
+#onLoaded setFeatureType help,help
 
-templateOut help
+# templateOut help
 searchHelp all
 if ~!Global,help-0!~,!=,,
 	requireEach ~!Global,help!~

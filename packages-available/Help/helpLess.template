@@ -1,0 +1,5 @@
+Available features:
+<~~ ~!Color,default!~~%commandLineFlags%~  ~!Color,brightBlack!~~  ~!Color,green!~~%description%~~!Color,default!~
+
+~>
+Full documentation lives at ~!General,docsDir!~
