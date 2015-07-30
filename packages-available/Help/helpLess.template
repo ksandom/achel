@@ -1,5 +1,5 @@
 Available features:
-<~~ ~!Color,default!~~%commandLineFlags%~  ~!Color,brightBlack!~~  ~!Color,green!~~%description%~~!Color,default!~
+<~~ ~!Color,green!~~%commandLineFlags%~  ~!Color,brightBlack!~~  ~!Color,default!~~%description%~
 
 ~>
 Full documentation lives at ~!General,docsDir!~

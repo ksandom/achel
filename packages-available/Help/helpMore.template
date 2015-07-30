@@ -1,7 +1,8 @@
 Available features:
-<~~ ~!Color,default!~~%commandLineFlags%~ ~!Color,brightBlack!~~ ~!Color,brightBlack!~~%tagString%~
-  ~!Color,green!~~%description%~~!Color,default!~
-  ~%provider%~  ~!Color,yellow!~~%source%~~!Color,default!~
+<~~ ~!Color,green!~~%commandLineFlags%~ ~!Color,brightBlack!~~ ~!Color,brightBlack!~~%tagString%~
+  ~!Color,default!~~%description%~~!Color,default!~
+  ~!Color,brightBlack!~~%provider%~  ~!Color,yellow!~~%source%~~!Color,default!~
+
 
 ~>
 Full documentation lives at ~!General,docsDir!~
