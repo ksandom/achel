@@ -24,7 +24,7 @@ class Macro extends Module
 				$this->core->registerFeature($this, array('defineMacro'), 'defineMacro', 'Define a macro. --defineMacro=macroName:"command1=blah\ncommand2=wheee"');
 				$this->core->registerFeature($this, array('runMacro'), 'runMacro', 'Run a macro. --runMacro=macroName');
 				$this->core->registerFeature($this, array('listMacros'), 'listMacros', 'List all macros');
-				$this->core->registerFeature($this, array('loop', 'loopMacro'), 'loop', 'Loop through a resultSet. The current iteration of the resultSet is accessed via STORE variables under the category Result. The key for a given iteration will be stored in Result,key and if the value is a string it will be stored in Result,line. Otherwise all array entries will be directly accessile directly in Result. See loopMacro.md for more information. --loop=macroName[,parametersForTheMacro]', array('loop', 'iterate', 'resultset')); # TODO This should probably move to a language module
+				$this->core->registerFeature($this, array('loop', 'loopMacro'), 'loop', 'Loop through a resultSet. The current iteration of the resultSet is accessed via STORE variables under the category Result. The key for a given iteration will be stored in Result,key and if the value is a string it will be stored in Result,line. Otherwise all array entries will be directly accessile directly in Result. See loopMacro.md for more information. --loop=[Category,]macroName . Category is where the data for current iteration of the loop will be stored. If omitted, it will be Result. Note that if you specify a Category from a macro, you should have a trailing comma before the indented code block; like this: loop Example,', array('loop', 'iterate', 'resultset')); # TODO This should probably move to a language module
 				$this->core->registerFeature($this, array('loopLite'), 'loopLite', 'Loop through a resultSet without passing the whole source resultSet arround in each iteration. For most use-cases, this will be what you want. The current iteration of the resultSet is accessed via STORE variables under the category Result. See loopMacro.md for more information. --loop=macroName[,parametersForTheMacro]', array('loop', 'iterate', 'resultset'));
 				$this->core->registerFeature($this, array('forEach'), 'forEach', "For each result in the resultSet, run this command. The whole resultSet will temporarily be set to the result in the current iteration, and the resultSet of that iteration will replace the original result in the original resultSet. Basically it's a way to work with nested results and be able to send their results back. --foreEach=feature,value", array('loop', 'iterate', 'resultset')); # TODO This should probably move to a language module
 				
@@ -50,9 +50,11 @@ class Macro extends Module
 				return $this->listMacros();
 				break;
 			case 'loop':
-				return $this->loopMacro($this->core->getResultSet(), $this->core->get('Global', $event));
+				$parms=$this->core->interpretParms($this->core->get('Global', $event));
+				return $this->loopMacro($this->core->getResultSet(), $parms);
 			case 'loopLite':
-				return $this->loopMacro($this->core->getResultSet(), $this->core->get('Global', $event), true);
+				$parms=$this->core->interpretParms($this->core->get('Global', $event));
+				return $this->loopMacro($this->core->getResultSet(), $parms, true);
 			case 'forEach':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 1);
 				return $this->doForEach($this->core->getResultSet(), $parms[0], $parms[1]);
@@ -227,16 +229,27 @@ class Macro extends Module
 	
 	function loopMacro($input, $paramaters, $clearResultSetOnStart=false)
 	{
+		if (isset($paramaters[1]))
+		{
+			$category=$paramaters[0];
+			$feature=$paramaters[1];
+		}
+		else
+		{
+			$category='Result';
+			$feature=$paramaters[0];
+		}
+		
 		$output=array();
-		$firstComma=strpos($paramaters, ',');
+		$firstComma=strpos($feature, ',');
 		if ($firstComma!==false)
 		{
-			$macroName=substr($paramaters, 0, $firstComma);
-			$macroParms=substr($paramaters, $firstComma+1);;
+			$macroName=substr($feature, 0, $firstComma);
+			$macroParms=substr($feature, $firstComma+1);;
 		}
 		else
 		{ // We haven't been passed any custom variables
-			$macroName=$paramaters;
+			$macroName=$feature;
 			$macroParms='';
 		}
 		
@@ -264,23 +277,23 @@ class Macro extends Module
 				$this->core->debug(5, "loopMacro iterated for key $key");
 				
 				# Create Result category for referencing the current position in the resultSet.
-				if (is_array($in)) $this->core->setCategoryModule('Result', $in);
+				if (is_array($in)) $this->core->setCategoryModule($category, $in);
 				else
 				{
-					$this->core->setCategoryModule('Result', array());
-					$this->core->set('Result', 'line', $in);
+					$this->core->setCategoryModule($category, array());
+					$this->core->set($category, 'line', $in);
 				}
 				
 				# Add the current key
-				$this->core->set('Result', 'key', $key);
+				$this->core->set($category, 'key', $key);
 				
 				# Add the surrounding keys
-				if (isset($keys[$position-1])) $this->core->set('Result', 'previousKey', $keys[$position-1]);
-				if (isset($keys[$position+1])) $this->core->set('Result', 'nextKey', $keys[$position+1]);
+				if (isset($keys[$position-1])) $this->core->set($category, 'previousKey', $keys[$position-1]);
+				if (isset($keys[$position+1])) $this->core->set($category, 'nextKey', $keys[$position+1]);
 				
 				# The environment is setup. Let's do the work.
 				$this->core->callFeature($macroName, $macroParms);
-				$result=$this->core->getCategoryModule('Result');
+				$result=$this->core->getCategoryModule($category);
 				if (count($result)==1) $single=(isset($result['line']));
 				else $single=false;
 				

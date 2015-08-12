@@ -1,0 +1,62 @@
+# Unit tests for looping ~ hidden,loop,unitTest
+
+defineTest loop - defaults - single iteration,
+	setNested Me,testData,a,1
+	setNested Me,testData,b,2
+	setNested Me,testData,c,3
+	setNested Me,testData,d,4
+	retrieveResults Me,testData
+	
+	first
+	loop
+		expect 1,~!Result,line!~
+
+defineTest loop - defaults - full line,
+	setNested Me,testData,a,1
+	setNested Me,testData,b,2
+	setNested Me,testData,c,3
+	setNested Me,testData,d,4
+	retrieveResults Me,testData
+	
+	loop
+		setNested Local,results,~!Result,key!~,~!Result,line!~
+	
+	expect 1234,~!Local,results,a!~~!Local,results,b!~~!Local,results,c!~~!Local,results,d!~
+
+defineTest loop - defaults - full subvalue,
+	setNested Me,testData,a,subvale,1
+	setNested Me,testData,b,subvale,2
+	setNested Me,testData,c,subvale,3
+	setNested Me,testData,d,subvale,4
+	retrieveResults Me,testData
+	
+	loop
+		setNested Local,results,~!Result,key!~,~!Result,subvale!~
+	
+	expect 1234,~!Local,results,a!~~!Local,results,b!~~!Local,results,c!~~!Local,results,d!~
+
+
+defineTest loop - Custom - full line,
+	setNested Me,testData,a,1
+	setNested Me,testData,b,2
+	setNested Me,testData,c,3
+	setNested Me,testData,d,4
+	retrieveResults Me,testData
+	
+	loop Custom,
+		setNested Local,results,~!Custom,key!~,~!Custom,line!~
+	
+	expect 1234,~!Local,results,a!~~!Local,results,b!~~!Local,results,c!~~!Local,results,d!~
+
+defineTest loop - Custom - full subvalue,
+	setNested Me,testData,a,subvale,1
+	setNested Me,testData,b,subvale,2
+	setNested Me,testData,c,subvale,3
+	setNested Me,testData,d,subvale,4
+	retrieveResults Me,testData
+	
+	loop Custom,
+		setNested Local,results,~!Custom,key!~,~!Custom,subvale!~
+	
+	expect 1234,~!Local,results,a!~~!Local,results,b!~~!Local,results,c!~~!Local,results,d!~
+
