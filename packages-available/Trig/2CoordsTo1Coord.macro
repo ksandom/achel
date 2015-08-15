@@ -4,6 +4,8 @@ parameters category,variable,x1,y1,x2,y2
 basicMaths Local,cox,~!Local,x2!~,-,~!Local,x1!~
 basicMaths Local,coy,~!Local,y2!~,-,~!Local,y1!~
 
+debug 1,basicMaths Local,cox,~!Local,x2!~,-,~!Local,x1!~   basicMaths Local,coy,~!Local,y2!~,-,~!Local,y1!~
+
 setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,cox!~
 setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,coy!~
 

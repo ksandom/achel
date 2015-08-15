@@ -210,6 +210,157 @@ defineTest 2CoordsTo1Coord y -,
 unset Tmp,2To1
 
 
+# At one point I suspected floating point errors to be causing a bug I'm trying to solve. This series of tests is to push the floating point calculations well beyond where it could be the cause of the problem.
+
+# Multipliers to test the ends of double precision calculations
+setNested Tmp,2CoordsToDistanceDataMultipliers,,1
+setNested Tmp,2CoordsToDistanceDataMultipliers,,1000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,10000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,100000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,1000000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,10000000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,100000000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,1000000000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,10000000000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,100000000000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,1000000000000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,10000000000000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,100000000000000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,1000000000000000000
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.0000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.00000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.0000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.00000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.0000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.00000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.000000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.0000000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.00000000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.000000000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.0000000000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.00000000000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.000000000000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.0000000000000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.00000000000000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.000000000000000000000001
+setNested Tmp,2CoordsToDistanceDataMultipliers,,0.0000000000000000000000001
+
+# Data to test
+setNested ["Tmp","2CoordsToDistanceData","",{"x1":"0","y1":"0","x2":"2","y2":"2","expectedResult":"2.83","decimalPlaces":"2"}]
+setNested ["Tmp","2CoordsToDistanceData","",{"x1":"0","y1":"0","x2":"3.4","y2":"6.8","expectedResult":"7.6","decimalPlaces":"2"}]
+setNested ["Tmp","2CoordsToDistanceData","",{"x1":"2","y1":"2","x2":"4","y2":"4","expectedResult":"2.83","decimalPlaces":"2"}]
+setNested ["Tmp","2CoordsToDistanceData","",{"x1":"2","y1":"2","x2":"5.4","y2":"8.8","expectedResult":"7.6","decimalPlaces":"2"}]
+setNested ["Tmp","2CoordsToDistanceData","",{"x1":"-10","y1":"-10","x2":"-8","y2":"-8","expectedResult":"2.83","decimalPlaces":"2"}]
+setNested ["Tmp","2CoordsToDistanceData","",{"x1":"-10","y1":"-10","x2":"-6.6","y2":"-3.2","expectedResult":"7.6","decimalPlaces":"2"}]
+
+retrieveResults Tmp,2CoordsToDistanceDataMultipliers
+loop LoopMultiplier,
+	retrieveResults Tmp,2CoordsToDistanceData
+	loop LoopData,
+		# Apply multiplier to data
+		basicMaths LoopData,x1,~!LoopData,x1!~,*,~!LoopMultiplier,line!~
+		basicMaths LoopData,y1,~!LoopData,y1!~,*,~!LoopMultiplier,line!~
+		basicMaths LoopData,x2,~!LoopData,x2!~,*,~!LoopMultiplier,line!~
+		basicMaths LoopData,y2,~!LoopData,y2!~,*,~!LoopMultiplier,line!~
+		
+		
+		defineTest 2CoordsToDistanceData (derived test) - ~!LoopData,x1!~ ~!LoopData,y1!~ ~!LoopData,x2!~ ~!LoopData,y2!~ (*~!LoopMultiplier,line!~),
+			# The thing to test
+			2CoordsToDistance Tmp,h,~!LoopData,x1!~,~!LoopData,y1!~,~!LoopData,x2!~,~!LoopData,y2!~
+			
+			# Invert multiplier on result
+			basicMaths Tmp,h,~!Tmp,h!~,/,~!LoopMultiplier,line!~
+			
+			# Round and test it.
+			round Tmp,h,~!Tmp,h!~,~!LoopData,decimalPlaces!~
+			expect ~!LoopData,expectedResult!~,~!Tmp,h!~
+
+
+unset Tmp,2CoordsToDistanceData
+unset Tmp,2CoordsToDistanceDataMultipliers
+
+# Base
+defineTest 2CoordsToDistance 0 0 2 2,
+	2CoordsToDistance Tmp,h,0,0,2,2
+	round Tmp,h,~!Tmp,h!~,2
+	expect 2.83,~!Tmp,h!~
+
+defineTest 2CoordsToDistance 0 0 3.4 6.8,
+	2CoordsToDistance Tmp,h,0,0,3.4,6.8
+	round Tmp,h,~!Tmp,h!~,2
+	expect 7.6,~!Tmp,h!~
+
+defineTest 2CoordsToDistance 2 2 4 4,
+	2CoordsToDistance Tmp,h,2,2,4,4
+	round Tmp,h,~!Tmp,h!~,2
+	expect 2.83,~!Tmp,h!~
+
+defineTest 2CoordsToDistance 2 2 5.4 8.8,
+	2CoordsToDistance Tmp,h,2,2,5.4,8.8
+	round Tmp,h,~!Tmp,h!~,2
+	expect 7.6,~!Tmp,h!~
+
+defineTest 2CoordsToDistance -10 -10 -8 -8,
+	2CoordsToDistance Tmp,h,-10,-10,-8,-8
+	round Tmp,h,~!Tmp,h!~,2
+	expect 2.83,~!Tmp,h!~
+
+defineTest 2CoordsToDistance -10 -10 -6.6 -3.2,
+	2CoordsToDistance Tmp,h,-10,-10,-6.6,-3.2
+	round Tmp,h,~!Tmp,h!~,2
+	expect 7.6,~!Tmp,h!~
+
+
+# / 1000000 - Test really small numbers. Looking for floating point errors (re-multiplied for simple testing).
+set Tmp,littleNumber,0.000002
+basicMaths Tmp,littleNumber,~!Tmp,littleNumber!~,*,1
+defineTest 2CoordsToDistance 0 0 ~!Tmp,littleNumber!~ ~!Tmp,littleNumber!~,
+	2CoordsToDistance Tmp,h,0,0,~!Tmp,littleNumber!~,~!Tmp,littleNumber!~
+	basicMaths Tmp,h,~!Tmp,h!~,*,1000000
+	round Tmp,h,~!Tmp,h!~,2
+	expect 2.83,~!Tmp,h!~
+	unset Tmp,littleNumber
+
+# / 1000000 - Test really small numbers. Looking for floating point errors (re-multiplied for simple testing).
+set Tmp,littleNumber,0.000002
+defineTest 2CoordsToDistance 0 0 ~!Tmp,littleNumber!~ ~!Tmp,littleNumber!~,
+	2CoordsToDistance Tmp,h,0,0,~!Tmp,littleNumber!~,~!Tmp,littleNumber!~
+	basicMaths Tmp,h,~!Tmp,h!~,*,1000000
+	round Tmp,h,~!Tmp,h!~,2
+	expect 2.83,~!Tmp,h!~
+	unset Tmp,littleNumber
+
+defineTest 2CoordsToDistance 0 0.0000034 0.0000068 (re-multiplied for simple testing),
+	2CoordsToDistance Tmp,h,0,0.0000034,0.0000068
+	basicMaths Tmp,h,~!Tmp,h!~,*,1000000
+	round Tmp,h,~!Tmp,h!~,2
+	expect 7.6,~!Tmp,h!~
+
+defineTest 2CoordsToDistance 2 2 4 4,
+	2CoordsToDistance Tmp,h,2,2,4,4
+	round Tmp,h,~!Tmp,h!~,2
+	expect 2.83,~!Tmp,h!~
+
+defineTest 2CoordsToDistance 2 2 5.4 8.8,
+	2CoordsToDistance Tmp,h,2,2,5.4,8.8
+	round Tmp,h,~!Tmp,h!~,2
+	expect 7.6,~!Tmp,h!~
+
+defineTest 2CoordsToDistance -10 -10 -8 -8,
+	2CoordsToDistance Tmp,h,-10,-10,-8,-8
+	round Tmp,h,~!Tmp,h!~,2
+	expect 2.83,~!Tmp,h!~
+
+defineTest 2CoordsToDistance -10 -10 -6.6 -3.2,
+	2CoordsToDistance Tmp,h,-10,-10,-6.6,-3.2
+	round Tmp,h,~!Tmp,h!~,2
+	expect 7.6,~!Tmp,h!~
+
+
+# * 1000000 - Test really big numbers. Looking for floating point or OOB errors.
 defineTest 2CoordsToDistance 0 0 2 2,
 	2CoordsToDistance Tmp,h,0,0,2,2
 	round Tmp,h,~!Tmp,h!~,2
