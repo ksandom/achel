@@ -88,6 +88,7 @@ class Packages extends Module
 					#$this->core->debug(0, "loadPackage: $filename Module. ($fullPath)");
 					loadModules($this->core, $fullPath, false);
 					break;
+				case 'achel':
 				case 'macro':
 					#$this->core->debug(0, "loadPackage: $filename Macro.");
 					$this->core->addItemsToAnArray('Core', 'macrosToLoad', array($filename=>$fullPath));
