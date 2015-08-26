@@ -386,7 +386,7 @@ class Macro extends Module
 			if($fileName=='*') break;
 			
 			$nameParts=explode('.', $fileName);
-			if ($nameParts[1]=='macro') // Only invest further time if it actually is a macro.
+			if ($nameParts[1]=='achel' or $nameParts[1]=='macro') // Only invest further time if it actually is a macro.
 			{
 				$macroName=$nameParts[0];
 				$contents=file_get_contents($fullPath);
@@ -410,7 +410,7 @@ class Macro extends Module
 			if($fileName=='*') break;
 			
 			$nameParts=explode('.', $fileName);
-			if ($nameParts[1]=='macro') // Only invest further time if it actually is a macro.
+			if ($nameParts[1]=='achel' or $nameParts[1]=='macro') // Only invest further time if it actually is a macro.
 			{
 				$macroName=$nameParts[0];
 				$contents=file_get_contents($fullPath);
