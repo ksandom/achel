@@ -1,0 +1,5 @@
+# Get a list of features ~ syntax,highlight,hidden
+
+getCategory Features
+excludeItem source,nesting
+
