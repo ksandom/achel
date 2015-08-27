@@ -1,0 +1,16 @@
+#!/bin/bash
+# Description
+#   Install/Update all syntax highlighting that we know how to do so far.
+#
+# Syntax:
+#   $0 
+#
+# Examples:
+#   Install/Update all syntax highlighting that we know how to do so far.
+#     $0 
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+. "$libDir"/syntaxHighlighting.sh
+
+highlightingInstall

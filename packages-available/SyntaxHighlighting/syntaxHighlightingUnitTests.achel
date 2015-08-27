@@ -1,0 +1,16 @@
+# Unit tests for syntax highlighting ~ syntax,highlighting,hl,unitTest,hidden
+
+defineTest listFeatures - Do we get expected data,
+	listFeatures
+	first
+	
+	nested
+	outNow
+	
+	loop
+		expectNot ,~!Result,name!~,name
+		expectNot ,~!Result,description!~,description
+		expectNot ,~!Result,tagString!~,tagString
+		expectNot ,~!Result,provider!~,provider
+		expectNot ,~!Result,isMacro!~,isMacro
+		expectNot ,~!Result,source!~,source
