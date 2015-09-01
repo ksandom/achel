@@ -1,0 +1,4 @@
+# Normally warnings will not give an exit code. This is so that scripts can simply test for success of failure. But sometimes you want to test for warnings as well. If so, use this flag to get an exit code of 2 for warnings. ~ unit,status
+
+debug 3,Turned on warning exit status.
+set Unit,giveWarnings,1
