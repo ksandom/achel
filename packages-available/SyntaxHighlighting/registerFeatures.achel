@@ -1,0 +1,7 @@
+# Register features available for syntax highlighting ~ hl,hidden
+#onDefine registerForEvent Install,general,registerFeatures
+
+collectionLoad SyntaxHighlightingFeatures
+debug 1,Registering features for ~!General,profile!~
+listFeatures
+stashResults SyntaxHighlightingFeatures,~!General,profile!~

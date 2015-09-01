@@ -4,12 +4,37 @@ defineTest listFeatures - Do we get expected data,
 	listFeatures
 	first
 	
-	nested
-	outNow
-	
 	loop
 		expectNot ,~!Result,name!~,name
 		expectNot ,~!Result,description!~,description
 		expectNot ,~!Result,provider!~,provider
 		expectNot ,~!Result,source!~,source
 
+defineTest registerFeatures,
+	# Get a baseline
+	listFeatures
+	countToVar Local,sourceFeatures
+	
+	# Make the unitTest not interfere with the current profile
+	set Local,originalProfile,~!General,profile!~
+	set General,profile,syntaxHighlightingUnitTests
+	clear
+	
+	# Run register
+	registerFeatures
+	clear
+	retrieveResults SyntaxHighlightingFeatures,syntaxHighlightingUnitTests
+	countToVar Local,actualFeatures
+	
+	# Test it
+	expect ~!Local,sourceFeatures!~,~!Local,actualFeatures!~
+	expectNot 0,~!Local,sourceFeatures!~
+	expectNot 1,~!Local,sourceFeatures!~
+	
+	# Return profile to normal
+	set General,profile,~!Local,originalProfile!~
+	
+	# Clean up
+	unset SyntaxHighlightingFeatures,syntaxHighlightingUnitTests
+	
+	
