@@ -10,6 +10,16 @@ defineTest listFeatures - Do we get expected data,
 		expectNot ,~!Result,provider!~,provider
 		expectNot ,~!Result,source!~,source
 
+defineTest listFeatureSets,
+	listFeatureSets
+	countToVar Local,numberOfResultSets
+	if ~!Local,numberOfResultSets!~,>,1,
+		passTest Got featureSets.
+	elseIf ~!Local,numberOfResultSets!~,==,1,
+		warnTest Got one featureSet. It could be you have nothing installed yet, or it could be there is a problem.
+	else
+		failTest No featureSets.
+
 defineTest registerFeatures,
 	# Get a baseline
 	listFeatures

@@ -1,0 +1,12 @@
+# List out the featureSets that can be used for syntax highlighting. ~ hl,highlighting,debug
+
+collectionLoad SyntaxHighlightingFeatures
+getCategory SyntaxHighlightingFeatures
+
+loop
+	isolate
+		getCategory Result
+		countToVar Local,numberOfFeatures
+	set Result,numberOfFeatures,~!Local,numberOfFeatures!~
+
+templateOut featureSet
