@@ -9,5 +9,5 @@ function highlightingInstall
 # Kate (KDE Advanced Text Editor)
 function highlightingInstallKate
 {
-	achel --listFeatures --templateOut=KateSyntaxHighlighting > ~/.kde/share/apps/katepart/syntax/achel.xml
+	achel --combineFeatureSets --templateOut=KateSyntaxHighlighting > ~/.kde/share/apps/katepart/syntax/achel.xml
 }

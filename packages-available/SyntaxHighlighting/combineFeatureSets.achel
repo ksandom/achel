@@ -1,0 +1,12 @@
+# Combines all of the featueSets into one list. ~ hl,syntaxHighlighting,hidden
+
+merge
+	collectionLoad SyntaxHighlightingFeatures
+	getCategory SyntaxHighlightingFeatures
+	
+	loop
+		dataSet TakeFirst,
+			retrieveResults SyntaxHighlightingFeatures,~!Result,key!~
+
+flatten 1
+keyOnPreserve name
