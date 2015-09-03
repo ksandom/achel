@@ -196,6 +196,11 @@ function cleanUp
 	# rm -RF "$tmpArea"
 }
 
+function setupSyntaxHighlighting
+{
+	manageAchel syntaxHTInstall
+}
+
 
 
 
@@ -211,6 +216,7 @@ fi
 
 setAchelVersion
 installAnyExtraRepos
+setupSyntaxHighlighting
 
 # Clean up
 cleanUp

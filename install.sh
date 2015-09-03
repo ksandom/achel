@@ -24,6 +24,8 @@ cd `dirname $0`
 . supplimentary/libs/display.sh
 . supplimentary/libs/repoInstall.sh
 . supplimentary/libs/repoParms.sh
+. supplimentary/libs/syntaxHighlighting.sh
+
 
 
 # Chose our default settings

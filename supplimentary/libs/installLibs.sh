@@ -269,6 +269,8 @@ function doInstall
 	# Perform logical setup
 	installRepo_setup "achel"
 	
+	# Install syntax highlighting
+	highlightingInstall
 	
 	# TODO mass: This needs to be migrated to the new repoParms system.
 	# createProfile massPrivateWebAPI --noExec
