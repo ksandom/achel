@@ -9,7 +9,6 @@ function highlightingInstall
 function highlightingInstallKate # Kate (KDE Advanced Text Editor)
 {
 	# TODO refactor to take all input in single parameters so multiple templates can all be supplied.
-	# TODO add to repoInstall and repoReinstall
 	
 	templateOut="/tmp/$$-syntaxHighlighting"
 	achel --combineFeatureSets --templateOut=KateSyntaxHighlighting > "$templateOut"

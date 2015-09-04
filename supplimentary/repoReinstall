@@ -29,6 +29,7 @@ requiredParms="$0"
 . $libDir/packages.sh
 . $libDir/installLibs.sh
 . $libDir/documentation.sh
+. "$libDir"/syntaxHighlighting.sh
 
 regex="$1"
 
@@ -43,3 +44,5 @@ if [ "$regex" == '--thorough' ]; then
 fi
 
 echo "$repos"| reInstallRepos
+
+highlightingInstall

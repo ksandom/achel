@@ -28,9 +28,12 @@ requiredParms="$1"
 . $libDir/packages.sh
 . $libDir/installLibs.sh
 . $libDir/documentation.sh
+. "$libDir"/syntaxHighlighting.sh
 
 repoAddress="$1"
 overRideRepoName="$2"
 
 installRepo "$repoAddress" "$overRideRepoName"
 achel --verbosity=2 --finalInstallStage
+
+highlightingInstall
