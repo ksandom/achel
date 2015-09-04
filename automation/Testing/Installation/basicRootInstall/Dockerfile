@@ -1,5 +1,5 @@
 FROM debian:jessie
-RUN apt-get update && apt-get install -y php5-cli git python-pip
+RUN apt-get update && apt-get install -y php5-cli git
 
 ENV builton=2015-09-02
 ENV preCloneSerial=001
