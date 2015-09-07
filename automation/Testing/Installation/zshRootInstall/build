@@ -1,4 +1,0 @@
-#!/bin/bash
-# Build the zsh root install test
-
-docker build -t zshrootinstall .

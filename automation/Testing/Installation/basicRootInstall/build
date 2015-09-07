@@ -1,4 +1,0 @@
-#!/bin/bash
-# Build the basic root install test
-
-docker build -t basicrootinstall .
