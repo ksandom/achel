@@ -1,5 +1,20 @@
 #!/bin/bash
 # Build the basic user install test
+# Syntax: $0 testName  where testName is one of the files in the tests folder, without the .sh at the end.
 
-docker build -t experiment .
-docker run -v /home/ksandom/files/develop/achel:/var/achelRepos/achel -it experiment su - testuser runInstall
+genericName="experiment"
+testName="$1"
+testFileName="$testName.sh"
+
+if ! [ -e tests/"$testFileName" ]; then
+	echo "Could not find tests/$testFileName." >&2
+	exit 1
+fi
+
+oldID=`docker images | grep experiment | awk '{print $3}'`
+if [ "$oldID" != '' ]; then
+	docker rm "$genericName"
+fi
+
+docker build -t "$genericName" .
+docker run -v /home/ksandom/files/develop/achel:/var/achelRepos/achel -it "$genericName" "/var/tests/$testFileName"
