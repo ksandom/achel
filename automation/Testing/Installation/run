@@ -8,6 +8,10 @@ testFileName="$testName.sh"
 
 if ! [ -e tests/"$testFileName" ]; then
 	echo "Could not find tests/$testFileName." >&2
+	echo "Syntax: run testName" >&2
+	echo "" >&2
+	echo "Possible tests are" >&2
+	ls -1 tests/* | sed 's/\.sh//g;s/^.*\//	/g' >&2
 	exit 1
 fi
 
