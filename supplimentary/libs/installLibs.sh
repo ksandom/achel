@@ -42,10 +42,16 @@ function linkedInstall
 		if testWriteable "$testExec"; then
 			binExec="$newBinExec"
 		else
-			echo "You have chosen a linked user install, but \"$binExec\" is not in \$PATH. And \"$newBinExec\" is not writeable. Installation can not continue."
-			
-			cat docs/errors/install/notWriteable.md
-			exit 1
+			if getBinCompatibility; then
+				echo "We should be working, let's continue!"
+				# TODO check binExec. It won't necessarily be what was chosen. Currently assuming it to be ~/bin for a user install.
+			else
+				echo
+				echo "You have chosen a linked user install, but \"$binExec\" is not in \$PATH. And \"$newBinExec\" is not writeable. Installation can not continue."
+				
+				cat docs/errors/install/notWriteable.md
+				exit 1
+			fi
 		fi
 	fi
 }
@@ -158,9 +164,22 @@ function copyTemplatedFile
 		s#~%.*%~##g' > "$dst"
 }
 
+function restartInstall
+{
+	if [ "$restartInstall" != '1' ]; then
+		echo "------- Restart of install requested -------"
+		export restartInstall=1
+		doInstall
+		exit 0
+	else
+		echo "Restart of install requested, however the install has already been restarted once. It is not safe to continue. Aborting." >&2
+		exit 1
+	fi
+}
+
 function doInstall
 {
-	
+	echo "start location=`pwd`"
 	# Last sanity checks before begining.
 	mkdir -p "$storageDir" "$configDir"
 	if ! testWriteable "$storageDir" || ! testWriteable "$configDir" ; then

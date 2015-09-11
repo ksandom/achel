@@ -18,6 +18,7 @@ installTypeComments=''
 
 cd `dirname $0`
 . supplimentary/libs/installLibs.sh
+. supplimentary/libs/binCompatibility.sh
 . supplimentary/libs/documentation.sh
 . supplimentary/libs/filesystem.sh
 . supplimentary/libs/packages.sh
