@@ -169,6 +169,23 @@ function restartInstall
 	if [ "$restartInstall" != '1' ]; then
 		echo "------- Restart of install requested -------"
 		export restartInstall=1
+		# Make sure we have the information we need to continue installation.
+		if [ "$startDir" == '' ]; then
+			startDir=`pwd`
+		fi
+		
+		derivePaths
+		
+		# Test sanity
+		if ! [ -e "$startDir"/install.sh ]; then
+			echo "Could not find \"$startDir/install.sh\". startDir may not be set correctly." >&2
+			exit 1
+		fi
+		
+		# Make absolutely sure we have a functional environment
+		[ -e /etc/profile ] && source /etc/profile
+		[ -e /etc/zprofile ] && source /etc/zprofile
+		
 		doInstall
 		exit 0
 	else

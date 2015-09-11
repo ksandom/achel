@@ -42,6 +42,8 @@ function runBinCompatibilityTest
 	if which binCompatibilityTest; then
 		binCompatibilityTest
 		return $?
+	else
+		return 1
 	fi
 }
 
