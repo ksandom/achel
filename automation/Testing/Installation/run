@@ -22,8 +22,3 @@ fi
 
 docker build -t "$genericName" .
 docker run -v /home/ksandom/files/develop/achel:/var/achelRepos/achel -it "$genericName" "/var/tests/$testFileName"
-
-if [ "$2" == "debug" ]; then
-	echo "Entering debug"
-	docker run -v /home/ksandom/files/develop/achel:/var/achelRepos/achel -it "$genericName" bash
-fi
