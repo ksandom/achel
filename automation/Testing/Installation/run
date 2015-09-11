@@ -15,10 +15,5 @@ if ! [ -e tests/"$testFileName" ]; then
 	exit 1
 fi
 
-oldID=`docker images | grep experiment | awk '{print $3}'`
-if [ "$oldID" != '' ]; then
-	docker rm "$genericName"
-fi
-
 docker build -t "$genericName" .
 docker run -v /home/ksandom/files/develop/achel:/var/achelRepos/achel -it "$genericName" "/var/tests/$testFileName"
