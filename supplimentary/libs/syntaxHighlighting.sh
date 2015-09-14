@@ -39,7 +39,7 @@ function installTemplates
 		lastDir=`dirname "$outputFile"`
 		
 		templateOut="/tmp/$$-syntaxHighlighting"
-		achel --combineFeatureSets --templateOut="$templateName" > "$templateOut"
+		$binExec/achel --combineFeatureSets --templateOut="$templateName" > "$templateOut"
 		uid=`id -u`
 		
 		for homeFolder in $primarySearchPath; do

@@ -3,6 +3,45 @@
 
 function getBinCompatibility
 {
+	uid=`id -u`
+	setupBinCompatibilityTest
+	
+	# Bash
+	if which bash >/dev/null; then
+		if [ "$uid" == '0' ]; then # root
+			if ! addBinBashProfiled; then
+				# Fall back to the old fashioned /etc/profile
+				addBinBashProfile
+			fi
+		else # non-root
+			addBinBashRC
+			# TODO .profile as well?
+		fi
+		
+		runBinCompatibilityTest `which bash`
+		retval=$?
+	fi
+	
+	# zsh
+	if which zsh >/dev/null; then
+		if [ "$uid" == '0' ]; then # root
+			if ! false; then
+				# Fall back to the old fashioned /etc/zprofile
+				addZProfile
+			fi
+		else # non-root
+			false
+		fi
+	fi
+	
+	
+	destroyBinCompatibilityTest
+	return $retval
+}
+
+
+function oldgetBinCompatibility
+{
 	echo "Requested configuration will not work as it is. Going to try getting ~/bin to work."
 	setupBinCompatibilityTest
 	
@@ -39,12 +78,12 @@ function destroyBinCompatibilityTest
 
 function runBinCompatibilityTest
 {
-	if which binCompatibilityTest; then
-		binCompatibilityTest
-		return $?
-	else
-		return 1
-	fi
+	shell="$1"
+	
+	$shell -l -c binCompatibilityTest
+	retval=$?
+	echo "Compatibility test return code = $retval"
+	return $?
 }
 
 
@@ -53,21 +92,13 @@ function runBinCompatibilityTest
 
 
 
-function testBinBashProfiled
+function addBinBashProfiled
 {
 	echo -n "Attempting profiled ..."
 	destinationFile="userBin"
 	if cp "supplimentary/resources/bash/profileD-path.sh" "/etc/profile.d/$destinationFile" 2>/dev/null; then
-		source /etc/profile
-		if runBinCompatibilityTest; then
-			echo "Success!"
-			restartInstall
-			exit 0
-		else
-			echo "Failure"
-			rm -f "/etc/profile.d/$destinationFile"
-			return 1
-		fi
+		echo "Added"
+		return exit 0
 	else
 		echo "NA"
 		return 1
@@ -75,36 +106,27 @@ function testBinBashProfiled
 }
 
 
-function testBinBashProfile
+function addBinBashProfile
 {
 	echo -n "Attempting profile ..."
-	tmpFile="/tmp/$$-profile"
+	tmpFile="/etc/profile.backupBeforeBin"
 	cp /etc/profile "$tmpFile"
-	if "$tmpFile" /etc/profile 2>/dev/null; then
+	if cp "$tmpFile" /etc/profile 2>/dev/null; then
 		cat "supplimentary/resources/bash/profileD-path.sh" >> /etc/profile
-		source /etc/profile
-		if runBinCompatibilityTest; then
 			echo "Success!"
-			restartInstall
-			exit 0
-		else
-			echo "Failure"
-			cp "$tmpFile" /etc/profile
-			rm -f "$tmpFile"
-			return 1
-		fi
+			return 0
 	else
 		echo "NA"
 		return 1
 	fi
 }
 
-function testBinBashRC
+function addBinBashRC
 {
-	echo -n "Attempting bashrc ..."
+	echo -n "Adding user bashrc ..."
 	configFile=~/.bashrc
 	if [ -e "$configFile" ]; then
-		tmpFile="/tmp/$$-bashrc"
+		tmpFile=~/".bashrc.backupBeforeBin"
 		cp "$configFile" "$tmpFile"
 	else
 		echo "No existing "$configFile", so not backing it up."
@@ -112,25 +134,21 @@ function testBinBashRC
 	fi
 	
 	cat "supplimentary/resources/bash/profileD-path.sh" >> "$configFile"
-	source "$configFile"
-	if runBinCompatibilityTest; then
-		echo "Success!"
-		restartInstall
-		exit 0
-	else
-		echo "Failure"
-		if [ "$tmpFile" != '' ]; then
-			cp "$tmpFile" "$configFile"
-			rm -f "$tmpFile"
-		else
-			rm "$configFile"
-		fi
-		return 1
-	fi
+	echo "done."
+	return 0
 }
 
-function testZProfile
+function addZProfile
 {
-	# TODO write this
-	source /etc/zprofile
+	echo -n "Attempting zprofile ..."
+	tmpFile="/etc/zprofile.backupBeforeBin"
+	cp /etc/profile "$tmpFile"
+	if cp "$tmpFile" /etc/zprofile 2>/dev/null; then
+		cat "supplimentary/resources/bash/zprofileD-path.sh" >> /etc/zprofile
+			echo "Success!"
+			return 0
+	else
+		echo "NA"
+		return 1
+	fi
 }

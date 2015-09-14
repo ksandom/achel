@@ -30,7 +30,7 @@ function repoGetParm
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	
 	if [ -f "$parmFile" ]; then
-		achel -q --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --getNested="RepoParms,$parameterName" -s
+		$binExec/achel -q --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --getNested="RepoParms,$parameterName" -s
 	fi
 }
 
@@ -70,7 +70,7 @@ function repoGetProfiles
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	
 	if [ -f "$parmFile" ]; then
-		achel -q --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --getCategory="RepoParms" --getKeys -s --exclude='(name|description)'
+		$binExec/achel -q --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --getCategory="RepoParms" --getKeys -s --exclude='(name|description)'
 	fi
 }
 
@@ -82,7 +82,7 @@ function repoGetParmPackages
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	
 	if [ -f "$parmFile" ]; then
-		achel -q --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --retrieveResults="RepoParms,$profileName" --takeSubResult=packages --flatten --toString="~%sourceRepo%~ ~%packageRegex%~" -s
+		$binExec/achel -q --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --retrieveResults="RepoParms,$profileName" --takeSubResult=packages --flatten --toString="~%sourceRepo%~ ~%packageRegex%~" -s
 	fi
 }
 
