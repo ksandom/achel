@@ -40,28 +40,6 @@ function getBinCompatibility
 }
 
 
-function oldgetBinCompatibility
-{
-	echo "Requested configuration will not work as it is. Going to try getting ~/bin to work."
-	setupBinCompatibilityTest
-	
-	if testBinBashProfiled; then
-		destroyBinCompatibilityTest
-		return 0
-	elif testBinBashProfile; then
-		destroyBinCompatibilityTest
-		return 0
-	elif testBinBashRC; then
-		destroyBinCompatibilityTest
-		return 0
-	fi
-	
-	echo "FAILURE: Hmmm, we don't yet have a solution for your problem. Please create an issue on http://github.com/ksandom/achel and be ready to answer questions about your setup."
-	destroyBinCompatibilityTest
-	return 1
-}
-
-
 function setupBinCompatibilityTest
 {
 	mkdir -p ~/bin
