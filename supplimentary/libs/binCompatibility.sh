@@ -19,7 +19,7 @@ function getBinCompatibility
 		fi
 		
 		runBinCompatibilityTest `which bash`
-		retval=$?
+		retval1=$?
 	fi
 	
 	# zsh
@@ -32,10 +32,13 @@ function getBinCompatibility
 		else # non-root
 			addUserZprofile
 		fi
+		runBinCompatibilityTest `which zsh`
+		retval2=$?
 	fi
 	
 	
 	destroyBinCompatibilityTest
+	let retval=$retval1+$retval2
 	return $retval
 }
 
