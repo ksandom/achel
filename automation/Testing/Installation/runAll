@@ -5,6 +5,7 @@
 . runLib.sh
 
 report="/tmp/achelDockerTestResults"
+finalResult=0
 
 reportLine "Test name" "Value" "Item result" > "$report"
 
@@ -18,6 +19,7 @@ for testName in `listTestsWithoutDebug`; do
 		;;
 		1)
 			itemResult="Failure"
+			finalResult=1
 		;;
 		*)
 			itemResult="Other"
@@ -27,5 +29,17 @@ for testName in `listTestsWithoutDebug`; do
 	reportLine "$testName" "$returnedValue" "$itemResult" >> "$report"
 done
 
+if [ "$finalResult" == 0 ]; then
+	finalResultTest="Success"
+else
+	finalResultTest="Failure"
+fi
+
+echo >> "$report"
+reportLine "Final result" "$finalResult" "$finalResultTest">> "$report"
+
+
 echo
 cat "$report"
+
+exit $finalResult
