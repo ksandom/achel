@@ -4,4 +4,4 @@
 useradd -m -s /bin/zsh testuser
 chsh testuser -s /usr/bin/zsh
 su - testuser -c "/usr/bin/runInstall"
-su - testuser -c "achel --unitTests"
+su - testuser -l -c "achel --unitTests"

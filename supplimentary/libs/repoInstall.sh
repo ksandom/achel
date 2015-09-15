@@ -137,7 +137,7 @@ function installRepo_setup
 			# create executable
 			if [ ! "$execName" == '' ]; then
 				createExec "$execName" "$irs_repoName"
-				$execName --verbosity=2 --finalInstallStage
+				$binExec/$execName --verbosity=2 --finalInstallStage
 				
 				# TODO If there is no execName, see if the profileName matches an existing repo. If so flag that repo for reInstall
 			fi

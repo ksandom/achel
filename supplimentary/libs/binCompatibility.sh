@@ -30,7 +30,7 @@ function getBinCompatibility
 				addZProfile
 			fi
 		else # non-root
-			false
+			addUserZprofile
 		fi
 	fi
 	
@@ -142,7 +142,7 @@ function addZProfile
 {
 	echo -n "Attempting zprofile ..."
 	tmpFile="/etc/zprofile.backupBeforeBin"
-	cp /etc/profile "$tmpFile"
+	cp /etc/zprofile "$tmpFile"
 	if cp "$tmpFile" /etc/zprofile 2>/dev/null; then
 		cat "supplimentary/resources/bash/zprofileD-path.sh" >> /etc/zprofile
 			echo "Success!"
@@ -151,4 +151,21 @@ function addZProfile
 		echo "NA"
 		return 1
 	fi
+}
+
+function addUserZprofile
+{
+	echo -n "Adding user zprofile ..."
+	configFile=~/.zprofile
+	if [ -e "$configFile" ]; then
+		tmpFile=~/".zprofile.backupBeforeBin"
+		cp "$configFile" "$tmpFile"
+	else
+		echo "No existing "$configFile", so not backing it up."
+		unset tmpFile
+	fi
+	
+	cat "supplimentary/resources/bash/profileD-path.sh" >> "$configFile"
+	echo "done."
+	return 0
 }

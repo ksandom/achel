@@ -35,16 +35,6 @@ function linkedInstall
 	binExec=~/bin
 	installType='ln'
 	
-	# Make sure we have got any environment stuff we need that would become present on the next login
-	mkdir -p $binExec
-	if [ -e /etc/profile ]; then
-		. /etc/profile
-	fi
-	
-	if [ -e ~/.profile ]; then
-		. ~/.profile
-	fi
-	
 	if [ "`echo $PATH|grep $binExec`" == '' ]; then
 		newBinExec="/usr/local/bin"
 		testExec="$newBinExec/canIWriteHere"
