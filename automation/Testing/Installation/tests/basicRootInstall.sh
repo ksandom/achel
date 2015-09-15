@@ -2,3 +2,4 @@
 # Test installing as root
 
 runInstall
+achel --unitTests

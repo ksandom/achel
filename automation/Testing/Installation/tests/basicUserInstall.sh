@@ -2,4 +2,5 @@
 # Test a basic user install.
 
 useradd -m -s /bin/bash testuser
-su - testuser runInstall
+su - testuser -c "runInstall"
+su - testuser -c "achel --unitTests"
