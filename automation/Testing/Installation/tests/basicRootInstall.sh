@@ -3,3 +3,5 @@
 
 runInstall
 achel --unitTests
+
+exit $?

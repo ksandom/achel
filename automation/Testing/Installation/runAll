@@ -1,0 +1,31 @@
+#!/bin/bash
+# Run all tests and then print a summary at the end. No Args.
+
+# Include the run library
+. runLib.sh
+
+report="/tmp/achelDockerTestResults"
+
+reportLine "Test name" "Value" "Item result" > "$report"
+
+for testName in `listTestsWithoutDebug`; do
+	./run $testName
+	returnedValue=$?
+	
+	case $returnedValue in
+		0)
+			itemResult="Success"
+		;;
+		1)
+			itemResult="Failure"
+		;;
+		*)
+			itemResult="Other"
+		;;
+	esac
+	
+	reportLine "$testName" "$returnedValue" "$itemResult" >> "$report"
+done
+
+echo
+cat "$report"

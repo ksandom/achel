@@ -6,12 +6,15 @@ genericName="experiment"
 testName="$1"
 testFileName="$testName.sh"
 
+# Include the run library
+. runLib.sh
+
 if ! [ -e tests/"$testFileName" ]; then
 	echo "Could not find tests/$testFileName." >&2
 	echo "Syntax: run testName" >&2
 	echo "" >&2
 	echo "Possible tests are" >&2
-	ls -1 tests/* | sed 's/\.sh//g;s/^.*\//	/g' >&2
+	listTests | indent >&2
 	exit 1
 fi
 

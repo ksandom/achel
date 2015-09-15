@@ -4,3 +4,4 @@
 zsh -c "runInstall"
 zsh -c "achel --unitTests"
 
+exit $?
