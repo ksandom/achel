@@ -17,6 +17,7 @@ class Manipulator extends Module
 		{
 			case 'init':
 				$this->core->registerFeature($this, array('toString'), 'toString', 'Convert array of arrays into an array of strings. eg --toString="blah file=%hostName% ip=~%externalIP%~"', array('array', 'string', 'Manipulations'));
+				$this->core->registerFeature($this, array('split'), 'split', "Split each string-able thing into it's parts based on a specified string. --split=[stringToSplitOn] . If stringToSplitOn is not specified, \\n is assumed.", array('array', 'string', 'new','line','new line', 'Manipulations'));
 				$this->core->registerFeature($this, array('f', 'flatten'), 'flatten', 'Flatten an array of arrays into a keyed array of values. --flatten[=limit] (default:-1). Note that "limit" specifies how far to go into the nesting before simply returning what ever is below. Choosing a negative number specifies how many levels to go in before beginning to flatten. Choosing 0 sets no limit.', array('array', 'string', 'Manipulations'));
 				$this->core->registerFeature($this, array('finalFlatten'), 'finalFlatten', 'To be used after a --flatten as gone as far as it can.', array('array', 'string', 'Manipulations'));
 				$this->core->registerFeature($this, array('replace'), 'replace', 'Replace a pattern matching a regular expression and replace it with something defined. --replace=searchRegex,replacement', array('array', 'string', 'Manipulations'));
@@ -74,6 +75,9 @@ class Manipulator extends Module
 			case 'followup':
 				break;
 			case 'last':
+				break;
+			case 'split':
+				return $this->splitItems($this->core->getResultSet(), $this->core->get('Global', $event));
 				break;
 			case 'requireEach':
 				return $this->requireEach($this->core->getResultSet(), $this->core->get('Global', $event));
@@ -256,6 +260,32 @@ class Manipulator extends Module
 				$this->core->complain($this, 'Unknown event', $event);
 				break;
 		}
+	}
+	
+	function splitItems($resultSet, $stringToSplitOn="\n")
+	{
+		if ($stringToSplitOn==='') $stringToSplitOn="\n";
+		$output=array();
+		if (!is_array($resultSet))
+		{
+			$this->core->debug(3, __CLASS__.'.'.__FUNCTION__.": resultSet is not an array. I can not do anything with this.");
+			return $resultSet;
+		}
+		
+		foreach ($resultSet as $key=>$resultItem)
+		{
+			if (is_string($resultItem))
+			{
+				$output[$key]=explode($stringToSplitOn, $resultItem);
+			}
+			else
+			{
+				$this->core->debug(3, __CLASS__.'.'.__FUNCTION__.": Key \"$key\" is not a string. Just add back in as is.");
+				$output[$key]=$resultItem;
+			}
+		}
+		
+		return $output;
 	}
 	
 	function replace($input, $search, $replace)
