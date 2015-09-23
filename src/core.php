@@ -1028,10 +1028,11 @@ class core extends Module
 			# TODO These lookups can be optimized!
 			$code=$this->get('Codes', $title, false);
 			$default=$this->get('Codes', 'default', false);
+			$dim=$this->get('Codes', 'dim', false);
 			$eol=$this->get('General', 'EOL', false); # TODO This can be improved
 			
 			$scopeName=$this->get('General', 'scopeName');
-			$output="$scopeName: ".$output;
+			$output="$dim$scopeName:$default ".$output;
 			
 			if ($output!=$this->lastMessage['value'])
 			{
