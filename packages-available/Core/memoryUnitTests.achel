@@ -198,4 +198,15 @@ defineTest copy,
 	expect 1,~!Local,b,a,c,a!~
 	
 	
+
+
+defineTest massSet,
+	massSet ["Test,massSet,v,w,x,y,z"],
+		setNested ~!Me,stuff!~,a,1
+		setNested ~!Me,stuff!~,b,2
+		setNested ~!Me,stuff!~,c,3
 	
+	expect 3,~!Test,massSet,v,w,x,y,z,c!~
+	expect 2,~!Test,massSet,v,w,x,y,z,b!~
+	expect 1,~!Test,massSet,v,w,x,y,z,a!~
+	unset Test,massSet
