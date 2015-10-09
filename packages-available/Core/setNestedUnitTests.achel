@@ -87,3 +87,11 @@ defineTest setNested - simplified addressing test - appendage,
 	
 	unset Tmp,setNested
 
+defineTest setNested - json parameters,
+	setNested ["Tmp,setNestedJson,a,b,c","aValue"]
+	
+	expect aValue,~!Tmp,setNestedJson,a,b,c!~
+	
+	unset Tmp,setNestedJson
+
+
