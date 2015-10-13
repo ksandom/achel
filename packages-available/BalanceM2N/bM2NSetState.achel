@@ -11,11 +11,19 @@ if ~!Global,bM2NSetState-1!~,==,,
 else
 	set Tmp,state,~!Global,bM2NSetState-1!~
 
+# TODO This is certainly causing a problem and needs to be revised.
 if ~!Global,bM2NSetState-2!~,==,,
-	debug 1,bM2NSetState: No ruleSet specified in --bM2NSetState=~!Global,bM2NSetState!~
-	set Tmp,ready,false
+	if ~!BalanceM2N,~!Tmp,stateInstanceName!~,ruleSet!~,==,,
+		debug 1,bM2NSetState: No ruleSet specified in --bM2NSetState=~!Global,bM2NSetState!~
+		set Tmp,ready,false
+	else
+		set Tmp,ruleSet,~!BalanceM2N,~!Tmp,stateInstanceName!~,ruleSet!~
 else
 	set Tmp,ruleSet,~!Global,bM2NSetState-2!~
+
+setNested BalanceM2N,~!Tmp,stateInstanceName!~,instanceName,~!Tmp,stateInstanceName!~
+setNested BalanceM2N,~!Tmp,stateInstanceName!~,state,~!Tmp,state!~
+setNested BalanceM2N,~!Tmp,stateInstanceName!~,ruleSet,~!Tmp,ruleSet!~
 
 
 # Do we have the requested rule?
