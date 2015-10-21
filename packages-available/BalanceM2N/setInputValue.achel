@@ -1,6 +1,0 @@
-# Set the input value for the current rule. --setInputValue=value[,destinationVariable] . It's normal to omit destinationVariable and it is assumed to be the key for the specific input. ~ BalanceM2N,input
-
-set Tmp,destinationVariable,~!Global,setInputValue-1!~
-setIfNothing Tmp,destinationVariable,~!BalanceM2N,current,inputVariable!~
-setNested BalanceM2N,current,~!Tmp,destinationVariable!~,~!Global,setInputValue-0!~
-unset Tmp,destinationVariable

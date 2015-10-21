@@ -1,11 +1,6 @@
 # For use with BalanceM2N. Multiplites the value in BalanceM2N,current,value by a specific amount. This is a blind multiply and does not to anything special considering any previous trimmings or centerings. --multiply=multiplier . multiplier is a decimal greater than 0. If it's greater than 1 is will make the value bigger. If it's less than 1 it will make the value smaller. eg multiplying by 0.5 is equivilent dividing by 2. ~ BalanceM2N,validation,range,conversion
+parameters {"multiplier":"1"}
 
-set Tmp,multiplier,~!Global,multiply!~
-setIfNothing Tmp,multiplier,1
-
-basicMaths Tmp,multiplyValue,~!BalanceM2N,current,value!~,*,~!Tmp,multiplier!~
+basicMaths Local,multiplyValue,~!BalanceM2N,current,value!~,*,~!Local,multiplier!~
 
 setNested BalanceM2N,current,value,~!Tmp,multiplyValue!~
-
-unset Tmp,multiplier
-unset Tmp,multiplyValue
