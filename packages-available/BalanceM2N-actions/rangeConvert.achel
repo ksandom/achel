@@ -1,83 +1,65 @@
 # Converts the input (BalanceM2N,current,value) from the defined input range to -1,0,1 and validates/asserts that it is not out of range. Therefore it is still valuable to do this even if the input range is already -1,0,1. --rangeConvert=outCategory,outVariable,inValue,inMin,inCenter,inMax,outMin,outCenter,outMax ~ BalanceM2N,validation,range,conversion
-
-# In and out
-set Tmp,rangeCategory,~!Global,rangeConvert-0!~
-set Tmp,rangeVariable,~!Global,rangeConvert-1!~
-set Tmp,rangeValue,~!Global,rangeConvert-2!~
+parameters {"outCategory","outVariable","inValue","inMin","inCenter","inMax","outMin","outCenter","outMax"}
 
 
 # Bounds
-setNested BalanceM2N,current,inMin,~!Global,rangeConvert-3!~
-setNested BalanceM2N,current,inCenter,~!Global,rangeConvert-4!~
-setNested BalanceM2N,current,inMax,~!Global,rangeConvert-5!~
+setNested BalanceM2N,current,inMin,~!Local,inMin!~
+setNested BalanceM2N,current,inCenter,~!Local,inCenter!~
+setNested BalanceM2N,current,inMax,~!Local,inMax!~
 
-setNested BalanceM2N,current,outMin,~!Global,rangeConvert-6!~
-setNested BalanceM2N,current,outCenter,~!Global,rangeConvert-7!~
-setNested BalanceM2N,current,outMax,~!Global,rangeConvert-8!~
+setNested BalanceM2N,current,outMin,~!Local,outMin!~
+setNested BalanceM2N,current,outCenter,~!Local,outCenter!~
+setNested BalanceM2N,current,outMax,~!Local,outMax!~
 
 
 # First, let's take care of the quick things.
-if ~!Tmp,rangeValue!~,<=,~!BalanceM2N,current,inMin!~,
-	set ~!Tmp,rangeCategory!~,~!Tmp,rangeVariable!~,~!BalanceM2N,current,outMin!~
+if ~!Local,inValue!~,<=,~!BalanceM2N,current,inMin!~,
+	set ~!Local,outCategory!~,~!Local,outVariable!~,~!BalanceM2N,current,outMin!~
 	
-elseIf ~!Tmp,rangeValue!~,==,~!BalanceM2N,current,inCenter!~,
-	set ~!Tmp,rangeCategory!~,~!Tmp,rangeVariable!~,~!BalanceM2N,current,outCenter!~
+elseIf ~!Local,inValue!~,==,~!BalanceM2N,current,inCenter!~,
+	set ~!Local,outCategory!~,~!Local,outVariable!~,~!BalanceM2N,current,outCenter!~
 	
-elseIf ~!Tmp,rangeValue!~,>=,~!BalanceM2N,current,inMax!~,
-	set ~!Tmp,rangeCategory!~,~!Tmp,rangeVariable!~,~!BalanceM2N,current,outMax!~
-	
+elseIf ~!Local,inValue!~,>=,~!BalanceM2N,current,inMax!~,
+	set ~!Local,outCategory!~,~!Local,outVariable!~,~!BalanceM2N,current,outMax!~
+
 
 # Now the more complex bit. This could be refactored for better code reuse.
-elseIf ~!Tmp,rangeValue!~,<,~!BalanceM2N,current,inCenter!~,
+if ~!Local,inValue!~,<,~!BalanceM2N,current,inCenter!~,
 	# Lower range
 	
 	# Remove inCenter
-	basicMaths Tmp,workingValue,~!Tmp,rangeValue!~,-,~!BalanceM2N,current,inCenter!~
+	basicMaths Local,workingValue,~!Local,inValue!~,-,~!BalanceM2N,current,inCenter!~
 	
 	# Divide by difference between inMin and inCenter
-	basicMaths Tmp,difference,~!BalanceM2N,current,inCenter!~,-,~!BalanceM2N,current,inMin!~
-	basicMaths Tmp,workingValue,~!Tmp,workingValue!~,/,~!Tmp,difference!~
+	basicMaths Local,difference,~!BalanceM2N,current,inCenter!~,-,~!BalanceM2N,current,inMin!~
+	basicMaths Local,workingValue,~!Local,workingValue!~,/,~!Local,difference!~
 	
 	# Multiply by difference between outMin and outCenter
-	basicMaths Tmp,difference,~!BalanceM2N,current,outCenter!~,-,~!BalanceM2N,current,outMin!~
-	basicMaths Tmp,workingValue,~!Tmp,workingValue!~,*,~!Tmp,difference!~
+	basicMaths Local,difference,~!BalanceM2N,current,outCenter!~,-,~!BalanceM2N,current,outMin!~
+	basicMaths Local,workingValue,~!Local,workingValue!~,*,~!Local,difference!~
 	
 	# Add outCenter
-	basicMaths Tmp,workingValue,~!Tmp,workingValue!~,+,~!BalanceM2N,current,outCenter!~
-	set ~!Tmp,rangeCategory!~,~!Tmp,rangeVariable!~,~!Tmp,workingValue!~
-	
-	# Clean up
-	unset Tmp,workingValue
-	unset Tmp,difference
-	
+	basicMaths Local,workingValue,~!Local,workingValue!~,+,~!BalanceM2N,current,outCenter!~
+	set ~!Local,outCategory!~,~!Local,outVariable!~,~!Local,workingValue!~
 
-elseIf ~!Tmp,rangeValue!~,>,~!BalanceM2N,current,inCenter!~,
+elseIf ~!Local,inValue!~,>,~!BalanceM2N,current,inCenter!~,
 	# Upper range
 	
 	# Remove inCenter
-	basicMaths Tmp,workingValue,~!Tmp,rangeValue!~,-,~!BalanceM2N,current,inCenter!~
+	basicMaths Local,workingValue,~!Local,inValue!~,-,~!BalanceM2N,current,inCenter!~
 	
 	# Divide by difference between inCenter and inMax
-	basicMaths Tmp,difference,~!BalanceM2N,current,inMax!~,-,~!BalanceM2N,current,inCenter!~
-	basicMaths Tmp,workingValue,~!Tmp,workingValue!~,/,~!Tmp,difference!~
+	basicMaths Local,difference,~!BalanceM2N,current,inMax!~,-,~!BalanceM2N,current,inCenter!~
+	basicMaths Local,workingValue,~!Local,workingValue!~,/,~!Local,difference!~
 	
 	# Multiply by difference between outCenter and outMax
-	basicMaths Tmp,difference,~!BalanceM2N,current,outMax!~,-,~!BalanceM2N,current,outCenter!~
-	basicMaths Tmp,workingValue,~!Tmp,workingValue!~,*,~!Tmp,difference!~
+	basicMaths Local,difference,~!BalanceM2N,current,outMax!~,-,~!BalanceM2N,current,outCenter!~
+	basicMaths Local,workingValue,~!Local,workingValue!~,*,~!Local,difference!~
 	
 	# Add outCenter
-	basicMaths Tmp,workingValue,~!Tmp,workingValue!~,+,~!BalanceM2N,current,outCenter!~
-	set ~!Tmp,rangeCategory!~,~!Tmp,rangeVariable!~,~!Tmp,workingValue!~
-	
-	# Clean up
-	unset Tmp,workingValue
-	unset Tmp,difference
+	basicMaths Local,workingValue,~!Local,workingValue!~,+,~!BalanceM2N,current,outCenter!~
+	set ~!Local,outCategory!~,~!Local,outVariable!~,~!Local,workingValue!~
 	
 else
-	debug 1,rangeConvert: Unhandeled range. This shouldn't happen. The value was ~!Tmp,rangeValue!~
+	debug 1,rangeConvert: Unhandeled range. This shouldn't happen. The value was ~!Local,inValue!~
 
-
-# Clean up
-unset Tmp,rangeCategory
-unset Tmp,rangeVariable
-unset Tmp,rangeValue
