@@ -1,13 +1,12 @@
 # Destroy an instance in BalanceM2N. --bM2NDestroyInstance=instanceName ~ bm2n,destroy,instance
+parameters instanceName
 
-if ~!Global,bM2NDestroyInstance-0!~,!=,,
-	unset BalanceM2N,instances,~!Global,bM2NDestroyInstance-0!~
+if ~!Local,instanceName!~,!=,,
+	unset BalanceM2N,instances,~!Local,instanceName!~
 	
 	retrieveResults BalanceM2N,instances
-	countToVar Tmp,instances
-	if ~!Tmp,instances!~,<,1,
+	countToVar Local,instances
+	if ~!Local,instances!~,<,1,
 		balanceM2NStop
-	
-	unset Tmp,instances
 else
 	debug 1,bM2NDestroyInstance: No instance name specified.
