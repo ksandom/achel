@@ -3,5 +3,5 @@ parameters {"min":"-1","center":"0","max":"1"}
 
 # TODO This should probably be re-factored at some point since rangeConvert is heavier than it needs to be for this purpose.
 
-rangeConvert Local,assertRangeValue,~!BalanceM2N,current,value!~,~!Local,rangeConvertMin!~,~!Local,rangeConvertCenter!~,~!Local,rangeConvertMax!~,~!Local,rangeConvertMin!~,~!Local,rangeConvertCenter!~,~!Local,rangeConvertMax!~
-setNested BalanceM2N,current,value,~!Tmp,assertRangeValue!~
+rangeConvert Local,assertRangeValue,~!BalanceM2N,current,value!~,~!Local,min!~,~!Local,center!~,~!Local,max!~,~!Local,min!~,~!Local,center!~,~!Local,max!~
+setNested BalanceM2N,current,value,~!Local,assertRangeValue!~
