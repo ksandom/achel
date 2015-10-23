@@ -3,4 +3,4 @@ parameters {"multiplier":"1"}
 
 basicMaths Local,multiplyValue,~!BalanceM2N,current,value!~,*,~!Local,multiplier!~
 
-setNested BalanceM2N,current,value,~!Tmp,multiplyValue!~
+setNested BalanceM2N,current,value,~!Local,multiplyValue!~

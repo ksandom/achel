@@ -1,5 +1,6 @@
 # bM2NTick ~ balanceM2N,hidden
 
+# TODO isolate!
 retrieveResults BalanceM2N,instances
 
 loop

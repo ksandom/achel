@@ -1,5 +1,5 @@
 # Converts the input (BalanceM2N,current,value) from the defined input range to -1,0,1 and validates/asserts that it is not out of range. Therefore it is still valuable to do this even if the input range is already -1,0,1. --rangeConvert=outCategory,outVariable,inValue,inMin,inCenter,inMax,outMin,outCenter,outMax ~ BalanceM2N,validation,range,conversion
-parameters {"outCategory","outVariable","inValue","inMin","inCenter","inMax","outMin","outCenter","outMax"}
+parameters ["outCategory","outVariable","inValue","inMin","inCenter","inMax","outMin","outCenter","outMax"]
 
 
 # Bounds
@@ -24,7 +24,7 @@ elseIf ~!Local,inValue!~,>=,~!BalanceM2N,current,inMax!~,
 
 
 # Now the more complex bit. This could be refactored for better code reuse.
-if ~!Local,inValue!~,<,~!BalanceM2N,current,inCenter!~,
+elseIf ~!Local,inValue!~,<,~!BalanceM2N,current,inCenter!~,
 	# Lower range
 	
 	# Remove inCenter
@@ -63,3 +63,4 @@ elseIf ~!Local,inValue!~,>,~!BalanceM2N,current,inCenter!~,
 else
 	debug 1,rangeConvert: Unhandeled range. This shouldn't happen. The value was ~!Local,inValue!~
 
+makeLocalAvailable ~!Local,outVariable!~
