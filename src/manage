@@ -58,7 +58,7 @@ else
 		;;
 		*)
 			echo "Could not find \"$1\""
-			displayHelp
+			displayHelp "$1"
 		;;
 	esac
 fi
