@@ -1,0 +1,7 @@
+# Unit tests for AchelJson. ~ hidden,unitTest,json
+
+defineTest AchelJsonFaucet - Internal - to json,
+	failTest incomplete
+
+defineTest AchelJsonFaucet - Internal - to var,
+	failTest incomplete
