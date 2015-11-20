@@ -1,9 +1,11 @@
 function displayHelp
 {
+	search="$1"
 	tail -n +2 $0 | grep '^#'|sed 's/^#/ /g;s/$0/'"$scriptName"'/g'
 	
 	if [ "$extraHelp" != '' ]; then
-		"$extraHelp"
+		echo "  (refined to \"$search\")"
+		"$extraHelp" "$search"
 	fi
 }
 

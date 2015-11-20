@@ -32,7 +32,7 @@ function installRepo_get
 	cd "$configDir/repos/$checkoutDir"
 	
 	
-	# get tha name
+	# get the name
 	if [ "$overRideRepoName" == '' ]; then # detect name
 		name=`repoGetParm "$checkoutDir" . name`
 	else # override name
@@ -41,7 +41,6 @@ function installRepo_get
 	fi
 
 	if [ "$name" == "" ]; then
-		# TODO add the option for the user to specify the parameters.
 		echo "installRepo_get: The repository at \"$repoAddress\" does not appear to have a name set. You'll need to do this installation manually."
 		removeRepo "$checkoutDir"
 		exit 1
