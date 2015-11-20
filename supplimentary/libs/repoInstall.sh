@@ -64,11 +64,6 @@ function installRepo_get
 		git checkout "$repoVersion"
 	fi
 	
-	
-	# Update if relevant
-	git pull
-	
-	
 	export repoName="$name"
 }
 

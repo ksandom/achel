@@ -1,0 +1,7 @@
+# Set several variables all begining with the same address. This is easy to use, but needs a couple of lines to explain. Therefore see massSet.md for more information. This is really only useful in macros. However the syntax is --massSet=variable,feature . And the destination variable is Me,stuff ~ memory,set
+parameters variable,feature
+
+set ["Me","stuff","~!Local,variable!~"]
+isolate ~!Local,feature!~
+
+unset Me,stuff

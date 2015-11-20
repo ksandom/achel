@@ -19,6 +19,11 @@ if ~!Progress,noProgress!~,!=,true,
 		# TODO choose a more intellegent width
 		calculateProgressStats ~!ProgressData,~!Local,progressKey!~,position!~,~!ProgressData,~!Local,progressKey!~,total!~,30
 		
+		# Bindings for output
+		set Local,position,~!ProgressData,~!Local,progressKey!~,position!~
+		set Local,total,~!ProgressData,~!Local,progressKey!~,total!~
+		set Local,remaining,~!ProgressData,~!Local,progressKey!~,remaining!~
+		
 		# Output
 		templateOutNoNewLine progress
 		outNow

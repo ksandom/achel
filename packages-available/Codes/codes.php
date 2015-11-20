@@ -165,6 +165,7 @@ class Codes extends Module
 		$this->core->set('Codes', 'debug8', $this->core->get('Color', 'brightBlue'));
 		$this->core->set('Codes', 'debug9', $this->core->get('Color', 'brightBlue'));
 		$this->core->set('Codes', 'default', $this->core->get('Color', 'default'));
+		$this->core->set('Codes', 'dim', $this->core->get('Color', 'brightBlack'));
 	}
 }
 

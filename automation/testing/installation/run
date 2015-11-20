@@ -18,5 +18,14 @@ if ! [ -e tests/"$testFileName" ]; then
 	exit 1
 fi
 
+# Build it
 docker build -t "$genericName" .
-docker run -v /home/ksandom/files/develop/achel:/var/achelRepos/achel -it "$genericName" "/var/tests/$testFileName"
+
+# A hack get around the ../.. no longer being accepted with -v in docker.
+startDir=`pwd`
+cd ../../..
+mountDir=`pwd`
+cd "$startDir"
+
+# Run it
+docker run -v "$mountDir:/var/achelRepos/achel" -it "$genericName" "/var/tests/$testFileName"

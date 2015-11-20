@@ -1028,10 +1028,11 @@ class core extends Module
 			# TODO These lookups can be optimized!
 			$code=$this->get('Codes', $title, false);
 			$default=$this->get('Codes', 'default', false);
+			$dim=$this->get('Codes', 'dim', false);
 			$eol=$this->get('General', 'EOL', false); # TODO This can be improved
 			
 			$scopeName=$this->get('General', 'scopeName');
-			$output="$scopeName: ".$output;
+			$output="$dim$scopeName:$default ".$output;
 			
 			if ($output!=$this->lastMessage['value'])
 			{
@@ -1626,27 +1627,35 @@ class core extends Module
 	
 	private function setNestedFromInterpreter($allValues)
 	{
-		$path=$this->interpretParms($allValues);
-		$lastPosition=count($path)-1;
-		if ($lastPosition==-1)
+		$parts=$this->interpretParms($allValues);
+		if (count($parts)==2)
 		{
-			$this->debug(1, "setNestedFromInterpreter: Could not interpret the path provied (\"$allValues\") at all. This is likely a syntax error in the address.");
-			return false;
-		}
-		
-		if (isset($path[$lastPosition]))
-		{
-			$value=$path[$lastPosition];
-			unset($path[$lastPosition]);
-			
-			
-			$this->setNestedStart($path, $value);
-			return true;
+			$this->setNestedViaPath($parts[0], $parts[1]);
 		}
 		else
 		{
-			$this->debug(1, "setNestedFromInterpreter: Could not interpret the path provied (\"$allValues\"). This suggests that interpretParms was unable to interpret it.");
-			return false;
+			$path=$parts;
+			$lastPosition=count($path)-1;
+			if ($lastPosition==-1)
+			{
+				$this->debug(1, "setNestedFromInterpreter: Could not interpret the path provied (\"$allValues\") at all. This is likely a syntax error in the address.");
+				return false;
+			}
+			
+			if (isset($path[$lastPosition]))
+			{
+				$value=$path[$lastPosition];
+				unset($path[$lastPosition]);
+				
+				
+				$this->setNestedStart($path, $value);
+				return true;
+			}
+			else
+			{
+				$this->debug(1, "setNestedFromInterpreter: Could not interpret the path provied (\"$allValues\"). This suggests that interpretParms was unable to interpret it.");
+				return false;
+			}
 		}
 	}
 	
