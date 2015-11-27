@@ -5,6 +5,8 @@ function getBinCompatibility
 {
 	uid=`id -u`
 	setupBinCompatibilityTest
+	retval1=0
+	retval2=0
 	
 	# Bash
 	if which bash >/dev/null; then
