@@ -17,14 +17,19 @@ class JsonGeneral extends Module
 		switch ($event)
 		{
 			case 'init':
-				$this->core->registerFeature($this, array('fromJson'), 'fromJson', 'Convert the resultSet from a Json string into the data it represents. This is the counterpart of --toJson', array('json'));
+				$this->core->registerFeature($this, array('fromJsons'), 'fromJsons', 'Convert the resultSet from an array of Json strings into the data it represents. This is the counterpart of --toJsons', array('json'));
+				break;
+				$this->core->registerFeature($this, array('toJsons'), 'toJsons', 'Convert the resultSet from an array of variables (ideally arrays) to Json strings. This is the counterpart of --fromJsons', array('json'));
 				break;
 			case 'followup':
 				break;
 			case 'last':
 				break;
-			case 'fromJson':
-				return $this->fromJson($this->core->getResultSet());
+			case 'fromJsons':
+				return $this->fromJsons($this->core->getResultSet());
+				break;
+			case 'toJsons':
+				return $this->toJsons($this->core->getResultSet());
 				break;
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
@@ -32,7 +37,24 @@ class JsonGeneral extends Module
 		}
 	}
 	
-	function fromJson($resultSet)
+	function toJsons($resultSet)
+	{
+		$output=array();
+		if (!is_array($resultSet))
+		{
+			$this->core->debug(2, "toJson: resultSet is not an array. Returning nothing.");
+		}
+		else
+		{
+			foreach ($resultSet as $key=>$line)
+			{
+				$output[$key]=json_encode($line, JSON_FORCE_OBJECT);
+			}
+		}
+		return $output;
+	}
+	
+	function fromJsons($resultSet)
 	{
 		$output=array();
 		if (!is_array($resultSet))

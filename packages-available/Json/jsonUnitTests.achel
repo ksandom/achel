@@ -1,8 +1,15 @@
 # Unit tests for json ~ json,unitTest,hidden
 
-defineTest json - fromJson,
+defineTest json - toJsons,
+	setNested Local,testResultSet,a,b,c
+	retrieveResults Local,testResultSet
+	toJsons
+	stashResults Local,outputResultSet
+	expect -{"b":"c"},-~!Local,outputResultSet,a!~
+
+defineTest json - fromJsons,
 	setNested Local,testResultSet,a,{"b":"c"}
 	retrieveResults Local,testResultSet
-	fromJson
+	fromJsons
 	stashResults Local,outputResultSet
 	expect c,~!Local,outputResultSet,a,b!~
