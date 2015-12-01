@@ -1,4 +1,8 @@
 # Unit tests for json ~ json,unitTest,hidden
 
 defineTest json - fromJson,
-	failTest TODO write tests
+	setNested Local,testResultSet,a,{"b":"c"}
+	retrieveResults Local,testResultSet
+	fromJson
+	stashResults Local,outputResultSet
+	expect c,~!Local,outputResultSet,a,b!~

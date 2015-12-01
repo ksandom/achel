@@ -17,7 +17,7 @@ class JsonGeneral extends Module
 		switch ($event)
 		{
 			case 'init':
-				$this->core->registerFeature($this, array('fromJson'), 'fromJson', 'Convert the resultSet from a Json string into the data it represents. This is the counterpart of --toJson', array('json'))
+				$this->core->registerFeature($this, array('fromJson'), 'fromJson', 'Convert the resultSet from a Json string into the data it represents. This is the counterpart of --toJson', array('json'));
 				break;
 			case 'followup':
 				break;
@@ -45,7 +45,7 @@ class JsonGeneral extends Module
 			{
 				if (is_string($line))
 				{
-					$output[$key]=json_decode($line);
+					$output[$key]=json_decode($line, 1);
 				}
 				else
 				{
