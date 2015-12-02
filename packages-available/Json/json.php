@@ -17,9 +17,8 @@ class JsonGeneral extends Module
 		switch ($event)
 		{
 			case 'init':
-				$this->core->registerFeature($this, array('fromJsons'), 'fromJsons', 'Convert the resultSet from an array of Json strings into the data it represents. This is the counterpart of --toJsons', array('json'));
-				break;
 				$this->core->registerFeature($this, array('toJsons'), 'toJsons', 'Convert the resultSet from an array of variables (ideally arrays) to Json strings. This is the counterpart of --fromJsons', array('json'));
+				$this->core->registerFeature($this, array('fromJsons'), 'fromJsons', 'Convert the resultSet from an array of Json strings into the data it represents. This is the counterpart of --toJsons', array('json'));
 				break;
 			case 'followup':
 				break;
