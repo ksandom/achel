@@ -1,3 +1,5 @@
 # Creates a faucet that converts json it recieves and sticks it in the specified variable. --createJsonToVarFaucet=faucetName,Category,variableName ~ create,faucet,json
 
-pass
+parameters faucetName,Category,variableName
+
+createCallFaucet ["~!Local,faucetName!~","achelJsonJsonToVar","~!Local,Category!~,~!Local,variableName!~"]

@@ -1,4 +1,16 @@
-# AchelJson ~ hidden,achel,json,worker
+# AchelJson. Takes json in the resultSet and puts it into a pre-determined variable. --achelJsonToVar=Category,variable ~ hidden,achel,json,worker
 
-pass
+parameters Category,variable
 
+debug 1,point A
+nested
+outNow
+
+debug 1,point B
+fromJsons
+nested
+outNow
+debug 1,point C
+stashResults ~!Local,Category!~,~!Local,variable!~
+
+makeLocalAvailable ~!Local,variable!~
