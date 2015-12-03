@@ -23,3 +23,12 @@ defineTest json - fromJsons,
 	fromJsons
 	stashResults Local,outputResultSet
 	expect c,~!Local,outputResultSet,a,b!~
+
+defineTest json - fromJsons - more complex dataset,
+	setNested ["Local","testResultSet","a","{\"a\",\"1\",\"b\":\"2\",\"mr nul\":\"0\"}"]
+	retrieveResults Local,testResultSet
+	fromJsons
+	stashResults Local,outputResultSet
+	expect 2,~!Local,outputResultSet,a,b!~
+
+
