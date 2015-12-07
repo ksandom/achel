@@ -1,7 +1,20 @@
 # Unit tests for AchelJson. ~ hidden,unitTest,json
 
 defineTest AchelJsonFaucet - Internal - to json,
-	failTest incomplete
+	setNested ["Local","jsonTestSrc","0",{"A":"1","B":"2","mr nul":"0"}]
+	retrieveResults Local,jsonTestSrc
+	
+	achelJsonVarToJson Local,jsonTest
+	
+	# This is a hack to handel nesting json in a parameter to a feature that doesn't support it yet.
+	retrieveResults Local,jsonTest
+	replace ",
+	replace [",","-"]
+	replace ["({|})","_"]
+	stashResults Local,jsonTest
+	
+	# Note that this expect has been mangled to match the above hack.
+	expect _A:1-B:2-mr nul:0_,~!Local,jsonTest,0!~
 
 defineTest AchelJsonFaucet - Internal - to var,
 	setNested ["Local","jsonTestSrc","0","{\"A\":\"1\",\"B\":\"2\",\"mr nul\":\"0\"}"]
