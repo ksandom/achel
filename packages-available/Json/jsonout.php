@@ -1,5 +1,5 @@
 <?php
-# Copyright (c) 2012, Kevin Sandom under the BSD License. See LICENSE for full details.
+# Copyright (c) 2012-2015, Kevin Sandom under the BSD License. See LICENSE for full details.
 
 # Manage command line options
 
