@@ -1,4 +1,4 @@
-# Creates a faucet that the specified into json. --createJsonToVarFaucet=faucetName,Category,variableName ~ create,faucet,json
+# Creates a faucet that the specified into json. --createJsonToVarFaucet=faucetName,Category,variableName ~ create,faucet,json,hidden,incomplete
 
 parameters faucetName,Category,variableName
 

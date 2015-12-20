@@ -35,9 +35,7 @@ defineTest AchelJsonFaucet - Create faucet and send data to it (json->var),
 	deliverAll
 	
 	expect 124,~!Tmp,jsonDemo,A!~
-	retrieveResults Tmp,jsonDemo
 	
 	deleteFaucet jsonDemo
 	deleteFaucet jsonNull
-
-
+	unset Tmp,jsonDemo
