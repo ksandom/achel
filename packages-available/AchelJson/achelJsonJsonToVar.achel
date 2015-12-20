@@ -3,6 +3,8 @@
 parameters Category,variable
 
 fromJsons
+lastResult
+flatten 1
 stashResults ~!Local,Category!~,~!Local,variable!~
 
 makeLocalAvailable ~!Local,variable!~

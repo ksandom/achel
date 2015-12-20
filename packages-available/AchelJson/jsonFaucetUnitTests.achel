@@ -22,8 +22,22 @@ defineTest AchelJsonFaucet - Internal - to var,
 	
 	achelJsonJsonToVar Local,jsonTest
 	
-	expect 1,~!Local,jsonTest,0,A!~
-	expect 2,~!Local,jsonTest,0,B!~
-	expect 0,~!Local,jsonTest,0,mr nul!~
+	expect 1,~!Local,jsonTest,A!~
+	expect 2,~!Local,jsonTest,B!~
+	expect 0,~!Local,jsonTest,mr nul!~
+
+defineTest AchelJsonFaucet - Create faucet and send data to it (json->var),
+	createJsonToVarFaucet jsonDemo,Tmp,jsonDemo
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	deliver jsonDemo,default,{"A":"123"}
+	deliver jsonDemo,default,{"A":"124"}
+	deliverAll
+	
+	expect 124,~!Tmp,jsonDemo,A!~
+	retrieveResults Tmp,jsonDemo
+	
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
 
 
