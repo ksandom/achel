@@ -1,0 +1,62 @@
+# Unit tests for generalIO ~ achel,proc,faucet,unitTest,hidden
+
+defineTest createProcFaucet - simple execution,
+	createProcFaucet procDemo,echo hi
+	createDumpFaucet procDump,ProcDemo
+	createPipe procDemo,procDump
+	
+	deliverAll
+	
+	expect hi,~!ProcDemo,0!~
+	
+	deleteFaucet procDemo
+	deleteFaucet procDump
+
+defineTest createProcFaucet - double quotes,
+	createProcFaucet procDemo,echo "ho"
+	createDumpFaucet procDump,ProcDemo
+	createPipe procDemo,procDump
+	
+	deliverAll
+	
+	expect ho,~!ProcDemo,0!~
+	
+	deleteFaucet procDemo
+	deleteFaucet procDump
+
+defineTest createProcFaucet - single quotes,
+	createProcFaucet procDemo,echo 'hey'
+	createDumpFaucet procDump,ProcDemo
+	createPipe procDemo,procDump
+	
+	deliverAll
+	
+	expect hey,~!ProcDemo,0!~
+	
+	deleteFaucet procDemo
+	deleteFaucet procDump
+
+defineTest createProcFaucet - curly brace,
+	createProcFaucet procDemo,echo '_{a}'
+	createDumpFaucet procDump,ProcDemo
+	createPipe procDemo,procDump
+	
+	deliverAll
+	
+	expect _{a},~!ProcDemo,0!~
+	
+	deleteFaucet procDemo
+	deleteFaucet procDump
+
+defineTest createProcFaucet - hard coded json,
+	createProcFaucet procDemo,echo '_{"A":"1"}'
+	createDumpFaucet procDump,ProcDemo
+	createPipe procDemo,procDump
+	
+	deliverAll
+	
+	expect _{"A":"1"},~!ProcDemo,0!~
+	
+	deleteFaucet procDemo
+	deleteFaucet procDump
+
