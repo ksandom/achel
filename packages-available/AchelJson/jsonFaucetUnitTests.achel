@@ -41,15 +41,13 @@ defineTest AchelJson - Create faucet and send data to it (json->var),
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - Create shell json faucet ,
-	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,exec echo '{"A":"987"}'
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,echo '{"A":"987"}'
 	createNullFaucet jsonNull
 	createPipe jsonDemo,jsonNull
 	
-	verbose 4
 	deliverAll
-	verbose 0
 	
-	expect 987,~!Tmp,jsonDemo!~
+	expect 987,~!Tmp,jsonDemo,A!~
 
 	deleteFaucet jsonDemo
 	deleteFaucet jsonNull
