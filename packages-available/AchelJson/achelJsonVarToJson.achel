@@ -2,6 +2,10 @@
 
 parameters Category,variable
 
+debug 0,GOT HERE
+nested
+outNow
+
 toJsons
 stashResults ~!Local,Category!~,~!Local,variable!~
 
