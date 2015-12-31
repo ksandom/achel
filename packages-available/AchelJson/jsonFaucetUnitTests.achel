@@ -40,18 +40,112 @@ defineTest AchelJson - Create faucet and send data to it (json->var),
 	deleteFaucet jsonNull
 	unset Tmp,jsonDemo
 
-defineTest AchelJson - Create shell json faucet ,
+defineTest AchelJson - Create shell json faucet,
 	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,echo '{"A":"987"}'
 	createNullFaucet jsonNull
 	createPipe jsonDemo,jsonNull
 	
-	deliverAll
+	deliverAll 100000
 	
 	expect 987,~!Tmp,jsonDemo,A!~
 
 	deleteFaucet jsonDemo
 	deleteFaucet jsonNull
 	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - 2 commands - true,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,true;echo '{"A":"765"}'
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 765,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - 2 commands - cd,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,cd /tmp;echo '{"A":"4563"}'
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 4563,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - 3 commands - stderr,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,cd /tmp;echo '{"A":"4562"}';echo example error >&2
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 4562,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - 3 commands - sh/stderr,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,sh -c "cd /tmp;echo '{\"A\":\"4561\"}';echo example error >&2"
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 4561,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - 2 commands - sh,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,sh -c "cd /tmp;echo '{\"A\":\"4560\"}'"
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 4560,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - python,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,echo "print '{\"A\":\"102\"}'" | python
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 102,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - bash,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,echo "echo '{\"A\":\"101\"}'" | bash
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 101,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+
+
 
 
 
