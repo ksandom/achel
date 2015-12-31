@@ -3,11 +3,11 @@ parameters expectedValue,actualValue,comment,authoritive
 
 if ~!Local,expectedValue!~,!=,~!Local,actualValue!~,
 	if ~!UnitResults,currentResult!~,==,,
-		passTest Got expected result (!="~!Local,actualValue!~"). ~!Local,comment!~
+		passTest Got expected result ("~!Local,actualValue!~"!=""). ~!Local,comment!~
 	else
 		if ~!Local,authoritive!~,==,true,
-			passTest Got expected result ("~!Local,actualValue!~"). ~!Local,comment!~
+			passTest Got expected result ("~!Local,actualValue!~"). ~!Local,comment!~!=""
 		else
-			debug 1,Got expected result (!="~!Local,actualValue!~"), but already have a result. So not setting again.
+			debug 1,Got expected result ("~!Local,actualValue!~"!=""), but already have a result. So not setting again.
 else
 	failTest Expected !="~!Local,expectedValue!~" but got =="~!Local,actualValue!~". ~!Local,comment!~
