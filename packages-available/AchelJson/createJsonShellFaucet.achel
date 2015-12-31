@@ -1,7 +1,6 @@
 # Creates a faucet that takes json from a given shell command, and puts it into a specified variable. --createJsonShellFaucet=faucetName,Category,variable,shellCommand ~ create,faucet,json
 parameters faucetName,Category,variable,shellCommand
 
-debug 0,GOT HERE AA ~!Local,faucetName!~-proc,~!Local,shellCommand!~
 createProcFaucet ~!Local,faucetName!~-proc,~!Local,shellCommand!~
 createJsonToVarFaucet ~!Local,faucetName!~,~!Local,Category!~,~!Local,variable!~
 
