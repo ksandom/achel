@@ -1,15 +1,15 @@
 <?php
-# Copyright (c) 2012, Kevin Sandom under the BSD License. See LICENSE for full details.
+# Copyright (c) 2012,2016, Kevin Sandom under the BSD License. See LICENSE for full details.
 
 # Covert to and work with strings
 
-class String extends Module
+class AchelString extends Module
 {
 	private $outputFile=false;
 	
 	function __construct()
 	{
-		parent::__construct('String');
+		parent::__construct(__CLASS__);
 	}
 	
 	function event($event)
@@ -87,6 +87,6 @@ class String extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new String());
+$core->registerModule(new AchelString());
  
 ?>
