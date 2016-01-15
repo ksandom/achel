@@ -45,7 +45,9 @@ function installTemplates
 		for homeFolder in $primarySearchPath; do
 			if [ "${homeFolder:0:5}" == '/home' ] || [ "$uid" == "0" ]; then
 				for pathPrefix in $secondarySearchPath; do
-					if [ -e "${homeFolder}${pathPrefix}" ]; then
+					# Some of the directories are not created if they are not being used. Even if they are the right ones to use. Therefore I am currently creating all  possible combinations. This is messey!
+					# TODO Find a better way to detect what should be set.
+					if true; then #[ -e "${homeFolder}${pathPrefix}" ]; then
 						mkdir -p "${homeFolder}${pathPrefix}/$lastDir"
 						cp -v "$templateOut" "${homeFolder}${pathPrefix}/${outputFile}"
 					fi

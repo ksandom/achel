@@ -1,0 +1,34 @@
+# Unit tests for json ~ json,unitTest,hidden
+
+defineTest json - inline test,
+	setNested Local,testResultSet,a,b,c
+	retrieveResults Local,testResultSet
+	stashResults Local,outputResultSet
+	
+	# This works because the array is converted into json when variable substitution is needed.
+	expect -{"b":"c"},-~!Local,outputResultSet,a!~
+
+defineTest json - toJsons,
+	setNested Local,testResultSet,a,b
+	retrieveResults Local,testResultSet
+	toJsons
+	stashResults Local,outputResultSet
+	
+	# This needs to be simplified to a simple string so that it the array doesn't get converted to json inline leading us to test the wrong thing.
+	expect "b",~!Local,outputResultSet,a!~
+
+defineTest json - fromJsons,
+	setNested Local,testResultSet,a,{"b":"c"}
+	retrieveResults Local,testResultSet
+	fromJsons
+	stashResults Local,outputResultSet
+	expect c,~!Local,outputResultSet,a,b!~
+
+defineTest json - fromJsons - more complex dataset,
+	setNested ["Local","testResultSet","a","{\"a\":\"1\",\"b\":\"2\",\"mr nul\":\"0\"}"]
+	retrieveResults Local,testResultSet
+	fromJsons
+	stashResults Local,outputResultSet
+	expect 2,~!Local,outputResultSet,a,b!~
+
+

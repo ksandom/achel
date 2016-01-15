@@ -13,7 +13,13 @@ function getListOfSupplimeentaryScripts
 
 function displayListOfSupplimeentaryScripts
 {
-	getListOfSupplimeentaryScripts | sed 's/	/ - /g;s/^/   /g'
+	refine="$1"
+	
+	if [ "$refine" == '' ];  then
+		getListOfSupplimeentaryScripts | sed 's/	/ - /g;s/^/   /g'
+	else
+		getListOfSupplimeentaryScripts | grep "$refine" | sed 's/	/ - /g;s/^/   /g'
+	fi
 }
 
 function processParms
