@@ -3,13 +3,13 @@
 
 # Manage command line options
 
-class JsonOut extends Module
+class AchelJsonOut extends Module
 {
 	private $forceObject=true;
 	
 	function __construct()
 	{
-		parent::__construct('JsonOut');
+		parent::__construct(__CLASS__);
 	}
 	
 	function event($event)
@@ -92,6 +92,6 @@ class JsonOut extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new JsonOut());
+$core->registerModule(new AchelJsonOut());
  
 ?>
