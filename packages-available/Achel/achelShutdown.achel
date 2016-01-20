@@ -1,0 +1,9 @@
+# Do all the cleanup before shutdown to make sure stuff is cleanly closed ~ tui,internal
+
+# TODO Test that this is actually working.
+break
+deliverAll
+disconnect
+
+getFaucets
+loopMacro internalAchelShutdown

@@ -1,0 +1,12 @@
+# Send a break to each matching connection ~ tui
+
+loop
+	if ~!Result,hostName!~,!=,,
+		debug 1,Sending break to ~!Result,hostName!~
+		
+		# Old way
+		# deliver SSH-~!Result,hostName!~,_control,break
+		
+		# New way
+		deliver SSH-~!Result,hostName!~,default,kill $!
+

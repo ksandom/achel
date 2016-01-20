@@ -1,0 +1,4 @@
+# Open a new terminal window. ~ tui2,user
+#onDefine aliasFeature newTerminalWindow,nw
+
+spawnTerminal telnet localhost ~!terminalWindow,listener,port!~

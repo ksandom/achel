@@ -1,0 +1,11 @@
+# Destroys a state within a given ruleSet. --balanceM2NDestroyState=stateName,ruleSetName ~ bM2N,state,destroy
+parameters stateName,ruleSetName
+
+if ~!Local,stateName!~,==,,
+	debug 1,balanceM2NDestroyState: No state specified.
+
+elseIf ~!Local,ruleSetName!~,==,,
+	debug 1,balanceM2NDestroyState: No ruleSet specified.
+
+else
+	unset BalanceM2N,rules,~!Local,ruleSetName!~,~!Local,stateName!~

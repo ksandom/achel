@@ -1,0 +1,6 @@
+# Specify a live highlight for output ~ tui,highlight
+
+if ~!Global,highlight-0!~,!=,,
+	addFaucetConfigItemEntry colors,Rules,,(~!Global,highlight-0!~),~\!Color,~!Global,highlight-1!~!\~$1~!Color,default!~
+else
+	debug 1,highlight: Ignoring "~!Global,highlight!~" since the search text seems to be broken.

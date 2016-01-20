@@ -1,0 +1,5 @@
+# For use with BalanceM2N. Offsets a number by a specific amount. This is a linear offset (compared to the warping offset that occurs when changing the center value of an input/output range). --trim=[trimAmount] . trimAmount defaults to 0. ~ BalanceM2N,validation,range,conversion
+parameters {"trimAmount":"0"}
+
+basicMaths Local,trimValue,~!BalanceM2N,current,value!~,+,~!Local,trimAmount!~
+setNested BalanceM2N,current,value,~!Local,trimValue!~

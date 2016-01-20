@@ -1,0 +1,54 @@
+# Chooses which state within a ruleSet will be used. An example of this being used would be a plane transitioning from climbing out of a take off, to sustaining flight. --bM2NSetState=[instanceName],state,ruleSet . instanceName specifies which instance we are talking about. If omitted it is "default". state specifies which state within the ruleSet will be used. ruleSet specifies which ruleSet we are using. This can be omitted after the first usage. ~ balanceM2N
+parameters {"instanceName":"default","state":"","ruleSet":""}
+
+set Local,ready,true
+set Local,instanceName,~!Global,bM2NSetState-0!~
+
+# Do we have sufficient input?
+if ~!Global,bM2NSetState-1!~,==,,
+	debug 1,bM2NSetState: No state specified in --bM2NSetState=~!Global,bM2NSetState!~
+	set Local,ready,false
+else
+	set Local,state,~!Global,bM2NSetState-1!~
+
+# TODO This is certainly causing a problem and needs to be revised.
+if ~!Global,bM2NSetState-2!~,==,,
+	if ~!BalanceM2N,~!Local,instanceName!~,ruleSet!~,==,,
+		debug 1,bM2NSetState: No ruleSet specified in --bM2NSetState=~!Global,bM2NSetState!~
+		set Local,ready,false
+	else
+		set Local,ruleSet,~!BalanceM2N,~!Local,instanceName!~,ruleSet!~
+else
+	set Local,ruleSet,~!Global,bM2NSetState-2!~
+
+setNested BalanceM2N,~!Local,instanceName!~,instanceName,~!Local,instanceName!~
+setNested BalanceM2N,~!Local,instanceName!~,state,~!Local,state!~
+setNested BalanceM2N,~!Local,instanceName!~,ruleSet,~!Local,ruleSet!~
+
+
+# Do we have the requested rule?
+# Structure: BalanceM2N,rules,ruleSet1,state1,rule1,process
+ifNested BalanceM2N,rules,~!Local,ruleSet!~,~!Local,state!~,
+	debug 3,bM2NSetState: RuleSet/state exists.
+else
+	debug 3,bM2NSetState: ruleSet=~!Local,ruleSet!~ state=~!Local,state!~ as defined in ~!Global,bM2NSetState!~ does not exist.
+	set Local,ready,false
+
+
+
+if ~!Local,ready!~,==,true,
+	# Do we have the requested instance?
+	ifNested BalanceM2N,instances,~!Local,instanceName!~,
+		debug 3,bM2NSetState: Instance exists.
+	else
+		debug 3,bM2NSetState: Instance does not exist.
+		setNested BalanceM2N,instances,~!Local,instanceName!~,instanceName,~!Local,instanceName!~
+	
+	setNested BalanceM2N,instances,~!Local,instanceName!~,state,~!Local,state!~
+	setNested BalanceM2N,instances,~!Local,instanceName!~,ruleSet,~!Local,ruleSet!~
+
+else
+	debug 2,bM2NSetState: One or more tests (listed above) did not pass, so we can not set the state as requested --bM2NSetState=~!Global,bM2NSetState!~
+
+
+balanceM2NStart

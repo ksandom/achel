@@ -1,0 +1,5 @@
+# Handel terminal window disconnect ~ tui2,terminalWindow,tcp,hidden
+#onDefine registerForEvent SocketServerFaucet,terminalWindowDisconnect,terminalWindowDisconnect
+#onDefine registerForEvent SocketServerFaucet,terminalWindowClose,terminalWindowDisconnect
+
+unregisterForM2N terminalWindow,~!Global,terminalWindowDisconnect-0!~

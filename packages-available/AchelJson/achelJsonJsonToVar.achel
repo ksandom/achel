@@ -1,0 +1,10 @@
+# AchelJson. Takes json in the resultSet and puts it into a pre-determined variable. --achelJsonToVar=Category,variable ~ hidden,achel,json,worker
+
+parameters Category,variable
+
+fromJsons
+lastResult
+flatten 1
+stashResults ~!Local,Category!~,~!Local,variable!~
+
+makeLocalAvailable ~!Local,variable!~

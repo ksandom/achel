@@ -1,0 +1,162 @@
+# AchelEvent unit tests. ~ unitTest,hidden
+
+createNullFaucet null
+
+set Tmp,eventHandeler,
+	set Tmp,value,vv~!Global,~!Tmp,eventHandeler!~!~
+
+
+defineTest EventFaucet - default source default(null),
+	# Set up
+	createEventFaucet event,Event
+	createPipe event,null
+	registerForEvent Event,default,~!Tmp,eventHandeler!~
+	
+	# Send data
+	deliver event,default,test123
+	deliverAll
+	
+	# Test that the data was recieved
+	expect vv,~!Tmp,value!~
+	
+	# Clean up
+	unset Tmp,value
+	deleteFaucet event
+	unregisterForEvent Event,default,~!Tmp,eventHandeler!~
+
+defineTest EventFaucet - test1 source default(null),
+	# Set up
+	createEventFaucet event,Event
+	createPipe event,null
+	registerForEvent Event,test1,~!Tmp,eventHandeler!~
+	
+	# Send data
+	deliver event,test1,test123
+	deliverAll
+	
+	# Test that the data was recieved
+	expect vv,~!Tmp,value!~
+	
+	# Clean up
+	unset Tmp,value
+	deleteFaucet event
+	unregisterForEvent Event,test1,~!Tmp,eventHandeler!~
+
+defineTest EventFaucet - test1 source default(null) - No residual event,
+	# Set up
+	createEventFaucet event,Event
+	createPipe event,null
+	registerForEvent Event,default,~!Tmp,eventHandeler!~
+	
+	# Send data
+	deliver event,test1,test123
+	deliverAll
+	
+	# Test that the data was recieved
+	expect ,~!Tmp,value!~
+	
+	# Clean up
+	unset Tmp,value
+	deleteFaucet event
+	unregisterForEvent Event,default,~!Tmp,eventHandeler!~
+
+# test null
+defineTest EventFaucet - test1 source null,
+	# Set up
+	createEventFaucet event,Event,null
+	createPipe event,null
+	registerForEvent Event,test1,~!Tmp,eventHandeler!~
+	
+	# Send data
+	deliver event,test1,test123
+	deliverAll
+	
+	# Test that the data was recieved
+	expect vv,~!Tmp,value!~
+	
+	# Clean up
+	unset Tmp,value
+	deleteFaucet event
+	unregisterForEvent Event,test1,~!Tmp,eventHandeler!~
+
+# TODO test lines
+defineTest EventFaucet - test1 source lines - 1,
+	# Set up
+	createEventFaucet event,Event,lines
+	createPipe event,null
+	registerForEvent Event,test1,~!Tmp,eventHandeler!~
+	
+	# Send data
+	deliver event,test1,test123
+	deliverAll
+	
+	# Test that the data was recieved
+	expect vv1,~!Tmp,value!~
+	
+	# Clean up
+	unset Tmp,value
+	deleteFaucet event
+	unregisterForEvent Event,test1,~!Tmp,eventHandeler!~
+
+defineTest EventFaucet - test1 source lines - 3,
+	# Set up
+	createEventFaucet event,Event,lines
+	createPipe event,null
+	registerForEvent Event,test1,~!Tmp,eventHandeler!~
+	
+	# Send data
+	deliver event,test1,test123-a
+	deliver event,test1,test123-b
+	deliver event,test1,test123-c
+	deliverAll
+	
+	# Test that the data was recieved
+	expect vv3,~!Tmp,value!~
+	
+	# Clean up
+	unset Tmp,value
+	deleteFaucet event
+	unregisterForEvent Event,test1,~!Tmp,eventHandeler!~
+
+# test channel
+defineTest EventFaucet - test1 source channel,
+	# Set up
+	createEventFaucet event,Event,channel
+	createPipe event,null
+	registerForEvent Event,test1,~!Tmp,eventHandeler!~
+	
+	# Send data
+	deliver event,test1,test123-a
+	deliverAll
+	
+	# Test that the data was recieved
+	expect vvtest1,~!Tmp,value!~
+	
+	# Clean up
+	unset Tmp,value
+	deleteFaucet event
+	unregisterForEvent Event,test1,~!Tmp,eventHandeler!~
+
+defineTest EventFaucet - test2 source channel,
+	# Set up
+	createEventFaucet event,Event,channel
+	createPipe event,null
+	registerForEvent Event,test2,~!Tmp,eventHandeler!~
+	
+	# Send data
+	deliver event,test2,test123-a
+	deliverAll
+	
+	# Test that the data was recieved
+	expect vvtest2,~!Tmp,value!~
+	
+	# Clean up
+	unset Tmp,value
+	deleteFaucet event
+	unregisterForEvent Event,test2,~!Tmp,eventHandeler!~
+
+
+
+
+unset Tmp,eventHandeler
+deleteFaucet null

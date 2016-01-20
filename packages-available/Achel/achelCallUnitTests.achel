@@ -1,0 +1,66 @@
+# Unit tests for the CallFaucet. ~ unitTest,call
+
+clearResultset
+# Create the call faucet
+createInlineCallFaucet unitCall
+
+# Connect something to it so that it will take some action.
+createNullFaucet unitNull
+createPipe unitCall,unitNull
+
+# Do something that will give us a result set, then see how many results we got.
+deliver unitCall,unitCall,
+	help
+	first 5
+	countToVar Tmp,unitCallResultCountInsideCall
+
+deliverAll
+countToVar Tmp,unitCallResultCountOutsideCall
+
+# Here we want to make sure that the previous resultSet is still available, so we do a another count, but this time from within the same scope as where we should find the resultSet.
+# This is an important point to understand. If the count was done within the macro again, it would almost certainly work since the problem appears to be at the CallFaucet, not the core. However the fix will likely be a combination of at the core and in the CallFaucet.
+deliver unitCall,default,countToVar Tmp,unitCallResultCountSecondCall
+
+deliverAll
+
+defineTest Call faucet have results,
+	if ~!Tmp,unitCallResultCountInsideCall!~,==,0,
+		failTest Got 0 results. Check the unit test.
+	elseIf ~!Tmp,unitCallResultCountInsideCall!~,==,,
+		failTest Got no results. Check the unit test.
+	elseIf ~!Tmp,unitCallResultCountInsideCall!~,==,5,
+		passTest Got 5 results (expected)
+	else
+		failTest Got ~!Tmp,unitCallResultCountInsideCall!~ results. Check the unit test.
+
+defineTest Call faucet results match inside and out,
+	# TODO this is failing because the call is being made withint the dataset. Sensible refactoring of the achelCall.php module is required.
+	if ~!Tmp,unitCallResultCountInsideCall!~,==,~!Tmp,unitCallResultCountOutsideCall!~,
+		passTest Both results are ~!Tmp,unitCallResultCountInsideCall!~
+	else
+		failTest inside=~!Tmp,unitCallResultCountInsideCall!~ outside=~!Tmp,unitCallResultCountOutsideCall!~
+
+defineTest Call faucet results match first and second,
+	# TODO this is failing because the call is being made withint the dataset. Sensible refactoring of the achelCall.php module is required.
+	if ~!Tmp,unitCallResultCountInsideCall!~,==,~!Tmp,unitCallResultCountSecondCall!~,
+		passTest Both results are ~!Tmp,unitCallResultCountInsideCall!~
+	else
+		failTest first=~!Tmp,unitCallResultCountInsideCall!~ second=~!Tmp,unitCallResultCountSecondCall!~
+
+
+pass
+	# show us the nesting here
+	debug 1,Nesting +1 in unit test
+	showNesting
+	
+	debug 1,Nesting in faucet
+	deliver unitCall,showNesting
+	deliverAll
+
+
+unset Tmp,unitCallResultCount1
+unset Tmp,unitCallResultCount2
+
+
+
+

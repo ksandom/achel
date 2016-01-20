@@ -1,0 +1,7 @@
+# Start the BalanceM2N package. ~ bM2N
+
+if ~!BalanceM2N,global,state!~,!=,running,
+	createTimer BalanceM2N,100000
+	registerForEvent Timer,BalanceM2N,bM2NTick
+	
+	setNested BalanceM2N,global,state,running

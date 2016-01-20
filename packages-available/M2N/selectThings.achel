@@ -1,0 +1,4 @@
+# Select some things to be joined to some users. ~ m2n,select
+
+isolate
+	m2nSelect right,thing,~!Global,selectThings-0!~

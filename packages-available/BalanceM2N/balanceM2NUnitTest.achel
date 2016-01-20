@@ -1,0 +1,89 @@
+# Unit tests for BalanceM2N. ~ balanceM2N,unitTest,hidden
+
+
+# Test the bigger picture
+setNested BalanceM2N,rules,ruleSet1,state1,rule1,inputs,value,
+	setInputValue -0.5
+
+setNested BalanceM2N,rules,ruleSet1,state1,rule1,process,
+	inputRange -1,0,1
+	outputRange -2,0,2
+
+setNested BalanceM2N,rules,ruleSet1,state1,rule1,outputs,tmp,
+	set Tmp,testOutput1,~!BalanceM2N,current,value!~
+
+
+
+defineTest BalanceM2N bM2NSetState rule1,
+	bM2NSetState blah,state1,ruleSet1
+	
+	expect blah,~!BalanceM2N,instances,blah,instanceName!~
+
+defineTest BalanceM2N bM2NSetState blank state,
+	setNested BalanceM2N,instances,default,state,aValue
+	bM2NSetState default,,ruleSet1
+	
+	expect aValue,~!BalanceM2N,instances,default,state!~
+
+defineTest BalanceM2N bM2NSetState blank ruleSet,
+	setNested BalanceM2N,instances,default,ruleSet,aValue
+	bM2NSetState default,state,
+	
+	expect aValue,~!BalanceM2N,instances,default,ruleSet!~
+
+defineTest BalanceM2N bM2NSetState non-existent ruleSet1asdasd,
+	setNested BalanceM2N,instances,default,ruleSet,aValue
+	bM2NSetState default,state1,ruleSet1asdasd
+	
+	expect aValue,~!BalanceM2N,instances,default,ruleSet!~
+
+defineTest BalanceM2N tick rule1,
+	bM2NSetState default,state1,ruleSet1
+	bM2NTick
+	
+	expect -1,~!Tmp,testOutput1!~
+
+
+# destroy instance
+defineTest BalanceM2N destroy instance,
+	bM2NSetState default,state1,ruleSet1
+	bM2NDestroyInstance default
+	
+	ifNested BalanceM2N,instances,default,
+		failTest There is still lingering data.
+	else
+		passTest Instance destroyed.
+
+defineTest BalanceM2N destroy instance - still destroyed,
+	# Test is to make sure that there is no residue that is left behind after a tick. This is to future-proof the testing for any caching, threading. In reality the test will probably need to be refactored to truly test the effects of threading.
+	
+	bM2NSetState default,state1,ruleSet1
+	bM2NDestroyInstance default
+	
+	bM2NTick
+	
+	ifNested BalanceM2N,instances,default,
+		failTest There is still lingering data.
+	else
+		passTest Instance destroyed.
+
+
+
+# destroy ruleSet/state
+defineTest destroy ruleSet/state,
+	balanceM2NDestroyState state1,ruleSet1
+	
+	ifNested BalanceM2N,rules,ruleSet1,state1,
+		failTest was not deleted.
+	else
+		passTest was deleted.
+	
+
+# TODO destroy ruleSet
+defineTest destroy ruleSet,
+	balanceM2NDestroyRuleSet ruleSet1
+	
+	ifNested BalanceM2N,rules,ruleSet1,
+		failTest was not deleted.
+	else
+		passTest was deleted.

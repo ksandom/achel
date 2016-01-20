@@ -1,0 +1,164 @@
+# Unit tests for AchelJson. ~ hidden,unitTest,json
+
+defineTest AchelJson - Internal - to json,
+	setNested ["Local","jsonTestSrc","0",{"A":"1","B":"2","mr nul":"0"}]
+	retrieveResults Local,jsonTestSrc
+	
+	achelJsonVarToJson Local,jsonTest
+	
+	# This is a hack to handel nesting json in a parameter to a feature that doesn't support it yet.
+	retrieveResults Local,jsonTest
+	replace ",
+	replace [",","-"]
+	replace ["({|})","_"]
+	stashResults Local,jsonTest
+	
+	# Note that this expect has been mangled to match the above hack.
+	expect _A:1-B:2-mr nul:0_,~!Local,jsonTest,0!~
+
+defineTest AchelJson - Internal - to var,
+	setNested ["Local","jsonTestSrc","0","{\"A\":\"1\",\"B\":\"2\",\"mr nul\":\"0\"}"]
+	retrieveResults Local,jsonTestSrc
+	
+	achelJsonJsonToVar Local,jsonTest
+	
+	expect 1,~!Local,jsonTest,A!~
+	expect 2,~!Local,jsonTest,B!~
+	expect 0,~!Local,jsonTest,mr nul!~
+
+defineTest AchelJson - Create faucet and send data to it (json->var),
+	createJsonToVarFaucet jsonDemo,Tmp,jsonDemo
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	deliver jsonDemo,default,{"A":"123"}
+	deliver jsonDemo,default,{"A":"124"}
+	deliverAll
+	
+	expect 124,~!Tmp,jsonDemo,A!~
+	
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,echo '{"A":"987"}'
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 987,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - 2 commands - true,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,true;echo '{"A":"765"}'
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 765,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - 2 commands - cd,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,cd /tmp;echo '{"A":"4563"}'
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 4563,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - 3 commands - stderr,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,cd /tmp;echo '{"A":"4562"}';echo example error >&2
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 4562,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - 3 commands - sh/stderr,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,sh -c "cd /tmp;echo '{\"A\":\"4561\"}';echo example error >&2"
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 4561,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - 2 commands - sh,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,sh -c "cd /tmp;echo '{\"A\":\"4560\"}'"
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 4560,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - python,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,echo "print '{\"A\":\"102\"}'" | python
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 102,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+defineTest AchelJson - Create shell json faucet - bash,
+	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,echo "echo '{\"A\":\"101\"}'" | bash
+	createNullFaucet jsonNull
+	createPipe jsonDemo,jsonNull
+	
+	deliverAll 100000
+	
+	expect 101,~!Tmp,jsonDemo,A!~
+
+	deleteFaucet jsonDemo
+	deleteFaucet jsonNull
+	unset Tmp,jsonDemo
+
+
+
+
+
+
+# TODO This should probably be mored out to a new/different module
+defineTest AchelDump - faucet,
+	createDumpFaucet dumpDemo,DumpDemo
+	createNullFaucet dumpNull
+	createPipe dumpDemo,dumpNull
+	deliver dumpDemo,default,hello
+	
+	deliverAll
+	expect hello,~!DumpDemo,0!~
+	
+	
+	deleteFaucet dumpDemo
+	deleteFaucet dumpNull

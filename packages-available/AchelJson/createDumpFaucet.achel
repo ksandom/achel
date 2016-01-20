@@ -1,0 +1,6 @@
+# Create a faucet that simply dumps everything it recieves on the default channel to a specified category. --createDumpFaucet=faucetName,Category ~ achel,dump,faucet
+parameters faucetName,Category 
+
+createCallFaucet ~!Local,faucetName!~,setCategory,~!Local,Category!~
+createNullFaucet ~!Local,faucetName!~Null
+createPipe ~!Local,faucetName!~,~!Local,faucetName!~Null

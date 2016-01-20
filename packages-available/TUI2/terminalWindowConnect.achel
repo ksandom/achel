@@ -1,0 +1,4 @@
+# Handel terminal window connect ~ tui2,terminalWindow,tcp,hidden
+#onDefine registerForEvent SocketServerFaucet,terminalWindowConnect,terminalWindowConnect
+
+registerForM2N terminalWindow,~!Global,terminalWindowConnect-0!~,user

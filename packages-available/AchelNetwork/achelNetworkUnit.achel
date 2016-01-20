@@ -1,0 +1,47 @@
+# Unit tests for achelNetwork ~ network,unitTest,hidden
+
+defineTest network can send/recieve message while binding to 127.0.0.1,
+	# create a listener
+	createSocketServerFaucet serverSocket,achelNetworkUnitConnect,achelNetworkUnitDisconnect,,12345,127.0.0.1
+	deliver serverSocket,_control,inEOL n
+	deliver serverSocket,_control,outEOL n
+	createNullFaucet null
+	createPipe serverSocket,null
+
+	# create a destination
+	createSemiInlineCallFaucet destination,achelNetworkUnitDestination,
+	createPipe destination,null
+	
+	# create a client connection
+	createSocketClientFaucet clientSocket,,,,12345,127.0.0.1
+	deliver clientSocket,_control,inEOL n
+	deliver clientSocket,_control,outEOL n
+	
+	# Make sure the server know about the connection. The server socket only checks for new connections when it it polled for new data. We normally wouldn't have to worry about this because the timer would get it. But because we are running this test non-interruptable, we have to invoke the deliverAll.
+	deliverAll
+	
+	# send something through
+	deliver clientSocket,default,correctValue
+	
+	# invoke delivery
+	deliverAll
+	
+	# test that it arrived
+	if ~!UnitNetwork,destination!~,==,,
+		failTest Got no value.
+	elseIf ~!UnitNetwork,destination!~,==,correctValue,
+		passTest Got correct value.
+	else
+		failTest Got incorrect value "~!UnitNetwork,destination!~".
+	
+	# Clean up
+	unset UnitNetwork,destination
+	deleteFaucet serverSocket
+	deleteFaucet clientSocket
+	deleteFaucet destination
+	deleteFaucet null
+	deliverAll
+
+
+
+

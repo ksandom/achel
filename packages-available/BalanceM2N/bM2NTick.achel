@@ -1,0 +1,49 @@
+# bM2NTick ~ balanceM2N,hidden
+
+# TODO isolate!
+retrieveResults BalanceM2N,instances
+
+loop
+	# Get current state
+	setNested ["BalanceM2N","current",~!BalanceM2N,instances,~!Result,key!~!~]
+	
+	# Address is like this: BalanceM2N,rules,ruleSet1,state1,rule1,inputs
+	# ~!BalanceM2N,current,state!~
+	# ~!BalanceM2N,current,ruleSet!~
+	# ~!BalanceM2N,current,instanceName!~
+	
+	set ["Tmp","rules",~!BalanceM2N,rules,~!BalanceM2N,current,ruleSet!~,~!BalanceM2N,current,state!~!~]
+	isolate
+		retrieveResults Tmp,rules
+		loop
+			# Gather input
+			setNested BalanceM2N,current,rule,~!Result,key!~
+			
+			debug 0,bM2NTick: Trying to process instanceName="~!BalanceM2N,current,instanceName!~" ruleSet="~!BalanceM2N,current,ruleSet!~" state="~!BalanceM2N,current,state!~" rule="~!BalanceM2N,current,rule!~"
+			
+			set ["Tmp","inputs",~!BalanceM2N,rules,~!BalanceM2N,current,ruleSet!~,~!BalanceM2N,current,state!~,~!BalanceM2N,current,rule!~,inputs!~]
+			isolate
+				retrieveResults Tmp,inputs
+				loop
+					setNested BalanceM2N,current,inputVariable,~!Result,key!~
+					callFeature ~!Result,line!~
+			
+			# perform operations
+			isolate
+				callFeature ~!BalanceM2N,rules,~!BalanceM2N,current,ruleSet!~,~!BalanceM2N,current,state!~,~!BalanceM2N,current,rule!~,process!~
+			
+			# output
+			set ["Tmp","outputs",~!BalanceM2N,rules,~!BalanceM2N,current,ruleSet!~,~!BalanceM2N,current,state!~,~!BalanceM2N,current,rule!~,outputs!~]
+			isolate
+				retrieveResults Tmp,outputs
+				loop
+					callFeature ~!Result,line!~
+					
+			
+			# cleanup?
+
+# cleanup
+unset Tmp,rules
+unset Tmp,inputs
+unset Tmp,outputs
+

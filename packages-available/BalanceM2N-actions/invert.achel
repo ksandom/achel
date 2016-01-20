@@ -1,0 +1,3 @@
+# For use with BalanceM2N. Effectively inverts a value in BalanceM2N,current,value by multiplying it by -1. Note that this does not do any manipulation of the center. ~ BalanceM2N,validation,range,conversion
+
+multiply -1

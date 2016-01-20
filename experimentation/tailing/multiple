@@ -1,0 +1,36 @@
+#!/bin/bash
+# Connect to several hosts on a single terminal
+# Must be passwordless keybased authentication
+
+# This was the first proof of concept as an interface to multiple hosts and has been superseeded by mass --tui
+
+
+tmpFile="/tmp/readwrite"
+
+function followHost
+{
+	host="$1"	
+	hostName="$2"
+
+	tail --pid=$$ -F "$tmpFile" 2>/dev/null | ssh -T $host 2>&1 |while read in;do 
+		echo "$hostName: $in"
+	done
+	echo "Exited $hostName"
+}
+
+rm -f "$tmpFile"
+touch "$tmpFile" 
+
+for i in $*;do 
+	detail1=`echo "$i"|cut -d^ -f1`
+	detail2=`echo "$i"|cut -d^ -f2`
+	followHost $detail1 $detail2 &
+done
+
+while read line;do
+	echo "$line" >> "$tmpFile"
+done
+
+rm -f "$tmpFile"
+echo "Good bye"
+

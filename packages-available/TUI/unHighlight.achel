@@ -1,0 +1,3 @@
+# Specify a live highlight for output ~ tui,highlight
+
+removeFaucetConfigItemEntry colors,Rules,,(~!Global,unHighlight-0!~)

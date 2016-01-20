@@ -1,0 +1,17 @@
+# Select some stuff from M2N to be joined together. --m2nSelect=leftOrRight,[userOrThing],searchRegex . leftOrRight specifies which side of the join you are selecting and defaults to "right". By convention users go on the left and everything else goes on the right. There are some cool things you can do with this. userOrThing specifies what type of thing you are searching for. While this can be implied by the convention (hense it's optional), there are some pretty cool exceptions. Please read the documentation for more information. ~ m2n,select
+
+retrieveResults M2N,items
+requireItem type,~!Global,m2nSelect-1!~
+if ~!Global,m2nSelect-2!~,!=,,
+	requireEach ~!Global,m2nSelect-2!~
+
+set Tmp,m2nSide,~!Global,m2nSelect-0!~
+if ~!Tmp,m2nSide!~,==,,
+	set Tmp,m2nSide,right
+
+countToVar Tmp,selectCount
+debug 2,Selected ~!Tmp,selectCount!~ items of type ~!Global,m2nSelect-1!~ matching "~!Global,m2nSelect-2!~" for placement on the ~!Tmp,m2nSide!~ side.
+unset Tmp,selectCount
+
+stashResults M2N,~!Tmp,m2nSide!~
+unset Tmp,m2nSide

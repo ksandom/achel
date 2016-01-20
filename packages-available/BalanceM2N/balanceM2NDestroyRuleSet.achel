@@ -1,0 +1,8 @@
+# Destroy a BalanceM2N ruleSet. --balanceM2NDestroyRuleSet=ruleSetName ~ balanceM2N,bm2n,destroy,ruleset
+parameters ruleSetName
+
+if ~!Local,ruleSetName!~,==,,
+	debug 1,balanceM2NDestroyState: No ruleSet specified.
+
+else
+	unset BalanceM2N,rules,~!Local,ruleSetName!~

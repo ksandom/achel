@@ -1,0 +1,5 @@
+# Handel disconnection for the unit tests. ~ network,hidden
+#onDefine registerForEvent SocketServerFaucet,achelNetworkUnitDisconnect,achelNetworkUnitHandelDisconnect
+
+debug 1,achelNetworkUnitHandelDisconnect: Got connection ~!Global,achelNetworkUnitHandelDisconnect-0!~
+

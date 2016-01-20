@@ -1,0 +1,9 @@
+# Test internal faucet config ~ test,faucet
+
+createRegexFaucet regex
+
+addFaucetConfigItemEntry regex,rules,,asd1,vfd,qwe,ret
+addFaucetConfigItemEntry regex,rules,,asd2,gfd,try,yw
+addFaucetConfigItemEntry regex,rules,,asd3,gfd
+
+getFaucetConfigItem regex

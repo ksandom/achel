@@ -1,0 +1,13 @@
+# Join two things together from the leftEntry and rightEntry  ~ m2n,join,hidden
+
+debug 2,joinWorker: Going to join ~!M2N,leftEntry,faucetName!~,~!M2N,leftEntry,channel!~ to ~!M2N,rightEntry,faucetName!~,~!M2N,rightEntry,channel!~
+
+# Make the join
+if ~!M2N,m2nReadMode!~,==,1,
+	createPipe ~!M2N,leftEntry,faucetName!~,~!M2N,rightEntry,faucetName!~,~!M2N,leftEntry,channel!~,~!M2N,rightEntry,channel!~
+if ~!M2N,m2nWriteMode!~,==,1,
+	createPipe ~!M2N,rightEntry,faucetName!~,~!M2N,leftEntry,faucetName!~,~!M2N,rightEntry,channel!~,~!M2N,leftEntry,channel!~
+
+# Register that we've made the join
+setNested M2N,items,~!M2N,rightEntry,key!~,connected,~!M2N,leftEntry,key!~,~!M2N,leftEntry,key!~
+setNested M2N,items,~!M2N,leftEntry,key!~,connected,~!M2N,rightEntry,key!~,~!M2N,rightEntry,key!~

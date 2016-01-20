@@ -1,0 +1,37 @@
+# Test MetaFaucet ~ test
+
+v
+
+mkdir bob
+
+createPipe terminal,bob,,bobIn
+createPipe bob,terminal,bobOut,
+
+setFaucetConfigItem bob,description,,A test metaFaucet
+
+cd bob
+
+createCallFaucet prefixItWorksDebug,toString,It works debug!!!> ~%value%~
+createCallFaucet prefixItWorksOther,toString,It works other!!!> ~%value%~
+
+createRegexFaucet inputSelector
+
+bindFaucetConfigItem inputSelector,rules,,rules,
+bindFaucetConfigItem inputSelector,defaultOut,,defaultOut,
+
+# Note that I have used different channels (bobIn, bobOut) simply to show how to do it. They could easily be the same channel without causing any conflicts.
+createPipe .,inputSelector,bobIn,
+
+createPipe inputSelector,prefixItWorksDebug,debug,default
+createPipe inputSelector,prefixItWorksOther,other,default
+
+createPipe prefixItWorksDebug,.,,bobOut
+createPipe prefixItWorksOther,.,,bobOut
+
+cd ..
+
+addFaucetConfigItemEntry bob,rules,,massMode,,^debug.*$,debug
+setFaucetConfigItem bob,defaultOut,,other
+
+
+V

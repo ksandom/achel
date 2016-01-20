@@ -1,0 +1,4 @@
+# Delegate specific output to another terminal. --delegate=regex,terminalID ~ tui
+
+addFaucetConfigItemEntry delegation,rules,,~!Global,delegate-0!~,,~!Global,delegate-0!~,~!Global,delegate-0!~
+createPipe delegation,TCPdelegation,~!Global,delegate-0!~,~!Global,delegate-1!~

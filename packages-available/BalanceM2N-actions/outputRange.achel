@@ -1,0 +1,5 @@
+# Converts the current value (BalanceM2N,current,value) to the defined output range and validates/asserts that it is not out of range. Therefore it is still valuable to do this even if the input range is already -1,0,1. --outputRange=min,center,max ~ BalanceM2N,validation,range,conversion
+parameters {"min":"-1","center":"0","max":"-1"}
+
+rangeConvert Local,outRangeValue,~!BalanceM2N,current,value!~,-1,0,1,~!Local,min!~,~!Local,center!~,~!Local,max!~
+setNested BalanceM2N,current,value,~!Local,outRangeValue!~

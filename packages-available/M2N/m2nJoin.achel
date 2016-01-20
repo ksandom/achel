@@ -1,0 +1,6 @@
+# Join the left and right items in a many to many relationship. --join=[writeMode] . writeMode can be one of rw,ro,wo ~ m2n
+#onDefine aliasFeature m2nJoin,join
+
+showNesting
+joinLooper ~!Global,m2nJoin!~,joinWorker
+

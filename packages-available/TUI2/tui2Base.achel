@@ -1,0 +1,41 @@
+# The foundation of the text user interface 2 ~ interactive,tui
+
+showNesting
+
+# Create a faucet to handel the terminal
+createTermFaucet terminal
+registerForM2N terminal,,user
+
+
+# Create faucets to handel the core
+createInlineCallFaucet call
+createCallFaucet prefixAchelOut,toString,achel> ~%value%~
+create2WayThroughFaucet core
+createThroughFaucet output
+
+createPipe core,call,inside,default
+createPipe call,core,default,inside
+createPipe output,core,default,inside
+createPipe core,prefixAchelOut,inside,default
+createPipe prefixAchelOut,core,default,inside
+
+setFaucetAs output,General,echoObject
+registerForM2N core,,thing
+
+
+# Create null
+createNullFaucet null
+registerForM2N null,,thing
+
+
+# Create faucets to handel local terminals
+createSocketServerFaucet terminalWindow,terminalWindowConnect,terminalWindowDisconnect,terminalWindowClose,0,
+deliver terminalWindow,_control,inEOL rn
+deliver terminalWindow,_control,outEOL rn
+createPipe terminalWindow,null
+# Registration happens in terminalWindowConnect automattically when a connection is made.
+
+
+# For debugging
+# createPipe terminal,core
+# createPipe core,terminal

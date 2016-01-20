@@ -1,0 +1,7 @@
+# Print out the current value at this moment. This macro is entirely for convenience when debugging. --bM2NDebug=[variableName][,commentToIdentifyLine] ~ debug,BalanceM2N
+parameters {"variableName":"value","commentToIdentifyLine":"No comment"}
+
+set Local,commentToIdentifyLine,~!Global,bM2NDebug-1!~
+setIfNothing Local,commentToIdentifyLine,No comment.
+
+debug 1,BalanceM2N-debug: ~!Local,variableName!~=~!BalanceM2N,current,~!Local,variableName!~!~ - ~!Local,commentToIdentifyLine!~

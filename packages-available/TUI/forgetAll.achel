@@ -1,0 +1,3 @@
+# Forget tracking to do with a particular host. --forgetHost=hostname ~ forget,host
+
+deliver lastSeen,_control,forgetAll
