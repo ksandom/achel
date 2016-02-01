@@ -1,6 +1,0 @@
-# Connect to all hosts returned from --list ~ tui
-
-loop
-	disconnectHost ~!Result,hostName!~,~!Result,IP!~
-
-mode mass
