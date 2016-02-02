@@ -3,7 +3,7 @@
 # TODO Test that this is actually working.
 break
 deliverAll
-disconnect
+triggerEvent Achel,shutdown
 
 getFaucets
 loopMacro internalAchelShutdown
