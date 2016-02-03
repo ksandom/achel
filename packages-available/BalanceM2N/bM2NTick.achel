@@ -19,7 +19,7 @@ loop
 			# Gather input
 			setNested BalanceM2N,current,rule,~!Result,key!~
 			
-			debug 0,bM2NTick: Trying to process instanceName="~!BalanceM2N,current,instanceName!~" ruleSet="~!BalanceM2N,current,ruleSet!~" state="~!BalanceM2N,current,state!~" rule="~!BalanceM2N,current,rule!~"
+			debug 1,bM2NTick: Trying to process instanceName="~!BalanceM2N,current,instanceName!~" ruleSet="~!BalanceM2N,current,ruleSet!~" state="~!BalanceM2N,current,state!~" rule="~!BalanceM2N,current,rule!~"
 			
 			set ["Tmp","inputs",~!BalanceM2N,rules,~!BalanceM2N,current,ruleSet!~,~!BalanceM2N,current,state!~,~!BalanceM2N,current,rule!~,inputs!~]
 			isolate
