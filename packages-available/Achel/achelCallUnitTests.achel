@@ -10,7 +10,7 @@ createPipe unitCall,unitNull
 
 # Do something that will give us a result set, then see how many results we got.
 deliver unitCall,unitCall,
-	help
+	help all
 	first 5
 	countToVar Tmp,unitCallResultCountInsideCall
 
