@@ -47,8 +47,7 @@ function repoRemoveParm
 	parmFile="$configDir/repos/$repoName/parameters.json"
 	
 	if [ -f "$parmFile" ]; then
-		# TODO This is not saving.... The command works on the command line, but doesn't save.
-		achel --collectionLoadArbitrary=RepoParms,"$parmFile" --unset="RepoParms,$parameterName"
+		achel --collectionLoadArbitrary=RepoParms,"$parmFile" --setNested="RepoParms,$parameterName,soThatTheChangedFlagWillBeSet" --unset="RepoParms,$parameterName"
 	fi
 }
 
