@@ -1,0 +1,9 @@
+# Create a prototyupe AchelRealityBridge Faucet. --createPrototypeARBridge=faucetName,Category,variable . Note that this feature will be obsolete and quickly removed in a couple of weeks. To find the replacement, do --help=ARBridge . ~ ARBridge,arbridge,reality,bridge
+parameters {"faucetName":"AR","Category":"AR","variable":"data"}
+
+getARBridgePath Local,AR
+createJsonShellFaucet ~!Local,faucetName!~,~!Local,Category!~,~!Local,variable!~,cd ~!Local,AR!~;./sudo servo1-stdin.py
+
+createTimer ARBPoll,100000
+registerForEvent Timer,ARBPoll,
+	deliver ~!Local,faucetName!~,default,~!AR,data,0!~,~!AR,data,1!~,~!AR,data,2!~,~!AR,data,3!~,~!AR,data,4!~,~!AR,data,5!~,~!AR,data,6!~,~!AR,data,7!~,~!AR,data,8!~
