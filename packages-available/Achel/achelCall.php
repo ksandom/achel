@@ -132,6 +132,7 @@ class InlineCallFaucet extends ThroughBasedFaucet
 						#print_r($tmpReturnedResult);
 						if (is_array($returnedResult)) $this->core->setResultSetNoRef($tmpReturnedResult, __CLASS__." Command={$parts[0]} $parts[1]}");
 						# unset($tmpReturnedResult); // This is needed since setResultSet takes a reference. Therefore the next iteration within the current preGet call overwrites result set regardless of whether we want it to or not.
+						# $this->core->debug(0, "Result type=".gettype($returnedResult)." count=".count($returnedResult));
 						$this->clearInput($channel);
 						$gotSomething=true;
 					}

@@ -10,6 +10,7 @@ registerForEvent Tui,quit,nested
 getHostName
 
 # Create the main faucets
+createNullFaucet null
 createTermFaucet terminal
 createFileFaucet log,/tmp/log
 createInlineCallFaucet iCall

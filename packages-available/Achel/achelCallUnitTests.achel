@@ -12,13 +12,16 @@ createPipe unitCall,unitNull
 deliver unitCall,unitCall,
 	help all
 	first 5
+	# ### INSIDE
 	countToVar Tmp,unitCallResultCountInsideCall
 
+# ### OUTSIDE
 deliverAll 100
 countToVar Tmp,unitCallResultCountOutsideCall
 
 # Here we want to make sure that the previous resultSet is still available, so we do a another count, but this time from within the same scope as where we should find the resultSet.
 # This is an important point to understand. If the count was done within the macro again, it would almost certainly work since the problem appears to be at the CallFaucet, not the core. However the fix will likely be a combination of at the core and in the CallFaucet.
+# ### SECOND
 deliver unitCall,unitCall,
 	countToVar Tmp,unitCallResultCountSecondCall
 

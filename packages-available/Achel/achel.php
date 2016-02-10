@@ -231,7 +231,7 @@ class Faucets extends Module
 				$this->currentFaucet->deliver($parms[0], $parms[1], $parms[2]);
 				break;
 			case 'deliverAll':
-				$this->rootFaucet->deliverAll($this->core->get('Global', $event));
+				return $this->rootFaucet->deliverAll($this->core->get('Global', $event));
 				break;
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
@@ -1204,11 +1204,11 @@ class MetaFaucet extends ThroughBasedFaucet
 			}
 			else
 			{
-				return $returnValue;
+				return $this->core->getResultSet();
 			}
 		}
 		
-		return $returnValue;
+		return $this->core->getResultSet();
 	}
 	
 	function tracePipes($fromFaucet, $fromChannel, $toFaucet, $toChannel, $depthLimit=10)
