@@ -7,7 +7,7 @@
 function documentationAddRepo
 {
 	repoName="$1"
-	base="$configDir/docs/repos/$repoName"
+	base="$configDir/docs/$repoName"
 	repoDir="$configDir/repos/$repoName"
 	
 	echo "documentationAddRepo: Adding repo \"$repoName\"."
@@ -15,15 +15,8 @@ function documentationAddRepo
 	cd "$base"
 	
 	# Link the overview and readme.md
-	linkSrc "$repoDir/readme.md" "readme.md"
-	linkSrc "$repoDir/docs" "overview"
-	
-	cd "$base/packages"
-	listPackages "$repoName" | while read package; do
-		linkSrc "$repoDir/packages-available/$package/docs" "$package"
-	done
-	
-	# TODO test this. It's not yet called from anywhere.
+	linkSrc "$repoDir/readme.md" "$repoName-readme.md"
+	linkSrc "$repoDir/docs" "$repoName-howTos"
 }
 
 function documentationRemoveRepo
@@ -44,8 +37,8 @@ function documentationAddProfile
 	
 	echo "documentationAddProfile: Adding profile \"$profileName\"."
 	
-	mkdir -p "$base"
-	cd "$base"
+	mkdir -p "$base/packages"
+	cd "$base/packages"
 	listPackagesForProfile "$profileName" | while read package; do
 		linkSrc "$profileDir/packages/$package/docs" "$package"
 	done
