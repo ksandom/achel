@@ -2,7 +2,7 @@
 parameters {"faucetName":"AR","Category":"AR","variable":"data"}
 
 getARBridgePath Local,AR
-createJsonShellFaucet ~!Local,faucetName!~,~!Local,Category!~,~!Local,variable!~,sudo ~!Local,AR!~/servo1-stdin.py
+createProcFaucet ~!Local,faucetName!~,sudo ~!Local,AR!~/servo1-stdin.py
 
 createTimer ARBPoll,100000
 registerForEvent Timer,ARBPoll,
