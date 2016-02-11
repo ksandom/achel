@@ -1,8 +1,14 @@
 #!/usr/bin/python -u
 
-import RPi.GPIO as GPIO
+try:
+	import RPi.GPIO as GPIO
+except:
+	# TODO Catching this and then continuing is at the expense of getting something meaningful on STDERR. Find a better solution.
+	print "{\"state\":\"not running\", \"reason\":\"Could not load GPIO.\"}"
+	
 import time
 import sys
+import json
 
 '''
 Pins
