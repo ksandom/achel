@@ -19,6 +19,9 @@ TODO define structure
 
 '''
 
+import time
+import sys
+import json
 
 try:
 	import RPi.GPIO as GPIO
@@ -26,10 +29,8 @@ except:
 	# TODO Catching this and then continuing is at the expense of getting something meaningful on STDERR. Find a better solution.
 	# TODO Use new self.state()
 	print "{\"state\":\"not running\", \"reason\":\"Could not load GPIO.\"}"
+	# arb.error("0", "no GPIO", "GPIO could not be loaded. No GPIO operations will work. At this point you are in testing only mode.")
 	
-import time
-import sys
-import json
 
 '''
 Pins
@@ -47,10 +48,18 @@ Pins
 
 class AchelRealityBridge:
 	def __init__(self):
+		self.setDefaultValues()
+		self.configureGPIO()
+	
+	def configureGPIO(self):
+		try:
+			GPIO.setmode(GPIO.BOARD)
+		except:
+			self.debug(2, "Could not start GPIO.")
+	
+	def setDefaultValues(self):
 		self.pins={}
 		self.inputData={}
-		
-		GPIO.setmode(GPIO.BOARD)
 		
 		minMS=0.5
 		centerMS=1.5
@@ -87,8 +96,8 @@ class AchelRealityBridge:
 			inMin=0
 		
 		self.debug(2, "In range " + str(inMin) + " - " + str(inMax))
-		
-		
+	
+	def registerAllPins(self):
 		self.registerPin(7, 0, inMin, inMax, outMin, outMax, outCenter, frequency)
 		self.registerPin(11, 1, inMin, inMax, outMin, outMax, outCenter, frequency)
 		self.registerPin(12, 2, inMin, inMax, outMin, outMax, outCenter, frequency)
@@ -97,6 +106,14 @@ class AchelRealityBridge:
 		self.registerPin(16, 5, inMin, inMax, outMin, outMax, outCenter, frequency)
 		self.registerPin(18, 6, inMin, inMax, outMin, outMax, outCenter, frequency)
 		self.registerPin(22, 7, inMin, inMax, outMin, outMax, outCenter, frequency)
+	
+	def oldInit(self):
+		
+		self.configureGPIO()
+		self.setDefaultValues()
+		self.registerAllPins()
+		
+		
 
 	def registerPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter, frequency):
 		
@@ -176,10 +193,13 @@ class AchelRealityBridge:
 
 	def quit(self, message):
 		self.debug(2, message)
-		for pin in self.pins:
-			self.pins[pin]['physicalPin'].stop()
-		
-		GPIO.cleanup()
+		try:
+			for pin in self.pins:
+				self.pins[pin]['physicalPin'].stop()
+			
+			GPIO.cleanup()
+		except:
+			self.error(1, 'no GPIO', 'Could not cleanup GPIO. Not available?')
 
 
 	def oldMain(self):
@@ -213,9 +233,23 @@ class AchelRealityBridge:
 		except KeyboardInterrupt:
 			self.quit("Keyboard intrerupt")
 	
+	
+	def processLine(self, line):
+		# Get data from line
+		try:
+			data=json.loads(line)
+			# Work out what do do with it
+			if (data['dataType'] == "ping"):
+				self.returnData('pong', "0", "", "Returned from requested ping.")
+			
+		except ValueError:
+			self.error(1, "notJson", "Recieved data was not decodable as json.")
+		except:
+			self.debug(1, "got here?!")
+	
 	def returnData(self, dataType, level, shortMessage, message):
 		result={"dataType":dataType, "level":level, "shortMessage":shortMessage, "message":message}
-		json.dumps(result)
+		print json.dumps(result)
 	
 	def debug(self, level, message):
 		self.returnData("debug", level, "NA", message)
@@ -228,12 +262,13 @@ class AchelRealityBridge:
 	
 	def main(self):
 		try:
-			sys.stdin.readline()
+			while True:
+				self.processLine(sys.stdin.readline())
 		except KeyboardInterrupt:
 			self.state("terminating", "recieved interrupt")
 			self.quit("Keyboard intrerupt")
 		finally:
-			controller.remove_listener(listener)
+			pass
 
 
 arb = AchelRealityBridge()
