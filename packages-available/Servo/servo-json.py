@@ -9,11 +9,13 @@ TODO define structure
 	Input
 		config
 		data
+		ping
 
 	Output
 		debug
 		error
 		state
+		pong
 
 
 
@@ -241,11 +243,13 @@ class AchelRealityBridge:
 			# Work out what do do with it
 			if (data['dataType'] == "ping"):
 				self.returnData('pong', "0", "", "Returned from requested ping.")
+			else:
+				self.debug(0, "Unknown dataType")
 			
 		except ValueError:
 			self.error(1, "notJson", "Recieved data was not decodable as json.")
-		except:
-			self.debug(1, "got here?!")
+		except KeyError:
+			self.error(1, "missing dataType", "Json was recieved, but dataType was not in it.")
 	
 	def returnData(self, dataType, level, shortMessage, message):
 		result={"dataType":dataType, "level":level, "shortMessage":shortMessage, "message":message}
