@@ -1,0 +1,8 @@
+# Unit tests for the Servo package. ~ unitTest,hidden,servo
+
+defineTest Servo - getPath,
+	getARBPath Local,servoPath
+	expectNot ,~!Local,servoPath!~
+
+# defineTest Servo - does it start,
+# 	createProcFaucet servoTest,
