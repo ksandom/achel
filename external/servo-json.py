@@ -30,7 +30,7 @@ try:
 except:
 	# TODO Catching this and then continuing is at the expense of getting something meaningful on STDERR. Find a better solution.
 	# TODO Use new self.state()
-	print "{\"state\":\"not running\", \"reason\":\"Could not load GPIO.\"}"
+	print "{\"dataType\":\"error\",\"level\":\"0\",\"shortMessage\":\"not running\", \"message\":\"Could not load GPIO.\"}"
 	# arb.error("0", "no GPIO", "GPIO could not be loaded. No GPIO operations will work. At this point you are in testing only mode.")
 	
 
