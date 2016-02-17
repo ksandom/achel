@@ -1,4 +1,4 @@
-# Get the path to LMJson. --getLMJsonPath=Category,variable ~ lmtracker,json,hidden
+# Get the path to the Achel Reality Bridge experimentation. --getLMJsonPath=Category,variable ~ lmtracker,json,hidden
 parameters Category,variable
 
 setNested ~!Local,Category!~,~!Local,variable!~,~!General,configDir!~/repos/achelRealityBridge/experimentation
