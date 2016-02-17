@@ -30,7 +30,7 @@ try:
 except:
 	# TODO Catching this and then continuing is at the expense of getting something meaningful on STDERR. Find a better solution.
 	# TODO Use new self.state()
-	print "{\"dataType\":\"error\",\"level\":\"0\",\"shortMessage\":\"not running\", \"message\":\"Could not load GPIO.\"}"
+	print "{\"command\":\"error\",\"level\":\"0\",\"shortMessage\":\"not running\", \"message\":\"Could not load GPIO.\"}"
 	# arb.error("0", "no GPIO", "GPIO could not be loaded. No GPIO operations will work. At this point you are in testing only mode.")
 	
 
@@ -241,18 +241,18 @@ class AchelRealityBridge:
 		try:
 			data=json.loads(line)
 			# Work out what do do with it
-			if (data['dataType'] == "ping"):
+			if (data['command'] == "ping"):
 				self.returnData('pong', "0", "", "Returned from requested ping.")
 			else:
-				self.debug(0, "Unknown dataType")
+				self.debug(0, "Unknown command")
 			
 		except ValueError:
 			self.error(1, "notJson", "Recieved data was not decodable as json.")
 		except KeyError:
-			self.error(1, "missing dataType", "Json was recieved, but dataType was not in it.")
+			self.error(1, "missing command", "Json was recieved, but command was not in it.")
 	
-	def returnData(self, dataType, level, shortMessage, message):
-		result={"dataType":dataType, "level":level, "shortMessage":shortMessage, "message":message}
+	def returnData(self, command, level, shortMessage, message):
+		result={"command":command, "level":level, "shortMessage":shortMessage, "message":message}
 		print json.dumps(result)
 	
 	def debug(self, level, message):
