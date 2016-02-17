@@ -36,3 +36,24 @@ defineTest Servo - ping,
 	unset ServoTest
 	deleteFaucet servoTest
 
+defineTest Servo - Send some data,
+	getARBPath Local,servoPath
+	createProcFaucet servoTest,~!Local,servoPath!~/servo-json.py
+	createJsonToVarFaucet jsonFaucet,ServoTest,returnedData
+	createNullFaucet null
+	createPipe jsonFaucet,null
+	createPipe servoTest,jsonFaucet
+	
+	deliverAll 10000
+	
+	deliver servoTest,,{"command":"setData","data":{"7":"100","11":"90"}}
+	
+	deliverAll 10000
+	
+	if ~!ServoTest,returnedData,message!~,==,Unknown command,
+		failTest Not implemented
+	else
+		failTest Unknown result "~!ServoTest,returnedData,message!~"
+	
+	unset ServoTest
+	deleteFaucet servoTest
