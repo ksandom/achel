@@ -252,7 +252,7 @@ class AchelRealityBridge:
 			if (data['command'] == "ping"):
 				self.returnData('pong', "0", "", "Returned from requested ping.")
 			elif (data['command'] == "setAllGenericServos"):
-				registerAllPins(self)
+				self.registerAllPins()
 				self.debug(2, "Set all pins to generic PWM based servos.")
 			else:
 				self.debug(0, "Unknown command \""+data['command']+"\"")
