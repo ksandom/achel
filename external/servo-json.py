@@ -211,7 +211,6 @@ class AchelRealityBridge:
 		except:
 			self.error(1, 'no GPIO', 'Could not cleanup GPIO. Not available?')
 
-
 	def oldMain(self):
 		# Startup
 		
@@ -244,6 +243,11 @@ class AchelRealityBridge:
 			self.quit("Keyboard intrerupt")
 	
 	
+	def setPins(self, data):
+		for key in data:
+			# TODO write this
+			pass
+	
 	def processLine(self, line):
 		# Get data from line
 		try:
@@ -254,6 +258,8 @@ class AchelRealityBridge:
 			elif (data['command'] == "setAllGenericServos"):
 				self.registerAllPins()
 				self.debug(2, "Set all pins to generic PWM based servos.")
+			elif (data['command'] == "setData"):
+				setPins(data['data'])
 			else:
 				self.debug(0, "Unknown command \""+data['command']+"\"")
 			
