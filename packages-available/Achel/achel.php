@@ -228,7 +228,6 @@ class Faucets extends Module
 				
 			case 'deliver':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
-				print_r($parms);
 				$this->currentFaucet->deliver($parms[0], $parms[1], $parms[2]);
 				break;
 			case 'deliverAll':
