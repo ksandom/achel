@@ -97,17 +97,26 @@ class AchelRealityBridge:
 		except:
 			inMin=0
 		
+		
+		self.servoInMin=inMin
+		self.servoinMax=inMax
+		self.servoOutMin=outMin
+		self.servoOutMax=outMax
+		self.servoOutCenter=outCenter
+		self.servoFrequency=frequency
+		
 		self.debug(2, "In range " + str(inMin) + " - " + str(inMax))
 	
 	def registerAllPins(self):
-		self.registerPin(7, 0, inMin, inMax, outMin, outMax, outCenter, frequency)
-		self.registerPin(11, 1, inMin, inMax, outMin, outMax, outCenter, frequency)
-		self.registerPin(12, 2, inMin, inMax, outMin, outMax, outCenter, frequency)
-		self.registerPin(13, 3, inMin, inMax, outMin, outMax, outCenter, frequency)
-		self.registerPin(15, 4, inMin, inMax, outMin, outMax, outCenter, frequency)
-		self.registerPin(16, 5, inMin, inMax, outMin, outMax, outCenter, frequency)
-		self.registerPin(18, 6, inMin, inMax, outMin, outMax, outCenter, frequency)
-		self.registerPin(22, 7, inMin, inMax, outMin, outMax, outCenter, frequency)
+		# TODO finish converting this
+		self.registerPin(7, 0, self.servoInMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(11, 1, self.servoInMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(12, 2, self.servoInMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(13, 3, self.servoInMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(15, 4, self.servoInMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(16, 5, self.servoInMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(18, 6, self.servoInMin, inMax, outMin, outMax, outCenter, frequency)
+		self.registerPin(22, 7, self.servoInMin, inMax, outMin, outMax, outCenter, frequency)
 	
 	def oldInit(self):
 		
@@ -243,6 +252,9 @@ class AchelRealityBridge:
 			# Work out what do do with it
 			if (data['command'] == "ping"):
 				self.returnData('pong', "0", "", "Returned from requested ping.")
+			if (data['command'] == "setAllGenericServos"):
+				registerAllPins(self)
+				self.debug(2, "Set all pins to generic PWM based servos.")
 			else:
 				self.debug(0, "Unknown command")
 			
