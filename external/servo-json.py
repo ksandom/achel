@@ -227,13 +227,8 @@ class AchelRealityBridge:
 						break
 				else:
 					for pin in self.pins:
-						# print self.pins[pin]['inputBinding']
 						floater=self.getInput(self.pins[pin]['inputBinding'])
-						if isinstance(floater, (float)):
-							scaled=self.scale(floater, self.pins[pin]['inMin'], self.pins[pin]['inMax'], self.pins[pin]['outMin'], self.pins[pin]['outMax'])
-							self.pins[pin]['physicalPin'].ChangeDutyCycle(scaled)
-						else:
-							pass
+						self.setPin(pin, floater)
 				
 				# time.sleep(0.1)
 				
@@ -244,9 +239,21 @@ class AchelRealityBridge:
 	
 	
 	def setPins(self, data):
-		for key in data:
-			# TODO write this
-			pass
+		for pin in data:
+			try:
+				self.setPin(key, data[pin])
+			except:
+				self.error("4", "unknown", "Failure trying to set pin "+pin+".")
+	
+	def setPin(self, pin, value):
+		scaled=self.scale(value, self.pins[pin]['inMin'], self.pins[pin]['inMax'], self.pins[pin]['outMin'], self.pins[pin]['outMax'])
+		
+		try:
+			self.pins[pin]['physicalPin'].ChangeDutyCycle(scaled)
+		except:
+			pass # Already complained about.
+		
+		self.debug("3", "Got data")
 	
 	def processLine(self, line):
 		# Get data from line
@@ -259,7 +266,7 @@ class AchelRealityBridge:
 				self.registerAllPins()
 				self.debug(2, "Set all pins to generic PWM based servos.")
 			elif (data['command'] == "setData"):
-				setPins(data['data'])
+				self.setPins(data['data'])
 			else:
 				self.debug(0, "Unknown command \""+data['command']+"\"")
 			

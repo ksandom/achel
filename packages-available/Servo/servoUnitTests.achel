@@ -54,7 +54,7 @@ defineTest Servo - Send some data,
 	
 	if ~!ServoTest,returnedData,message!~,==,Unknown command,
 		failTest Not implemented
-	elseIf ~!ServoTest,returnedData,message!~,==,Recieved data,
+	elseIf ~!ServoTest,returnedData,message!~,==,Got data,
 		passTest Got confirmation of data.
 	else
 		failTest Unknown result "~!ServoTest,returnedData,message!~"
