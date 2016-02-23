@@ -36,6 +36,28 @@ defineTest Servo - ping,
 	unset ServoTest
 	deleteFaucet servoTest
 
+defineTest Servo - GPIO started,
+	getARBPath Local,servoPath
+	createProcFaucet servoTest,~!Local,servoPath!~/servo-json.py
+	createJsonToVarFaucet jsonFaucet,ServoTest,returnedData
+	createNullFaucet null
+	createPipe jsonFaucet,null
+	createPipe servoTest,jsonFaucet
+	
+	deliverAll 10000
+	
+	deliver servoTest,,{"command":"ping"}
+	
+	deliverAll 10000
+	
+	if ~!ServoTest,returnedData,shortMessage!~,==,gpioStarted,
+		passTest GPIO started
+	else
+		warnTest GPIO not started
+	
+	unset ServoTest
+	deleteFaucet servoTest
+
 defineTest Servo - Send some data,
 	getARBPath Local,servoPath
 	createProcFaucet servoTest,~!Local,servoPath!~/servo-json.py
@@ -56,6 +78,8 @@ defineTest Servo - Send some data,
 		failTest Not implemented
 	elseIf ~!ServoTest,returnedData,message!~,==,Got data,
 		passTest Got confirmation of data.
+	elseIf ~!ServoTest,returnedData,message!~,==,Failure trying to set pin 7.,
+		warnTest Got an error that usually means that GPIO failed to load. If that is the case, you can ignore this test if you are simply testing that the code is working. If you are trying to understand why this isn't working on an actual device that has GPIO pins such as the raspberry Pi; then this will be a good heads up. Check that the python GPIO libraries are installed.
 	else
 		failTest Unknown result "~!ServoTest,returnedData,message!~"
 	

@@ -56,8 +56,10 @@ class AchelRealityBridge:
 	def configureGPIO(self):
 		try:
 			GPIO.setmode(GPIO.BOARD)
+			self.gpioStarted=True
 		except:
 			self.debug(2, "Could not start GPIO.")
+			self.gpioStarted=False
 	
 	def setDefaultValues(self):
 		self.pins={}
@@ -255,6 +257,12 @@ class AchelRealityBridge:
 		
 		self.debug("3", "Got data")
 	
+	def isGpioStarted(self):
+		if (self.gpioStarted):
+			self.returnData("gpioState", "0", "gpioStarted", "NA")
+		else:
+			self.returnData("gpioState", "0", "gpioNotStarted", "NA")
+	
 	def processLine(self, line):
 		# Get data from line
 		try:
@@ -267,6 +275,8 @@ class AchelRealityBridge:
 				self.debug(2, "Set all pins to generic PWM based servos.")
 			elif (data['command'] == "setData"):
 				self.setPins(data['data'])
+			elif (data['command'] == "isGpioStarted"):
+				self.isGpioStarted()
 			else:
 				self.debug(0, "Unknown command \""+data['command']+"\"")
 			
