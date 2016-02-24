@@ -1,0 +1,4 @@
+# Create a faucet that takes json in on the default channel and breaks its components into separate channels. ~ create,faucet,json
+parameters faucetName
+
+pass

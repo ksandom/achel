@@ -1,4 +1,4 @@
-# Unit tests for AchelJson. ~ hidden,unitTest,json
+# Unit tests for AchelJson. ~ hidden,unitTest,json,jsonfaucet
 
 defineTest AchelJson - Internal - to json,
 	setNested ["Local","jsonTestSrc","0",{"A":"1","B":"2","mr nul":"0"}]
@@ -144,6 +144,33 @@ defineTest AchelJson - Create shell json faucet - bash,
 	deleteFaucet jsonNull
 	unset Tmp,jsonDemo
 
+
+defineTest AchelJson - jsonToChannelFaucet,
+	createJsonToChannelsFaucet jsonChannel
+	createDumpFaucet jsonDump,JsonDump
+	createNullFaucet jsonNull
+	createPipe jsonChannel,jsonDump
+	createPipe jsonDump,jsonNull
+	
+	deliver jsonChannel,A,1
+	
+	expect JsonDump,default,{"A":"1"}
+	
+	deleteFaucet jsonChannel
+	deleteFaucet jsonDump
+	deleteFaucet jsonNull
+	
+	unsetCategory JsonDump
+
+defineTest AchelJson - channelToJsonFaucet,
+	createChannelsToJsonFaucet jsonChannel
+	createNullFaucet jsonNull
+	createPipe jsonChannel,jsonNull
+	
+	failTest not implemented
+	
+	deleteFaucet jsonChannel
+	deleteFaucet jsonNull
 
 
 
