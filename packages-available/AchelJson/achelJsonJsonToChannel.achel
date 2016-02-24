@@ -1,0 +1,5 @@
+# AchelJson. Takes all channels, and puts them into one channel. ~ hidden,achel,json,worker
+
+stashResults Local,jsonChannels
+copy ["Local,jsonChannels","Local,jsonChannel,default"]
+retrieveResults Local,jsonChannel

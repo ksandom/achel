@@ -144,17 +144,29 @@ defineTest AchelJson - Create shell json faucet - bash,
 	deleteFaucet jsonNull
 	unset Tmp,jsonDemo
 
+defineTest AchelJson - jsonToChannel,
+	setNested Local,example,A,1
+	retrieveResults Local,example
+	
+	achelJsonJsonToChannel
+	
+	stashResults Local,example
+	
+	expect -{"default":{"A":"1"}},-~!Local,example!~
+
 
 defineTest AchelJson - jsonToChannelFaucet,
 	createJsonToChannelsFaucet jsonChannel
 	createDumpFaucet jsonDump,JsonDump
 	createNullFaucet jsonNull
-	createPipe jsonChannel,jsonDump
 	createPipe jsonDump,jsonNull
+	createPipe jsonChannel,jsonDump
 	
 	deliver jsonChannel,A,1
 	
-	expect JsonDump,default,{"A":"1"}
+	deliverAll 100000
+	
+	expect -{"A":"1"},-~!JsonDump,default!~
 	
 	deleteFaucet jsonChannel
 	deleteFaucet jsonDump
