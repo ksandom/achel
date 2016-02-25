@@ -67,4 +67,60 @@ unset Tmp,unitCallResultCount2
 
 
 
+defineTest 1-1CallFaucet,
+	# Here is deliver a different number of things to different channels, but only look at the output of channel B.
+	
+	create1-1CallFaucet callTest,
+		count
+	
+	createDumpFaucet callDump,CallTest
+	createNullFaucet callNull
+	
+	createPipe callTest,callDump,B
+	createPipe callDump,callNull
+	
+	deliver callTest,A,100
+	deliver callTest,B,200
+	deliver callTest,B,201
+	deliver callTest,C,300
+	deliver callTest,C,301
+	deliver callTest,C,302
+	
+	deliverAll 10000
+	
+	expect 2,~!CallTest,0!~
+	
+	
+	deleteFaucet callTest
+	deleteFaucet callDump
+	deleteFaucet callNull
+
+defineTest WholeCallFaucet,
+	# Here is deliver a different number of things to different channels, but only look at the output of the default channel. Everything has worked, we will get the number of different channels we have sent to.
+	
+	createWholeCallFaucet callTest,
+		count
+	
+	createDumpFaucet callDump,CallTest
+	createNullFaucet callNull
+	
+	createPipe callTest,callDump
+	createPipe callDump,callNull
+	
+	deliver callTest,A,100
+	deliver callTest,B,200
+	deliver callTest,B,201
+	deliver callTest,C,300
+	deliver callTest,C,301
+	deliver callTest,C,302
+	
+	deliverAll 10000
+	
+	expect 3,~!CallTest,0!~
+	
+	
+	deleteFaucet callTest
+	deleteFaucet callDump
+	deleteFaucet callNull
+
 

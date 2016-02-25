@@ -16,7 +16,8 @@ class CallFaucets extends Faucets
 		switch ($event)
 		{
 			case 'init':
-				$this->core->registerFeature($this, array('createCallFaucet'), 'createCallFaucet', "Create a faucet to/from a call to a feature. --createCallFaucet=faucetName,feature,argument", array());
+				$this->core->registerFeature($this, array('create1-1CallFaucet', 'createCallFaucet'), 'create1-1CallFaucet', "Create a faucet to/from a call to a feature. Each channel is processed individually, which gives an explicit 1-1 relatinship between the input and output channels. --createCallFaucet=faucetName,feature,argument", array());
+				$this->core->registerFeature($this, array('createWholeCallFaucet'), 'createWholeCallFaucet', "Create a faucet to/from a call to a feature. All channels are processed as one blob of data keyed by channel name. --createCallFaucet=faucetName,feature,argument", array());
 				$this->core->registerFeature($this, array('createSemiInlineCallFaucet'), 'createSemiInlineCallFaucet', "Create a faucet to/from a call to a feature, but using a variable as the/an extra parameter.. --createSemiInlineCallFaucet=faucetName,feature,[argument]", array());
 				
 				$this->core->registerFeature($this, array('createInlineCallFaucet'), 'createInlineCallFaucet', "Create a faucet that will call what ever feature is passed to it. The result will be it's output . --createInlineCallFaucet=faucetName", array());
@@ -26,9 +27,13 @@ class CallFaucets extends Faucets
 				break;
 			case 'last':
 				break;
-			case 'createCallFaucet':
+			case 'create1-1CallFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
 				$this->currentFaucet->createFaucet($parms[0], 'call', new CallFaucet($parms[1], $parms[2]));
+				break;
+			case 'createWholeCallFaucet':
+				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
+				$this->currentFaucet->createFaucet($parms[0], 'Wholecall', new WholeCallFaucet($parms[1], $parms[2]));
 				break;
 			case 'createSemiInlineCallFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
@@ -62,7 +67,6 @@ class CallFaucet extends ThroughBasedFaucet
 	
 	function preGet()
 	{
-		# TODO this function needs refactoring.
 		$gotSomething=false;
 		foreach ($this->input as $channel=>$data)
 		{
@@ -92,6 +96,39 @@ class CallFaucet extends ThroughBasedFaucet
 					$gotSomething=true;
 				}
 			}
+		}
+		
+		return $gotSomething;
+	}
+}
+
+class WholeCallFaucet extends ThroughBasedFaucet
+{
+	private $feature='';
+	private $argument='';
+	private $semiInline=false;
+	
+	function __construct($feature, $argument, $semiInline=false)
+	{
+		parent::__construct(__CLASS__);
+		$this->feature=$feature;
+		$this->argument=$argument;
+		$this->semiInline=$semiInline;
+	}
+	
+	function preGet()
+	{
+		$gotSomething=false;
+		if (count($this->input))
+		{
+			$gotSomething=true;
+			
+			$this->core->debug(3, "WholeCallFaucet->preGet: Calling feature={$this->feature} parameter={$this->argument}");
+			$outData=$this->core->callFeatureWithDataset($this->feature, $this->argument, $this->input);
+			$this->outFill($outData, "default");
+			# TODO work out what this line needs to be.
+			$this->clearInput($channel);
+			$gotSomething=true;
 		}
 		
 		return $gotSomething;
