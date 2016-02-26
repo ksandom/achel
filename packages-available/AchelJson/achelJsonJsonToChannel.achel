@@ -3,3 +3,20 @@
 stashResults Local,jsonChannels
 copy ["Local,jsonChannels","Local,jsonChannel,default"]
 retrieveResults Local,jsonChannel
+
+first
+loop
+	unset Result,key
+	getCategory Result
+	
+	loop Channel,
+		set Local,channelKey,~!Channel,key!~
+		unset Channel,key
+		
+		getCategory Channel
+		last
+		
+		loop Data,
+			setNested Local,jsonCombined,default,~!Local,channelKey!~,~!Data,line!~
+
+retrieveResults Local,jsonCombined

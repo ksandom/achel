@@ -145,7 +145,7 @@ defineTest AchelJson - Create shell json faucet - bash,
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - jsonToChannel,
-	setNested Local,example,A,1
+	setNested Local,example,A,0,1
 	retrieveResults Local,example
 	
 	achelJsonJsonToChannel
