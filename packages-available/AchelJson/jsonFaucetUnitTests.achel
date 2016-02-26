@@ -152,11 +152,44 @@ defineTest AchelJson - jsonToChannel,
 	
 	stashResults Local,example
 	
+	# expect -{"default":{"A":"1"}},-~!Local,example!~
+	failTest incorrect implementation
+
+defineTest AchelJson - channelToJson,
+	# TODO write this
+	# Check the working tests... I think I have it around the wrong way.
+	setNested Local,example,A,0,1
+	retrieveResults Local,example
+	
+	achelJsonJsonToChannel
+	
+	stashResults Local,example
+	
 	expect -{"default":{"A":"1"}},-~!Local,example!~
 
 
 defineTest AchelJson - jsonToChannelFaucet,
 	createJsonToChannelsFaucet jsonChannel
+	createDumpFaucet jsonDump,JsonDump
+	createNullFaucet jsonNull
+	createPipe jsonDump,jsonNull
+	createPipe jsonChannel,jsonDump
+	
+	deliver jsonChannel,A,1
+	
+	deliverAll 100000
+	
+	# expect -{"A":"1"},-~!JsonDump,default!~
+	failTest incorrect implementation
+	
+	deleteFaucet jsonChannel
+	deleteFaucet jsonDump
+	deleteFaucet jsonNull
+	
+	unsetCategory JsonDump
+
+defineTest AchelJson - channelToJsonFaucet,
+	createChannelsToJsonFaucet jsonChannel
 	createDumpFaucet jsonDump,JsonDump
 	createNullFaucet jsonNull
 	createPipe jsonDump,jsonNull
@@ -173,16 +206,6 @@ defineTest AchelJson - jsonToChannelFaucet,
 	deleteFaucet jsonNull
 	
 	unsetCategory JsonDump
-
-defineTest AchelJson - channelToJsonFaucet,
-	createChannelsToJsonFaucet jsonChannel
-	createNullFaucet jsonNull
-	createPipe jsonChannel,jsonNull
-	
-	failTest not implemented
-	
-	deleteFaucet jsonChannel
-	deleteFaucet jsonNull
 
 
 

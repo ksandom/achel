@@ -1,0 +1,22 @@
+# AchelJson. Takes all channels, and puts them into one channel as json representing all of the original channels. Note that the current implementation on works with strings for now (ie not arrays). ~ hidden,achel,json,worker
+
+stashResults Local,jsonChannels
+copy ["Local,jsonChannels","Local,jsonChannel,default"]
+retrieveResults Local,jsonChannel
+
+first
+loop
+	unset Result,key
+	getCategory Result
+	
+	loop Channel,
+		set Local,channelKey,~!Channel,key!~
+		unset Channel,key
+		
+		getCategory Channel
+		last
+		
+		loop Data,
+			setNested Local,jsonCombined,default,~!Local,channelKey!~,~!Data,line!~
+
+retrieveResults Local,jsonCombined
