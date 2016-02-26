@@ -145,23 +145,20 @@ defineTest AchelJson - Create shell json faucet - bash,
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - jsonToChannel,
-	setNested Local,example,A,0,1
+	setNested Local,example,default,0,{"A":"1"}
 	retrieveResults Local,example
 	
 	achelJsonJsonToChannel
 	
 	stashResults Local,example
 	
-	# expect -{"default":{"A":"1"}},-~!Local,example!~
-	failTest incorrect implementation
+	expect 1,~!Local,example,A,0!~
 
 defineTest AchelJson - channelToJson,
-	# TODO write this
-	# Check the working tests... I think I have it around the wrong way.
 	setNested Local,example,A,0,1
 	retrieveResults Local,example
 	
-	achelJsonJsonToChannel
+	achelJsonChannelToJson
 	
 	stashResults Local,example
 	
@@ -173,14 +170,13 @@ defineTest AchelJson - jsonToChannelFaucet,
 	createDumpFaucet jsonDump,JsonDump
 	createNullFaucet jsonNull
 	createPipe jsonDump,jsonNull
-	createPipe jsonChannel,jsonDump
+	createPipe jsonChannel,jsonDump,A
 	
-	deliver jsonChannel,A,1
+	deliver jsonChannel,default,{"A":"1"}
 	
 	deliverAll 100000
 	
-	# expect -{"A":"1"},-~!JsonDump,default!~
-	failTest incorrect implementation
+	expect 1,~!JsonDump,default!~
 	
 	deleteFaucet jsonChannel
 	deleteFaucet jsonDump

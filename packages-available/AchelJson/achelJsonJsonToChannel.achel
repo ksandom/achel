@@ -1,22 +1,17 @@
-# AchelJson. Takes all channels, and puts them into one channel. ~ hidden,achel,json,worker
+# AchelJson. Takes json in the default channel, and puts its contents into the appropriate channels. ~ hidden,achel,json,worker
 
 stashResults Local,jsonChannels
-copy ["Local,jsonChannels","Local,jsonChannel,default"]
-retrieveResults Local,jsonChannel
+retrieveResults Local,jsonChannels,default
 
-first
 loop
-	unset Result,key
-	getCategory Result
-	
-	loop Channel,
-		set Local,channelKey,~!Channel,key!~
-		unset Channel,key
-		
-		getCategory Channel
-		last
-		
-		loop Data,
-			setNested Local,jsonCombined,default,~!Local,channelKey!~,~!Data,line!~
+	set ["Local","interpreted",~!Result,line!~]
+	retrieveResults Local,interpreted
+	loop Item,
+		setNested Local,recompiled,~!Item,key!~,0,~!Item,line!~
 
-retrieveResults Local,jsonCombined
+
+retrieveResults Local,recompiled
+
+# nested
+# outNow
+
