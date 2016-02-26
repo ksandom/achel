@@ -667,9 +667,16 @@ class ThroughBasedFaucet extends Faucet
 		}
 	}
 	
-	function clearInput($channel)
+	function clearInput($channel=false)
 	{
-		unset($this->input[$channel]);
+		if ($channel)
+		{
+			unset($this->input[$channel]);
+		}
+		else
+		{
+			$this->input=array();
+		}
 	}
 	
 	function put($data, $channel)

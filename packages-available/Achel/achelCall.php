@@ -126,8 +126,7 @@ class WholeCallFaucet extends ThroughBasedFaucet
 			$this->core->debug(3, "WholeCallFaucet->preGet: Calling feature={$this->feature} parameter={$this->argument}");
 			$outData=$this->core->callFeatureWithDataset($this->feature, $this->argument, $this->input);
 			$this->outFill($outData, "default");
-			# TODO work out what this line needs to be.
-			$this->clearInput($channel);
+			$this->clearInput();
 			$gotSomething=true;
 		}
 		
