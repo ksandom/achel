@@ -99,7 +99,15 @@ defineTest WholeCallFaucet,
 	# Here is deliver a different number of things to different channels, but only look at the output of the default channel. Everything has worked, we will get the number of different channels we have sent to.
 	
 	createWholeCallFaucet callTest,
-		count
+		
+		# Get the count of stuff in channel B
+		stashResults Local,callTest
+		retrieveResults Local,callTest,B
+		countToVar Local,channelB
+		
+		# Put that into the output format
+		setNested Local,callResult,default,0,~!Local,channelB!~
+		retrieveResults Local,callResult
 	
 	createDumpFaucet callDump,CallTest
 	createNullFaucet callNull
@@ -116,7 +124,7 @@ defineTest WholeCallFaucet,
 	
 	deliverAll 10000
 	
-	expect 3,~!CallTest,0!~
+	expect 2,~!CallTest,0!~
 	
 	
 	deleteFaucet callTest

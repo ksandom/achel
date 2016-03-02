@@ -176,6 +176,10 @@ defineTest AchelJson - jsonToChannelFaucet,
 	
 	deliverAll 100000
 	
+	getCategory JsonDump
+	nested
+	outNow
+	
 	expect 1,~!JsonDump,default!~
 	
 	deleteFaucet jsonChannel

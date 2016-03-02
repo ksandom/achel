@@ -20,3 +20,4 @@ loop
 			setNested Local,jsonCombined,default,~!Local,channelKey!~,~!Data,line!~
 
 retrieveResults Local,jsonCombined
+

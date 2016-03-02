@@ -12,6 +12,6 @@ loop
 
 retrieveResults Local,recompiled
 
-# nested
-# outNow
+nested
+outNow
 
