@@ -17,7 +17,7 @@ class CallFaucets extends Faucets
 		{
 			case 'init':
 				$this->core->registerFeature($this, array('create1-1CallFaucet', 'createCallFaucet'), 'create1-1CallFaucet', "Create a faucet to/from a call to a feature. Each channel is processed individually, which gives an explicit 1-1 relatinship between the input and output channels. --createCallFaucet=faucetName,feature,argument", array());
-				$this->core->registerFeature($this, array('createWholeCallFaucet'), 'createWholeCallFaucet', "Create a faucet to/from a call to a feature. All channels are processed as one blob of data keyed by channel name. --createCallFaucet=faucetName,feature,argument", array());
+				$this->core->registerFeature($this, array('createMappedCallFaucet'), 'createMappedCallFaucet', "Create a faucet to/from a call to a feature. All channels are processed as one blob of data keyed by channel name. --createCallFaucet=faucetName,feature,argument", array());
 				$this->core->registerFeature($this, array('createSemiInlineCallFaucet'), 'createSemiInlineCallFaucet', "Create a faucet to/from a call to a feature, but using a variable as the/an extra parameter.. --createSemiInlineCallFaucet=faucetName,feature,[argument]", array());
 				
 				$this->core->registerFeature($this, array('createInlineCallFaucet'), 'createInlineCallFaucet', "Create a faucet that will call what ever feature is passed to it. The result will be it's output . --createInlineCallFaucet=faucetName", array());
@@ -29,15 +29,15 @@ class CallFaucets extends Faucets
 				break;
 			case 'create1-1CallFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
-				$this->currentFaucet->createFaucet($parms[0], 'call', new CallFaucet($parms[1], $parms[2]));
+				$this->currentFaucet->createFaucet($parms[0], '1-1Call', new CallFaucet($parms[1], $parms[2]));
 				break;
-			case 'createWholeCallFaucet':
+			case 'createMappedCallFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
-				$this->currentFaucet->createFaucet($parms[0], 'Wholecall', new WholeCallFaucet($parms[1], $parms[2]));
+				$this->currentFaucet->createFaucet($parms[0], 'mappedCall', new MappedCallFaucet($parms[1], $parms[2]));
 				break;
 			case 'createSemiInlineCallFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
-				$this->currentFaucet->createFaucet($parms[0], 'call', new CallFaucet($parms[1], $parms[2], true));
+				$this->currentFaucet->createFaucet($parms[0], 'semiInlineCall', new CallFaucet($parms[1], $parms[2], true));
 				break;
 			case 'createInlineCallFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
@@ -102,7 +102,7 @@ class CallFaucet extends ThroughBasedFaucet
 	}
 }
 
-class WholeCallFaucet extends ThroughBasedFaucet
+class MappedCallFaucet extends ThroughBasedFaucet
 {
 	private $feature='';
 	private $argument='';
@@ -116,6 +116,30 @@ class WholeCallFaucet extends ThroughBasedFaucet
 		$this->semiInline=$semiInline;
 	}
 	
+	
+	function last($series)
+	{
+		if (is_array($series))
+		{
+			$keys=array_keys($series);
+			return $series[$keys[count($keys)-1]];
+		}
+		else
+		{
+			return $series;
+		}
+	}
+	
+	function buildInput($input)
+	{
+		$builtInput=array();
+		foreach ($input as $key=>$value)
+		{
+			$builtInput[$key]=$this->last($value);
+		}
+		return $builtInput;
+	}
+	
 	function preGet()
 	{
 		$gotSomething=false;
@@ -123,16 +147,13 @@ class WholeCallFaucet extends ThroughBasedFaucet
 		{
 			$gotSomething=true;
 			
-			$this->core->debug(3, "WholeCallFaucet->preGet: Calling feature={$this->feature} parameter={$this->argument}");
-			$returnedData=$this->core->callFeatureWithDataset($this->feature, $this->argument, $this->input);
+			
+			
+			$this->core->debug(3, "MappedCallFaucet->preGet: Calling feature={$this->feature} parameter={$this->argument}");
+			$returnedData=$this->core->callFeatureWithDataset($this->feature, $this->argument, $this->buildInput($this->input));
 			foreach ($returnedData as $channel=>$outData)
 			{
-				$this->core->debug(0, $channel);
-				$keys=array_keys($outData);
-				$lastEntry=$outData[$keys[count($keys)-1]];
-				print_r($lastEntry);
-				
-				$this->outFill($lastEntry, $channel);
+				$this->outFill(array($outData), $channel);
 			}
 			$this->clearInput();
 			$gotSomething=true;

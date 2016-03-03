@@ -95,36 +95,62 @@ defineTest 1-1CallFaucet,
 	deleteFaucet callDump
 	deleteFaucet callNull
 
-defineTest WholeCallFaucet,
+defineTest MappedCallFaucet - no manipulations,
 	# Here is deliver a different number of things to different channels, but only look at the output of the default channel. Everything has worked, we will get the number of different channels we have sent to.
 	
-	createWholeCallFaucet callTest,
-		
-		# Get the count of stuff in channel B
-		stashResults Local,callTest
-		retrieveResults Local,callTest,B
-		countToVar Local,channelB
-		
-		# Put that into the output format
-		setNested Local,callResult,default,0,~!Local,channelB!~
-		retrieveResults Local,callResult
+	createMappedCallFaucet callTest,
+		pass
 	
 	createDumpFaucet callDump,CallTest
 	createNullFaucet callNull
 	
-	createPipe callTest,callDump
+	createPipe callTest,callDump,C1
 	createPipe callDump,callNull
 	
-	deliver callTest,A,100
-	deliver callTest,B,200
-	deliver callTest,B,201
-	deliver callTest,C,300
-	deliver callTest,C,301
-	deliver callTest,C,302
+	deliver callTest,A1,100
+	deliver callTest,B1,200
+	deliver callTest,B1,201
+	deliver callTest,C1,300
+	deliver callTest,C1,301
+	deliver callTest,C1,302
+	
+	deliverAll 10000
+	getCategory CallTest
+	
+	expect 302,~!CallTest,0!~
+	
+	
+	
+	deleteFaucet callTest
+	deleteFaucet callDump
+	deleteFaucet callNull
+
+defineTest MappedCallFaucet,
+	createMappedCallFaucet callTest,
+		
+		# Get the count of stuff in channel B
+		stashResults Local,callTest
+		basicMaths Local,added,~!Local,callTest,B2!~,+,1000
+		setNested Local,callTest,donkey,~!Local,added!~
+		
+		retrieveResults Local,callTest
+	
+	createDumpFaucet callDump,CallTest
+	createNullFaucet callNull
+	
+	createPipe callTest,callDump,donkey
+	createPipe callDump,callNull
+	
+	deliver callTest,A2,100
+	deliver callTest,B2,200
+	deliver callTest,B2,201
+	deliver callTest,C2,300
+	deliver callTest,C2,301
+	deliver callTest,C2,302
 	
 	deliverAll 10000
 	
-	expect 2,~!CallTest,0!~
+	expect 1201,~!CallTest,0!~
 	
 	
 	deleteFaucet callTest
