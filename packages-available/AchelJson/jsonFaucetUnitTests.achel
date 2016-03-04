@@ -145,17 +145,17 @@ defineTest AchelJson - Create shell json faucet - bash,
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - jsonToChannel,
-	setNested Local,example,default,0,{"A":"1"}
+	setNested Local,example,default,{"A":"1"}
 	retrieveResults Local,example
 	
 	achelJsonJsonToChannel
 	
 	stashResults Local,example
 	
-	expect 1,~!Local,example,A,0!~
+	expect 1,~!Local,example,A!~
 
 defineTest AchelJson - channelToJson,
-	setNested Local,example,A,0,1
+	setNested Local,example,A,1
 	retrieveResults Local,example
 	
 	achelJsonChannelToJson
