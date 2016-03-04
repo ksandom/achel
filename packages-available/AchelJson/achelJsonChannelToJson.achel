@@ -1,5 +1,5 @@
 # AchelJson. Takes all channels, and puts them into one channel as json representing all of the original channels. Note that the current implementation on works with strings for now (ie not arrays). ~ hidden,achel,json,worker
 
 stashResults Local,resultSet
-set Local,jsonified,~!Local,resultSet!~
+setNested ["Local","jsonified","default",~!Local,resultSet!~]
 retrieveResults Local,jsonified
