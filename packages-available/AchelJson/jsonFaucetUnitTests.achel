@@ -176,11 +176,7 @@ defineTest AchelJson - jsonToChannelFaucet,
 	
 	deliverAll 100000
 	
-	getCategory JsonDump
-	nested
-	outNow
-	
-	expect 1,~!JsonDump,default!~
+	expect 1,~!JsonDump,0!~
 	
 	deleteFaucet jsonChannel
 	deleteFaucet jsonDump
@@ -199,7 +195,7 @@ defineTest AchelJson - channelToJsonFaucet,
 	
 	deliverAll 100000
 	
-	expect -{"A":"1"},-~!JsonDump,default!~
+	expect -{"A":"1"},-~!JsonDump,0!~
 	
 	deleteFaucet jsonChannel
 	deleteFaucet jsonDump
@@ -207,6 +203,64 @@ defineTest AchelJson - channelToJsonFaucet,
 	
 	unsetCategory JsonDump
 
+
+defineTest AchelJson - channelToJsonFaucet to jsonToChannelFaucet,
+	# This is the test that shows that everything is working. If we are able to send data into one faucet, connect it to another and recieve the correct data from the other faucet, things are goooood. :)
+	
+	createChannelsToJsonFaucet jsonChannelIn
+	createJsonToChannelsFaucet jsonChannelOut
+	createDumpFaucet jsonDump,JsonDump
+	createNullFaucet jsonNull
+	createPipe jsonDump,jsonNull
+	createPipe jsonChannelIn,jsonChannelOut
+	createPipe jsonChannelOut,jsonDump,A
+	
+	deliver jsonChannelIn,A,321
+	
+	deliverAll 100000
+	
+	expect 321,~!JsonDump,0!~
+	
+	deleteFaucet jsonChannel
+	deleteFaucet jsonDump
+	deleteFaucet jsonNull
+	
+	unsetCategory JsonDump
+
+defineTest AchelJson - channelToJsonFaucet to jsonToChannelFaucet - lots of channels,
+	# This is the test that shows that everything is working. If we are able to send data into one faucet, connect it to another and recieve the correct data from the other faucet, things are goooood. :)
+	
+	createChannelsToJsonFaucet jsonChannelIn
+	createJsonToChannelsFaucet jsonChannelOut
+	createDumpFaucet jsonDumpA,JsonDumpA
+	createDumpFaucet jsonDumpB,JsonDumpB
+	createDumpFaucet jsonDumpC,JsonDumpC
+	createNullFaucet jsonNull
+	createPipe jsonDumpA,jsonNull
+	createPipe jsonDumpB,jsonNull
+	createPipe jsonDumpC,jsonNull
+	createPipe jsonChannelIn,jsonChannelOut
+	createPipe jsonChannelOut,jsonDumpA,A
+	createPipe jsonChannelOut,jsonDumpB,B
+	createPipe jsonChannelOut,jsonDumpC,C
+	
+	deliver jsonChannelIn,A,321
+	deliver jsonChannelIn,B,456
+	deliver jsonChannelIn,C,987
+	
+	deliverAll 100000
+	
+	expect 321,~!JsonDumpA,0!~
+	expect 456,~!JsonDumpB,0!~
+	expect 987,~!JsonDumpC,0!~
+	
+	deleteFaucet jsonChannel
+	deleteFaucet jsonDumpA
+	deleteFaucet jsonDumpB
+	deleteFaucet jsonDumpC
+	deleteFaucet jsonNull
+	
+	unsetCategory JsonDump
 
 
 
