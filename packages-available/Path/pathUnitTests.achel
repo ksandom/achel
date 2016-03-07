@@ -1,0 +1,8 @@
+# Unit tests for the path package. ~ path,unitTest,hidden
+
+defineTest Path - getRepoPath,
+	failTest not implemented.
+
+defineTest Path - getPackagePath,
+	failTest not implemented.
+
