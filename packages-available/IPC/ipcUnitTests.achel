@@ -1,0 +1,4 @@
+# Unit tests for IPC. ~ ipc,unitTest,hidden
+
+defineTest IPC - json faucet,
+	failTest not implemented
