@@ -1,3 +1,6 @@
-# Get the path the a particular package within a repository ~ path,package
+# Get the path the a particular package within a repository. --getPackagePath=Category,variable,repoName,packageName ~ path,package
+parameters category,variable,repoName,packageName
 
-pass
+getRepoPath Local,repoPath,~!Local,repoName!~
+set ~!Local,category!~,~!Local,variable!~,~!Local,repoPath!~/packages-available/~!Local,packageName!~
+makeLocalAvailable ~!Local,variable!~

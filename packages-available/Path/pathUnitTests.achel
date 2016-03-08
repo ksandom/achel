@@ -1,8 +1,10 @@
 # Unit tests for the path package. ~ path,unitTest,hidden
 
 defineTest Path - getRepoPath,
-	failTest not implemented.
+	getRepoPath Local,repoPath,achel
+	expect ~!General,configDir!~/repos/achel,~!Local,repoPath!~
 
 defineTest Path - getPackagePath,
-	failTest not implemented.
+	getPackagePath Local,packagePath,achel,Path
+	expect ~!General,configDir!~/repos/achel/packages-available/Path,~!Local,packagePath!~
 
