@@ -33,8 +33,7 @@ class Pinger:
 			while True:
 				self.processLine(sys.stdin.readline())
 		except KeyboardInterrupt:
-			self.state("terminating", "recieved interrupt")
-			self.quit("Keyboard intrerupt")
+			pass
 		finally:
 			pass
 
