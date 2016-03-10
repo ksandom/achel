@@ -1,31 +1,33 @@
 # There must be exactly number results. --expectNumberOfResults=number,contextDescription,[field],regex, . number is how many results to expect. contextDescription will be prepended to the error message if the number of results is not correct. It should be short but meaningful. field is the field within each resultSet item to test. If it is blank all of them will be tested. regex is the regular expression to refine the resultSet to before testing the number of results again. This feature is expected to be called with code nested after it. See also --thereCanBeOnly ~ condition,Condition,language
+parameters number,contextDescription,field,regex,subFeature
 
-countToVar Tmp,expectNumberOfResults-before
+countToVar Local,expectNumberOfResults-before
 
-if ~!Global,expectNumberOfResults-2!~,==,,
-	requireEach ~!Global,expectNumberOfResults-3!~
+if ~!Local,field!~,==,,
+	requireEach ~!Local,regex!~
 else
-	requireItem ~!Global,expectNumberOfResults-2!~,~!Global,expectNumberOfResults-3!~
+	requireItem ~!Local,field!~,~!Local,regex!~
 
-countToVar Tmp,expectNumberOfResults-after
+countToVar Local,expectNumberOfResults-after
 
-if ~!Global,expectNumberOfResults-4!~,!=,,
-	if ~!Tmp,expectNumberOfResults-before!~,==,~!Global,expectNumberOfResults-0!~,
-		if ~!Tmp,expectNumberOfResults-after!~,==,~!Global,expectNumberOfResults-0!~,
-			debug 4,~!Global,expectNumberOfResults-1!~: Exactly ~!Global,expectNumberOfResults-0!~ results were required, and recieved.
-			callFeature ~!Global,expectNumberOfResults-4!~
+if ~!Local,subFeature!~,!=,,
+	if ~!Local,expectNumberOfResults-before!~,==,~!Local,number!~,
+		if ~!Local,expectNumberOfResults-after!~,==,~!Local,number!~,
+			debug 4,~!Local,contextDescription!~: Exactly ~!Local,number!~ results were required, and recieved.
+			callFeature ~!Local,subFeature!~
 		else
-			debug 1,~!Global,expectNumberOfResults-1!~: Exactly ~!Global,expectNumberOfResults-0!~ results were required, but ~!Tmp,expectNumberOfResults-before!~ were recieved before refining the resultSet to ~!Global,expectNumberOfResults-2!~="~!Global,expectNumberOfResults-3!~" and ~!Tmp,expectNumberOfResults-after!~ after.
+			debug 1,~!Local,contextDescription!~: Exactly ~!Local,number!~ results were required, but ~!Local,expectNumberOfResults-before!~ were recieved before refining the resultSet to ~!Local,field!~="~!Local,regex!~" and ~!Local,expectNumberOfResults-after!~ after.
 			if ~!Verbosity,level!~,>=,2,
 				nested
 				outNow
 	else
-		debug 1,~!Global,expectNumberOfResults-1!~: Exactly ~!Global,expectNumberOfResults-0!~ results were required, but ~!Tmp,expectNumberOfResults-before!~ were recieved before refining the resultSet to ~!Global,expectNumberOfResults-2!~="~!Global,expectNumberOfResults-3!~" and ~!Tmp,expectNumberOfResults-after!~ after.
+		debug 1,~!Local,contextDescription!~: Exactly ~!Local,number!~ results were required, but ~!Local,expectNumberOfResults-before!~ were recieved before refining the resultSet to ~!Local,field!~="~!Local,regex!~" and ~!Local,expectNumberOfResults-after!~ after.
 		if ~!Verbosity,level!~,>=,2,
 			nested
 			outNow
 else
-	debug 0,~!Global,expectNumberOfResults-1!~: expectNumberOfResults is expected to have indented code after it, but this doesn't appear to be the case. If it is, make sure it has the trailing comma at the end.
+	debug 0,number=~!Local,number!~ contextDescription=~!Local,contextDescription!~ field=~!Local,field!~ regex=~!Local,regex!~ subFeature="~!Local,subFeature!~"
+	debug 0,~!Local,contextDescription!~: expectNumberOfResults is expected to have indented code after it, but this doesn't appear to be the case. If it is, make sure it has the trailing comma at the end.
 
-unset Tmp,expectNumberOfResults-before
-unset Tmp,expectNumberOfResults-after
+unset Local,expectNumberOfResults-before
+unset Local,expectNumberOfResults-after
