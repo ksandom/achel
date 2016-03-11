@@ -1,4 +1,21 @@
 # Unit tests for IPC. ~ ipc,unitTest,hidden
 
 defineTest IPC - json faucet,
-	failTest not implemented
+	getPackagePath Local,ipcPath,achel,IPS
+	createJsonIPCFaucet ipc,~!Local,ipcPath!~/ping.py
+	createDumpFaucet ipcDump,IPC
+	createNullFaucet ipcNull
+	
+	createPipe ipcDump,ipcNull
+	createPipe ipc,ipcDump,message
+	
+	deliver ipc,command,ping
+	deliver ipc,message,blah
+	
+	deliverAll 10000
+	
+	expect blah-pong,~!IPC,default!~
+	
+	deleteFaucet ipc
+	deleteFaucet ipcDump
+	deleteFaucet ipcNull
