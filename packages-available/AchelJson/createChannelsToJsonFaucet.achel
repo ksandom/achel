@@ -1,4 +1,4 @@
-# Create a faucet that takes input on any channel, and outputs json on the default channel. ~ create,json,faucet
+# Create a faucet that takes input on any channel, and outputs json on the default channel. No parameters. ~ create,json,faucet
 parameters faucetName
 
 createMappedCallFaucet ["~!Local,faucetName!~","achelJsonChannelToJson"]

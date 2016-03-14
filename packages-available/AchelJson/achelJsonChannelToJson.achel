@@ -1,4 +1,4 @@
-# AchelJson. Takes all channels, and puts them into one channel as json representing all of the original channels. Note that the current implementation on works with strings for now (ie not arrays). ~ hidden,achel,json,worker
+# AchelJson. Takes all channels, and puts them into one channel as json representing all of the original channels. Note that the current implementation on works with strings for now (ie not arrays). No parameters. ~ hidden,achel,json,worker
 
 stashResults Local,resultSet
 setNested ["Local","jsonified","default",~!Local,resultSet!~]
