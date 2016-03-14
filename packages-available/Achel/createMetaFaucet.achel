@@ -1,0 +1,7 @@
+# Create a meta faucet to group functionality together. --createMetaFaucet=FaucetName, followed by an indented line creatging the components to be contained. Input channels can be accessed by piping from the faucet named ".", and output channels can be accessed by piping to the faucet named ".". ~ faucet,meta
+parameters faucetName,internalFunction
+
+createRawMetaFaucet ~!Local,faucetName!~
+changeFaucet ~!Local,faucetName!~
+callFeatureNoReturn ~!Local,internalFunction!~
+changeFaucet ..

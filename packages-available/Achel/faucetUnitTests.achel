@@ -1,0 +1,18 @@
+# Unit tests for faucets. ~ hidden,unitTest,faucets
+
+defineTest Faucets - metaFaucet - straight through,
+	createMetaFaucet meta,
+		createPipe .,.
+	
+	createDumpFaucet metaDump,MetaDump
+	createNullFaucet metaNull
+	
+	createPipe meta,metaDump
+	createPipe metaDump,metaNull
+	
+	deliver meta,default,test001
+	
+	deliverAll 10000
+	
+	expect test001,~!MetaDump,0!~
+

@@ -68,7 +68,7 @@ class Faucets extends Module
 				$this->registerFaucetCatalogEntry('NullFaucet', 'A black hole for data.', 'achel', 'createNullFaucet,%faucetName%');
 				$this->core->registerFeature($this, array('createNullFaucet'), 'createNullFaucet', "Many Faucet actions will only get performed when there is at least one pipe connected to the exit of the faucet. But sometimes we want to create a fully funtioning faucet without connecting it to anything. The NullFaucet gives you something to connect it to without causing data to build up anywhere. --createNullFaucet=faucetName", array());
 				
-				$this->core->registerFeature($this, array('createMetaFaucet', 'mkdir'), 'createMetaFaucet', "Create a MetaFaucet that can contain other Faucets. You can use --cf to get inside it and create other faucets etc. --createMetaFaucet=faucetName", array());
+				$this->core->registerFeature($this, array('createRawMetaFaucet', 'mkdir'), 'createRawMetaFaucet', "Create a MetaFaucet that can contain other Faucets. You can use --cf to get inside it and create other faucets etc. --createRawMetaFaucet=faucetName. Normally you will want --createMetaFaucet instead, which allows you to do the nested programming style, which is generally much easier to read.", array());
 				
 				
 				$this->core->registerFeature($this, array('changeFaucet', 'cf', 'cd'), 'changeFaucet', "Used pretty much like cd on the linux command line. Note that you can only --changeFaucet into meta faucets. --changeFaucet=pathToFaucet e.g. --changeFaucet=/faucetName/anotherFaucetName/andAnotherFaucetName . IMPORTANT: When using this within macros, please use changeFaucet or cf. Not cd as that is slang to make the tui more intuitive.", array('metaFaucet'));
@@ -119,7 +119,7 @@ class Faucets extends Module
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
 				$this->currentFaucet->createFaucet($parms[0], 'null', new NullFaucet());
 				break;
-			case 'createMetaFaucet':
+			case 'createRawMetaFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
 				$metaFaucet=new MetaFaucet($parms[0]);
 				$metaFaucet->setStructure($this->rootFaucet, $this->currentFaucet);
