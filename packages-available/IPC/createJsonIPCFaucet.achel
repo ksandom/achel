@@ -1,3 +1,9 @@
 # Create a JSON based IPC faucet. If you want to run a program inside of Achel and communicate with it using Json, this is the way to do it. --createJsonIPCFaucet=faucetName,command ~ ipc,faucet,create
+parameters faucetName,command
 
-pass
+createProcFaucet ~!Local,faucetName!~-proc,~!Local,command!~
+createChannelsToJsonFaucet ~!Local,faucetName!~-in
+createJsonToChannelsFaucet ~!Local,faucetName!~-out
+
+createPipe ~!Local,faucetName!~-in,~!Local,faucetName!~-proc
+createPipe ~!Local,faucetName!~-proc,~!Local,faucetName!~-out
