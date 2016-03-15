@@ -15,4 +15,50 @@ defineTest Faucets - metaFaucet - straight through,
 	deliverAll 10000
 	
 	expect test001,~!MetaDump,0!~
+	
+	deleteFaucet meta
+	deleteFaucet metaDump
+	unsetCategory MetaDump
 
+defineTest Faucets - metaFaucet - replace,
+	createMetaFaucet meta2,
+		createDumbReplaceFaucet replace,triumph001
+		
+		createPipe .,replace
+		createPipe replace,.
+	
+	createDumpFaucet metaDump2,MetaDump2
+	createNullFaucet metaNull
+	
+	createPipe meta2,metaDump2
+	createPipe metaDump,metaNull
+	
+	deliver meta2,default,test002
+	
+	deliverAll 10000
+	
+	expect triumph001,~!MetaDump2,0!~
+	
+	deleteFaucet meta2
+	deleteFaucet metaDump2
+	unsetCategory MetaDump2
+
+defineTest Faucets - dumbReplace - simple,
+	createDumbReplaceFaucet replace,thing
+	createDumpFaucet dump,DumbReplace
+	createNullFaucet null
+	
+	createPipe replace,dump
+	createPipe dump,null
+	
+	deliver replace,default,test003
+	
+	deliverAll 10000
+	
+	expect thing,~!DumbReplace,0!~
+	
+	deleteFaucet replace
+	deleteFaucet dump
+	deleteFaucet null
+	
+	
