@@ -34,15 +34,15 @@ class GeneralIOFaucets extends Faucets
 				break;
 			case 'createFileFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2);
-				$this->currentFaucet->createFaucet($parms[0], 'file', new FileFaucet($parms[1]));
+				$this->environment->currentFaucet->createFaucet($parms[0], 'file', new FileFaucet($parms[1]));
 				break;
 			case 'createTermFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
-				$this->currentFaucet->createFaucet($parms[0], 'term', new TermFaucet());
+				$this->environment->currentFaucet->createFaucet($parms[0], 'term', new TermFaucet());
 				break;
 			case 'createProcFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2);
-				$this->currentFaucet->createFaucet($parms[0], 'proc', new ProcFaucet($parms[1]));
+				$this->environment->currentFaucet->createFaucet($parms[0], 'proc', new ProcFaucet($parms[1]));
 				break;
 			
 			default:

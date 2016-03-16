@@ -27,11 +27,11 @@ class UIFaucets extends Faucets
 				break;
 			case 'createBasicDiffFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
-				$this->currentFaucet->createFaucet($parms[0], 'basicDiff', new BasicDiffFaucet());
+				$this->environment->currentFaucet->createFaucet($parms[0], 'basicDiff', new BasicDiffFaucet());
 				break;
 			case 'createDynamicLastSeenFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 1);
-				$this->currentFaucet->createFaucet($parms[0], 'dynamicLastSeen', new DynamicLastSeenFaucet($parms[1], $parms[2]));
+				$this->environment->currentFaucet->createFaucet($parms[0], 'dynamicLastSeen', new DynamicLastSeenFaucet($parms[1], $parms[2]));
 				break;
 			
 			default:

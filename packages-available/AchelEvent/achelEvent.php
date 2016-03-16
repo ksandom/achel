@@ -28,7 +28,7 @@ class AchelEvent extends Faucets
 			case 'createEventFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 2);
 				$faucet=new EventFaucet($parms[1], $parms[2]);
-				$this->currentFaucet->createFaucet($parms[0], 'Event', $faucet);
+				$this->environment->currentFaucet->createFaucet($parms[0], 'Event', $faucet);
 				break;
 			
 			default:

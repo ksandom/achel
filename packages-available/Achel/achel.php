@@ -22,21 +22,25 @@ define('procOut', 0);
 define('procIn', 1);
 define('procError', 2);
 
-class Faucets extends Module
+class FaucetEnvironment
 {
-	# For tracking nested faucets
-	protected $currentFaucet=null;
-	private $rootFaucet=null;
+	# The environment for containing everything.
+	private static $environment=null;
 	
-	function __construct($className=__CLASS__)
+	# For tracking nested faucets
+	public $currentFaucet=null;
+	public $rootFaucet=null;
+	public $core=null;
+	
+	function __construct()
 	{
-		parent::__construct($className);
-		
-		$core=core::assert();
-		$this->setCore($core);
-		
-		$amIFaucets=($className==__CLASS__);
-		$this->createEvironment($amIFaucets);
+		$this->core=core::assert();
+	}
+	
+	public static function assert()
+	{
+		if (!isset(self::$environment)) self::$environment=new FaucetEnvironment();
+		return self::$environment;
 	}
 	
 	function createEvironment($createEnvironment=true)
@@ -51,6 +55,24 @@ class Faucets extends Module
 		{
 			$this->currentFaucet=&$this->core->get('Achel','currentFaucet');
 		}
+	}
+}
+
+
+class Faucets extends Module
+{
+	
+	function __construct($className=__CLASS__)
+	{
+		parent::__construct($className);
+		
+		$core=core::assert();
+		$this->setCore($core);
+		
+		$this->environment=&FaucetEnvironment::assert();
+		
+		$amIFaucets=($className==__CLASS__);
+		$this->environment->createEvironment($amIFaucets);
 	}
 	
 	function event($event)
@@ -102,28 +124,28 @@ class Faucets extends Module
 			case 'last':
 				break;
 			case 'getFaucets':
-				return $this->currentFaucet->getFaucets();
+				return $this->environment->currentFaucet->getFaucets();
 				break;
 			case 'getFaucetsDetails':
-				return $this->currentFaucet->getFaucetsDetails();
+				return $this->environment->currentFaucet->getFaucetsDetails();
 				break;
 			case 'createThroughFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
-				$this->currentFaucet->createFaucet($parms[0], 'through', new ThroughFaucet());
+				$this->environment->currentFaucet->createFaucet($parms[0], 'through', new ThroughFaucet());
 				break;
 			case 'create2WayThroughFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
-				$this->currentFaucet->createFaucet($parms[0], 'through', new ThroughFaucet(true));
+				$this->environment->currentFaucet->createFaucet($parms[0], 'through', new ThroughFaucet(true));
 				break;
 			case 'createNullFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
-				$this->currentFaucet->createFaucet($parms[0], 'null', new NullFaucet());
+				$this->environment->currentFaucet->createFaucet($parms[0], 'null', new NullFaucet());
 				break;
 			case 'createRawMetaFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
 				$metaFaucet=new MetaFaucet($parms[0]);
 				$metaFaucet->setStructure($this->rootFaucet, $this->currentFaucet);
-				$this->currentFaucet->createFaucet($parms[0], 'meta', $metaFaucet);
+				$this->environment->currentFaucet->createFaucet($parms[0], 'meta', $metaFaucet);
 				break;
 			
 			
@@ -137,7 +159,7 @@ class Faucets extends Module
 				break;
 			case 'setFaucetConfigItem':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 4, true);
-				if ($faucet=&$this->currentFaucet->getFaucet($parms[0], $event))
+				if ($faucet=&$this->environment->currentFaucet->getFaucet($parms[0], $event))
 				{
 					// --setFaucetConfigItem=faucetName,configName,[configSubcategory],value
 					$faucet['object']->setConfigItem($parms[1], $parms[2], $parms[3]);
@@ -146,7 +168,7 @@ class Faucets extends Module
 			case 'addFaucetConfigItemEntry':
 				// addConfigItemEntry($settingName, $subcategory, $entryName, $entryValue)
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 4, 5, false);
-				if ($faucet=&$this->currentFaucet->getFaucet($parms[0], $event))
+				if ($faucet=&$this->environment->currentFaucet->getFaucet($parms[0], $event))
 				{
 					$faucet['object']->addConfigItemEntry($parms[1], $parms[2], $parms[3], $parms[4]);
 				}
@@ -161,7 +183,7 @@ class Faucets extends Module
 			case 'getFaucetConfigItem':
 				// --getFaucetConfigItem=faucetName,[configName,[configSubcategory]]
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 1);
-				if ($faucet=&$this->currentFaucet->getFaucet($parms[0], $event))
+				if ($faucet=&$this->environment->currentFaucet->getFaucet($parms[0], $event))
 				{
 					if ($parms[1])
 					{
@@ -176,18 +198,18 @@ class Faucets extends Module
 			case 'bindFaucetConfigItem':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 5, 4, false);
 				// --bindFaucetConfigItem=faucetName,configName,[configSubcategory],metaFaucetConfigName,[metaFaucetConfigSubcategory]
-				$this->currentFaucet->bindConfigItem($parms[0], $parms[1], $parms[2], $parms[3], $parms[4]);
+				$this->environment->currentFaucet->bindConfigItem($parms[0], $parms[1], $parms[2], $parms[3], $parms[4]);
 				break;
 			case 'generateFaucetCatalogEntry':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1);
-				return $this->currentFaucet->generateFaucetCatalogEntry($parms[0]);
+				return $this->environment->currentFaucet->generateFaucetCatalogEntry($parms[0]);
 				break;
 			
 			
 			
 			case 'deleteFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1);
-				$this->currentFaucet->deleteFaucet($parms[0]);
+				$this->environment->currentFaucet->deleteFaucet($parms[0]);
 				break;
 			
 			
@@ -201,37 +223,37 @@ class Faucets extends Module
 				break;
 			case 'createFaucetAlias':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2);
-				$this->currentFaucet->createAlias($parms[0], $parms[1]);
+				$this->environment->currentFaucet->createAlias($parms[0], $parms[1]);
 				break;
 			case 'replaceFaucetAlias':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2);
-				$this->currentFaucet->createAlias($parms[0], $parms[1], true);
+				$this->environment->currentFaucet->createAlias($parms[0], $parms[1], true);
 				break;
 			case 'deleteFaucetAlias':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1);
-				$this->currentFaucet->deleteAlias($parms[0]);
+				$this->environment->currentFaucet->deleteAlias($parms[0]);
 				break;
 			case 'getPipes':
 				# TODO migrate this
-				return $this->currentFaucet->getPipes();
+				return $this->environment->currentFaucet->getPipes();
 				break;
 			case 'createPipe':
-				$this->currentFaucet->createPipe($this->core->get('Global', $event));
+				$this->environment->currentFaucet->createPipe($this->core->get('Global', $event));
 				break;
 			case 'deletePipe':
-				$this->currentFaucet->deletePipe($this->core->get('Global', $event));
+				$this->environment->currentFaucet->deletePipe($this->core->get('Global', $event));
 				break;
 			case 'tracePipes':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 5, 2);
-				return $this->currentFaucet->tracePipes($parms[0], $parms[2], $parms[1], $parms[3], $parms[4]);
+				return $this->environment->currentFaucet->tracePipes($parms[0], $parms[2], $parms[1], $parms[3], $parms[4]);
 				break;
 				
 			case 'deliver':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
-				$this->currentFaucet->deliver($parms[0], $parms[1], $parms[2]);
+				$this->environment->currentFaucet->deliver($parms[0], $parms[1], $parms[2]);
 				break;
 			case 'deliverAll':
-				return $this->rootFaucet->deliverAll($this->core->get('Global', $event));
+				return $this->environment->rootFaucet->deliverAll($this->core->get('Global', $event));
 				break;
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
@@ -242,7 +264,7 @@ class Faucets extends Module
 	
 	function setFaucetAs($faucetName, $category, $valueName)
 	{
-		if ($faucet=&$this->currentFaucet->getFaucet($faucetName))
+		if ($faucet=&$this->environment->currentFaucet->getFaucet($faucetName))
 		{
 			$this->core->debug(2, "setFaucetAs: Putting Faucet \"$faucetName\" into $category,$valueName");
 			$this->core->setRef($category, $valueName, $faucet['object']);
@@ -255,7 +277,7 @@ class Faucets extends Module
 	
 	function currentFaucet()
 	{
-		$this->core->debug(0, __CLASS__.'->'.__FUNCTION__.': '.$this->currentFaucet->getName());
+		$this->core->debug(0, __CLASS__.'->'.__FUNCTION__.': '.$this->environment->currentFaucet->getName());
 	}
 	
 	function changeFaucet($faucetPath)
@@ -286,11 +308,11 @@ class Faucets extends Module
 				case '..':
 					// Note that .. is allowed part-way through a sequence.
 					$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Changed to parent");
-					$this->currentFaucet=&$this->currentFaucet->getParentFaucet();
+					$this->currentFaucet=&$this->environment->currentFaucet->getParentFaucet();
 					break;
 				default:
 					$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Entered \"$part\"");
-					$totalFaucet=$this->currentFaucet->getFaucet($part);
+					$totalFaucet=$this->environment->currentFaucet->getFaucet($part);
 					$this->currentFaucet=&$totalFaucet['object'];
 					unset($totalFaucet);
 					break;
@@ -306,7 +328,7 @@ class Faucets extends Module
 			return false;
 		}
 		
-		$entry=$this->currentFaucet->getFaucetCatalogTemplate($faucetName, $source, 'macro');
+		$entry=$this->environment->currentFaucet->getFaucetCatalogTemplate($faucetName, $source, 'macro');
 		$entry['config']['description']=$description;
 		$entry['config']['package']=$package;
 		

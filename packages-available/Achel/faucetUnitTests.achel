@@ -31,7 +31,7 @@ defineTest Faucets - metaFaucet - replace,
 	createNullFaucet metaNull
 	
 	createPipe meta2,metaDump2
-	createPipe metaDump,metaNull
+	createPipe metaDump2,metaNull
 	
 	deliver meta2,default,test002
 	
