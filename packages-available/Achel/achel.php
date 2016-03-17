@@ -144,7 +144,7 @@ class Faucets extends Module
 			case 'createRawMetaFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
 				$metaFaucet=new MetaFaucet($parms[0]);
-				$metaFaucet->setStructure($this->rootFaucet, $this->currentFaucet);
+				$metaFaucet->setStructure($this->environment->rootFaucet, $this->environment->currentFaucet);
 				$this->environment->currentFaucet->createFaucet($parms[0], 'meta', $metaFaucet);
 				break;
 			
@@ -152,10 +152,10 @@ class Faucets extends Module
 			case 'changeFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
 				$this->changeFaucet($parms[0]);
-				$this->core->setRef('Achel','currentFaucet', $this->currentFaucet);
+				$this->core->setRef('Achel','currentFaucet', $this->environment->currentFaucet);
 				break;
 			case 'currentFaucet':
-				$this->currentFaucet();
+				$this->environment->currentFaucet();
 				break;
 			case 'setFaucetConfigItem':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 4, true);
@@ -299,7 +299,7 @@ class Faucets extends Module
 						This is intended behavior. If later it is desired to ignore double slashes, then this test will help ($partKey==0)
 					*/
 					$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Changed to rootFaucet");
-					$this->currentFaucet=&$this->rootFaucet;
+					$this->environment->currentFaucet=&$this->environment->rootFaucet;
 					break;
 				case '.':
 					// We're already here. We don't need to do anything.
@@ -308,12 +308,12 @@ class Faucets extends Module
 				case '..':
 					// Note that .. is allowed part-way through a sequence.
 					$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Changed to parent");
-					$this->currentFaucet=&$this->environment->currentFaucet->getParentFaucet();
+					$this->environment->currentFaucet=&$this->environment->currentFaucet->getParentFaucet();
 					break;
 				default:
 					$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Entered \"$part\"");
 					$totalFaucet=$this->environment->currentFaucet->getFaucet($part);
-					$this->currentFaucet=&$totalFaucet['object'];
+					$this->environment->currentFaucet=&$totalFaucet['object'];
 					unset($totalFaucet);
 					break;
 			}
@@ -863,7 +863,7 @@ class MetaFaucet extends ThroughBasedFaucet
 	
 	function setStructure(&$parentFaucet, &$rootFaucet)
 	{
-		$this->rootFaucet=&$rootFaucet;
+		$this->environment->rootFaucet=&$rootFaucet;
 		$this->parentFaucet=&$parentFaucet;
 	}
 	

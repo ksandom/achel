@@ -157,7 +157,6 @@ class DumbReplaceFaucet extends ThroughBasedFaucet
 			$output=array();
 			foreach ($data as $line)
 			{
-				$this->core->debug(0, "thingToInsert=$line->$thingToInsert");
 				$output[]=$thingToInsert;
 				$gotSomething=true;
 			}
