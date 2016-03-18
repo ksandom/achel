@@ -61,4 +61,23 @@ defineTest Faucets - dumbReplace - simple,
 	deleteFaucet dump
 	deleteFaucet null
 	
+defineTest Faucets - metaFaucet - many to many,
+	createMetaFaucet meta,
+		createPipe .,.,*,*
 	
+	createDumpFaucet metaDump,MetaDump
+	createNullFaucet metaNull
+	
+	createPipe meta,metaDump
+	createPipe metaDump,metaNull
+	
+	deliver meta,default,test005
+	
+	deliverAll 10000
+	
+	expect test001,~!MetaDump,0!~
+	
+	deleteFaucet meta
+	deleteFaucet metaDump
+	unsetCategory MetaDump
+

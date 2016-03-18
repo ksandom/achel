@@ -1166,66 +1166,7 @@ class MetaFaucet extends ThroughBasedFaucet
 		
 		for ($revolution=0; $revolution<$maximumRevolutions; $revolution++)
 		{
-			foreach ($this->pipes as $fromFaucet=>$fromFaucetPipes)
-			{
-				if ($fromFaucet=='.')
-				{
-					$fromFaucetName='.';
-					if (!count($this->input)) continue;  // Skip if there is no data.
-				}
-				elseif (!$fromFaucetName=$this->findRealFaucetName($fromFaucet))
-				{
-					$this->core->debug(2, "deliverAll: Can not find $fromFaucet. Removing pipes for $fromFaucet.");
-					unset($this->pipes[$fromFaucet]);
-					continue; // Skip if the faucet doesn't exist
-				}
-				else
-				{
-					if (!$this->faucets[$fromFaucet]['object']->preGet()) continue; // Skip if the faucet has no new data
-				}
-				
-				foreach ($fromFaucetPipes as $fromChannel=>$channelPipes)
-				{
-					if ($fromFaucet=='.')
-					{
-						if (isset($this->input[$fromChannel]))
-						{
-							$input=$this->input[$fromChannel];
-							$this->clearInput($fromChannel);
-							$this->core->debug(4, "Got input from $fromChannel");
-						}
-						else $input=false;
-					}
-					else
-					{
-						$input=$this->faucets[$fromFaucetName]['object']->get($fromChannel);
-					}
-					
-					if ($input)
-					{
-						$resultValue=true;
-						foreach ($channelPipes as $key=>$pipe)
-						{
-							if (!$toFaucetName=$this->findRealFaucetName($pipe['toFaucet']))
-							{
-								$this->core->debug(2, "deliverAll: Can not find {$pipe['toFaucet']}. Removing pipe from $fromFaucetName to $toFaucetName.");
-								$this->deletePipe($key);
-								continue;
-							}
-							
-							if ($this->core->isVerboseEnough($this->deliveryNotifcationLevel))
-							{
-								$numberOfItems=count($input);
-								$this->core->debug($this->deliveryNotifcationLevel, "deliverAll: Delivering ".gettype($input)." $numberOfItems entries from $fromFaucetName,$fromChannel to $toFaucetName,{$pipe['toChannel']} using context {$pipe['context']} and key $key.");
-								# print_r($input);
-							}
-							
-							if ($toFaucetName=='.') $this->outFill($input, $pipe['toChannel']);
-							else $this->faucets[$toFaucetName]['object']->put($input, $pipe['toChannel']);
-						}
-					}
-				}
-			}
+			$resultValue=$this->processPipes();
 			
 			if ($resultValue)
 			{
@@ -1238,6 +1179,73 @@ class MetaFaucet extends ThroughBasedFaucet
 		}
 		
 		return $this->core->getResultSet();
+	}
+	
+	private function processPipes()
+	{
+		$resultValue=true;
+		foreach ($this->pipes as $fromFaucet=>$fromFaucetPipes)
+		{
+			if ($fromFaucet=='.')
+			{
+				$fromFaucetName='.';
+				if (!count($this->input)) continue;  // Skip if there is no data.
+			}
+			elseif (!$fromFaucetName=$this->findRealFaucetName($fromFaucet))
+			{
+				$this->core->debug(2, "deliverAll: Can not find $fromFaucet. Removing pipes for $fromFaucet.");
+				unset($this->pipes[$fromFaucet]);
+				continue; // Skip if the faucet doesn't exist
+			}
+			else
+			{
+				if (!$this->faucets[$fromFaucet]['object']->preGet()) continue; // Skip if the faucet has no new data
+			}
+			
+			foreach ($fromFaucetPipes as $fromChannel=>$channelPipes)
+			{
+				if ($fromFaucet=='.')
+				{
+					if (isset($this->input[$fromChannel]))
+					{
+						$input=$this->input[$fromChannel];
+						$this->clearInput($fromChannel);
+						$this->core->debug(4, "Got input from $fromChannel");
+					}
+					else $input=false;
+				}
+				else
+				{
+					$input=$this->faucets[$fromFaucetName]['object']->get($fromChannel);
+				}
+				
+				if ($input)
+				{
+					$resultValue=true;
+					foreach ($channelPipes as $key=>$pipe)
+					{
+						if (!$toFaucetName=$this->findRealFaucetName($pipe['toFaucet']))
+						{
+							$this->core->debug(2, "deliverAll: Can not find {$pipe['toFaucet']}. Removing pipe from $fromFaucetName to $toFaucetName.");
+							$this->deletePipe($key);
+							continue;
+						}
+						
+						if ($this->core->isVerboseEnough($this->deliveryNotifcationLevel))
+						{
+							$numberOfItems=count($input);
+							$this->core->debug($this->deliveryNotifcationLevel, "deliverAll: Delivering ".gettype($input)." $numberOfItems entries from $fromFaucetName,$fromChannel to $toFaucetName,{$pipe['toChannel']} using context {$pipe['context']} and key $key.");
+							# print_r($input);
+						}
+						
+						if ($toFaucetName=='.') $this->outFill($input, $pipe['toChannel']);
+						else $this->faucets[$toFaucetName]['object']->put($input, $pipe['toChannel']);
+					}
+				}
+			}
+		}
+		
+		return $resultValue;
 	}
 	
 	function tracePipes($fromFaucet, $fromChannel, $toFaucet, $toChannel, $depthLimit=10)
