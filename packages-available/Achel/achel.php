@@ -1259,7 +1259,7 @@ class MetaFaucet extends ThroughBasedFaucet
 					# TODO figure out what this should be. Probably get needs to take an empty value for retrieving everything.
 					if ($fromChannel=='*')
 					{
-						$input=$this->faucets[$fromFaucetName]['object']->$input=getOutQues();
+						$input=$this->faucets[$fromFaucetName]['object']->getOutQues();
 					}
 					else
 					{
