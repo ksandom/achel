@@ -60,7 +60,7 @@ defineTest Faucets - dumbReplace - simple,
 	deleteFaucet replace
 	deleteFaucet dump
 	deleteFaucet null
-	
+
 defineTest Faucets - metaFaucet - many to many,
 	createMetaFaucet meta,
 		createPipe .,.,*,*
@@ -75,9 +75,10 @@ defineTest Faucets - metaFaucet - many to many,
 	
 	deliverAll 10000
 	
-	expect test001,~!MetaDump,0!~
+	expect test005,~!MetaDump,0!~
 	
 	deleteFaucet meta
 	deleteFaucet metaDump
 	unsetCategory MetaDump
 
+# TODO create more unit tests for *

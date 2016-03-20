@@ -386,39 +386,53 @@ class Faucet
 			$this->outChannels[$outChannel]=array();
 		}
 		
-		if (count($this->outChannels[$outChannel]))
-		{ // We need to carefully integrate the new data with the existing data
-			foreach ($data as $key=>$value)
-			{
-				if (is_numeric($key)) $this->outChannels[$outChannel][]=$value;
-				else
+		if ($channel=='*')
+		{ // We have been given all of the channels at once. This needs to be done a little differently.
+			# TODO implement merging
+// 			if (count($this->outChannels[$outChannel]))
+// 			{ // We need to merge
+// 				
+// 			}
+// 			else
+// 			{ // Just overwrite it.
+				$this->outChannels=$data;
+// 			}
+		}
+		else
+		{ // Normal flow: We have been givin a specific channel.
+			if (count($this->outChannels[$outChannel]))
+			{ // We need to carefully integrate the new data with the existing data
+				foreach ($data as $key=>$value)
 				{
-					if (isset($this->outChannels[$outChannel][$key]))
+					if (is_numeric($key)) $this->outChannels[$outChannel][]=$value;
+					else
 					{
-						if (is_array($this->outChannels[$outChannel][$key]) and is_array($value))
+						if (isset($this->outChannels[$outChannel][$key]))
 						{
-							$this->outChannels[$outChannel][$key]=array_merge($this->outChannels[$outChannel][$key], $value);
+							if (is_array($this->outChannels[$outChannel][$key]) and is_array($value))
+							{
+								$this->outChannels[$outChannel][$key]=array_merge($this->outChannels[$outChannel][$key], $value);
+							}
+							else
+							{
+								$this->core->debug(4, "outFill: Data collision. This shouldn't happen, but could if a specific key ($key) is used, and the input (".gettype($value).") and the existing value (".gettype($this->outChannels[$outChannel][$key]).") are not both arrays. In this case, the new value is going to replace the old value.");
+								$this->outChannels[$outChannel][$key]=$value;
+							}
 						}
-						else
+						else 
 						{
-							$this->core->debug(4, "outFill: Data collision. This shouldn't happen, but could if a specific key ($key) is used, and the input (".gettype($value).") and the existing value (".gettype($this->outChannels[$outChannel][$key]).") are not both arrays. In this case, the new value is going to replace the old value.");
+							$this->core->debug(4, "outFill: Directly saved fresh data as key $key in channel $outChannel. Objecttype {$this->objectType}");
 							$this->outChannels[$outChannel][$key]=$value;
 						}
 					}
-					else 
-					{
-						$this->core->debug(4, "outFill: Directly saved fresh data as key $key in channel $outChannel. Objecttype {$this->objectType}");
-						$this->outChannels[$outChannel][$key]=$value;
-					}
 				}
 			}
+			else
+			{ // We can simply stick our data there
+				$this->core->debug(4, "outFill: Saved fresh data in channel $outChannel. Objecttype {$this->objectType}");
+				$this->outChannels[$outChannel]=$data;
+			}
 		}
-		else
-		{ // We can simply stick our data there
-			$this->core->debug(4, "outFill: Saved fresh data in channel $outChannel. Objecttype {$this->objectType}");
-			$this->outChannels[$outChannel]=$data;
-		}
-		
 		return true;
 	}
 	
@@ -663,28 +677,36 @@ class ThroughBasedFaucet extends Faucet
 	
 	function storeData($data, $channel)
 	{
-		if (!isset($this->input[$channel]))
+		if ($channel=='*')
 		{
-			$this->input[$channel]=$data;
+			# TODO implement merging for existing data. At the moment data will silently get lost.
+			$this->input=$data;
 		}
-		elseif(is_array($data))
+		else
 		{
-			foreach ($data as $key=>$line)
+			if (!isset($this->input[$channel]))
 			{
-				if (is_numeric($key)) $this->input[$channel][]=$line;
-				elseif (isset($this->input[$channel][$key]))
+				$this->input[$channel]=$data;
+			}
+			elseif(is_array($data))
+			{
+				foreach ($data as $key=>$line)
 				{
-					if (is_array($this->input[$channel][$key]) and is_array($line))
+					if (is_numeric($key)) $this->input[$channel][]=$line;
+					elseif (isset($this->input[$channel][$key]))
 					{
-						$this->input[$channel][$key]=array_merge($this->input[$channel][$key], $line);
+						if (is_array($this->input[$channel][$key]) and is_array($line))
+						{
+							$this->input[$channel][$key]=array_merge($this->input[$channel][$key], $line);
+						}
+						else
+						{
+							$this->core->debug(2, "->storeData: $key already exists in channel $channel and is ".gettype($this->input[$channel][$key])." while the input is ".gettype($line).". Both need to be an array to be merged. Going to replace the existing data. This is very likely not what you want.");
+							$this->input[$channel][$key]=$line;
+						}
 					}
-					else
-					{
-						$this->core->debug(2, "->storeData: $key already exists in channel $channel and is ".gettype($this->input[$channel][$key])." while the input is ".gettype($line).". Both need to be an array to be merged. Going to replace the existing data. This is very likely not what you want.");
-						$this->input[$channel][$key]=$line;
-					}
+					else $this->input[$channel][$key]=$line;
 				}
-				else $this->input[$channel][$key]=$line;
 			}
 		}
 	}
@@ -1193,7 +1215,7 @@ class MetaFaucet extends ThroughBasedFaucet
 			}
 			elseif (!$fromFaucetName=$this->findRealFaucetName($fromFaucet))
 			{
-				$this->core->debug(2, "deliverAll: Can not find $fromFaucet. Removing pipes for $fromFaucet.");
+				$this->core->debug(2, "processPipes: Can not find $fromFaucet. Removing pipes for $fromFaucet.");
 				unset($this->pipes[$fromFaucet]);
 				continue; // Skip if the faucet doesn't exist
 			}
@@ -1206,19 +1228,48 @@ class MetaFaucet extends ThroughBasedFaucet
 			{
 				if ($fromFaucet=='.')
 				{
-					if (isset($this->input[$fromChannel]))
+					if ($fromChannel=='*')
 					{
-						$input=$this->input[$fromChannel];
-						$this->clearInput($fromChannel);
-						$this->core->debug(4, "Got input from $fromChannel");
+						if (count($this->input))
+						{
+							$input=$this->input;
+							$this->clearInput();
+						}
+						else
+						{
+							$input=false;
+						}
 					}
-					else $input=false;
+					else
+					{
+						if (isset($this->input[$fromChannel]))
+						{
+							$input=$this->input[$fromChannel];
+							$this->clearInput($fromChannel);
+							$this->core->debug(4, "Got input from $fromChannel");
+						}
+						else
+						{
+							$input=false;
+						}
+					}
 				}
 				else
 				{
-					$input=$this->faucets[$fromFaucetName]['object']->get($fromChannel);
+					# TODO figure out what this should be. Probably get needs to take an empty value for retrieving everything.
+					if ($fromChannel=='*')
+					{
+						$input=$this->faucets[$fromFaucetName]['object']->$input=getOutQues();
+					}
+					else
+					{
+						$input=$this->faucets[$fromFaucetName]['object']->get($fromChannel);
+						
+					}
 				}
 				
+				
+				# TODO handle * output
 				if ($input)
 				{
 					$resultValue=true;
