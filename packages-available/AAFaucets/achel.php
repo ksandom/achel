@@ -700,8 +700,17 @@ class ThroughBasedFaucet extends Faucet
 	{
 		if ($channel=='*')
 		{
-			# TODO implement merging for existing data. At the moment data will silently get lost.
-			$this->input=$data;
+			if (count($this->input))
+			{
+				foreach ($data as $channel=>$channelData)
+				{
+					$this->mergeInChannelData($channel, $channelData);
+				}
+			}
+			else
+			{
+				$this->input=$data;
+			}
 		}
 		else
 		{
