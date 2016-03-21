@@ -1283,7 +1283,6 @@ class MetaFaucet extends ThroughBasedFaucet
 				}
 				
 				
-				# TODO handle * output
 				if ($input)
 				{
 					$resultValue=true;
