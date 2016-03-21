@@ -103,7 +103,7 @@ defineTest Faucets - metaFaucet/normal - many to many,
 	deleteFaucet metaDump
 	unsetCategory MetaDump
 
-defineTest Faucets - metaFaucet/normal - many to 1,
+defineTest Faucets - metaFaucet/normal - many to 1 (~ish),
 	createMetaFaucet meta,
 		createLabelFaucet labely
 		createPipe .,labely,*,*
@@ -125,4 +125,24 @@ defineTest Faucets - metaFaucet/normal - many to 1,
 	deleteFaucet metaDump
 	unsetCategory MetaDump
 
-# TODO create more unit tests for *
+defineTest Faucets - metaFaucet/normal - many to 1 and 1 to many,
+	createMetaFaucet meta,
+		createThroughFaucet throughy
+		createPipe .,throughy,*
+		createPipe throughy,.,,*
+	
+	createDumpFaucet metaDump,MetaDump
+	createNullFaucet metaNull
+	
+	createPipe meta,metaDump
+	createPipe metaDump,metaNull
+	
+	deliver meta,default,test008
+	
+	deliverAll 10000
+	
+	expect test008,~!MetaDump,0!~
+	
+	deleteFaucet meta
+	deleteFaucet metaDump
+	unsetCategory MetaDump
