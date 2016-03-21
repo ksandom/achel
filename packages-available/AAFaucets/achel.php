@@ -675,6 +675,27 @@ class ThroughBasedFaucet extends Faucet
 	{
 	}
 	
+	private function mergeInChannelData($channel, $data)
+	{
+		foreach ($data as $key=>$line)
+		{
+			if (is_numeric($key)) $this->input[$channel][]=$line;
+			elseif (isset($this->input[$channel][$key]))
+			{
+				if (is_array($this->input[$channel][$key]) and is_array($line))
+				{
+					$this->input[$channel][$key]=array_merge($this->input[$channel][$key], $line);
+				}
+				else
+				{
+					$this->core->debug(2, "->storeData: $key already exists in channel $channel and is ".gettype($this->input[$channel][$key])." while the input is ".gettype($line).". Both need to be an array to be merged. Going to replace the existing data. This is very likely not what you want.");
+					$this->input[$channel][$key]=$line;
+				}
+			}
+			else $this->input[$channel][$key]=$line;
+		}
+	}
+	
 	function storeData($data, $channel)
 	{
 		if ($channel=='*')
@@ -690,23 +711,7 @@ class ThroughBasedFaucet extends Faucet
 			}
 			elseif(is_array($data))
 			{
-				foreach ($data as $key=>$line)
-				{
-					if (is_numeric($key)) $this->input[$channel][]=$line;
-					elseif (isset($this->input[$channel][$key]))
-					{
-						if (is_array($this->input[$channel][$key]) and is_array($line))
-						{
-							$this->input[$channel][$key]=array_merge($this->input[$channel][$key], $line);
-						}
-						else
-						{
-							$this->core->debug(2, "->storeData: $key already exists in channel $channel and is ".gettype($this->input[$channel][$key])." while the input is ".gettype($line).". Both need to be an array to be merged. Going to replace the existing data. This is very likely not what you want.");
-							$this->input[$channel][$key]=$line;
-						}
-					}
-					else $this->input[$channel][$key]=$line;
-				}
+				$this->mergeInChannelData($channel, $data);
 			}
 		}
 	}
