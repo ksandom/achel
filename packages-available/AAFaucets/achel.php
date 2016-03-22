@@ -372,66 +372,70 @@ class Faucet
 		return $this->faucetInstanceName;
 	}
 	
-	function outFill($data, $channel=false)
-	{ // Send output to a particular channel
-		# TODO check if this line needs to be replaced in some form
-		# if (!$data) return false;
-		
-		if (!$data) return false;
-		
-		$outChannel=($channel!==false)?$channel:'default';
-		if (!isset($this->outChannels[$outChannel]))
-		{
-			$this->core->debug(4, "outFill: Created channel $outChannel");
-			$this->outChannels[$outChannel]=array();
-		}
-		
-		if ($channel=='*')
-		{ // We have been given all of the channels at once. This needs to be done a little differently.
-			# TODO implement merging
-// 			if (count($this->outChannels[$outChannel]))
-// 			{ // We need to merge
-// 				
-// 			}
-// 			else
-// 			{ // Just overwrite it.
-				$this->outChannels=$data;
-// 			}
-		}
-		else
-		{ // Normal flow: We have been givin a specific channel.
-			if (count($this->outChannels[$outChannel]))
-			{ // We need to carefully integrate the new data with the existing data
-				foreach ($data as $key=>$value)
+	private function mergeOutFillData($outChannel, $data)
+	{
+		if (count($this->outChannels[$outChannel]))
+		{ // We need to carefully integrate the new data with the existing data
+			foreach ($data as $key=>$value)
+			{
+				if (is_numeric($key)) $this->outChannels[$outChannel][]=$value;
+				else
 				{
-					if (is_numeric($key)) $this->outChannels[$outChannel][]=$value;
-					else
+					if (isset($this->outChannels[$outChannel][$key]))
 					{
-						if (isset($this->outChannels[$outChannel][$key]))
+						if (is_array($this->outChannels[$outChannel][$key]) and is_array($value))
 						{
-							if (is_array($this->outChannels[$outChannel][$key]) and is_array($value))
-							{
-								$this->outChannels[$outChannel][$key]=array_merge($this->outChannels[$outChannel][$key], $value);
-							}
-							else
-							{
-								$this->core->debug(4, "outFill: Data collision. This shouldn't happen, but could if a specific key ($key) is used, and the input (".gettype($value).") and the existing value (".gettype($this->outChannels[$outChannel][$key]).") are not both arrays. In this case, the new value is going to replace the old value.");
-								$this->outChannels[$outChannel][$key]=$value;
-							}
+							$this->outChannels[$outChannel][$key]=array_merge($this->outChannels[$outChannel][$key], $value);
 						}
-						else 
+						else
 						{
-							$this->core->debug(4, "outFill: Directly saved fresh data as key $key in channel $outChannel. Objecttype {$this->objectType}");
+							$this->core->debug(4, "outFill: Data collision. This shouldn't happen, but could if a specific key ($key) is used, and the input (".gettype($value).") and the existing value (".gettype($this->outChannels[$outChannel][$key]).") are not both arrays. In this case, the new value is going to replace the old value.");
 							$this->outChannels[$outChannel][$key]=$value;
 						}
 					}
+					else 
+					{
+						$this->core->debug(4, "outFill: Directly saved fresh data as key $key in channel $outChannel. Objecttype {$this->objectType}");
+						$this->outChannels[$outChannel][$key]=$value;
+					}
+				}
+			}
+		}
+		else
+		{ // We can simply stick our data there
+			$this->core->debug(4, "outFill: Saved fresh data in channel $outChannel. Objecttype {$this->objectType}");
+			$this->outChannels[$outChannel]=$data;
+		}
+	}
+	
+	function outFill($data, $channel=false)
+	{ // Send output to a particular channel
+		if (!$data) return false;
+		
+		if ($channel=='*')
+		{ // We have been given all of the channels at once. This needs to be done a little differently.
+			if (count($this->outChannels))
+			{ // We need to merge
+				foreach ($data as $dataChannel=>$channelData)
+				{
+					$this->mergeOutFillData($dataChannel, $channelData);
 				}
 			}
 			else
-			{ // We can simply stick our data there
-				$this->core->debug(4, "outFill: Saved fresh data in channel $outChannel. Objecttype {$this->objectType}");
-				$this->outChannels[$outChannel]=$data;
+			{ // Just overwrite it.
+				$this->outChannels=$data;
 			}
+		}
+		else
+		{ // Normal flow: We have been givin a specific channel.
+			$outChannel=($channel!==false)?$channel:'default';
+			if (!isset($this->outChannels[$outChannel]))
+			{
+				$this->core->debug(4, "outFill: Created channel $outChannel");
+				$this->outChannels[$outChannel]=array();
+			}
+			
+			$this->mergeOutFillData($outChannel, $data);
 		}
 		return true;
 	}
