@@ -681,22 +681,29 @@ class ThroughBasedFaucet extends Faucet
 	
 	private function mergeInChannelData($channel, $data)
 	{
-		foreach ($data as $key=>$line)
+		if (!isset($this->input[$channel]))
 		{
-			if (is_numeric($key)) $this->input[$channel][]=$line;
-			elseif (isset($this->input[$channel][$key]))
+			$this->input[$channel]=$data;
+		}
+		elseif(is_array($data))
+		{
+			foreach ($data as $key=>$line)
 			{
-				if (is_array($this->input[$channel][$key]) and is_array($line))
+				if (is_numeric($key)) $this->input[$channel][]=$line;
+				elseif (isset($this->input[$channel][$key]))
 				{
-					$this->input[$channel][$key]=array_merge($this->input[$channel][$key], $line);
+					if (is_array($this->input[$channel][$key]) and is_array($line))
+					{
+						$this->input[$channel][$key]=array_merge($this->input[$channel][$key], $line);
+					}
+					else
+					{
+						$this->core->debug(2, "->storeData: $key already exists in channel $channel and is ".gettype($this->input[$channel][$key])." while the input is ".gettype($line).". Both need to be an array to be merged. Going to replace the existing data. This is very likely not what you want.");
+						$this->input[$channel][$key]=$line;
+					}
 				}
-				else
-				{
-					$this->core->debug(2, "->storeData: $key already exists in channel $channel and is ".gettype($this->input[$channel][$key])." while the input is ".gettype($line).". Both need to be an array to be merged. Going to replace the existing data. This is very likely not what you want.");
-					$this->input[$channel][$key]=$line;
-				}
+				else $this->input[$channel][$key]=$line;
 			}
-			else $this->input[$channel][$key]=$line;
 		}
 	}
 	
@@ -718,14 +725,7 @@ class ThroughBasedFaucet extends Faucet
 		}
 		else
 		{
-			if (!isset($this->input[$channel]))
-			{
-				$this->input[$channel]=$data;
-			}
-			elseif(is_array($data))
-			{
-				$this->mergeInChannelData($channel, $data);
-			}
+			$this->mergeInChannelData($channel, $data);
 		}
 	}
 	
