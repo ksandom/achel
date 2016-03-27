@@ -374,6 +374,12 @@ class Faucet
 	
 	private function mergeOutFillData($outChannel, $data)
 	{
+		if (!isset($this->outChannels[$outChannel]))
+		{
+			$this->core->debug(4, "outFill: Created channel $outChannel");
+			$this->outChannels[$outChannel]=array();
+		}
+		
 		if (count($this->outChannels[$outChannel]))
 		{ // We need to carefully integrate the new data with the existing data
 			foreach ($data as $key=>$value)
@@ -429,11 +435,6 @@ class Faucet
 		else
 		{ // Normal flow: We have been givin a specific channel.
 			$outChannel=($channel!==false)?$channel:'default';
-			if (!isset($this->outChannels[$outChannel]))
-			{
-				$this->core->debug(4, "outFill: Created channel $outChannel");
-				$this->outChannels[$outChannel]=array();
-			}
 			
 			$this->mergeOutFillData($outChannel, $data);
 		}
