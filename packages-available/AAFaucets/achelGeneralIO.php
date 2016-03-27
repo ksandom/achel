@@ -276,7 +276,7 @@ class ProcFaucet extends Faucet
 					foreach ($data as $line)
 					{
 						if (is_string($line)) fwrite($this->procFaucets[procOut], "$line\n");
-						else $this->core->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but struck ".gettype($line)." in the array.");
+						else $this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but struck ".gettype($line)." in the array.");
 					}
 					break;
 			}

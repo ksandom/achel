@@ -1,8 +1,25 @@
 # Unit tests for IPC. ~ ipc,unitTest,hidden
 
+defineTest IPC - prereq - procFaucet,
+	createProcFaucet proc,echo Hi!
+	createDumpFaucet procDump,ProcDump
+	createNullFaucet null
+	
+	createPipe proc,procDump
+	createPipe procDump,null
+	
+	deliverAll 10000
+	
+	expect Hi!,~!ProcDump,0!~
+	
+	deleteFaucet proc
+	deleteFaucet procDump
+	deleteFaucet null
+
 defineTest IPC - json faucet,
-	getPackagePath Local,ipcPath,achel,IPS
-	createJsonIPCFaucet ipc,~!Local,ipcPath!~/ping.py
+	getPackagePath Local,ipcPath,achel,IPC
+	# debug 0,:::~!Local,ipcPath!~/ping.py
+	createJsonIPCFaucet ipc,~!Local,ipcPath!~/ping.py;echo hello > /tmp/asd
 	createDumpFaucet ipcDump,IPC
 	createNullFaucet ipcNull
 	
@@ -14,7 +31,7 @@ defineTest IPC - json faucet,
 	
 	deliverAll 10000
 	
-	expect blah-pong,~!IPC,default!~
+	expect blah-pong,~!IPC,0!~
 	
 	deleteFaucet ipc
 	deleteFaucet ipcDump
