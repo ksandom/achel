@@ -1,4 +1,4 @@
-# Unit tests for json ~ json,unitTest,hidden
+# Unit tests for json ~ json,justJson,unitTest,hidden
 
 defineTest json - inline test,
 	setNested Local,testResultSet,a,b,c
@@ -30,5 +30,36 @@ defineTest json - fromJsons - more complex dataset,
 	fromJsons
 	stashResults Local,outputResultSet
 	expect 2,~!Local,outputResultSet,a,b!~
+
+defineTest json - jsonify,
+	unset Local,a
+	setNested Local,a,b,c,d
+	jsonify Local,a,b
+	
+	expect -{"c":"d"},-~!Local,a,b!~
+
+defineTest json - unJsonify,
+	unset Local,a
+	setNested ["Local","a","b",{"c":"d"}]
+	unJsonify Local,a,b
+	
+	expect d,~!Local,a,b,c!~
+
+defineTest json - jsonify and back,
+	unset Local,a
+	setNested Local,a,b,c,d
+	jsonify Local,a,b
+	unJsonify Local,a,b
+	
+	expect d,~!Local,a,b,c!~
+
+defineTest json - unJsonify and back,
+	unset Local,a
+	setNested ["Local","a","b",{"c":"d"}]
+	unJsonify Local,a,b
+	jsonify Local,a,b
+	
+	expect -{"c":"d"},-~!Local,a,b!~
+
 
 
