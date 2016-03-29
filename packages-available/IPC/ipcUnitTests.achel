@@ -50,7 +50,10 @@ defineTest IPC - prereq - ping with raw json,
 	
 	deliverAll 10000
 	
-	expect blah-pong,~!Proc,0!~
+	unJsonify ["Proc,0","Proc,0"]
+	retrieveResults Proc,0
+	
+	expect blah - pong,~!Proc,0,message!~
 	
 	deleteFaucet proc
 	deleteFaucet procDump
@@ -72,9 +75,7 @@ defineTest IPC - json faucet,
 	
 	deliverAll 10000
 	
-	
-	unJsonify IPC,0
-	expect blah-pong,~!IPC,0,message!~
+	expect blah-pong,~!IPC,0!~
 	
 	deleteFaucet ipc
 	deleteFaucet ipcDump
