@@ -1,0 +1,4 @@
+# Create a debug faucet for debugging data traveling between faucets. --createDebugFaucet=FaucetName . Use the channel names as the debug level. Eg --deliver=debug,1,Hello! will cause the debugFaucet named debug to output a message using the --debug feature on level 1. ~ debug,faucet
+
+parameters faucetName
+createMappedCallFaucet ~!Local,faucetName!~,debugFaucetInternals

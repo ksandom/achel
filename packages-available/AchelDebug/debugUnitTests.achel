@@ -1,0 +1,18 @@
+# Unit tests for achelDebug ~ unitTest,debug,hidden
+
+# TODO I haven't figured out a way to test this.
+defineTest debug - visual run through,
+	createDebugFaucet debugTest
+	createNullFaucet nullTest
+	
+	createPipe debugTest,nullTest
+	
+	deliver debugTest,0,Hey
+	
+	debug 0,asd
+	deliverAll 10000
+	
+	
+	passTest No testable output for now.
+	
+	
