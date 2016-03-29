@@ -2,4 +2,5 @@
 
 stashResults Local,resultSet
 setNested ["Local","jsonified","default",~!Local,resultSet!~]
+jsonify ["Local,jsonified,default","Local,jsonified,default"]
 retrieveResults Local,jsonified

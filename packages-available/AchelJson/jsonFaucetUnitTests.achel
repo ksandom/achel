@@ -162,7 +162,7 @@ defineTest AchelJson - channelToJson,
 	
 	stashResults Local,example
 	
-	expect -{"default":{"A":"1"}},-~!Local,example!~
+	expect -{"default":"{\"A\":\"1\"}"},-~!Local,example!~
 
 
 defineTest AchelJson - jsonToChannelFaucet,
