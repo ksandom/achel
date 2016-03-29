@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python -u
 """
 This is for testing json based IPC.
 """

@@ -16,6 +16,47 @@ defineTest IPC - prereq - procFaucet,
 	deleteFaucet procDump
 	deleteFaucet null
 
+defineTest IPC - prereq - procFaucet inside meta faucet,
+	createMetaFaucet meta,
+		createProcFaucet proc,echo Ho!
+		
+		createPipe .,proc
+		createPipe proc,.
+	
+	createDumpFaucet procDump,ProcDump
+	createNullFaucet null
+	
+	createPipe meta,procDump
+	createPipe procDump,null
+	
+	deliverAll 10000
+	
+	expect Ho!,~!ProcDump,0!~
+	
+	deleteFaucet procDump
+	deleteFaucet null
+	deleteFaucet meta
+
+defineTest IPC - prereq - ping with raw json,
+	getPackagePath Local,ipcPath,achel,IPC
+	createProcFaucet proc,~!Local,ipcPath!~/ping.py
+	createDumpFaucet procDump,Proc
+	createNullFaucet procNull
+	
+	createPipe procDump,procNull
+	createPipe proc,procDump
+	
+	deliver proc,,{"command":"ping","message":"blah"}
+	
+	deliverAll 10000
+	
+	expect blah-pong,~!Proc,0!~
+	
+	deleteFaucet proc
+	deleteFaucet procDump
+	deleteFaucet procNull
+
+
 defineTest IPC - json faucet,
 	getPackagePath Local,ipcPath,achel,IPC
 	# debug 0,:::~!Local,ipcPath!~/ping.py
@@ -31,7 +72,9 @@ defineTest IPC - json faucet,
 	
 	deliverAll 10000
 	
-	expect blah-pong,~!IPC,0!~
+	
+	unJsonify IPC,0
+	expect blah-pong,~!IPC,0,message!~
 	
 	deleteFaucet ipc
 	deleteFaucet ipcDump
