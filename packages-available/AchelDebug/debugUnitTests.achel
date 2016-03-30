@@ -7,9 +7,11 @@ defineTest debug - visual run through,
 	
 	createPipe debugTest,nullTest
 	
-	deliver debugTest,0,Hey
+	# TODO At the moment, only the latest value is showen. This could be counter productive when debugging.Therefore show every value.
+	deliver debugTest,1,Hey
+	deliver debugTest,2,Oh
+	deliver debugTest,1,You
 	
-	debug 0,asd
 	deliverAll 10000
 	
 	

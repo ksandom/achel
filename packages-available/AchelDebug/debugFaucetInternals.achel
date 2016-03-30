@@ -1,8 +1,4 @@
 # Internals for the debug faucet. ~ debug,faucet,hidden
 
 loop Channel,
-	debug 0,~!Channel,key!~
-	# keep channel
-	# unset extras
-	# loop through data
-	#   output
+	debug ~!Channel,key!~,~!Channel,line!~
