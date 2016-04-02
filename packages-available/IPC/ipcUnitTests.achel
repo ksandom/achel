@@ -62,9 +62,7 @@ defineTest IPC - prereq - ping with raw json,
 
 defineTest IPC - json faucet,
 	getPackagePath Local,ipcPath,achel,IPC
-	# debug 0,:::~!Local,ipcPath!~/ping.py
-	# ~!Local,ipcPath!~/ping.py
-	createJsonIPCFaucet ipc,sh 'echo hello > /tmp/asd'
+	createJsonIPCFaucet ipc,~!Local,ipcPath!~/ping.py
 	createDumpFaucet ipcDump,IPC
 	createNullFaucet ipcNull
 	
@@ -72,17 +70,11 @@ defineTest IPC - json faucet,
 	createPipe ipc,ipcDump,message
 	
 	deliver ipc,command,ping
-	deliver ipc,message,blah
+	deliver ipc,message,whay!
 	
 	deliverAll 10000
 	
-	retrieveResults IPC,0
-	# nested
-	# outNow
-	
-	expect blah - pong,~!IPC,0!~
-	
-	# debug 0,DUMPER: ~!Dump,0!~
+	expect whay! - pong,~!IPC,0!~
 	
 	deleteFaucet ipc
 	deleteFaucet ipcDump
