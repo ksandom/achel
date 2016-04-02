@@ -1,0 +1,9 @@
+# Ping the servo faucet to make sure it is working. --servoPing=faucetName,message ~ servo,ping
+parameters {"FaucetName":"servo","message":"ping"}
+
+cd ~!Local,FaucetName!~
+
+deliver proc,command,ping
+deliver proc,message,~!Local,message!~
+
+cd ..

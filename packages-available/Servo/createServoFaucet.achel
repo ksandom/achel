@@ -1,0 +1,5 @@
+# Create a faucet for interacting with servos. --createServoFaucet=faucetName ~ servo,faucet
+parameters FaucetName
+
+getARBPath Local,ARBPath
+createJsonIPCFaucet ~!Local,FaucetName!~,~!Local,ARBPath!~
