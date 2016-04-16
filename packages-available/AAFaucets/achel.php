@@ -155,7 +155,7 @@ class Faucets extends Module
 				$this->core->setRef('Achel','currentFaucet', $this->environment->currentFaucet);
 				break;
 			case 'currentFaucet':
-				$this->environment->currentFaucet();
+				$this->getCurrentFaucet();
 				break;
 			case 'setFaucetConfigItem':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 4, true);
@@ -275,7 +275,7 @@ class Faucets extends Module
 		}
 	}
 	
-	function currentFaucet()
+	function getCurrentFaucet()
 	{
 		$this->core->debug(0, __CLASS__.'->'.__FUNCTION__.': '.$this->environment->currentFaucet->getName());
 	}
@@ -1180,6 +1180,8 @@ class MetaFaucet extends ThroughBasedFaucet
 			$actuallyToFaucet=$this->findRealFaucetName($dstFaucet);
 			if (!is_array($input)) $input=array($input);
 		}
+		else $actuallyToFaucet=null;
+		
 		
 		$this->core->debug(4, "deliver: Delivering ".gettype($input)." to $actuallyToFaucet,$dstChannel.");
 		
