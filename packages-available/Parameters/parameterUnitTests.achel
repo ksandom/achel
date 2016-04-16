@@ -234,3 +234,24 @@ defineTest 1 parameter (nested json) - empty definition - no value,
 	callFeature ~!Tmp,feature!~,
 
 
+defineTest Parameters - normal scope,
+	set Me,testScope,
+		parameters thing
+		
+		expect 123,~!Local,thing!~
+		
+	callFeatureNoReturn ~!Me,testScope!~,123
+
+defineTest Parameters - out of scope,
+	# TODO find a way to cope with this use case in a sensible way.
+	# BACKGROUND When a nesting is called (createMetaFaucet) that needs a new scope, the parameters provided by Local no longer work. This is expected, but invonvenient, and not necessarily intuitive in that some features require their own scope, while others don't.
+	
+	set Me,testScope,
+		parameters thing
+		
+		set Me,nestedThing,
+			expect ,~!Local,thing!~
+		
+		callOutOfScope ~!Me,nestedThing!~
+		
+	callFeatureNoReturn ~!Me,testScope!~,124
