@@ -4,7 +4,6 @@ parameters internalFeatureName
 # createMetaFaucet changes the scope, so this variable is not available directly. Therefore using Me.
 set Me,internalFeatureName,~!Local,internalFeatureName!~
 
-# TODP figure out why this isn't working.
 # TODO write documjentation.
 
 createMetaFaucet testFaucet,
