@@ -5,3 +5,9 @@ defineTest Stub test with " in it,
 
 defineTest Did the stub test get referenced correctly?,
 	expect pass,~!UnitResults,results,Stub test with " in it,result!~
+
+defineTest testFaucets,
+	testFaucets
+		deliver .,A,thing
+	
+	expect thing,~!Test,A,0!~
