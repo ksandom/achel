@@ -8,7 +8,7 @@ Provides a unit testing framework.
 * Create tests inside a macro with `unitTest` in the tags on the first line.
 * Run the tests like so `achel --unitTests`
 
-## A worked example
+## A worked example - normal feature
 
 Let's define some tests.
 
@@ -37,3 +37,19 @@ Let's define some tests.
 * You can use `passTest`, `warnTest` or `failTest`. Each with a description of why it failed.
  * You can have many results in one test. Eg you can fail in many ways. This helps you to have a useful comment as to why it failed. *Do this.*
  * The last one in the test wins.
+
+## A worked example - faucet
+
+This used to be hard. Now it's easy
+
+    defineTest IPC - prereq - procFaucet (replacement),
+    	testFaucets
+    		createProcFaucet proc,echo Hi!
+    		createPipe proc,.
+    	
+    	expect Hi!,~!Test,default,0!~
+
+* Define a test as you would for a normal feature.
+* Nest the thing you want to test inside of `testFaucets`.
+* Create a pipe from your stuff to `.` and any data recieved will be dumped to ~!Test,channel,messageNumber!~.
+* You can then test the results with the expect statement just like you would for normal features.
