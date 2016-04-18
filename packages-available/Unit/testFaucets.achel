@@ -1,10 +1,10 @@
 # Abstraction to test a faucet or bunch of faucets. See Unit documentation for full details for how to use it. ~ unit,faucets
 parameters internalFeatureName
 
+unsetCategory Test
+
 # createMetaFaucet changes the scope, so this variable is not available directly. Therefore using Me.
 set Me,internalFeatureName,~!Local,internalFeatureName!~
-
-# TODO write documjentation.
 
 createMetaFaucet testFaucet,
 	# TODO work out why the many to many pipe is needed.
