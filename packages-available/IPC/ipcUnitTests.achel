@@ -1,20 +1,12 @@
 # Unit tests for IPC. ~ ipc,unitTest,hidden
 
 defineTest IPC - prereq - procFaucet,
-	createProcFaucet proc,echo Hi!
-	createDumpFaucet procDump,ProcDump
-	createNullFaucet null
+	testFaucets
+		createProcFaucet proc,echo Hi!
+		createPipe proc,.
 	
-	createPipe proc,procDump
-	createPipe procDump,null
-	
-	deliverAll 10000
-	
-	expect Hi!,~!ProcDump,0!~
-	
-	deleteFaucet proc
-	deleteFaucet procDump
-	deleteFaucet null
+	expect Hi!,~!Test,default,0!~
+
 
 defineTest IPC - prereq - procFaucet inside meta faucet,
 	createMetaFaucet meta,
