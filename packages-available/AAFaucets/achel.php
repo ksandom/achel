@@ -282,7 +282,7 @@ class Faucets extends Module
 	
 	function changeFaucet($faucetPath)
 	{
-		$debugLevel=2;
+		$debugLevel=1;
 		
 		if ($faucetPath=='/') $faucetPath=''; // A simple way to make sure that / gets processed only once.
 		
@@ -308,7 +308,14 @@ class Faucets extends Module
 				case '..':
 					// Note that .. is allowed part-way through a sequence.
 					$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Changed to parent");
-					$this->environment->currentFaucet=&$this->environment->currentFaucet->getParentFaucet();
+					if ($this->environment->currentFaucet->getParentFaucet())
+					{
+						$this->environment->currentFaucet=&$this->environment->currentFaucet->getParentFaucet();
+					}
+					else
+					{
+						$this->core->debug(1, "Can not .. beyond root.");
+					}
 					break;
 				default:
 					$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Entered \"$part\"");

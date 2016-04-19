@@ -146,3 +146,9 @@ defineTest Faucets - metaFaucet/normal - many to 1 and 1 to many,
 	deleteFaucet meta
 	deleteFaucet metaDump
 	unsetCategory MetaDump
+
+defineTest Faucets - changeFaucet graceful failure,
+	cd ..
+	cd ..
+	cd ..
+	passTest If it got this far... ;)
