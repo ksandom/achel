@@ -325,7 +325,7 @@ class Faucets extends Module
 			}
 			
 			$destination=$this->environment->currentFaucet->getName();
-			$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": $origin->$destination ($part)");
+			$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": $origin->$destination ($part)");
 		}
 	}
 	
