@@ -8,7 +8,7 @@ defineTest IPC - prereq - procFaucet,
 	expect Hi!,~!Test,default,0!~
 
 
-defineTest IPC - prereq - procFaucet inside meta faucet,
+defineTest IPC - prereq - procFaucet inside meta faucet (obsolete),
 	createMetaFaucet meta,
 		createProcFaucet proc,echo Ho!
 		
@@ -28,6 +28,25 @@ defineTest IPC - prereq - procFaucet inside meta faucet,
 	deleteFaucet procDump
 	deleteFaucet null
 	deleteFaucet meta
+
+defineTest IPC - prereq - procFaucet inside meta faucet,
+	pwd
+	testFaucets
+		pwd
+		createMetaFaucet meta,
+			pwd
+			createProcFaucet proc,echo Ho!
+			
+			createPipe .,proc
+			createPipe proc,.
+			pwd
+		
+		pwd
+		createPipe meta,.
+		debug 0,GOT HERE uytrew
+	
+	debug 0,GOT HERE fufytrew
+	expect Ho!,~!Test,default,0!~
 
 defineTest IPC - prereq - ping with raw json,
 	getPackagePath Local,ipcPath,achel,IPC

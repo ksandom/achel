@@ -282,7 +282,7 @@ class Faucets extends Module
 	
 	function changeFaucet($faucetPath)
 	{
-		$debugLevel=1;
+		$debugLevel=2;
 		
 		if ($faucetPath=='/') $faucetPath=''; // A simple way to make sure that / gets processed only once.
 		
@@ -290,6 +290,8 @@ class Faucets extends Module
 		
 		foreach ($pathParts as $partKey=>$part)
 		{
+			$origin=$this->environment->currentFaucet->getName();
+			
 			switch ($part)
 			{
 				case '':
@@ -298,17 +300,14 @@ class Faucets extends Module
 						
 						This is intended behavior. If later it is desired to ignore double slashes, then this test will help ($partKey==0)
 					*/
-					$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Changed to rootFaucet");
 					$this->environment->currentFaucet=&$this->environment->rootFaucet;
 					break;
 				case '.':
 					// We're already here. We don't need to do anything.
-					$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" No action taken.");
 					break;
 				case '..':
 					// Note that .. is allowed part-way through a sequence.
-					$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Changed to parent");
-					if ($this->environment->currentFaucet->getParentFaucet())
+					if ($parentFaucet=&$this->environment->currentFaucet->getParentFaucet())
 					{
 						$this->environment->currentFaucet=&$this->environment->currentFaucet->getParentFaucet();
 					}
@@ -324,6 +323,9 @@ class Faucets extends Module
 					unset($totalFaucet);
 					break;
 			}
+			
+			$destination=$this->environment->currentFaucet->getName();
+			$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": $origin->$destination ($part)");
 		}
 	}
 	
@@ -909,7 +911,7 @@ class MetaFaucet extends ThroughBasedFaucet
 	{
 	}
 	
-	function setStructure(&$parentFaucet, &$rootFaucet)
+	function setStructure(&$rootFaucet, &$parentFaucet)
 	{
 		$this->environment->rootFaucet=&$rootFaucet;
 		$this->parentFaucet=&$parentFaucet;
