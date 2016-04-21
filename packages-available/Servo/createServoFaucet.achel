@@ -2,4 +2,4 @@
 parameters FaucetName
 
 getARBPath Local,ARBPath
-createJsonIPCFaucet ~!Local,FaucetName!~,~!Local,ARBPath!~
+createJsonIPCFaucet ~!Local,FaucetName!~,~!Local,ARBPath!~/servo-json.py

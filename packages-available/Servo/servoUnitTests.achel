@@ -87,23 +87,15 @@ defineTest Servo - Send some data,
 	deleteFaucet servoTest
 
 defineTest Servo - faucet - ping,
-	createServoFaucet servo
-	createNullFaucet null
-	createDumpFaucet dumper,Servo
-	
-	createPipe servo,dumper,message
-	createPipe dumper,null
-	
-	servoPing servo
-	
-	deliverAll 10000
-	
-	getCategory Servo
+	testFaucets
+		createServoFaucet servo
+		createPipe servo,.,message
+		
+		servoPing servo
+		
+	getCategory Test
 	nested
 	outNow
 	
-	expect Returned from requested ping.,~!Servo,0!~
-	
-	deleteFaucet null
-	deleteFaucet servo
-	deleteFaucet dumper
+	expect Returned from requested ping.,~!Test,default,0!~
+
