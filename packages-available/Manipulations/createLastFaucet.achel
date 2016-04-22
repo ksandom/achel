@@ -1,0 +1,4 @@
+# Create a faucet that only keeps the last value on every channel. --createLastFaucet=faucetName ~ faucet,last,manipulations,hidden
+parameters faucetName
+
+createMappedCallFaucet ~!Local,faucetName!~,lastOfEach

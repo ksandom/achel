@@ -1,0 +1,12 @@
+# Unit tests for manipulation faucets. ~ unitTest,manipulation,faucet
+
+defineTest Manipulation,
+	testFaucets
+		createLastFaucet last
+		createPipe last,.,blah,blah
+		
+		deliver last,blah,A
+		deliver last,blah,B
+		deliver last,blah,C
+	
+	expect C,~!Test,blah,0!~

@@ -1,0 +1,35 @@
+# Unit tests for logic ~ hidden,logic,unitTest
+
+defineTest logic - 2 - failure - single,
+	# This should not pass because we are expecting at least input on at least 2 channels, but we are getting 1 input from 1 channel.
+	testFaucets
+		createAtLeastFaucet atLeast,2
+		createPipe atLeast,.,*,*
+		
+		deliver atLeast,default,blah
+	
+	expect ,~!Test,default,0!~
+
+defineTest logic - 2 - failure - double,
+	# This should not pass because we are expecting at least input on at least 2 channels, but we are getting 2 inputs from 1 channel.
+	testFaucets
+		createAtLeastFaucet atLeast,2
+		createPipe atLeast,.,*,*
+		
+		deliver atLeast,default,blah
+		deliver atLeast,default,blah
+	
+	expect ,~!Test,default,0!~
+
+defineTest logic - 2 - success - double,
+	# This should not pass because we are expecting at least input on at least 2 channels, but we are getting 2 inputs from 1 channel.
+	testFaucets
+		createAtLeastFaucet atLeast,2
+		createPipe atLeast,.,*,*
+		
+		deliver atLeast,default,blah1
+		deliver atLeast,thing,blah2
+	
+	expect blah2,~!Test,thing,0!~
+	expect blah1,~!Test,default,0!~
+
