@@ -94,10 +94,6 @@ defineTest Servo - faucet - ping,
 		createPipe last,.
 		
 		servoPing servo
-		
-	getCategory Test
-	nested
-	outNow
 	
 	expect Returned from requested ping.,~!Test,default,0!~
 
