@@ -3,7 +3,6 @@ parameters {"FaucetName":"servo","message":"ping"}
 
 cd ~!Local,FaucetName!~
 
-deliver proc,command,ping
-deliver proc,message,~!Local,message!~
+deliver proc,default,{"command":"ping","message":"~!Local,message!~"}
 
 cd ..

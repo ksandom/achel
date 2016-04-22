@@ -89,7 +89,9 @@ defineTest Servo - Send some data,
 defineTest Servo - faucet - ping,
 	testFaucets
 		createServoFaucet servo
-		createPipe servo,.,message
+		createLastFaucet last
+		createPipe servo,last,message
+		createPipe last,.
 		
 		servoPing servo
 		

@@ -282,6 +282,7 @@ class AchelRealityBridge:
 			
 		except ValueError:
 			self.error(1, "notJson", "Recieved data was not decodable as json.")
+			sys.stderr.write("Not json?: \""+line+"\"\n")
 		except KeyError:
 			self.error(1, "missing command", "Json was recieved, but command was not in it.")
 	
@@ -302,6 +303,8 @@ class AchelRealityBridge:
 		try:
 			while True:
 				self.processLine(sys.stdin.readline())
+		except IOError:
+			pass
 		except KeyboardInterrupt:
 			self.state("terminating", "recieved interrupt")
 			self.quit("Keyboard intrerupt")
