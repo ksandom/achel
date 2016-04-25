@@ -97,6 +97,18 @@ defineTest Servo - faucet - ping,
 	
 	expect Returned from requested ping.,~!Test,default,0!~
 
+defineTest Servo - faucet - nuter,
+	testFaucets
+		createServoFaucet servo
+		createLastFaucet last
+		createPipe servo,last,message
+		createPipe last,.
+		
+		servoNuter servo
+	
+	expect Set nutered to true(true).,~!Test,default,0!~
+
+
 defineTest Servo - faucet - send live data,
 	testFaucets
 		createServoFaucet servo

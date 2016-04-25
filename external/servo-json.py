@@ -50,6 +50,7 @@ Pins
 
 class AchelRealityBridge:
 	def __init__(self):
+		self.nutered=False
 		self.setDefaultValues()
 		self.configureGPIO()
 	
@@ -263,6 +264,15 @@ class AchelRealityBridge:
 		else:
 			self.returnData("gpioState", "0", "gpioNotStarted", "NA")
 	
+	def nuter(self, value):
+		self.nutered = (value == "true")
+		if (self.nutered):
+			resultValue="true"
+		else:
+			resultValue="false"
+		
+		self.debug(2, "Set nutered to "+resultValue+"("+value+").")
+	
 	def processLine(self, line):
 		# Get data from line
 		try:
@@ -277,6 +287,8 @@ class AchelRealityBridge:
 				self.setPins(data['data'])
 			elif (data['command'] == "isGpioStarted"):
 				self.isGpioStarted()
+			elif (data['command'] == "nuter"):
+				self.nuter(data['message'])
 			else:
 				self.debug(0, "Unknown command \""+data['command']+"\"")
 			
