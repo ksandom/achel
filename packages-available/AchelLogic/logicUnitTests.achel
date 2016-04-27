@@ -22,7 +22,7 @@ defineTest logic - 2 - failure - double,
 	expect ,~!Test,default,0!~
 
 defineTest logic - 2 - success - double,
-	# This should not pass because we are expecting at least input on at least 2 channels, but we are getting 2 inputs from 1 channel.
+	# This should pass because we are expecting at least input on at least 2 channels, and we are getting 1 input from each of the 2 channels.
 	testFaucets
 		createAtLeastFaucet atLeast,2
 		createPipe atLeast,.,*,*
@@ -31,5 +31,43 @@ defineTest logic - 2 - success - double,
 		deliver atLeast,thing,blah2
 	
 	expect blah2,~!Test,thing,0!~
+	expect blah1,~!Test,default,0!~
+
+defineTest logic - 3 - failure - single,
+	# This should not pass because we are expecting at least input on at least 3 channels, but we are getting 1 input from each of 2 channels.
+	testFaucets
+		createAtLeastFaucet atLeast,3
+		createPipe atLeast,.,*,*
+		
+		deliver atLeast,default,blah
+		deliver atLeast,thing1,blah
+	
+	expect ,~!Test,default,0!~
+
+defineTest logic - 3 - failure - double,
+	# This should not pass because we are expecting at least input on at least 3 channels, but we are getting 2 inputs from each of 2 channels.
+	testFaucets
+		createAtLeastFaucet atLeast,3
+		createPipe atLeast,.,*,*
+		
+		deliver atLeast,default,blah
+		deliver atLeast,default,blah
+		deliver atLeast,thing1,blah
+		deliver atLeast,thing1,blah
+	
+	expect ,~!Test,default,0!~
+
+defineTest logic - 3 - success - double,
+	# This should pass because we are expecting at least input on at least 3 channels, and we are getting 1 inputs from each channel.
+	testFaucets
+		createAtLeastFaucet atLeast,3
+		createPipe atLeast,.,*,*
+		
+		deliver atLeast,default,blah1
+		deliver atLeast,thing1,blah2
+		deliver atLeast,thing2,blah3
+	
+	expect blah3,~!Test,thing2,0!~
+	expect blah2,~!Test,thing1,0!~
 	expect blah1,~!Test,default,0!~
 
