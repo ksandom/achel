@@ -32,7 +32,7 @@ setNested ["UnitResults","results","~!Local,escapedDescription!~","stackTrace",~
 
 
 if ~!UnitConfig,showTests!~,==,true,
-	debug 0,[~!UnitResults,currentResult!~] ~!Local,description!~
+	debug 0,[~!Color,~!UnitResults,currentColor!~!~~!UnitResults,currentResult!~~!Color,default!~] ~!Local,description!~
 
 
 resetTest
