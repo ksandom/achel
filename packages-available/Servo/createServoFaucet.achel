@@ -3,3 +3,10 @@ parameters FaucetName
 
 getARBPath Local,ARBPath
 createJsonIPCFaucet ~!Local,FaucetName!~,~!Local,ARBPath!~/servo-json.py
+
+cd ~!Local,FaucetName!~
+
+createAtLeastAndAddFaucet atLeastAndAdd,1,command,setData
+createPipe .,atLeast,*,data
+
+cd ..

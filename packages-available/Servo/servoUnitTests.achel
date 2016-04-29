@@ -116,6 +116,8 @@ defineTest Servo - faucet - send live data,
 		createPipe servo,last,message
 		createPipe last,.
 		
+		servoNuter servo
+		
 		deliver servo,0,1
 		deliver servo,1,2
 		deliver servo,2,3

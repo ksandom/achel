@@ -242,11 +242,17 @@ class AchelRealityBridge:
 	
 	
 	def setPins(self, data):
+		changeCount=0
+		
 		for pin in data:
 			try:
 				self.setPin(key, data[pin])
+				changeCount+=1
 			except:
 				self.error("4", "unknown", "Failure trying to set pin "+pin+".")
+		
+		# TODO check this line
+		self.debug(3, "Set "+str(changeCount)+" pins.")
 	
 	def setPin(self, pin, value):
 		scaled=self.scale(value, self.pins[pin]['inMin'], self.pins[pin]['inMax'], self.pins[pin]['outMin'], self.pins[pin]['outMax'])
@@ -275,6 +281,9 @@ class AchelRealityBridge:
 	
 	def processLine(self, line):
 		# Get data from line
+		# if (line == ""):
+		#	return False
+		
 		try:
 			data=json.loads(line)
 			# Work out what do do with it
@@ -297,6 +306,9 @@ class AchelRealityBridge:
 			sys.stderr.write("Not json?: \""+line+"\"\n")
 		except KeyError:
 			self.error(1, "missing command", "Json was recieved, but command was not in it.")
+		except TypeError:
+			self.error(1, "typeError", "The decoded json does not appear to be a dict.")
+			sys.stderr.write("Unexpected json structure: \""+line+"\"\n")
 	
 	def returnData(self, command, level, shortMessage, message):
 		result={"command":command, "level":level, "shortMessage":shortMessage, "message":message}
