@@ -1,6 +1,6 @@
 # Unit tests for logic ~ hidden,logic,unitTest
 
-defineTest logic - 2 - failure - single,
+defineTest logic - atLeast 2 - failure - single,
 	# This should not pass because we are expecting at least input on at least 2 channels, but we are getting 1 input from 1 channel.
 	testFaucets
 		createAtLeastFaucet atLeast,2
@@ -10,7 +10,7 @@ defineTest logic - 2 - failure - single,
 	
 	expect ,~!Test,default,0!~
 
-defineTest logic - 2 - failure - double,
+defineTest logic - atLeast 2 - failure - double,
 	# This should not pass because we are expecting at least input on at least 2 channels, but we are getting 2 inputs from 1 channel.
 	testFaucets
 		createAtLeastFaucet atLeast,2
@@ -21,7 +21,7 @@ defineTest logic - 2 - failure - double,
 	
 	expect ,~!Test,default,0!~
 
-defineTest logic - 2 - success - double,
+defineTest logic - atLeast 2 - success - double,
 	# This should pass because we are expecting at least input on at least 2 channels, and we are getting 1 input from each of the 2 channels.
 	testFaucets
 		createAtLeastFaucet atLeast,2
@@ -33,7 +33,7 @@ defineTest logic - 2 - success - double,
 	expect blah2,~!Test,thing,0!~
 	expect blah1,~!Test,default,0!~
 
-defineTest logic - 3 - failure - single,
+defineTest logic - atLeast 3 - failure - single,
 	# This should not pass because we are expecting at least input on at least 3 channels, but we are getting 1 input from each of 2 channels.
 	testFaucets
 		createAtLeastFaucet atLeast,3
@@ -44,7 +44,7 @@ defineTest logic - 3 - failure - single,
 	
 	expect ,~!Test,default,0!~
 
-defineTest logic - 3 - failure - double,
+defineTest logic - atLeast 3 - failure - double,
 	# This should not pass because we are expecting at least input on at least 3 channels, but we are getting 2 inputs from each of 2 channels.
 	testFaucets
 		createAtLeastFaucet atLeast,3
@@ -57,7 +57,7 @@ defineTest logic - 3 - failure - double,
 	
 	expect ,~!Test,default,0!~
 
-defineTest logic - 3 - success - double,
+defineTest logic - atLeast 3 - success - double,
 	# This should pass because we are expecting at least input on at least 3 channels, and we are getting 1 inputs from each channel.
 	testFaucets
 		createAtLeastFaucet atLeast,3
