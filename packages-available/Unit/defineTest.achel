@@ -31,6 +31,9 @@ setNested ["UnitResults","results","~!Local,escapedDescription!~","resultColor",
 setNested ["UnitResults","results","~!Local,escapedDescription!~","stackTrace",~!UnitResults,currentStackTrace!~]
 
 
+if ~!UnitConfig,showTests!~,==,true,
+	debug 0,[~!UnitResults,currentResult!~] ~!Local,description!~
+
 
 resetTest
 unset Local,defineTest-description

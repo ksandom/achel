@@ -1,0 +1,3 @@
+# Show the results of unit tests as they happen. Must be called before --unitTests ~ unit,user
+
+set UnitConfig,showTests,true
