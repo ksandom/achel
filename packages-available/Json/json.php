@@ -54,7 +54,7 @@ class JsonGeneral extends Module
 		
 		if (!$backwards)
 		{ // jsonify
-			$output=json_encode($value);
+			$output=json_encode($value, JSON_FORCE_OBJECT);
 		}
 		else
 		{ // unJsonify

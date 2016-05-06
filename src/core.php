@@ -1259,7 +1259,7 @@ class core extends Module
 						}
 					}
 					else $result=null;
-					$this->core->debug(5,"get (public): [$category][$nesting][$valueName] ".json_encode($result));
+					$this->core->debug(5,"get (public): [$category][$nesting][$valueName] ".json_encode($result, JSON_FORCE_OBJECT));
 				}
 				else
 				{

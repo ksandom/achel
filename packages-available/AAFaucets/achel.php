@@ -431,9 +431,9 @@ class Faucet
 		{ // We have been given all of the channels at once. This needs to be done a little differently.
 			if (count($this->outChannels))
 			{ // We need to merge
-				foreach ($data as $dataChannel=>$channelData)
+				foreach ($data as $dataChannel=>$dataChannelData)
 				{
-					$this->mergeOutFillData($dataChannel, $channelData);
+					$this->mergeOutFillData($dataChannel, $dataChannelData);
 				}
 			}
 			else
@@ -444,7 +444,6 @@ class Faucet
 		else
 		{ // Normal flow: We have been givin a specific channel.
 			$outChannel=($channel!==false)?$channel:'default';
-			
 			$this->mergeOutFillData($outChannel, $data);
 		}
 		return true;
