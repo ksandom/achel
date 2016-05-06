@@ -246,7 +246,10 @@ class AchelRealityBridge:
 		
 		for pin in data:
 			try:
-				self.setPin(key, data[pin])
+				if (not self.nutered):
+					self.setPin(key, data[pin])
+				else:
+					self.error(1, "wrotePin", "wrote pin "+pin)
 				changeCount+=1
 			except:
 				self.error("4", "unknown", "Failure trying to set pin "+pin+".")
@@ -305,8 +308,9 @@ class AchelRealityBridge:
 			self.error(1, "notJson", "Recieved data was not decodable as json.")
 			sys.stderr.write("Not json?: \""+line+"\"\n")
 		except KeyError:
-			self.error(1, "missing command", "Json was recieved, but command was not in it.")
+			self.error(1, "missing command", "Json was recieved, but command was not in it. Line=\""+line+"\"")
 		except TypeError:
+			# TODO Happening inside data[]?
 			self.error(1, "typeError", "The decoded json does not appear to be a dict.")
 			sys.stderr.write("Unexpected json structure: \""+line+"\"\n")
 	
@@ -322,6 +326,7 @@ class AchelRealityBridge:
 	
 	def error(self, level, what, why):
 		self.returnData("error", level, what, why)
+		sys.stderr.write("Error: Level="+str(level)+" What=\""+what+"\" Why=\""+why+"\"\n")
 	
 	def main(self):
 		try:

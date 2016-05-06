@@ -7,6 +7,8 @@ createJsonIPCFaucet ~!Local,FaucetName!~,~!Local,ARBPath!~/servo-json.py
 cd ~!Local,FaucetName!~
 
 createAtLeastAndAddFaucet atLeastAndAdd,1,command,setData
-createPipe .,atLeast,*,data
+createPipe .,atLeastAndAdd,*,data
+createPipe atLeastAndAdd,.,command,command
+createPipe atLeastAndAdd,.,data,data
 
 cd ..
