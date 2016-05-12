@@ -63,7 +63,7 @@ defineTest Faucets - dumbReplace - simple,
 
 defineTest Faucets - metaFaucet - many to many,
 	createMetaFaucet meta,
-		createPipe .,.,*,*
+		createPipe .,.,_*_,*
 	
 	createDumpFaucet metaDump,MetaDump
 	createNullFaucet metaNull
