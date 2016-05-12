@@ -1,4 +1,12 @@
 # Internals for the debug faucet. ~ debug,faucet,hidden
 
+debug Temporary dump of all debugging
+nested
+outNow
+
 loop Channel,
-	debug ~!Channel,key!~,~!Channel,line!~
+	debug ~!Channel,key!~,Here is the contents of the data sent to debug level (channel) ~!Channel,key!~
+	isolate
+		getCategory Channel
+		nested
+		outNow

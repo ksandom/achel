@@ -1231,6 +1231,32 @@ class MetaFaucet extends ThroughBasedFaucet
 		
 		return $this->core->getResultSet();
 	}
+
+	function last($series)
+	{
+		if (is_array($series))
+		{
+			$keys=array_keys($series);
+			return $series[$keys[count($keys)-1]];
+		}
+		else
+		{
+			return $series;
+		}
+	}
+	
+	private function bendInput($input, $preBentInput=false)
+	{
+		if ($preBentInput) return $preBentInput;
+		
+		$bentInput=array();
+		foreach ($input as $key=>$value)
+		{
+			$bentInput[$key]=$this->last($value);
+		}
+		
+		return $bentInput;
+	}
 	
 	private function processPipes()
 	{
@@ -1255,13 +1281,28 @@ class MetaFaucet extends ThroughBasedFaucet
 			
 			foreach ($fromFaucetPipes as $fromChannel=>$channelPipes)
 			{
+				$bentData=false;
+				
+				# Figure out as much of the input now as we can
 				if ($fromFaucet=='.')
 				{
-					if ($fromChannel=='*')
+					if ($fromChannel=='_*_')
 					{
 						if (count($this->input))
 						{
 							$input=$this->input;
+							$this->clearInput();
+						}
+						else
+						{
+							$input=false;
+						}
+					}
+					elseif ($fromChannel=='*')
+					{
+						if (count($this->input))
+						{
+							$input=$this->bendInput($this->input, $bentData);
 							$this->clearInput();
 						}
 						else
