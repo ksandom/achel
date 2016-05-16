@@ -165,3 +165,5 @@ defineTest Faucets - changeFaucet graceful failure,
 	cd ..
 	cd ..
 	passTest If it got this far... ;)
+
+# TODO Write tests for ~* bent input.
