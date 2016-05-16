@@ -1286,7 +1286,7 @@ class MetaFaucet extends ThroughBasedFaucet
 				# Figure out as much of the input now as we can
 				if ($fromFaucet=='.')
 				{
-					if ($fromChannel=='_*_')
+					if ($fromChannel=='*')
 					{
 						if (count($this->input))
 						{
@@ -1295,10 +1295,11 @@ class MetaFaucet extends ThroughBasedFaucet
 						}
 						else
 						{
+							$this->core->debug(4,__CLASS__.": No Data!?");
 							$input=false;
 						}
 					}
-					elseif ($fromChannel=='*')
+					elseif ($fromChannel=='~*')
 					{
 						if (count($this->input))
 						{
@@ -1331,6 +1332,18 @@ class MetaFaucet extends ThroughBasedFaucet
 					{
 						$input=$this->faucets[$fromFaucetName]['object']->getOutQues();
 					}
+					elseif ($fromChannel=='~*')
+					{
+						if (count($this->input))
+						{
+							$input=$this->faucets[$fromFaucetName]['object']->getOutQues();
+							$input=$this->bendInput($input, false);
+						}
+						else
+						{
+							$input=false;
+						}
+					}
 					else
 					{
 						$input=$this->faucets[$fromFaucetName]['object']->get($fromChannel);
@@ -1339,7 +1352,7 @@ class MetaFaucet extends ThroughBasedFaucet
 				}
 				
 				
-				if ($input)
+				if (count($input))
 				{
 					$resultValue=true;
 					foreach ($channelPipes as $key=>$pipe)
@@ -1355,7 +1368,6 @@ class MetaFaucet extends ThroughBasedFaucet
 						{
 							$numberOfItems=count($input);
 							$this->core->debug($this->deliveryNotifcationLevel, "deliverAll: Delivering ".gettype($input)." $numberOfItems entries from $fromFaucetName,$fromChannel to $toFaucetName,{$pipe['toChannel']} using context {$pipe['context']} and key $key.");
-							# print_r($input);
 						}
 						
 						if ($toFaucetName=='.') $this->outFill($input, $pipe['toChannel']);

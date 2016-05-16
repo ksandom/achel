@@ -63,7 +63,7 @@ defineTest Faucets - dumbReplace - simple,
 
 defineTest Faucets - metaFaucet - many to many,
 	createMetaFaucet meta,
-		createPipe .,.,_*_,*
+		createPipe .,.,*,*
 	
 	createDumpFaucet metaDump,MetaDump
 	createNullFaucet metaNull
@@ -82,6 +82,19 @@ defineTest Faucets - metaFaucet - many to many,
 	unsetCategory MetaDump
 
 defineTest Faucets - metaFaucet/normal - many to many,
+	pass
+		testFaucets
+			createMetaFaucet meta,
+				createThroughFaucet throughy
+				createPipe .,throughy,*,*
+				createPipe throughy,.,*,*
+				# createPipe .,.,_*_,*
+			createPipe meta,.
+			deliver meta,default,test006
+		
+		expect test006,~!Test,0!~
+	
+	
 	createMetaFaucet meta,
 		createThroughFaucet throughy
 		createPipe .,throughy,*,*

@@ -155,9 +155,6 @@ class MappedCallFaucet extends ThroughBasedFaucet
 			
 			$this->core->debug(1, "MappedCallFaucet->preGet: Calling feature={$this->feature} parameter={$this->argument}");
 			$builtInput=$this->buildInput($this->input);
-			print_r($this->input);
-			$this->core->debug(0,"-- TO --");
-			print_r($builtInput);
 			$returnedData=$this->core->callFeatureWithDataset($this->feature, $this->argument, $builtInput);
 			foreach ($returnedData as $channel=>$outData)
 			{

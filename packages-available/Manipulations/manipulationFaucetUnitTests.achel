@@ -8,5 +8,8 @@ defineTest Manipulation,
 		deliver last,blah,A
 		deliver last,blah,B
 		deliver last,blah,C
+		
+		createDebugFaucet debug
+		createPipe last,debug,blah,0
 	
 	expect C,~!Test,blah,0!~
