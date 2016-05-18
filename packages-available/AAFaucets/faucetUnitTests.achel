@@ -167,3 +167,17 @@ defineTest Faucets - changeFaucet graceful failure,
 	passTest If it got this far... ;)
 
 # TODO Write tests for ~* bent input.
+defineTest Faucets - bent many to many,
+	testFaucets
+		createThroughFaucet throughy
+		createPipe throughy,.,~*,combined
+		
+		deliver throughy,a,1
+		deliver throughy,b,2
+		deliver throughy,c,3
+	
+	expect 1,~!Test,combined,a!~
+	expect 2,~!Test,combined,b!~
+	expect 3,~!Test,combined,c!~
+	
+	

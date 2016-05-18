@@ -1334,10 +1334,11 @@ class MetaFaucet extends ThroughBasedFaucet
 					}
 					elseif ($fromChannel=='~*')
 					{
-						if (count($this->input))
+						
+						$input=$this->faucets[$fromFaucetName]['object']->getOutQues();
+						if (count($input))
 						{
-							$input=$this->faucets[$fromFaucetName]['object']->getOutQues();
-							$input=$this->bendInput($input, false);
+							$input=$this->bendInput($input, $bentData);
 						}
 						else
 						{
