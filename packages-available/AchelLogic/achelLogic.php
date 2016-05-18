@@ -58,7 +58,7 @@ class AtLeast extends ThroughBasedFaucet
 		
 		if ($channel)
 		{
-			$this->core->debug(0, "AtLeastAndAdd: n=$numberOfRequiredChannels c=$channel v=$value");
+			$this->core->debug(2, "AtLeastAndAdd: n=$numberOfRequiredChannels c=$channel v=$value");
 			$this->channel=$channel;
 			$this->value=$value;
 		}
@@ -71,7 +71,7 @@ class AtLeast extends ThroughBasedFaucet
 		
 		if ($channelCount>=$this->numberOfRequiredChannels and $this->channel)
 		{
-			$this->core->debug(0, "AtLeast: got data count=$channelCount c={$this->channel} v={$this->value}");
+			$this->core->debug(2, "AtLeast: got data count=$channelCount c={$this->channel} v={$this->value}");
 			$this->outFill(array($this->value), $this->channel);
 			$gotSomething=true;
 		}
@@ -84,7 +84,7 @@ class AtLeast extends ThroughBasedFaucet
 		{
 			if ($channelCount>=$this->numberOfRequiredChannels)
 			{
-				$this->core->debug(0, "AtLeast: got data count=$channelCount c=$channel");
+				# $this->core->debug(0, "AtLeast: got data count=$channelCount c=$channel");
 				
 				$output=array();
 				foreach ($data as $key=>$value)
@@ -100,7 +100,7 @@ class AtLeast extends ThroughBasedFaucet
 						$output[$key]=$value;
 					}
 				}
-				print_r($output);
+				# print_r($output);
 				$this->outFill($output, $channel);
 				$gotSomething=true;
 			}

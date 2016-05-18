@@ -1,12 +1,13 @@
 # Internals for the debug faucet. ~ debug,faucet,hidden
 
-debug Temporary dump of all debugging
-nested
-outNow
+# debug 0,Temporary dump of all debugging
+pass
+	nested
+	outNow
 
 loop Channel,
 	debug ~!Channel,key!~,Here is the contents of the data sent to debug level (channel) ~!Channel,key!~
-	isolate
+	pass isolate
 		getCategory Channel
 		nested
 		outNow
