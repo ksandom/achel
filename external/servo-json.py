@@ -246,11 +246,11 @@ class AchelRealityBridge:
 		
 		for pin in data:
 			try:
-				if (not self.nutered):
+				if not (self.nutered):
 					self.setPin(key, data[pin])
 				else:
 					self.error(1, "wrotePin", "wrote pin "+pin)
-				changeCount+=1
+				changeCount=changeCount+1
 			except:
 				self.error("4", "unknown", "Failure trying to set pin "+pin+".")
 		
@@ -286,6 +286,8 @@ class AchelRealityBridge:
 		# Get data from line
 		# if (line == ""):
 		#	return False
+		
+		sys.stderr.write("Input: \""+line+"\"\n")
 		
 		try:
 			data=json.loads(line)

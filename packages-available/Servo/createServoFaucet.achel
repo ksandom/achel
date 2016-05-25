@@ -1,14 +1,43 @@
-# Create a faucet for interacting with servos. --createServoFaucet=faucetName ~ servo,faucet
+# Create a faucet for interacting with servos. --createServoFaucet=FaucetName ~ servo,faucet
 parameters FaucetName
 
 getARBPath Local,ARBPath
-createJsonIPCFaucet ~!Local,FaucetName!~,~!Local,ARBPath!~/servo-json.py
+set IPC-~!Local,FaucetName!~,ipcCommand,~!Local,ARBPath!~/servo-json.py
 
-cd ~!Local,FaucetName!~
+createMetaFaucet ~!Local,FaucetName!~,
+	createChannelsToJsonFaucet in
+	createProcFaucet proc,~!IPC-~!Local,FaucetName!~,ipcCommand!~
+	createJsonToChannelsFaucet out
+	createAtLeastAndAddFaucet atLeastAndAdd,1,command,setData
+	createDebugFaucet debug
+	
+	createPipe .,debug,*,0
+	createPipe .,atLeastAndAdd,*,data
+	createPipe atLeastAndAdd,in
+	createPipe in,proc
+	createPipe proc,out
+	createPipe out,.,*,*
+	
+	createPipe debug,.
 
-createAtLeastAndAddFaucet atLeastAndAdd,1,command,setData
-createPipe .,atLeastAndAdd,*,data
-createPipe atLeastAndAdd,.,command,command
-createPipe atLeastAndAdd,.,data,data
 
-cd ..
+pass
+	createJsonIPCFaucet ~!Local,FaucetName!~,~!Local,ARBPath!~/servo-json.py
+
+	cd ~!Local,FaucetName!~
+
+	createPipe .,atLeastAndAdd,*,data
+	createPipe atLeastAndAdd,proc,command,command
+	createPipe atLeastAndAdd,proc,data,data
+
+	createPipe .,debug,*,1
+	# createPipe atLeastAndAdd,debug,command,1
+
+	createPipe debug,.
+
+	pass
+		getPipes
+		nested
+		outNow
+
+	cd ..
