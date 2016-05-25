@@ -71,11 +71,7 @@ defineTest Servo - Send some data,
 		
 		setAllGenericServos
 		
-		deliverAll 10000
-		
 		deliver servoTest,,{"command":"setData","data":{"7":"100","11":"90"}}
-		
-		deliverAll 10000
 		
 	if ~!ServoTest,returnedData,message!~,==,Unknown command,
 		failTest Not implemented
