@@ -27,7 +27,7 @@ defineTest Servo - ping,
 	
 	deliverAll 10000
 	
-	deliver servoTest,,{"command":"ping"}
+	deliver servoTest,,{"command":"ping","message":"manual ping"}
 	
 	deliverAll 10000
 	
@@ -46,7 +46,7 @@ defineTest Servo - GPIO started,
 	
 	deliverAll 10000
 	
-	deliver servoTest,,{"command":"ping"}
+	deliver servoTest,,{"command":"ping","message":"none/GPIO"}
 	
 	deliverAll 10000
 	
@@ -89,8 +89,11 @@ defineTest Servo - faucet - ping,
 		createPipe servo,last,message
 		createPipe last,.
 		
-		servoPing servo
+		servoPing servo,faucet
 	
+	getCategory Test
+	nested
+	outNow
 	expect Returned from requested ping.,~!Test,default,0!~
 
 defineTest Servo - faucet - nuter,

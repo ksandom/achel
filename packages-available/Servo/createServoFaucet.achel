@@ -2,42 +2,17 @@
 parameters FaucetName
 
 getARBPath Local,ARBPath
-set IPC-~!Local,FaucetName!~,ipcCommand,~!Local,ARBPath!~/servo-json.py
+set Me,FaucetName,~!Local,FaucetName!~
+set IPC-~!Me,FaucetName!~,ipcCommand,~!Local,ARBPath!~/servo-json.py
 
-createMetaFaucet ~!Local,FaucetName!~,
+createMetaFaucet ~!Me,FaucetName!~,
 	createChannelsToJsonFaucet in
-	createProcFaucet proc,~!IPC-~!Local,FaucetName!~,ipcCommand!~
+	createProcFaucet proc,~!IPC-~!Me,FaucetName!~,ipcCommand!~
 	createJsonToChannelsFaucet out
 	createAtLeastAndAddFaucet atLeastAndAdd,1,command,setData
-	createDebugFaucet debug
 	
-	createPipe .,debug,*,0
 	createPipe .,atLeastAndAdd,*,data
 	createPipe atLeastAndAdd,in
 	createPipe in,proc
 	createPipe proc,out
 	createPipe out,.,*,*
-	
-	createPipe debug,.
-
-
-pass
-	createJsonIPCFaucet ~!Local,FaucetName!~,~!Local,ARBPath!~/servo-json.py
-
-	cd ~!Local,FaucetName!~
-
-	createPipe .,atLeastAndAdd,*,data
-	createPipe atLeastAndAdd,proc,command,command
-	createPipe atLeastAndAdd,proc,data,data
-
-	createPipe .,debug,*,1
-	# createPipe atLeastAndAdd,debug,command,1
-
-	createPipe debug,.
-
-	pass
-		getPipes
-		nested
-		outNow
-
-	cd ..

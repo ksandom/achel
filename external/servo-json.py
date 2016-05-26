@@ -318,7 +318,9 @@ class AchelRealityBridge:
 	
 	def returnData(self, command, level, shortMessage, message):
 		result={"command":command, "level":level, "shortMessage":shortMessage, "message":message}
-		print json.dumps(result)
+		output=json.dumps(result)
+		print output
+		sys.stderr.write("Output: "+output+"\n")
 	
 	def debug(self, level, message):
 		self.returnData("debug", level, "NA", message)
