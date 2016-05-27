@@ -147,8 +147,13 @@ class MappedCallFaucet extends ThroughBasedFaucet
 	function preGet()
 	{
 		$gotSomething=false;
-		if (count($this->input))
+		if ($numberOfChannels=count($this->input))
 		{
+			if ($numberOfChannels==1 and isset($this->input['default']))
+			{
+				if (!$this->input['default']) return false;
+			}
+			
 			$gotSomething=true;
 			
 			
