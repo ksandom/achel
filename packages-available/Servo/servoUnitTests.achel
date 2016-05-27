@@ -83,6 +83,8 @@ defineTest Servo - Send some data,
 		failTest Unknown result "~!ServoTest,returnedData,message!~"
 
 defineTest Servo - faucet - ping,
+	# This test is occasionally failing because the last faucet can only give the last result if there is a back log. If the data comes in separate iterations, the last value will be taken of each iteration. Therefore causing there to be multiple results, and choosing the first one (as done here) gives the wrong result.
+	# TODO create throttleFaucet
 	testFaucets
 		createServoFaucet servo
 		createLastFaucet last
@@ -91,9 +93,6 @@ defineTest Servo - faucet - ping,
 		
 		servoPing servo,faucet
 	
-	getCategory Test
-	nested
-	outNow
 	expect Returned from requested ping.,~!Test,default,0!~
 
 defineTest Servo - faucet - nuter,
@@ -118,9 +117,18 @@ defineTest Servo - faucet - send live data,
 		
 		servoNuter servo
 		
+		deliverAll 10000
+		
 		deliver servo,0,1
 		deliver servo,1,2
 		deliver servo,2,3
+		deliver servo,test,thingn
+		
+		deliverAll 10000
 	
 	expect Set 3 pins.,~!Test,default,0!~
+	
+	getCategory Test
+	nested
+	outNow
 

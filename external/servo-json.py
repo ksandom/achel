@@ -287,7 +287,7 @@ class AchelRealityBridge:
 		# if (line == ""):
 		#	return False
 		
-		sys.stderr.write("Input: \""+line+"\"\n")
+		sys.stderr.write(" Input: \""+line+"\"\n")
 		
 		try:
 			data=json.loads(line)
