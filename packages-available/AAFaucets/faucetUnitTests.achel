@@ -1,4 +1,4 @@
-# Unit tests for faucets. ~ hidden,unitTest,faucets
+# Unit tests for faucets. ~ hidden,unitTest,faucetStructure,faucets
 
 defineTest Faucets - metaFaucet - straight through,
 	createMetaFaucet meta,
@@ -179,5 +179,46 @@ defineTest Faucets - bent many to many,
 	expect 1,~!Test,combined,a!~
 	expect 2,~!Test,combined,b!~
 	expect 3,~!Test,combined,c!~
+
+defineTest Faucets - metaFaucet - nested 1,
+	testFaucets
+		createMetaFaucet test1,
+			createPipe .,.,in,out
+		
+		createPipe test1,.,out,default
+		
+		deliver test1,in,thing
 	
+	expect thing,~!Test,default,0!~
+
+defineTest Faucets - metaFaucet - nested 2,
+	testFaucets
+		createMetaFaucet test1,
+			createMetaFaucet test2,
+				createPipe .,.,in2,out2
+			createPipe .,test2,in,in2
+			createPipe test2,.,out2,out
+		
+		createPipe test1,.,out,default
+		
+		deliver test1,in,thing2
 	
+	expect thing2,~!Test,default,0!~
+
+defineTest Faucets - metaFaucet - nested 3,
+	testFaucets
+		createMetaFaucet test1,
+			createMetaFaucet test2,
+				createMetaFaucet test3,
+					createPipe .,.,in3,out3,
+				createPipe .,test3,in2,in3
+				createPipe test3,.,out3,out2
+			createPipe .,test2,in,in2
+			createPipe test2,.,out2,out
+		
+		createPipe test1,.,out,default
+		
+		deliver test1,in,thing3
+	
+	expect thing3,~!Test,default,0!~
+
