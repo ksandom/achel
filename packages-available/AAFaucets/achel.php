@@ -1200,7 +1200,7 @@ class MetaFaucet extends ThroughBasedFaucet
 		}
 	}
 	
-	function deliverAll($maximumRevolutions=10)
+	function deliverAll($maximumRevolutions=1)
 	{
 		if (!$maximumRevolutions) $maximumRevolutions=10;
 		# TODO consider refactoring to be non-blocking so that timers will also work
