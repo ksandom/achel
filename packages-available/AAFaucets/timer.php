@@ -134,6 +134,7 @@ class Timer extends Module
 			$numberOfTimers=count($this->timers);
 			$numberOfTriggeredTimers=0;
 			
+			
 			foreach ($this->timers as $name=>$delay)
 			{
 				$now=microtime(true);
@@ -155,7 +156,7 @@ class Timer extends Module
 			if ($numberOfTriggeredTimers and $intervalPos>0) $intervalPos--;
 			elseif (!$numberOfTriggeredTimers and $intervalPos<$this->intervalMax) $intervalPos++;
 			
-			usleep($this->intervals[$intervalPos]); // Sleep long enough to give the CPU enough, but no so much to make it feel sluggish.
+			usleep($this->intervals[$intervalPos]); // Sleep long enough to give the CPU enough time to do other stuff, but no so much to make it feel sluggish.
 		}
 	}
 	
