@@ -1,7 +1,8 @@
 # Unit tests for the timer module. ~ unitTest,timer,hidden
 
 defineTest Timer - full setup,
-	createTimer testfs,1000000
+	# 100 milliseconds
+	createTimer testfs,100
 	
 	debug 1,If this test locks up, the test didn't pass. It should succeed in less than a second.
 	set Tmp,testfs-gotHere,false

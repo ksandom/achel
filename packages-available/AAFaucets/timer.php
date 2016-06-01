@@ -10,7 +10,7 @@
 
 */
 
-define('delayBase', 1000000);
+define('delayBase', 1000);
 
 class Timer extends Module
 {
