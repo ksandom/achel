@@ -27,7 +27,7 @@ class BalanceFaucets extends Faucets
 				$parms=$this->core->get('Global', $event);
 				$faucet=new BalanceFaucet($parms);
 
-				$this->currentFaucet->createFaucet($parms, 'Balance', $faucet);
+				$this->environment->currentFaucet->createFaucet($parms, 'Balance', $faucet);
 				break;
 			
 			default:
