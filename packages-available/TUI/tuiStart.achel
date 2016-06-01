@@ -1,6 +1,6 @@
 # Makes the interactive macro live. ~ tui,interactive,base,macro
 
-createTimer main,100000
+createTimer main,100
 
 registerForEvent Timer,main,deliverAll
 startMainLoop
