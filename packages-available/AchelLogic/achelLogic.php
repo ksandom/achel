@@ -86,6 +86,12 @@ class AtLeast extends ThroughBasedFaucet
 			{
 				# $this->core->debug(0, "AtLeast: got data count=$channelCount c=$channel");
 				
+				if (!is_array($data))
+				{
+					$this->core->debug(1, __CLASS__.": $channel has not been presented as an array.");
+					continue;
+				}
+				
 				$output=array();
 				foreach ($data as $key=>$value)
 				{
