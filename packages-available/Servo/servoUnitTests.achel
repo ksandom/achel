@@ -93,6 +93,8 @@ defineTest Servo - faucet - ping,
 		
 		servoPing servo,faucet
 	
+	deliverAll 1000000
+	
 	expect Returned from requested ping.,~!Test,default,0!~
 
 defineTest Servo - faucet - nuter,
@@ -128,7 +130,7 @@ defineTest Servo - faucet - send live data,
 	
 	expect Set 3 pins.,~!Test,default,0!~
 	
-	getCategory Test
-	nested
-	outNow
+	# getCategory Test
+	# nested
+	# outNow
 
