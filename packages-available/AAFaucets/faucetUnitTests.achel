@@ -176,9 +176,9 @@ defineTest Faucets - bent many to many,
 		deliver throughy,b,2
 		deliver throughy,c,3
 	
-	expect 1,~!Test,combined,a!~
-	expect 2,~!Test,combined,b!~
-	expect 3,~!Test,combined,c!~
+	expect 1,~!Test,combined,0,a!~
+	expect 2,~!Test,combined,0,b!~
+	expect 3,~!Test,combined,0,c!~
 
 defineTest Faucets - metaFaucet - nested 1,
 	testFaucets

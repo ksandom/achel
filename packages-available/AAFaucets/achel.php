@@ -1205,7 +1205,6 @@ class MetaFaucet extends ThroughBasedFaucet
 		if (!$maximumRevolutions) $maximumRevolutions=10;
 		# TODO consider refactoring to be non-blocking so that timers will also work
 		$this->core->debug(4, "deliverAll: About to deliver anything that needs to be delivered..");
-		$this->deliveryNotifcationLevel=4;
 		$returnValue=false;
 		$resultValue=true;
 		
@@ -1255,11 +1254,19 @@ class MetaFaucet extends ThroughBasedFaucet
 			$bentInput[$key]=$this->last($value);
 		}
 		
-		return $bentInput;
+		return array($bentInput);
 	}
 	
 	private function processPipes()
 	{
+		$pipeDebugLevel=$this->core->get('General', 'pipeDebugLevel');
+		if ($pipeDebugLevel=='')
+		{
+			$pipeDebugLevel=5;
+			$this->core->set('General', 'pipeDebugLevel', $pipeDebugLevel);
+		}
+		
+		
 		$resultValue=true;
 		foreach ($this->pipes as $fromFaucet=>$fromFaucetPipes)
 		{
@@ -1353,8 +1360,10 @@ class MetaFaucet extends ThroughBasedFaucet
 				}
 				
 				
-				if (count($input))
+				if (count($input) and $input!==false)
 				{
+					$isVerboseEnough=$this->core->isVerboseEnough($pipeDebugLevel);
+					
 					$resultValue=true;
 					foreach ($channelPipes as $key=>$pipe)
 					{
@@ -1365,10 +1374,11 @@ class MetaFaucet extends ThroughBasedFaucet
 							continue;
 						}
 						
-						if ($this->core->isVerboseEnough($this->deliveryNotifcationLevel))
+						if ($isVerboseEnough)
 						{
+							$debugData=json_encode($input);
 							$numberOfItems=count($input);
-							$this->core->debug($this->deliveryNotifcationLevel, "deliverAll: Delivering ".gettype($input)." $numberOfItems entries from $fromFaucetName,$fromChannel to $toFaucetName,{$pipe['toChannel']} using context {$pipe['context']} and key $key.");
+							$this->core->debug($pipeDebugLevel, "deliverAll: Delivering ".gettype($input)." $numberOfItems entries from $fromFaucetName,$fromChannel to $toFaucetName,{$pipe['toChannel']} using context {$pipe['context']} and key $key. Data=$debugData");
 						}
 						
 						if ($toFaucetName=='.') $this->outFill($input, $pipe['toChannel']);
