@@ -1,0 +1,6 @@
+# Run the nested command only if the specified verbosity level is met with sufficient -v's. --ifVerboseEnough=level, ~ debug
+parameters level,feature
+
+
+if ~!Verbosity,level!~,>=,~!Local,level!~,
+	callFeature ~!Local,feature!~
