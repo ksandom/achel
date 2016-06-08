@@ -69,22 +69,17 @@ class AtLeast extends ThroughBasedFaucet
 		$gotSomething=false;
 		$channelCount=count($this->input);
 		
-		if ($channelCount>=$this->numberOfRequiredChannels and $this->channel)
-		{
-			$this->core->debug(2, "AtLeast: got data count=$channelCount c={$this->channel} v={$this->value}");
-			$this->outFill(array($this->value), $this->channel);
-			$gotSomething=true;
-		}
-		else
-		{
-			# $this->core->debug(0, "AtLeast: count=$channelCount c={$this->channel} v={$this->value}");
-		}
+		
 		
 		foreach ($this->input as $channel=>$data)
 		{
 			if ($channelCount>=$this->numberOfRequiredChannels)
 			{
-				# $this->core->debug(0, "AtLeast: got data count=$channelCount c=$channel");
+				if ($channelCount)
+				{
+					echo "$channel\n\n";
+					print_r($this->input);
+				}
 				
 				if (!is_array($data))
 				{
@@ -92,26 +87,31 @@ class AtLeast extends ThroughBasedFaucet
 					continue;
 				}
 				
+				# If we have lots of data for the given channel, let's only take the last entry.
 				$output=array();
-				foreach ($data as $key=>$value)
+				if (is_array($data))
 				{
-					if (is_array($value))
-					{
-						$numberOfKeys=count($value);
-						$keys=array_keys($value);
-						$output[$key]=$value[$keys[$numberOfKeys-1]];
-					}
-					else
-					{
-						$output[$key]=$value;
-					}
+					$numberOfKeys=count($data);
+					$keys=array_keys($data);
+					$output[$key]=$data[$keys[$numberOfKeys-1]];
 				}
-				# print_r($output);
+				else
+				{
+					$output[$key]=$data;
+				}
+				
 				$this->outFill($output, $channel);
 				$gotSomething=true;
 			}
 			
 			$this->clearInput($channel);
+		}
+		
+		if ($gotSomething and $this->channel)
+		{
+			$this->core->debug(0, "AtLeast: got data count=$channelCount c={$this->channel} v={$this->value}");
+			$this->outFill($this->value, $this->channel);
+			$gotSomething=true;
 		}
 		
 		return $gotSomething;
