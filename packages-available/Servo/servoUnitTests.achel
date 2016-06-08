@@ -110,6 +110,8 @@ defineTest Servo - faucet - nuter,
 
 
 defineTest Servo - faucet - send live data,
+	set General,pipeDebugLevel,0
+	
 	testFaucets
 		createServoFaucet servo
 		createLastFaucet last
@@ -124,12 +126,12 @@ defineTest Servo - faucet - send live data,
 		deliver servo,0,1
 		deliver servo,1,2
 		deliver servo,2,3
-		deliver servo,test,thingn
 		
 		deliverAll 10000
 	
 	expect Set 3 pins.,~!Test,default,0!~
 	
+	set General,pipeDebugLevel,5
 	# getCategory Test
 	# nested
 	# outNow
