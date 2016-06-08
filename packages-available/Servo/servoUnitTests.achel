@@ -123,9 +123,9 @@ defineTest Servo - faucet - send live data,
 		
 		deliverAll 10000
 		
-		deliver servo,0,1
-		deliver servo,1,2
-		deliver servo,2,3
+		deliver servo,6,1
+		deliver servo,7,2
+		deliver servo,8,3
 		
 		deliverAll 10000
 	

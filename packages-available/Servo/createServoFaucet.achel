@@ -18,7 +18,7 @@ createMetaFaucet ~!Me,FaucetName!~,
 	createPipe debug,.
 	# TODO There is something wrong with *
 	createPipe .,atLeastAndAdd,~*,data
-	createPipe atLeastAndAdd,in,~*,*
+	createPipe atLeastAndAdd,in,*,*
 	createPipe in,proc
 	createPipe proc,out
 	createPipe out,.,*,*
