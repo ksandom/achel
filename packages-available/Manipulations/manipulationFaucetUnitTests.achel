@@ -13,3 +13,15 @@ defineTest Manipulation,
 		createPipe last,debug,blah,0
 	
 	expect C,~!Test,blah,0!~
+
+defineTest ResetKeys,
+	setNested Local,test,a,A
+	setNested Local,test,b,B
+	setNested Local,test,c,C
+	setNested Local,test,d,D
+	
+	retrieveResults Local,test
+	resetKeys
+	
+	stashResults Local,test
+	expect B,~!Local,test,1!~

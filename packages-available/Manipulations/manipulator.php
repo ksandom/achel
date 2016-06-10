@@ -55,6 +55,7 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('firstResult', 'firstResults', 'first'), 'firstResult', "Take the first x results, where x is one if not specified. --firstResult[=x]", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('lastResult', 'lastResults', 'last'), 'lastResult', "Take the last x results, where x is one if not specified. --lastResult=x", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('offsetResult', 'offsetResults'), 'offsetResult', "After x results, take the first y results. --offsetResult=x,y . If y is negative, The results will be taken from the end rather than the beginning. In this case x therefore is an offset from the end, not the beginning.", array('result', 'Manipulations'));
+				$this->core->registerFeature($this, array('resetKeys'), 'resetKeys', "Resets the keys of the resultSet to an integer starting at 0. Use this when you want to access something by position. --resetKeys", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('keyOn'), 'keyOn', "Key items in the resultSet using a named value from each item in the resultSet. --keyOn=itemKey1[,itemKey2[,itemKey3[,...]]]", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('keyOnPreserve'), 'keyOnPreserve', "Key items in the resultSet using a named value from each item in the resultSet. --keyOn=itemKey1[,itemKey2[,itemKey3[,...]]] . Preseve keys. Clashes will take the last value. Use this where you need to match up keys from multiple sources.", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('keyValueOn'), 'keyValueOn', "Key items in the value of each item in the resultSet using a named value from each item inside that item in the resultSet. If this sounds confusing, just think of it as running --keyOn inside a value inside each item in the result set. --keyValueOn=valueName,subValueName", array('result', 'Manipulations'));
@@ -216,6 +217,9 @@ class Manipulator extends Module
 				break;
 			case 'createOneResult':
 				return array(array());
+				break;
+			case 'resetKeys':
+				return $this->resetKeys($this->core->getResultSet());
 				break;
 			case 'keyOn':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 1, 1);
@@ -839,6 +843,20 @@ class Manipulator extends Module
 		{
 			$key=$keys[$i];
 			$output[$key]=$resultSet[$key];
+		}
+		
+		return $output;
+	}
+	
+	function resetKeys($data)
+	{
+		$output=array();
+		$newKey=0;
+		
+		foreach ($data as $value)
+		{
+			$output[$newKey]=$value;
+			$newKey++;
 		}
 		
 		return $output;
