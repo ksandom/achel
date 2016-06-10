@@ -103,7 +103,7 @@ class AtLeast extends ThroughBasedFaucet
 		
 		if ($gotSomething and $this->channel)
 		{
-			$this->core->debug(0, "AtLeast: got data count=$channelCount c={$this->channel} v={$this->value}");
+			$this->core->debug(4, "AtLeast: got data count=$channelCount c={$this->channel} v={$this->value}");
 			$this->outFill($this->value, $this->channel);
 			$gotSomething=true;
 		}
