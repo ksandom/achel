@@ -75,12 +75,6 @@ class AtLeast extends ThroughBasedFaucet
 		{
 			if ($channelCount>=$this->numberOfRequiredChannels)
 			{
-				if ($channelCount)
-				{
-					echo "$channel\n\n";
-					print_r($this->input);
-				}
-				
 				if (!is_array($data))
 				{
 					$this->core->debug(1, __CLASS__.": $channel has not been presented as an array.");
@@ -93,7 +87,7 @@ class AtLeast extends ThroughBasedFaucet
 				{
 					$numberOfKeys=count($data);
 					$keys=array_keys($data);
-					$output[$key]=$data[$keys[$numberOfKeys-1]];
+					$output[]=$data[$keys[$numberOfKeys-1]];
 				}
 				else
 				{

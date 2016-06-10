@@ -95,5 +95,4 @@ defineTest logic - atLeastAndAdd 3 - success - double,
 	expect blah3,~!Test,thing2,0!~
 	expect blah2,~!Test,thing1,0!~
 	expect blah1,~!Test,default,0!~
-	expect example,~!Test,command,0!~
-	
+	expect example,~!Test,command!~
