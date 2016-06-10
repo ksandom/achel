@@ -11,11 +11,12 @@ createMetaFaucet ~!Me,FaucetName!~,
 	createJsonToChannelsFaucet out
 	createAtLeastAndAddFaucet atLeastAndAdd,1,command,setData
 	
-	createDebugFaucet debug
 	
-	createPipe .,debug,~*,0
-	createPipe debug,.
-	# TODO There is something wrong with *
+	pass
+		createDebugFaucet debug
+		createPipe .,debug,~*,0
+		createPipe debug,.
+	
 	createPipe .,atLeastAndAdd,~*,data
 	createPipe atLeastAndAdd,in,*,*
 	createPipe in,proc
