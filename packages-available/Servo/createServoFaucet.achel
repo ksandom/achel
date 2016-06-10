@@ -6,7 +6,6 @@ set Me,FaucetName,~!Local,FaucetName!~
 set IPC-~!Me,FaucetName!~,ipcCommand,~!Local,ARBPath!~/servo-json.py
 
 createMetaFaucet ~!Me,FaucetName!~,
-	pwd
 	createChannelsToJsonFaucet in
 	createProcFaucet proc,~!IPC-~!Me,FaucetName!~,ipcCommand!~
 	createJsonToChannelsFaucet out

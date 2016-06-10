@@ -249,7 +249,7 @@ class AchelRealityBridge:
 				if not (self.nutered):
 					self.setPin(key, data[pin])
 				else:
-					self.error(1, "wrotePin", "wrote pin "+pin)
+					self.debug(1, "would write pin "+pin+", but currently nutered.")
 				changeCount=changeCount+1
 			except:
 				self.error("4", "unknown", "Failure trying to set pin "+pin+".")

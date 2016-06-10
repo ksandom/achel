@@ -129,10 +129,15 @@ defineTest Servo - faucet - send live data,
 		
 		deliverAll 10000
 	
+	retrieveResults Test,default
+	last
+	resetKeys
+	stashResults Test,default
+	
 	expect Set 3 pins.,~!Test,default,0!~
 	
 	set General,pipeDebugLevel,5
-	# getCategory Test
-	# nested
-	# outNow
+	getCategory Test
+	nested
+	outNow
 
