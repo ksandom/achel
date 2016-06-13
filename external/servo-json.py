@@ -58,8 +58,9 @@ class AchelRealityBridge:
 		try:
 			GPIO.setmode(GPIO.BOARD)
 			self.gpioStarted=True
-		except:
+		except Exception as e:
 			self.debug(2, "Could not start GPIO.")
+			self.Exception(e)
 			self.gpioStarted=False
 	
 	def setDefaultValues(self):
@@ -211,7 +212,7 @@ class AchelRealityBridge:
 				self.pins[pin]['physicalPin'].stop()
 			
 			GPIO.cleanup()
-		except:
+		except Exception as e:
 			self.error(1, 'no GPIO', 'Could not cleanup GPIO. Not available?')
 
 	def oldMain(self):
@@ -239,6 +240,8 @@ class AchelRealityBridge:
 
 		except KeyboardInterrupt:
 			self.quit("Keyboard intrerupt")
+		except Exception as e:
+			self.exception(e)
 	
 	
 	def setPins(self, data):
@@ -247,12 +250,12 @@ class AchelRealityBridge:
 		for pin in data:
 			try:
 				if not (self.nutered):
-					self.setPin(key, data[pin])
+					self.setPin(pin, data[pin])
 				else:
 					self.debug(1, "would write pin "+pin+", but currently nutered.")
 				changeCount=changeCount+1
-			except:
-				self.error("4", "unknown", "Failure trying to set pin "+pin+".")
+			except Exception as e:
+				self.exception(e)
 		
 		# TODO check this line
 		self.debug(3, "Set "+str(changeCount)+" pins.")
@@ -262,8 +265,8 @@ class AchelRealityBridge:
 		
 		try:
 			self.pins[pin]['physicalPin'].ChangeDutyCycle(scaled)
-		except:
-			pass # Already complained about.
+		except Exception as e:
+			self.exception(e)
 		
 		self.debug("3", "Got data")
 	
@@ -331,6 +334,11 @@ class AchelRealityBridge:
 	def error(self, level, what, why):
 		self.returnData("error", level, what, why)
 		sys.stderr.write("Error: Level="+str(level)+" What=\""+what+"\" Why=\""+why+"\"\n")
+	
+	def exception(self, e):
+		template = "An exception of type {0} occured. Arguments:\n{1!r}"
+		message = template.format(type(e).__name__, e.args)
+		self.returnData("exception", "0", 'NA', message)
 	
 	def main(self):
 		try:
