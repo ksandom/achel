@@ -60,12 +60,13 @@ class AchelRealityBridge:
 			self.gpioStarted=True
 		except Exception as e:
 			self.debug(2, "Could not start GPIO.")
-			self.Exception(e)
+			self.Exception(e, 'configureGPIO')
 			self.gpioStarted=False
 	
 	def setDefaultValues(self):
 		self.pins={}
 		self.inputData={}
+		
 		
 		minMS=0.5
 		centerMS=1.5
@@ -101,9 +102,8 @@ class AchelRealityBridge:
 		except:
 			inMin=0
 		
-		
 		self.servoInMin=inMin
-		self.servoinMax=inMax
+		self.servoInMax=inMax
 		self.servoOutMin=outMin
 		self.servoOutMax=outMax
 		self.servoOutCenter=outCenter
@@ -241,7 +241,7 @@ class AchelRealityBridge:
 		except KeyboardInterrupt:
 			self.quit("Keyboard intrerupt")
 		except Exception as e:
-			self.exception(e)
+			self.exception(e, 'oldMain')
 	
 	
 	def setPins(self, data):
@@ -255,7 +255,7 @@ class AchelRealityBridge:
 					self.debug(1, "would write pin "+pin+", but currently nutered.")
 				changeCount=changeCount+1
 			except Exception as e:
-				self.exception(e)
+				self.exception(e, "setPins. Pin="+pin+" Value="+data[pin])
 		
 		# TODO check this line
 		self.debug(3, "Set "+str(changeCount)+" pins.")
@@ -266,7 +266,7 @@ class AchelRealityBridge:
 		try:
 			self.pins[pin]['physicalPin'].ChangeDutyCycle(scaled)
 		except Exception as e:
-			self.exception(e)
+			self.exception(e, "setPin")
 		
 		self.debug("3", "Got data")
 	
@@ -335,10 +335,10 @@ class AchelRealityBridge:
 		self.returnData("error", level, what, why)
 		sys.stderr.write("Error: Level="+str(level)+" What=\""+what+"\" Why=\""+why+"\"\n")
 	
-	def exception(self, e):
+	def exception(self, e, context='NA'):
 		template = "An exception of type {0} occured. Arguments:\n{1!r}"
 		message = template.format(type(e).__name__, e.args)
-		self.returnData("exception", "0", 'NA', message)
+		self.returnData("exception", "0", context, message)
 	
 	def main(self):
 		try:
