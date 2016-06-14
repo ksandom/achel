@@ -112,14 +112,17 @@ class AchelRealityBridge:
 		self.debug(2, "In range " + str(inMin) + " - " + str(inMax))
 	
 	def registerAllPins(self):
-		self.registerPin(7, "0", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(11, "1", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(12, "2", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(13, "3", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(15, "4", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(16, "5", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(18, "6", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(22, "7", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+		try:
+			self.registerPin(7, "0", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPin(11, "1", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPin(12, "2", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPin(13, "3", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPin(15, "4", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPin(16, "5", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPin(18, "6", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPin(22, "7", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+		except Exception as e:
+			self.exception(e, "registerAllPins.")
 	
 	def oldInit(self):
 		
@@ -132,7 +135,8 @@ class AchelRealityBridge:
 	def registerPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter, frequency):
 		
 		try:
-			self.pins[str(pinID)] = {
+			strPinID=str(pinID)
+			self.pins[strPinID] = {
 				'pinID':pinID,
 				'inputBinding':inputBinding,
 				'inMin':inMin,
@@ -148,11 +152,11 @@ class AchelRealityBridge:
 			self.inputData[inputBinding]=inMin
 			
 			GPIO.setup(pinID,GPIO.OUT)
-			self.pins[pinID]['physicalPin'] = GPIO.PWM(pinID, frequency)
-			self.pins[pinID]['physicalPin'].start(outCenter)
+			self.pins[strPinID]['physicalPin'] = GPIO.PWM(pinID, frequency)
+			self.pins[strPinID]['physicalPin'].start(outCenter)
 			
 		except Exception as e:
-			self.exception(e, "setPins. PinID="+pinID+" inputBinding="+inputBinding)
+			self.exception(e, "registerPin. PinID="+str(pinID)+" inputBinding="+str(inputBinding))
 	
 	def scale(self, value, inMin, inMax, outMin, outMax):
 		# Takes a value, checks it's within bounds and scales accordingly.
@@ -250,20 +254,27 @@ class AchelRealityBridge:
 	
 	def setPins(self, data):
 		changeCount=0
+		failCount=0
+		nuteredCount=0
 		
 		for pin in data:
 			try:
 				if not (self.nutered):
-					self.setPin(pin, data[pin])
+					if (self.setPin(str(pin), data[pin])):
+						changeCount=changeCount+1
+					else:
+						failCount=failCount+1
 				else:
 					self.debug(1, "would write pin "+pin+", but currently nutered.")
-				changeCount=changeCount+1
+					nuteredCount=nuteredCount+1
 			except Exception as e:
 				self.exception(e, "setPins. Pin="+pin+" Value="+data[pin])
+				failCount=failCount+1
 		
-		self.debug(3, "Set "+str(changeCount)+" pins.")
+		self.debug(3, "Set "+str(changeCount)+" pins. Nutered "+str(nuteredCount)+" pins. Failed to set "+str(failCount)+" pins.")
 	
 	def setPin(self, pin, value):
+		self.debug("3", "Got data")
 		try:
 			inMin=self.pins[pin]['inMin']
 			inMax=self.pins[pin]['inMax']
@@ -271,10 +282,11 @@ class AchelRealityBridge:
 			outMax=self.pins[pin]['outMax']
 			scaled=self.scale(value, inMin, inMax, outMin, outMax)
 			self.pins[pin]['physicalPin'].ChangeDutyCycle(scaled)
+			return True
 		except Exception as e:
 			self.exception(e, "setPin")
+			return False
 		
-		self.debug("3", "Got data")
 	
 	def isGpioStarted(self):
 		if (self.gpioStarted):
