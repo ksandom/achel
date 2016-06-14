@@ -112,14 +112,14 @@ class AchelRealityBridge:
 		self.debug(2, "In range " + str(inMin) + " - " + str(inMax))
 	
 	def registerAllPins(self):
-		self.registerPin(7, 0, self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(11, 1, self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(12, 2, self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(13, 3, self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(15, 4, self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(16, 5, self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(18, 6, self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-		self.registerPin(22, 7, self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+		self.registerPin(7, "0", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+		self.registerPin(11, "1", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+		self.registerPin(12, "2", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+		self.registerPin(13, "3", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+		self.registerPin(15, "4", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+		self.registerPin(16, "5", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+		self.registerPin(18, "6", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+		self.registerPin(22, "7", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
 	
 	def oldInit(self):
 		
@@ -131,24 +131,28 @@ class AchelRealityBridge:
 
 	def registerPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter, frequency):
 		
-		self.pins[pinID] = {
-			'pinID':pinID,
-			'inputBinding':inputBinding,
-			'inMin':inMin,
-			'inMax':inMax,
-			'outMin':outMin,
-			'outCenter':outCenter,
-			'outMax':outMax}
-		
-		self.debug(2, 'Debug: registering pin ' + str(pinID))
-		
-		# TODO Refactor so that it doesn't stamp on previously written values.
-		# TODO add the possibility for a default value.
-		self.inputData[inputBinding]=inMin
-		
-		GPIO.setup(pinID,GPIO.OUT)
-		self.pins[pinID]['physicalPin'] = GPIO.PWM(pinID, frequency)
-		self.pins[pinID]['physicalPin'].start(outCenter)
+		try:
+			self.pins[str(pinID)] = {
+				'pinID':pinID,
+				'inputBinding':inputBinding,
+				'inMin':inMin,
+				'inMax':inMax,
+				'outMin':outMin,
+				'outCenter':outCenter,
+				'outMax':outMax}
+			
+			self.debug(2, 'Debug: registering pin ' + str(pinID) +' as '+str(inputBinding))
+			
+			# TODO Refactor so that it doesn't stamp on previously written values.
+			# TODO add the possibility for a default value.
+			self.inputData[inputBinding]=inMin
+			
+			GPIO.setup(pinID,GPIO.OUT)
+			self.pins[pinID]['physicalPin'] = GPIO.PWM(pinID, frequency)
+			self.pins[pinID]['physicalPin'].start(outCenter)
+			
+		except Exception as e:
+			self.exception(e, "setPins. PinID="+pinID+" inputBinding="+inputBinding)
 	
 	def scale(self, value, inMin, inMax, outMin, outMax):
 		# Takes a value, checks it's within bounds and scales accordingly.
@@ -257,13 +261,15 @@ class AchelRealityBridge:
 			except Exception as e:
 				self.exception(e, "setPins. Pin="+pin+" Value="+data[pin])
 		
-		# TODO check this line
 		self.debug(3, "Set "+str(changeCount)+" pins.")
 	
 	def setPin(self, pin, value):
-		scaled=self.scale(value, self.pins[pin]['inMin'], self.pins[pin]['inMax'], self.pins[pin]['outMin'], self.pins[pin]['outMax'])
-		
 		try:
+			inMin=self.pins[pin]['inMin']
+			inMax=self.pins[pin]['inMax']
+			outMin=self.pins[pin]['outMin']
+			outMax=self.pins[pin]['outMax']
+			scaled=self.scale(value, inMin, inMax, outMin, outMax)
 			self.pins[pin]['physicalPin'].ChangeDutyCycle(scaled)
 		except Exception as e:
 			self.exception(e, "setPin")
