@@ -169,10 +169,11 @@ class AchelRealityBridge:
 			raise ValueError("outMax not greater than outtMin")
 		
 		# Check bounds
-		if value < inMin:
+		sanitisedValue=float(value)
+		if sanitisedValue < float(inMin):
 			self.debug(2, "OOB " + str(value) + " < " + str(inMin))
 			return outMin
-		if value > inMax:
+		if sanitisedValue > float(inMax):
 			self.debug(2, "OOB " + str(value) + " > " + str(inMax))
 			return outMax
 		
@@ -181,7 +182,7 @@ class AchelRealityBridge:
 		outScale=outMax-outMin
 
 		# Derive final value
-		finalValue=(value-inMin)/inScale*outScale+outMin
+		finalValue=(sanitisedValue-inMin)/inScale*outScale+outMin
 		
 		debugging=str(finalValue) +"=("+str(value) +"-"+ str(inMin) +")/"+ str(inScale)+ "*" + str(outScale)+ "+" +str(outMin)
 		self.debug(2, debugging)
