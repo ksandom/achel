@@ -75,7 +75,7 @@ defineTest Servo - Send some data,
 		
 	if ~!ServoTest,returnedData,message!~,==,Unknown command,
 		failTest Not implemented
-	elseIf ~!ServoTest,returnedData,message!~,==,Set 2 pins.,
+	elseIf ~!ServoTest,returnedData,message!~,==,Set 0 pins. Nutered 2 pins. Failed to set 0 pins.,
 		passTest Got confirmation of data.
 	elseIf ~!ServoTest,returnedData,message!~,==,Failure trying to set pin 7.,
 		warnTest Got an error that usually means that GPIO failed to load. If that is the case, you can ignore this test if you are simply testing that the code is working. If you are trying to understand why this isn't working on an actual device that has GPIO pins such as the raspberry Pi; then this will be a good heads up. Check that the python GPIO libraries are installed.
@@ -132,5 +132,5 @@ defineTest Servo - faucet - send live data,
 	resetKeys
 	stashResults Test,default
 	
-	expect Set 3 pins.,~!Test,default,0!~
+	expect Set 0 pins. Nutered 3 pins. Failed to set 0 pins.,~!Test,default,0!~
 
