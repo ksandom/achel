@@ -24,6 +24,7 @@ TODO define structure
 import time
 import sys
 import json
+import pprint
 
 try:
 	import RPi.GPIO as GPIO
@@ -135,7 +136,7 @@ class AchelRealityBridge:
 	def registerPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter, frequency):
 		
 		try:
-			strPinID=str(pinID)
+			strPinID=str(inputBinding)
 			self.pins[strPinID] = {
 				'pinID':pinID,
 				'inputBinding':inputBinding,
@@ -275,6 +276,7 @@ class AchelRealityBridge:
 	
 	def setPin(self, pin, value):
 		self.debug("3", "Got data")
+		# TODO remove this: pprint.pprint (self.pins)
 		try:
 			inMin=self.pins[pin]['inMin']
 			inMax=self.pins[pin]['inMax']
