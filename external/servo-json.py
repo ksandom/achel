@@ -28,6 +28,7 @@ import pprint
 
 try:
 	import RPi.GPIO as GPIO
+	print "{\"command\":\"debug\",\"level\":\"4\",\"shortMessage\":\"gpioLoaded\", \"message\":\"GPIO was successfully loaded.\"}"
 except:
 	# TODO Catching this and then continuing is at the expense of getting something meaningful on STDERR. Find a better solution.
 	# TODO Use new self.state()
@@ -59,8 +60,9 @@ class AchelRealityBridge:
 		try:
 			GPIO.setmode(GPIO.BOARD)
 			self.gpioStarted=True
+			self.state("gpioStarted", "GPIO successfully started.")
 		except Exception as e:
-			self.debug(2, "Could not start GPIO.")
+			self.state("noGPIO", "could not start GPIO.")
 			self.exception(e, 'configureGPIO')
 			self.gpioStarted=False
 	
