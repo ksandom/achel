@@ -62,8 +62,8 @@ class AchelRealityBridge:
 			self.gpioStarted=True
 			self.state("gpioStarted", "GPIO successfully started.")
 		except Exception as e:
-			self.state("noGPIO", "could not start GPIO.")
 			self.exception(e, 'configureGPIO')
+			self.state("noGPIO", "could not start GPIO.")
 			self.gpioStarted=False
 	
 	def setDefaultValues(self):
