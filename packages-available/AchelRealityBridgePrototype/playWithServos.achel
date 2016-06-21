@@ -1,0 +1,8 @@
+# Set up for playing with the servos. ~ servo
+
+createServoFaucet servo
+setServoAllPWM servo
+
+createNullFaucet null
+createPipe servo,null
+createPipe null,servo
