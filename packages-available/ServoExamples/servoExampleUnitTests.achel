@@ -1,0 +1,6 @@
+# Unit tests for the ServoExamples. ~ unitTest,servoExample,hidden
+
+defineTest ServoExamples - getPath,
+	getServoExamplePath Local,servoExamplesPath
+	expectNot ,~!Local,servoExamplesPath!~
+
