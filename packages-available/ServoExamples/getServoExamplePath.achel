@@ -1,0 +1,5 @@
+# Get the path to ServoExample external dependancies. --getServoExamplePath=Category,variable ~ lmtracker,json,hidden
+parameters Category,variable
+
+setNested ~!Local,Category!~,~!Local,variable!~,~!General,configDir!~/repos/achelRealityBridge/packages-available/ServoExample
+makeLocalAvailable ~!Local,variable!~
