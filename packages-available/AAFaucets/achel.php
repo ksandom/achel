@@ -391,28 +391,42 @@ class Faucet
 		
 		if (count($this->outChannels[$outChannel]))
 		{ // We need to carefully integrate the new data with the existing data
-			foreach ($data as $key=>$value)
+			if (is_array($data))
 			{
-				if (is_numeric($key)) $this->outChannels[$outChannel][]=$value;
-				else
+				foreach ($data as $key=>$value)
 				{
-					if (isset($this->outChannels[$outChannel][$key]))
+					if (is_numeric($key)) $this->outChannels[$outChannel][]=$value;
+					else
 					{
-						if (is_array($this->outChannels[$outChannel][$key]) and is_array($value))
+						if (isset($this->outChannels[$outChannel][$key]))
 						{
-							$this->outChannels[$outChannel][$key]=array_merge($this->outChannels[$outChannel][$key], $value);
+							if (is_array($this->outChannels[$outChannel][$key]) and is_array($value))
+							{
+								$this->outChannels[$outChannel][$key]=array_merge($this->outChannels[$outChannel][$key], $value);
+							}
+							else
+							{
+								$this->core->debug(4, "outFill: Data collision. This shouldn't happen, but could if a specific key ($key) is used, and the input (".gettype($value).") and the existing value (".gettype($this->outChannels[$outChannel][$key]).") are not both arrays. In this case, the new value is going to replace the old value.");
+								$this->outChannels[$outChannel][$key]=$value;
+							}
 						}
-						else
+						else 
 						{
-							$this->core->debug(4, "outFill: Data collision. This shouldn't happen, but could if a specific key ($key) is used, and the input (".gettype($value).") and the existing value (".gettype($this->outChannels[$outChannel][$key]).") are not both arrays. In this case, the new value is going to replace the old value.");
+							$this->core->debug(4, "outFill: Directly saved fresh data as key $key in channel $outChannel. Objecttype {$this->objectType}");
 							$this->outChannels[$outChannel][$key]=$value;
 						}
 					}
-					else 
-					{
-						$this->core->debug(4, "outFill: Directly saved fresh data as key $key in channel $outChannel. Objecttype {$this->objectType}");
-						$this->outChannels[$outChannel][$key]=$value;
-					}
+				}
+			}
+			else
+			{
+				if (is_array($this->outChannels[$outChannel]))
+				{
+					$this->outChannels[$outChannel][]=$data;
+				}
+				else
+				{
+					$this->outChannels[$outChannel]=$data;
 				}
 			}
 		}
