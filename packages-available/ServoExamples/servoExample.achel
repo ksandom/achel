@@ -1,0 +1,14 @@
+# Run the servo example, drawing local stats and sending them to the servos. ~ servo,servoExample,stats
+
+createNullFaucet null
+createLocalStatsFaucet stats
+createDebugFaucet debug
+
+createPipe debug,null
+createPipe stats,debug,~*,1
+
+createPipe stats,servo,cpu,0
+createPipe stats,servo,memory,1
+createPipe stats,null,cpu
+createPipe stats,null,memory
+createPipe stats,null,cores

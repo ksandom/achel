@@ -22,4 +22,32 @@ Running the origin command looks like this
     {"cpu":"7", "cores":"4", "memory":"18"}
     {"cpu":"6", "cores":"4", "memory":"18"}
 
+You can see it run like this
+
+    $ achel --tui --playWithServos
+    [debug1] tui-3: verbosity: Incremented verbosity to "Information" (1)
+    [debug1] showNesting-7: Current nesting level is 7
+
+Then type this
+
+    servoExample
+
+You can get it into your program like this
+
+    createNullFaucet null
+    createLocalStatsFaucet stats
+    createDebugFaucet debug
+
+    # The null faucet gives the debug faucet a prerequisite, and thus the debug faucet gets called.
+    createPipe debug,null
+    
+    # This sends everything to the debug faucet. It will be displayed if verbosity has been incremented to at least 1.
+    createPipe stats,debug,~*,1
+    
+    
+    # This sends % CPU to the first servo.
+    createPipe stats,servo,cpu,0
+    
+    # This sends % memory to the second servo.
+    createPipe stats,servo,memory,1
 
