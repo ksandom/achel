@@ -21,8 +21,9 @@ function getMemory
 }
 
 
-while sleep 1;do
+while true;do
 	cpu=`getCPULoad`
 	mem=`getMemory`
 	echo "{\"cpu\":\"$cpu\", \"cores\":\"$cores\", \"memory\":\"$mem\"}"
+	sleep 1
 done
