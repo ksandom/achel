@@ -3,7 +3,7 @@
 # Note that these metrics are purely for getting some interesting data. If you use them for other purposes they are likely to be not entirely correct depending on your needs. Eg cache and buffers are not taken into account for memory, and messing around with the load average in this way is a bit miss-leading.
 
 
-cores=`grep 'vendor_id' /proc/cpuinfo | wc -l`
+cores=`grep -i 'bogomips' /proc/cpuinfo | wc -l`
 
 function getCPULoad
 {
