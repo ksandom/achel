@@ -1,1 +1,0 @@
-{"name":"achelRealityBridge","achelRealityBridge":{"name":"achelRealityBridge","description":"Adds support for things like servos and LEDs.","execName":"realitybridge","packages":{"BASE":{"sourceRepo":"achel","packageRegex":".*"},"SELF":{"sourceRepo":"achelRealityBridge","packageRegex":".*"}}}}
