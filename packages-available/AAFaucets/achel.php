@@ -1249,8 +1249,15 @@ class MetaFaucet extends ThroughBasedFaucet
 	{
 		if (is_array($series))
 		{
-			$keys=array_keys($series);
-			return $series[$keys[count($keys)-1]];
+			if (count($series) < 1)
+			{
+				return false;
+			}
+			else
+			{
+				$keys=array_keys($series);
+				return $series[$keys[count($keys)-1]];
+			}
 		}
 		else
 		{
