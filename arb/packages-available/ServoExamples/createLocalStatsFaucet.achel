@@ -1,0 +1,6 @@
+# Gets local system stats and outputs one per channel. --createLocalStatsFaucet=[faucetName=localStats] ~ example,servo,stats
+parameters {"faucetName":"localStats"}
+
+getServoExamplePath Local,servoExample
+
+createJsonIPCFaucet ~!Local,faucetName!~,~!Local,servoExample!~/getLocalStats.sh

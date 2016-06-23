@@ -1,0 +1,5 @@
+# Get the path to Achel Reality Bridge external dependancies. --getARBPath=Category,variable ~ lmtracker,json,hidden
+parameters Category,variable
+
+setNested ~!Local,Category!~,~!Local,variable!~,~!General,configDir!~/repos/achelRealityBridge/packages-available/Servo
+makeLocalAvailable ~!Local,variable!~

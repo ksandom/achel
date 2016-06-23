@@ -1,0 +1,11 @@
+# Show the servoExample stats in action. ~ servoExample,stats
+
+createMetaFaucet servoExampleStats,
+	createLocalStatsFaucet stats
+	createDebugFaucet debug
+	
+	createPipe stats,debug,1
+	createPipe debug,.
+
+createNullFaucet null
+createPipe servoExampleStats,null

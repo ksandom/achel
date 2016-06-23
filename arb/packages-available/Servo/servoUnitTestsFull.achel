@@ -1,0 +1,55 @@
+# Unit tests for the Servo package. ~ unitTest,servo,servoFull,hidden
+
+
+defineTest Servo - faucet - ping,
+	# This test is occasionally failing because the last faucet can only give the last result if there is a back log. If the data comes in separate iterations, the last value will be taken of each iteration. Therefore causing there to be multiple results, and choosing the first one (as done here) gives the wrong result.
+	# TODO create throttleFaucet
+	testFaucets
+		createServoFaucet servo
+		createLastFaucet last
+		createPipe servo,last,message
+		createPipe last,.
+		
+		servoPing servo,faucet
+	
+	deliverAll 1000000
+	
+	expect Returned from requested ping.,~!Test,default,0!~
+
+defineTest Servo - faucet - nuter,
+	testFaucets
+		createServoFaucet servo
+		createLastFaucet last
+		createPipe servo,last,message
+		createPipe last,.
+		
+		servoNuter servo
+	
+	expect Set nutered to true(true).,~!Test,default,0!~
+
+
+defineTest Servo - faucet - send live data,
+	testFaucets
+		createServoFaucet servo
+		createLastFaucet last
+		createPipe servo,last,message
+		createPipe last,.
+		createPipe .,servo
+		
+		servoNuter servo
+		
+		deliverAll 10000
+		
+		deliver servo,6,1
+		deliver servo,7,2
+		deliver servo,8,3
+		
+		deliverAll 10000
+	
+	retrieveResults Test,default
+	last
+	resetKeys
+	stashResults Test,default
+	
+	expect Set 0 pins. Nutered 3 pins. Failed to set 0 pins.,~!Test,default,0!~
+

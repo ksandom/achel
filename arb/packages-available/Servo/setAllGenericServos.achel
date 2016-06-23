@@ -1,0 +1,4 @@
+# Configures all channels to be servos. --setAllGenericServos=faucetName . faucetName is the faucet controling the servos. This is a transitional feature while I move from hard-coded configuration to dynamic configuration. If your code breaks with an upgrade, this is the first place to look. ~ servo,config
+parameters {"faucetName":"arb"}
+
+deliver ~!Local,faucetName!~,,{"command":"setAllGenericServos"}

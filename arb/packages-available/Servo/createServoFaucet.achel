@@ -1,0 +1,25 @@
+# Create a faucet for interacting with servos. --createServoFaucet=FaucetName ~ servo,faucet
+parameters FaucetName
+
+getARBPath Local,ARBPath
+set Me,FaucetName,~!Local,FaucetName!~
+set IPC-~!Me,FaucetName!~,ipcCommand,~!Local,ARBPath!~/servo-json.py
+
+createMetaFaucet ~!Me,FaucetName!~,
+	createChannelsToJsonFaucet in
+	createProcFaucet proc,~!IPC-~!Me,FaucetName!~,ipcCommand!~
+	createJsonToChannelsFaucet out
+	createAtLeastAndAddFaucet atLeastAndAdd,1,command,setData
+	
+	
+	pass
+		createDebugFaucet debug
+		createPipe .,debug,~*,0
+		createPipe debug,.
+	
+	createPipe .,atLeastAndAdd,~*,data
+	createPipe atLeastAndAdd,in,*,*
+	createPipe in,proc
+	createPipe proc,out
+	createPipe out,.,*,*
+	

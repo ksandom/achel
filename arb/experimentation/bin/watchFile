@@ -1,0 +1,6 @@
+#!/bin/bash
+
+tmpFile=/tmp/arbExp
+touch $tmpFile
+tail -F $tmpFile | sudo ./servo1-stdin.py $1
+

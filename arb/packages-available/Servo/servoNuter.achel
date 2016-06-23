@@ -1,0 +1,8 @@
+# Nuter the servo faucet to stop tests from sending potentially bad commands to real servos during unit testing. You can turn this off again by making state false. --servoPing=faucetName[,state] . state can be true or false. ~ servo,ping
+parameters {"FaucetName":"servo","state":"true"}
+
+cd ~!Local,FaucetName!~
+
+deliver proc,default,{"command":"nuter","message":"~!Local,state!~"}
+
+cd ..

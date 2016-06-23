@@ -1,0 +1,5 @@
+#!/bin/bash
+# Watch CPU load
+
+while sleep 1;do uptime | sed 's/.*: //g;s/,.*//g';done| sudo ./servo1-stdin.py 1
+

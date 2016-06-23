@@ -1,0 +1,80 @@
+# Unit tests for the Servo package. ~ unitTest,servo,servoBasic,hidden
+
+defineTest Servo - getPath,
+	getARBPath Local,servoPath
+	expectNot ,~!Local,servoPath!~
+
+defineTest Servo - does it start,
+	getARBPath Local,servoPath
+	createJsonShellFaucet servoTest,ServoTest,returnedData,~!Local,servoPath!~/servo-json.py
+	createNullFaucet null
+	createPipe servoTest,null
+	
+	deliverAll 10000
+	
+	expectNot ,~!ServoTest,returnedData,command!~
+	
+	unset ServoTest
+	deleteFaucet servoTest
+
+defineTest Servo - ping,
+	getARBPath Local,servoPath
+	createProcFaucet servoTest,~!Local,servoPath!~/servo-json.py
+	createJsonToVarFaucet jsonFaucet,ServoTest,returnedData
+	createNullFaucet null
+	createPipe jsonFaucet,null
+	createPipe servoTest,jsonFaucet
+	
+	deliverAll 10000
+	
+	deliver servoTest,,{"command":"ping","message":"manual ping"}
+	
+	deliverAll 10000
+	
+	expect pong,~!ServoTest,returnedData,command!~
+	
+	unset ServoTest
+	deleteFaucet servoTest
+
+defineTest Servo - GPIO started,
+	getARBPath Local,servoPath
+	createProcFaucet servoTest,~!Local,servoPath!~/servo-json.py
+	createJsonToVarFaucet jsonFaucet,ServoTest,returnedData
+	createNullFaucet null
+	createPipe jsonFaucet,null
+	createPipe servoTest,jsonFaucet
+	
+	deliverAll 10000
+	
+	if ~!ServoTest,returnedData,shortMessage!~,==,gpioStarted,
+		passTest GPIO started
+	else
+		warnTest GPIO not started - "~!ServoTest,returnedData!~"
+	
+	unset ServoTest
+	deleteFaucet servoTest
+
+defineTest Servo - Send some data,
+	testFaucets
+		getARBPath Local,servoPath
+		createProcFaucet servoTest,~!Local,servoPath!~/servo-json.py
+		createJsonToVarFaucet jsonFaucet,ServoTest,returnedData
+		createNullFaucet null
+		createPipe jsonFaucet,null
+		createPipe servoTest,jsonFaucet
+		
+		deliver servoTest,,{"command":"nuter","message":"true"}
+		
+		setAllGenericServos
+		
+		deliver servoTest,,{"command":"setData","data":{"7":"100","11":"90"}}
+		
+	if ~!ServoTest,returnedData,message!~,==,Unknown command,
+		failTest Not implemented
+	elseIf ~!ServoTest,returnedData,message!~,==,Set 0 pins. Nutered 2 pins. Failed to set 0 pins.,
+		passTest Got confirmation of data.
+	elseIf ~!ServoTest,returnedData,message!~,==,Failure trying to set pin 7.,
+		warnTest Got an error that usually means that GPIO failed to load. If that is the case, you can ignore this test if you are simply testing that the code is working. If you are trying to understand why this isn't working on an actual device that has GPIO pins such as the raspberry Pi; then this will be a good heads up. Check that the python GPIO libraries are installed.
+	else
+		failTest Unknown result "~!ServoTest,returnedData,message!~"
+

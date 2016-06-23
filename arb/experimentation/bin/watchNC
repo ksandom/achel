@@ -1,0 +1,5 @@
+#!/bin/bash
+# Listen to TCP packets on port 1040
+
+nc -l 1040 | sudo ./servo1-stdin.py $1 $2 $3 $4
+

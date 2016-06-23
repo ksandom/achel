@@ -1,0 +1,15 @@
+# Unit tests for the ServoExamples. ~ unitTest,servoExample,hidden
+
+defineTest ServoExamples - getPath,
+	getServoExamplePath Local,servoExamplesPath
+	expectNot ,~!Local,servoExamplesPath!~
+
+defineTest ServoExamples - localStatsFaucet,
+	testFaucets
+		createLocalStatsFaucet stats
+		
+		createPipe stats,.,cpu,cpu
+		createPipe stats,.,memory,memory
+		
+	expectNot ,~!Test,cpu,0!~
+	expectNot ,~!Test,memory,0!~

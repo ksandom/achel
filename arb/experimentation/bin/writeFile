@@ -1,0 +1,5 @@
+#!/bin/bash
+
+tmpFile=/tmp/arbExp
+cat - > $tmpFile
+
