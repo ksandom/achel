@@ -71,9 +71,9 @@ class AchelRealityBridge:
 		self.inputData={}
 		
 		
-		minMS=0.5
+		minMS=0.6
 		centerMS=1.5
-		maxMS=2.5
+		maxMS=2.2
 		
 		# Get a frequency if we have it.
 		try:
