@@ -1,0 +1,4 @@
+# Internal disconnect hook on the server side. ~ hidden,disconnect,server
+
+pass
+debug 0,TODO finish bridge hooks
