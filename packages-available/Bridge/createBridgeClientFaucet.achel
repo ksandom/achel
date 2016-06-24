@@ -1,0 +1,15 @@
+# Creates a bridge faucet on the TCP connect side. --createBridgeClientFaucet=faucetName,address,port ~ bridge,faucet
+parameters faucetName,address,port
+set Me,address,~!Local,address!~
+set Me,port,~!Local,port!~
+
+createMetaFaucet ~!Local,faucetName!~,
+	createChannelsToJsonFaucet in
+	# TODO These event names will not handel more than one instance of the bridge. Fix this.
+	createSocketClientFaucet tcp,bridgeClientConnect,bridgeClientDisconnect,bridgeClientDisconnect,~!Me,address!~,~!Me,port!~
+	createJsonToChannelsFaucet out
+	
+	createPipe .,in,*,*
+	createPipe in,tcp
+	createPipe tcp,out
+	createPipe out,.,*,*

@@ -1,3 +1,0 @@
-# Creates a bridge faucet on the TCP listener side. --createBridgeListenerFaucet=faucetName ~ bridge,faucet
-
-pass
