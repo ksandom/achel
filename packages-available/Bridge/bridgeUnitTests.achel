@@ -1,0 +1,41 @@
+# Unit tests for the bridge faucet ~ unitTest,bridge,hidden
+
+defineTest Bridge - end to end - forward,
+	testFaucets
+		createNullFaucet null
+		createBridgeListenerFaucet bridgeListener,22001
+		createBridgeConnectFaucet bridgeConnect,localhost,22001
+		
+		createPipe bridgeListener,.
+		
+		# This is needed so it gets polled and realises there is data there.
+		createPipe bridgeConnect,null
+		createPipe null,.
+		
+		deliver bridgeConnect,a,thing
+		deliver bridgeConnect,b,buzz
+		deliver bridgeConnect,c,side
+	
+	expect thing,~!Test,a,0!~
+	expect buzz,~!Test,b,0!~
+	expect side,~!Test,c,0!~
+
+defineTest Bridge - end to end - reverse,
+	testFaucets
+		createNullFaucet null
+		createBridgeListenerFaucet bridgeListener,22001
+		createBridgeConnectFaucet bridgeConnect,localhost,22001
+		
+		createPipe bridgeConnect,.
+		
+		# This is needed so it gets polled and realises there is data there.
+		createPipe bridgeListener,null
+		createPipe null,.
+		
+		deliver bridgeListener,a,thing
+		deliver bridgeListener,b,buzz
+		deliver bridgeListener,c,side
+	
+	expect thing,~!Test,a,0!~
+	expect buzz,~!Test,b,0!~
+	expect side,~!Test,c,0!~
