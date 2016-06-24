@@ -227,35 +227,6 @@ class AchelRealityBridge:
 		except Exception as e:
 			self.error(1, 'no GPIO', 'Could not cleanup GPIO. Not available?')
 
-	def oldMain(self):
-		# Startup
-		
-		try:
-			print "Debug: Entering loop"
-			while True:
-				gotInput = self.getRawInput()
-				if isinstance(gotInput, (bool, str)):
-					if gotInput == 'EOF':
-						self.quit("EOF")
-						break
-					elif gotInput == 'quit':
-						self.quit("quit")
-						break
-				else:
-					for pin in self.pins:
-						floater=self.getInput(self.pins[pin]['inputBinding'])
-						self.setPin(pin, floater)
-				
-				# time.sleep(0.1)
-				
-			print "Debug: clean exit"
-
-		except KeyboardInterrupt:
-			self.quit("Keyboard intrerupt")
-		except Exception as e:
-			self.exception(e, 'oldMain')
-	
-	
 	def setPins(self, data):
 		changeCount=0
 		failCount=0
