@@ -3,8 +3,8 @@
 defineTest Bridge - end to end - forward,
 	testFaucets
 		createNullFaucet null
-		createBridgeListenerFaucet bridgeListener,22001
-		createBridgeConnectFaucet bridgeConnect,localhost,22001
+		createBridgeServerFaucet bridgeListener,localhost,22001
+		createBridgeClientFaucet bridgeConnect,localhost,22001
 		
 		createPipe bridgeListener,.
 		
@@ -23,8 +23,8 @@ defineTest Bridge - end to end - forward,
 defineTest Bridge - end to end - reverse,
 	testFaucets
 		createNullFaucet null
-		createBridgeListenerFaucet bridgeListener,22001
-		createBridgeConnectFaucet bridgeConnect,localhost,22001
+		createBridgeServerFaucet bridgeListener,localhost,22002
+		createBridgeClientFaucet bridgeConnect,localhost,22002
 		
 		createPipe bridgeConnect,.
 		
