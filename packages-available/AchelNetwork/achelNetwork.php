@@ -36,7 +36,6 @@ class NetworkFaucets extends Faucets
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 6, 4);
 				$faucet=new SocketServerFaucet($parms[1], $parms[2], $parms[3]);
 				$this->environment->currentFaucet->createFaucet($parms[0], 'SocketServer', $faucet);
-				print_r($parms);
 				$faucet->listen($parms[5], $parms[4]);
 				break;
 			case 'createSocketClientFaucet':
