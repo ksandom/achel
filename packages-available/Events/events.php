@@ -88,6 +88,12 @@ class Events extends Module
 	{
 		if (!$category and !$eventName) return false;
 		
+		$this->core->set('Event', 'details', array(
+			'category' => $category,
+			'eventName' => $eventName,
+			'value' => $value
+			));
+		
 		$this->core->debug(4, "triggerEvent: $category,$eventName");
 		$priorityGroups=$this->core->get('Events', "$category-$eventName");
 		if (is_array($priorityGroups) && count($priorityGroups)>0)
@@ -134,6 +140,8 @@ class Events extends Module
 			$this->core->debug(4, "Event \"$category, $eventName\" triggered, but there were no eventee priority groups. This means there are no registered eventees.");
 			}
 		}
+		
+		$this->core->doUnset(array('Event', 'details'));
 	}
 	
 	function getKey($category, $eventName, $featureName)
