@@ -1,0 +1,5 @@
+# Creates a simplified abstraction of the networking. This is the Client part. --createSimpleNetworkClientFaucet=faucetName,listenAddress,port ~ achel,network,simplified
+parameters faucetName,listenAddress,port,eventFeature
+
+# TODO finish this.
+pass

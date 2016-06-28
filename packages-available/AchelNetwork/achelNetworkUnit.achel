@@ -1,6 +1,6 @@
 # Unit tests for achelNetwork ~ network,unitTest,hidden
 
-defineTest network can send/recieve message while binding to 127.0.0.1,
+defineTest network - can send/recieve message while binding to 127.0.0.1,
 	# create a listener
 	createSocketServerFaucet serverSocket,achelNetworkUnitConnect,achelNetworkUnitDisconnect,,12345,127.0.0.1
 	deliver serverSocket,_control,inEOL n
@@ -43,5 +43,55 @@ defineTest network can send/recieve message while binding to 127.0.0.1,
 	deliverAll
 
 
+defineTest network - simpleFaucet - forward,
+	testFaucets
+		createSimpleNetworkServerFaucet server,localhost,22005,
+			parameters channel
+			
+			cd server
+			createPipe .,network,in,~!Local,channel!~
+			createPipe network,.,~!Local,channel!~,out
+			cd ..
+		
+		createSimpleNetworkClientFaucet client,localhost,22005,
+			parameters channel
+			
+			cd client
+			createPipe .,network,in,~!Local,channel!~
+			createPipe network,.,~!Local,channel!~,out
+			cd ..
+		
+		createNullFaucet null
+		
+		createPipe server,client,out,in
+		createPipe client,.,out
+		
+		deliver server,in,forward
+
+
+defineTest network - simpleFaucet - reverse,
+	testFaucets
+		createSimpleNetworkServerFaucet server,localhost,22005,
+			parameters channel
+			
+			cd server
+			createPipe .,network,in,~!Local,channel!~
+			createPipe network,.,~!Local,channel!~,out
+			cd ..
+		
+		createSimpleNetworkClientFaucet client,localhost,22005,
+			parameters channel
+			
+			cd client
+			createPipe .,network,in,~!Local,channel!~
+			createPipe network,.,~!Local,channel!~,out
+			cd ..
+		
+		createNullFaucet null
+		
+		createPipe client,server,out,in
+		createPipe server,.,out
+		
+		deliver client,in,forward
 
 
