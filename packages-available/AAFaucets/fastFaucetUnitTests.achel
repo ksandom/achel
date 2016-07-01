@@ -1,0 +1,69 @@
+# Unit tests for faucets. ~ hidden,unitTest,faucetStructure,faucets,fastFaucet
+
+defineTest Faucets - changeFaucet graceful failure,
+	cd ..
+	cd ..
+	cd ..
+	passTest If it got this far... ;)
+
+
+defineTest Faucets - changeFaucet - root,
+	createMetaFaucet thing1,
+		createMetaFaucet thing2,
+			changeFaucet root
+			pwd Test,result
+	
+	expectMultiPart ["root","~!Test,result!~"]
+	unsetCategory Test
+	
+	deleteFaucet thing1
+	deleteFaucet thing2
+
+defineTest Faucets - changeFaucet - .,
+	createMetaFaucet thing1,
+		createMetaFaucet thing2,
+			changeFaucet .
+			pwd Test,result
+	
+	expectMultiPart ["root,thing1,thing2","~!Test,result!~"]
+	unsetCategory Test
+	
+	deleteFaucet thing1
+	deleteFaucet thing2
+
+defineTest Faucets - changeFaucet - ..,
+	createMetaFaucet thing1,
+		createMetaFaucet thing2,
+			changeFaucet ..
+			pwd Test,result
+	
+	expectMultiPart ["root,thing1","~!Test,result!~"]
+	unsetCategory Test
+	
+	deleteFaucet thing1
+	deleteFaucet thing2
+
+defineTest Faucets - changeFaucet - thing1,
+	createMetaFaucet thing1,
+		createMetaFaucet thing2,
+			changeFaucet root,thing1
+			pwd Test,result
+	
+	expectMultiPart ["root,thing1","~!Test,result!~"]
+	unsetCategory Test
+	
+	deleteFaucet thing1
+	deleteFaucet thing2
+
+defineTest Faucets - pwd - store,
+	createMetaFaucet thing1,
+		createMetaFaucet thing2,
+			pwd Test,result
+	
+	expectMultiPart ["root,thing1,thing2","~!Test,result!~"]
+	unsetCategory Test
+	
+	deleteFaucet thing1
+	deleteFaucet thing2
+
+

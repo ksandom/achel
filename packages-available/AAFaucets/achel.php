@@ -314,6 +314,9 @@ class Faucets extends Module
 					*/
 					$this->environment->currentFaucet=&$this->environment->rootFaucet;
 					break;
+				case 'root':
+					$this->environment->currentFaucet=&$this->environment->currentFaucet->getRootFaucet();
+					break;
 				case '.':
 					// We're already here. We don't need to do anything.
 					break;
