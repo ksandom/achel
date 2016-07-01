@@ -160,12 +160,6 @@ defineTest Faucets - metaFaucet/normal - many to 1 and 1 to many,
 	deleteFaucet metaDump
 	unsetCategory MetaDump
 
-defineTest Faucets - changeFaucet graceful failure,
-	cd ..
-	cd ..
-	cd ..
-	passTest If it got this far... ;)
-
 # TODO Write tests for ~* bent input.
 defineTest Faucets - bent many to many,
 	testFaucets

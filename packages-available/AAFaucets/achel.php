@@ -155,7 +155,8 @@ class Faucets extends Module
 				$this->core->setRef('Achel','currentFaucet', $this->environment->currentFaucet);
 				break;
 			case 'currentFaucet':
-				$this->getCurrentFaucet();
+				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 0);
+				$this->getCurrentFaucet($parms);
 				break;
 			case 'setFaucetConfigItem':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 4, true);
@@ -275,9 +276,20 @@ class Faucets extends Module
 		}
 	}
 	
-	function getCurrentFaucet()
+	function getCurrentFaucet($parameters)
 	{
-		$this->core->debug(0, __CLASS__.'->'.__FUNCTION__.': '.$this->environment->currentFaucet->getName());
+		# TODO Refactor this to 
+		# * take arguments,and set the result in the specified location in ncessary.
+		# * find the whole path.
+		
+		if (isset($parameters[1]))
+		{
+			$this->core->set($parameters[0], $parameters[1], $this->environment->currentFaucet->getFullPath());
+		}
+		else
+		{
+			$this->core->debug(0, __CLASS__.'->'.__FUNCTION__.': '.$this->environment->currentFaucet->getFullPath());
+		}
 	}
 	
 	function changeFaucet($faucetPath)
@@ -930,6 +942,16 @@ class MetaFaucet extends ThroughBasedFaucet
 		$this->parentFaucet=&$parentFaucet;
 	}
 	
+	function &getRootFaucet()
+	{
+		return $this->parentFaucet;
+	}
+	
+	function &getParentFaucet()
+	{
+		return $this->parentFaucet;
+	}
+	
 	function preGet()
 	{
 		return $this->deliverAll();
@@ -949,6 +971,18 @@ class MetaFaucet extends ThroughBasedFaucet
 	function getName()
 	{
 		return $this->myName;
+	}
+	
+	function getFullPath()
+	{
+		if ($this->myName == 'root')
+		{
+			return $this->myName;
+		}
+		else
+		{
+			return $this->parentFaucet->getFullPath().','.$this->myName;
+		}
 	}
 	
 	function createFaucet($faucetName, $type, &$faucetObject)
@@ -1045,11 +1079,6 @@ class MetaFaucet extends ThroughBasedFaucet
 		}
 		
 		return $stats;
-	}
-	
-	function &getParentFaucet()
-	{
-		return $this->parentFaucet;
 	}
 	
 	function findRealFaucetName($faucetName)
