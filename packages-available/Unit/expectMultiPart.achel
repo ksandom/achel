@@ -1,0 +1,13 @@
+# Expect a particular multipart value. --expectMultiPart=["expectedValue","actualValue","comment","authoritive"] (note that for json arguments like this, the [] are json, not the normal indication of an optional parameter) . If authoritive is true, this test will override previous results. Default is false. ~ unit,result
+parameters expectedValue,actualValue,comment,authoritive
+
+if ["~!Local,expectedValue!~","==","~!Local,actualValue!~"],
+	if ["~!UnitResults,currentResult!~","==",""],
+		passTest Got expected multipart result.
+	else
+		if ~!Local,authoritive!~,==,true,
+			passTest Got expected multipart result.
+		else
+			debug 1,Got expected result ("~!Local,actualValue!~"), but already set result. So not setting again.
+else
+	failTest ["Expected \"~!Local,expectedValue!~\" but got \"~!Local,actualValue!~\". ~!Local,comment!~"]
