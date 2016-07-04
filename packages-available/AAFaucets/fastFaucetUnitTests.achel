@@ -13,7 +13,7 @@ defineTest Faucets - changeFaucet - root,
 			changeFaucet root
 			pwd Test,result
 	
-	expectMultiPart ["root","~!Test,result!~"]
+	expectMultiPart ["","~!Test,result!~"]
 	unsetCategory Test
 	
 	deleteFaucet thing1
@@ -25,7 +25,7 @@ defineTest Faucets - changeFaucet - .,
 			changeFaucet .
 			pwd Test,result
 	
-	expectMultiPart ["root,thing1,thing2","~!Test,result!~"]
+	expectMultiPart ["/thing1/thing2","~!Test,result!~"]
 	unsetCategory Test
 	
 	deleteFaucet thing1
@@ -37,19 +37,31 @@ defineTest Faucets - changeFaucet - ..,
 			changeFaucet ..
 			pwd Test,result
 	
-	expectMultiPart ["root,thing1","~!Test,result!~"]
+	expectMultiPart ["/thing1","~!Test,result!~"]
 	unsetCategory Test
 	
 	deleteFaucet thing1
 	deleteFaucet thing2
 
-defineTest Faucets - changeFaucet - thing1,
+defineTest Faucets - changeFaucet - thing1 via root,
 	createMetaFaucet thing1,
 		createMetaFaucet thing2,
-			changeFaucet root,thing1
+			changeFaucet root/thing1
 			pwd Test,result
 	
-	expectMultiPart ["root,thing1","~!Test,result!~"]
+	expectMultiPart ["/thing1","~!Test,result!~"]
+	unsetCategory Test
+	
+	deleteFaucet thing1
+	deleteFaucet thing2
+
+defineTest Faucets - changeFaucet - thing1 via empty string,
+	createMetaFaucet thing1,
+		createMetaFaucet thing2,
+			changeFaucet root/thing1
+			pwd Test,result
+	
+	expectMultiPart ["/thing1","~!Test,result!~"]
 	unsetCategory Test
 	
 	deleteFaucet thing1
@@ -60,7 +72,7 @@ defineTest Faucets - pwd - store,
 		createMetaFaucet thing2,
 			pwd Test,result
 	
-	expectMultiPart ["root,thing1,thing2","~!Test,result!~"]
+	expectMultiPart ["/thing1/thing2","~!Test,result!~"]
 	unsetCategory Test
 	
 	deleteFaucet thing1

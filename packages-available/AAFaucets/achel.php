@@ -294,7 +294,7 @@ class Faucets extends Module
 	
 	function changeFaucet($faucetPath)
 	{
-		$debugLevel=1;
+		$debugLevel=2;
 		
 		if ($faucetPath=='/') $faucetPath=''; // A simple way to make sure that / gets processed only once.
 		
@@ -980,11 +980,11 @@ class MetaFaucet extends ThroughBasedFaucet
 	{
 		if ($this->myName == 'root')
 		{
-			return $this->myName;
+			return '';
 		}
 		else
 		{
-			return $this->parentFaucet->getFullPath().','.$this->myName;
+			return $this->parentFaucet->getFullPath().'/'.$this->myName;
 		}
 	}
 	
