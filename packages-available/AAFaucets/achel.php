@@ -294,7 +294,7 @@ class Faucets extends Module
 	
 	function changeFaucet($faucetPath)
 	{
-		$debugLevel=2;
+		$debugLevel=1;
 		
 		if ($faucetPath=='/') $faucetPath=''; // A simple way to make sure that / gets processed only once.
 		
@@ -315,7 +315,7 @@ class Faucets extends Module
 					$this->environment->currentFaucet=&$this->environment->rootFaucet;
 					break;
 				case 'root':
-					$this->environment->currentFaucet=&$this->environment->currentFaucet->getRootFaucet();
+					$this->environment->currentFaucet=&$this->environment->rootFaucet;
 					break;
 				case '.':
 					// We're already here. We don't need to do anything.
