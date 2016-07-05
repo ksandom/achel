@@ -1,5 +1,17 @@
 # Unit tests for faucets. ~ hidden,unitTest,faucetStructure,faucets,fastFaucet
 
+defineTest Faucets - pwd - store,
+	createMetaFaucet thing1,
+		createMetaFaucet thing2,
+			pwd Test,result
+	
+	expectMultiPart ["/thing1/thing2","~!Test,result!~"]
+	unsetCategory Test
+	
+	deleteFaucet thing1
+	deleteFaucet thing2
+
+
 defineTest Faucets - changeFaucet graceful failure,
 	cd ..
 	cd ..
@@ -23,6 +35,18 @@ defineTest Faucets - changeFaucet - .,
 	createMetaFaucet thing1,
 		createMetaFaucet thing2,
 			changeFaucet .
+			pwd Test,result
+	
+	expectMultiPart ["/thing1/thing2","~!Test,result!~"]
+	unsetCategory Test
+	
+	deleteFaucet thing1
+	deleteFaucet thing2
+
+defineTest Faucets - changeFaucet - invalid input,
+	createMetaFaucet thing1,
+		createMetaFaucet thing2,
+			changeFaucet alfdkhjsdflkjas
 			pwd Test,result
 	
 	expectMultiPart ["/thing1/thing2","~!Test,result!~"]
@@ -66,16 +90,4 @@ defineTest Faucets - changeFaucet - thing1 via empty string,
 	
 	deleteFaucet thing1
 	deleteFaucet thing2
-
-defineTest Faucets - pwd - store,
-	createMetaFaucet thing1,
-		createMetaFaucet thing2,
-			pwd Test,result
-	
-	expectMultiPart ["/thing1/thing2","~!Test,result!~"]
-	unsetCategory Test
-	
-	deleteFaucet thing1
-	deleteFaucet thing2
-
 
