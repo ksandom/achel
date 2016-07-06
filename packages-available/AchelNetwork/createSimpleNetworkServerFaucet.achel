@@ -1,5 +1,15 @@
 # Creates a simplified abstraction of the networking. This is the Server part. --createSimpleNetworkServerFaucet=faucetName,listenAddress,port ~ achel,network,simplified
 parameters faucetName,listenAddress,port,eventFeature
+set Me,listenAddress,~!Local,listenAddress!~
+set Me,port,~!Local,port!~
+set Me,eventFeature,~!Local,eventFeature!~
 
-# TODO finish this.
-pass
+# TODO make this feature like the client faucet
+
+createMetaFaucet ~!Local,faucetName!~,
+	pwd Network,~!Me,eventFeature!~
+	registerForEvent SocketServerFaucet,~!Me,eventFeature!~,~!Me,eventFeature!~,~!Me,listenAddress!~:~!Me,port!~
+	
+	createSocketServerFaucet network,~!Me,eventFeature!~,pass,pass,~!Me,port!~,~!Me,listenAddress!~
+	
+	createPipe network,.

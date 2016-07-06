@@ -48,18 +48,17 @@ defineTest network - simpleFaucet - forward,
 		createSimpleNetworkServerFaucet server,localhost,22005,
 			parameters channel
 			
-			cd server
+			# TODO The problem is that the context needs to be changed to where the network faucet is. But we don't know how many faucets we are nested in yet.
+			# DO use pwd in the createSimpleNetworkClientFaucet etc to store the context.
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
-			cd ..
 		
 		createSimpleNetworkClientFaucet client,localhost,22005,
 			parameters channel
 			
-			cd client
+			debug 0,GOT HERE client
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
-			cd ..
 		
 		createNullFaucet null
 		
@@ -67,31 +66,39 @@ defineTest network - simpleFaucet - forward,
 		createPipe client,.,out
 		
 		deliver server,in,forward
+	
+	expect forward,~!Test,default,0!~
+
 
 
 defineTest network - simpleFaucet - reverse,
 	testFaucets
-		createSimpleNetworkServerFaucet server,localhost,22005,
-			parameters channel
+		createSimpleNetworkServerFaucet server,localhost,22006,
+			parameters ID,channel
 			
-			cd server
+			# TODO check that this is right
+			# TODO Do we need ID
+			
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
-			cd ..
 		
-		createSimpleNetworkClientFaucet client,localhost,22005,
+		createSimpleNetworkClientFaucet client,localhost,22006,
 			parameters channel
 			
-			cd client
+			# TODO apply changes as above
+			
+			# cd client
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
-			cd ..
+			# cd ..
 		
 		createNullFaucet null
 		
 		createPipe client,server,out,in
 		createPipe server,.,out
 		
-		deliver client,in,forward
+		deliver client,in,reverse
+	
+	expect reverse,~!Test,default,0!~
 
 
