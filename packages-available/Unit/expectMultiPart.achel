@@ -11,3 +11,4 @@ if ["~!Local,expectedValue!~","==","~!Local,actualValue!~"],
 			debug 1,Got expected result ("~!Local,actualValue!~"), but already set result. So not setting again.
 else
 	failTest ["Expected \"~!Local,expectedValue!~\" but got \"~!Local,actualValue!~\". ~!Local,comment!~"]
+	debug ["0","Expected \"~!Local,expectedValue!~\" but got \"~!Local,actualValue!~\". ~!Local,comment!~"]
