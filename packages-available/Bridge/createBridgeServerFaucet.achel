@@ -6,7 +6,7 @@ set Me,port,~!Local,port!~
 createMetaFaucet ~!Local,faucetName!~,
 	createChannelsToJsonFaucet in
 	# TODO These event names will not handel more than one instance of the bridge. Fix this.
-	createSocketServerFaucet tcp,bridgeServerConnect,bridgeServerDisconnect,bridgeServerDisconnect,~!Me,port!~,~!Me,address!~
+	createSocketServerFaucet tcp,bridgeServerConnect,bridgeServerDisconnect,bridgeServerDisconnect,~!Me,port!~,~!Me,address!~,~!Local,faucetName!~
 	createJsonToChannelsFaucet out
 	
 	createPipe .,in,*,*

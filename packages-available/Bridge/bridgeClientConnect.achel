@@ -1,4 +1,5 @@
 # Internal connect hook on the client side. ~ hidden,connect,client
+parameters channel
 
 pass
 debug 0,TODO finish bridge hooks

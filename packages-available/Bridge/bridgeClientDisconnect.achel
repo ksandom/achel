@@ -1,4 +1,5 @@
 # Internal disconnect hook on the client side. ~ hidden,disconnect,client
+parameters channel
 
 pass
 debug 0,TODO finish bridge hooks

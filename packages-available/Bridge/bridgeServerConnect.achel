@@ -1,4 +1,5 @@
 # Internal connect hook on the server side. ~ hidden,connect,server
+parameters channel
 
 pass
 debug 0,TODO finish bridge hooks
