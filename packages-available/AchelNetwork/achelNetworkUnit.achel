@@ -75,22 +75,19 @@ defineTest network - simpleFaucet - reverse,
 	testFaucets
 		createSimpleNetworkServerFaucet server,localhost,22006,
 			parameters ID,channel
+			debug 0,ID=~!Local,ID!~ channel=~!Local,channel!~
 			
 			# TODO check that this is right
-			# TODO Do we need ID
 			
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
 		
 		createSimpleNetworkClientFaucet client,localhost,22006,
-			parameters channel
+			parameters ID,channel
+			debug 0,ID=~!Local,ID!~ channel=~!Local,channel!~
 			
-			# TODO apply changes as above
-			
-			# cd client
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
-			# cd ..
 		
 		createNullFaucet null
 		

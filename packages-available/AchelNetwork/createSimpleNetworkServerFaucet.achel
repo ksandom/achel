@@ -1,15 +1,27 @@
 # Creates a simplified abstraction of the networking. This is the Server part. --createSimpleNetworkServerFaucet=faucetName,listenAddress,port ~ achel,network,simplified
 parameters faucetName,listenAddress,port,eventFeature
-set Me,listenAddress,~!Local,listenAddress!~
-set Me,port,~!Local,port!~
-set Me,eventFeature,~!Local,eventFeature!~
 
-# TODO make this feature like the client faucet
+set Me,ID,server-~!Local,listenAddress!~:~!Local,port!~
+setNested Network,~!Me,ID!~,ID,~!Me,ID!~
+setNested Network,~!Me,ID!~,type,server
+setNested Network,~!Me,ID!~,address,~!Local,listenAddress!~
+setNested Network,~!Me,ID!~,port,~!Local,port!~
+setNested Network,~!Me,ID!~,eventFeature,~!Local,eventFeature!~
+setNested Network,~!Me,ID!~,handler,
+	parameters ID,channel
+	
+	pwd Local,originFaucet
+	changeFaucet ~!Network,~!Local,ID!~,eventFaucet!~
+	callFeatureReturn ~!Network,~!Local,ID!~,eventFeature!~,~!Local,ID!~,~!Local,channel!~
+	changeFaucet ~!Local,originFaucet!~
 
 createMetaFaucet ~!Local,faucetName!~,
-	pwd Network,~!Me,eventFeature!~
-	registerForEvent SocketServerFaucet,~!Me,eventFeature!~,~!Me,eventFeature!~,~!Me,listenAddress!~:~!Me,port!~
+	pwd Local,eventFaucet
+	setNested Network,~!Me,ID!~,faucet,~!Local,eventFaucet!~
 	
-	createSocketServerFaucet network,~!Me,eventFeature!~,pass,pass,~!Me,port!~,~!Me,listenAddress!~
+	registerForEvent SocketServerFaucet,ANConnect,~!Network,~!Me,ID!~,handler!~,~!Me,ID!~
+	
+	createSocketServerFaucet network,ANConnect,pass,pass,~!Network,~!Me,ID!~,port!~,~!Network,~!Me,ID!~,address!~
 	
 	createPipe network,.
+
