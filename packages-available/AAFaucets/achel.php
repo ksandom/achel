@@ -150,7 +150,7 @@ class Faucets extends Module
 			
 			
 			case 'changeFaucet':
-				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
+				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 0);
 				$this->changeFaucet($parms[0]);
 				$this->core->setRef('Achel','currentFaucet', $this->environment->currentFaucet);
 				break;
@@ -282,7 +282,7 @@ class Faucets extends Module
 		# * take arguments,and set the result in the specified location in ncessary.
 		# * find the whole path.
 		
-		if (isset($parameters[1]))
+		if (isset($parameters[1]) && $parameters[1])
 		{
 			$this->core->set($parameters[0], $parameters[1], $this->environment->currentFaucet->getFullPath());
 		}

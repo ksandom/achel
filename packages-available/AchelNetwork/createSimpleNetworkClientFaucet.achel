@@ -14,10 +14,16 @@ setNested Network,~!Me,ID!~,handler,
 	nested
 	outNow
 	
-	pwd Local,originFaucet
-	changeFaucet ~!Network,~!Local,ID!~,eventFaucet!~
+	pwd
+	pwd Network,originFaucet
+	debug 0,ID=~!Local,ID!~ faucet=~!Network,~!Local,ID!~,faucet!~ originFaucet=~!Network,originFaucet!~
+	changeFaucet ~!Network,~!Local,ID!~,faucet!~
+	debug 0,gothere --1
 	callFeatureReturn ~!Network,~!Local,ID!~,eventFeature!~,~!Local,ID!~,~!Local,channel!~
-	changeFaucet ~!Local,originFaucet!~
+	debug 0,gothere --2
+	changeFaucet ~!Network,originFaucet!~
+	unset Network,originFaucet
+	debug 0,gothere --3
 
 createMetaFaucet ~!Local,faucetName!~,
 	pwd Local,eventFaucet

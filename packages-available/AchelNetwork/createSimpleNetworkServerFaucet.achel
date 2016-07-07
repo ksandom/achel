@@ -10,10 +10,20 @@ setNested Network,~!Me,ID!~,eventFeature,~!Local,eventFeature!~
 setNested Network,~!Me,ID!~,handler,
 	parameters ID,channel
 	
-	pwd Local,originFaucet
-	changeFaucet ~!Network,~!Local,ID!~,eventFaucet!~
+	getCategory Network
+	nested
+	outNow
+	
+	pwd
+	pwd Network,originFaucet
+	debug 0,ID=~!Local,ID!~ faucet=~!Network,~!Local,ID!~,faucet!~ originFaucet=~!Network,originFaucet!~
+	changeFaucet ~!Network,~!Local,ID!~,faucet!~
+	debug 0,gothere --1
 	callFeatureReturn ~!Network,~!Local,ID!~,eventFeature!~,~!Local,ID!~,~!Local,channel!~
-	changeFaucet ~!Local,originFaucet!~
+	debug 0,gothere --2
+	changeFaucet ~!Network,originFaucet!~
+	unset Network,originFaucet
+	debug 0,gothere --3
 
 createMetaFaucet ~!Local,faucetName!~,
 	pwd Local,eventFaucet
