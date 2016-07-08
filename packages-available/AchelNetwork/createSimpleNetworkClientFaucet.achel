@@ -7,30 +7,17 @@ setNested Network,~!Me,ID!~,type,client
 setNested Network,~!Me,ID!~,address,~!Local,listenAddress!~
 setNested Network,~!Me,ID!~,port,~!Local,port!~
 setNested Network,~!Me,ID!~,eventFeature,~!Local,eventFeature!~
-setNested Network,~!Me,ID!~,handler,
-	parameters ID,channel
-	
-	getCategory Network
-	nested
-	outNow
-	
-	pwd
-	pwd Network,originFaucet
-	debug 0,ID=~!Local,ID!~ faucet=~!Network,~!Local,ID!~,faucet!~ originFaucet=~!Network,originFaucet!~
-	changeFaucet ~!Network,~!Local,ID!~,faucet!~
-	debug 0,gothere --1
-	callFeatureReturn ~!Network,~!Local,ID!~,eventFeature!~,~!Local,ID!~,~!Local,channel!~
-	debug 0,gothere --2
-	changeFaucet ~!Network,originFaucet!~
-	unset Network,originFaucet
-	debug 0,gothere --3
 
 createMetaFaucet ~!Local,faucetName!~,
 	pwd Local,eventFaucet
 	setNested Network,~!Me,ID!~,faucet,~!Local,eventFaucet!~
 	
-	registerForEvent SocketServerFaucet,ANConnect,~!Network,~!Me,ID!~,handler!~,~!Me,ID!~
+	registerForEvent SocketServerFaucet,ANConnect,handleConnect,~!Me,ID!~
 	
 	createSocketClientFaucet network,ANConnect,pass,pass,~!Network,~!Me,ID!~,port!~,~!Network,~!Me,ID!~,address!~
+	
+	# TODO work out if this is needed, and see if there is a better way of doing it.
+	deliver network,_control,inEOL n
+	deliver network,_control,outEOL n
 	
 	createPipe network,.

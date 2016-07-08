@@ -294,7 +294,7 @@ class Faucets extends Module
 	
 	function changeFaucet($faucetPath)
 	{
-		$debugLevel=1;
+		$debugLevel=2;
 		
 		if ($faucetPath=='/') $faucetPath=''; // A simple way to make sure that / gets processed only once.
 		
@@ -335,7 +335,7 @@ class Faucets extends Module
 					$totalFaucet=$this->environment->currentFaucet->getFaucet($part);
 					if ($totalFaucet)
 					{
-						$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Entered \"$part\"");
+						$this->core->debug($debugLevel+1, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Entered \"$part\"");
 						$this->environment->currentFaucet=&$totalFaucet['object'];
 						unset($totalFaucet);
 					}

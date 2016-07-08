@@ -43,13 +43,38 @@ defineTest network - can send/recieve message while binding to 127.0.0.1,
 	deliverAll
 
 
+defineTest network - handelConnect,
+	set Test,inner,
+		pwd Test,result
+	
+	createMetaFaucet testEnv,
+		createMetaFaucet thing1,
+			createMetaFaucet thing2,
+				createMetaFaucet thing3,
+					pass
+	
+	set Me,ID,blahish
+	
+	setNested Network,~!Me,ID!~,ID,~!Me,ID!~
+	setNested Network,~!Me,ID!~,type,client
+	setNested Network,~!Me,ID!~,address,anAddress
+	setNested Network,~!Me,ID!~,port,aPort
+	setNested Network,~!Me,ID!~,eventFeature,~!Test,inner!~
+	setNested Network,~!Me,ID!~,faucet,/testEnv/thing1/thing2/thing3
+	
+	handleConnect ~!Me,ID!~,123
+	
+	expect /testEnv/thing1/thing2/thing3,~!Test,result!~
+
+	deleteFaucet testEnv
+
+
 defineTest network - simpleFaucet - forward,
 	testFaucets
 		createSimpleNetworkServerFaucet server,localhost,22005,
 			parameters channel
 			
-			# TODO The problem is that the context needs to be changed to where the network faucet is. But we don't know how many faucets we are nested in yet.
-			# DO use pwd in the createSimpleNetworkClientFaucet etc to store the context.
+			debug 0,GOT HERE server
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
 		
@@ -60,8 +85,6 @@ defineTest network - simpleFaucet - forward,
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
 		
-		createNullFaucet null
-		
 		createPipe server,client,out,in
 		createPipe client,.,out
 		
@@ -70,32 +93,32 @@ defineTest network - simpleFaucet - forward,
 	expect forward,~!Test,default,0!~
 
 
-
-defineTest network - simpleFaucet - reverse,
-	testFaucets
-		createSimpleNetworkServerFaucet server,localhost,22006,
-			parameters ID,channel
-			debug 0,ID=~!Local,ID!~ channel=~!Local,channel!~
+pass
+	defineTest network - simpleFaucet - reverse,
+		testFaucets
+			createSimpleNetworkServerFaucet server,localhost,22006,
+				parameters ID,channel
+				debug 0,ID=~!Local,ID!~ channel=~!Local,channel!~
+				
+				# TODO check that this is right
+				
+				createPipe .,network,in,~!Local,channel!~
+				createPipe network,.,~!Local,channel!~,out
 			
-			# TODO check that this is right
+			createSimpleNetworkClientFaucet client,localhost,22006,
+				parameters ID,channel
+				debug 0,ID=~!Local,ID!~ channel=~!Local,channel!~
+				
+				createPipe .,network,in,~!Local,channel!~
+				createPipe network,.,~!Local,channel!~,out
 			
-			createPipe .,network,in,~!Local,channel!~
-			createPipe network,.,~!Local,channel!~,out
-		
-		createSimpleNetworkClientFaucet client,localhost,22006,
-			parameters ID,channel
-			debug 0,ID=~!Local,ID!~ channel=~!Local,channel!~
+			createNullFaucet null
 			
-			createPipe .,network,in,~!Local,channel!~
-			createPipe network,.,~!Local,channel!~,out
+			createPipe client,server,out,in
+			createPipe server,.,out
+			
+			deliver client,in,reverse
 		
-		createNullFaucet null
-		
-		createPipe client,server,out,in
-		createPipe server,.,out
-		
-		deliver client,in,reverse
-	
-	expect reverse,~!Test,default,0!~
+		expect reverse,~!Test,default,0!~
 
 
