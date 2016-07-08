@@ -21,4 +21,5 @@ createMetaFaucet ~!Local,faucetName!~,
 	deliver network,_control,outEOL n
 	
 	createPipe network,.
+	createPipe .,network
 
