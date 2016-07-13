@@ -1,0 +1,8 @@
+# Sets a specific pin to be a PWN servo. --setPinGenericServo=faucet,pin,pinBinding ~ servo
+parameters {"FaucetName":"servo","pin":"7","pinBinding":"0"}
+
+cd ~!Local,FaucetName!~
+
+deliver proc,default,{"command":"setPinGenericServo","data":{"pin":"~!Local,pin!~","binding":"~!Local,pinBinding!~"}}
+
+cd ..

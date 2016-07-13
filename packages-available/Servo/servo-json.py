@@ -134,7 +134,13 @@ class AchelRealityBridge:
 		self.registerAllPins()
 		
 		
-
+	
+	def registerPinPWNDefaults(self, pin, inputBinding):
+		try:
+			self.registerPin(pin, inputBinding, self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+		except Exception as e:
+			self.exception(e, "registerPinPWNDefaults. PinID="+str(pinID)+" inputBinding="+str(inputBinding))
+	
 	def registerPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter, frequency):
 		
 		try:
@@ -148,7 +154,7 @@ class AchelRealityBridge:
 				'outCenter':outCenter,
 				'outMax':outMax}
 			
-			self.debug(2, 'Debug: registering pin ' + str(pinID) +' as '+str(inputBinding))
+			self.debug(2, 'registering pin ' + str(pinID) +' as '+str(inputBinding))
 			
 			# TODO Refactor so that it doesn't stamp on previously written values.
 			# TODO add the possibility for a default value.
@@ -158,8 +164,8 @@ class AchelRealityBridge:
 			self.pins[strPinID]['physicalPin'] = GPIO.PWM(pinID, frequency)
 			self.pins[strPinID]['physicalPin'].start(outCenter)
 			
-		except Exception as e:
-			self.exception(e, "registerPin. PinID="+str(pinID)+" inputBinding="+str(inputBinding))
+		except NameError as e:
+			self.error(2, "NameError while registering pin PinID="+str(pinID)+" inputBinding="+str(inputBinding))
 	
 	def scale(self, value, inMin, inMax, outMin, outMax):
 		# Takes a value, checks it's within bounds and scales accordingly.
@@ -294,6 +300,11 @@ class AchelRealityBridge:
 			elif (data['command'] == "setAllGenericServos"):
 				self.registerAllPins()
 				self.debug(2, "Set all pins to generic PWM based servos.")
+			elif (data['command'] == "setPinGenericServo"):
+				try:
+					self.registerPinPWNDefaults(data['data']['pin'], data['data']['binding'])
+				except Exception as e:
+					self.exception(e, "registerPin. PinID="+str(pinID)+" inputBinding="+str(inputBinding))
 			elif (data['command'] == "setData"):
 				self.setPins(data['data'])
 			elif (data['command'] == "isGpioStarted"):
@@ -301,7 +312,7 @@ class AchelRealityBridge:
 			elif (data['command'] == "nuter"):
 				self.nuter(data['message'])
 			else:
-				self.debug(0, "Unknown command \""+data['command']+"\"")
+				self.debug(0, "Unknown command/a \""+data['command']+"\" - beeeep")
 			
 		except ValueError:
 			self.error(1, "notJson", "Recieved data was not decodable as json.")
