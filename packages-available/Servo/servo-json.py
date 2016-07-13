@@ -24,7 +24,6 @@ TODO define structure
 import time
 import sys
 import json
-import pprint
 
 try:
 	import RPi.GPIO as GPIO
@@ -126,14 +125,6 @@ class AchelRealityBridge:
 			self.registerPin(22, "7", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
 		except Exception as e:
 			self.exception(e, "registerAllPins.")
-	
-	def oldInit(self):
-		
-		self.configureGPIO()
-		self.setDefaultValues()
-		self.registerAllPins()
-		
-		
 	
 	def registerPinPWNDefaults(self, pin, inputBinding):
 		try:
@@ -256,7 +247,6 @@ class AchelRealityBridge:
 	
 	def setPin(self, pin, value):
 		self.debug("3", "Got data")
-		# TODO remove this: pprint.pprint (self.pins)
 		try:
 			inMin=self.pins[pin]['inMin']
 			inMax=self.pins[pin]['inMax']
@@ -320,7 +310,6 @@ class AchelRealityBridge:
 		except KeyError:
 			self.error(1, "missing command", "Json was recieved, but command was not in it. Line=\""+line+"\"")
 		except TypeError:
-			# TODO Happening inside data[]?
 			self.error(1, "typeError", "The decoded json does not appear to be a dict.")
 			sys.stderr.write("Unexpected json structure: \""+line+"\"\n")
 	
