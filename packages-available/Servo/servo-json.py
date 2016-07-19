@@ -133,7 +133,6 @@ class AchelRealityBridge:
 			self.exception(e, "registerPWMPinDefaults. PinID="+str(pinID)+" inputBinding="+str(inputBinding))
 	
 	def registerPWMPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter, frequency):
-		
 		try:
 			strPinID=str(inputBinding)
 			self.pins[strPinID] = {
@@ -156,6 +155,26 @@ class AchelRealityBridge:
 			GPIO.setup(pinID,GPIO.OUT)
 			self.pins[strPinID]['physicalPin'] = GPIO.PWM(pinID, frequency)
 			self.pins[strPinID]['physicalPin'].start(outCenter)
+			
+		except NameError as e:
+			self.error(2, "NameError while registering pin PinID="+str(pinID)+" inputBinding="+str(inputBinding))
+	
+	def registerBinaryPin(self, pinID, inputBinding, defaultValue):
+		try:
+			strPinID=str(inputBinding)
+			self.pins[strPinID] = {
+				'pinID':pinID,
+				'inputBinding':inputBinding,
+				'type':'pwm',
+				'state':'active',
+				'defaultValue':defaultValue}
+			
+			self.debug(2, 'registering pin ' + str(pinID) +' as '+str(inputBinding))
+			
+			self.inputData[inputBinding]=inMin
+			
+			GPIO.setup(pinID,GPIO.OUT)
+			self.setBinaryPin(pinID, defaultValue)
 			
 		except NameError as e:
 			self.error(2, "NameError while registering pin PinID="+str(pinID)+" inputBinding="+str(inputBinding))
@@ -234,10 +253,16 @@ class AchelRealityBridge:
 		for pin in data:
 			try:
 				if not (self.nutered):
-					if (self.setPin(str(pin), data[pin])):
-						changeCount=changeCount+1
-					else:
-						failCount=failCount+1
+					if (self.pins[pin]['type']=='PWM'):
+						if (self.setPWMPin(str(pin), data[pin])):
+							changeCount=changeCount+1
+						else:
+							failCount=failCount+1
+					elif (self.pins[pin]['type']=='binary'):
+						if (self.setBinaryPin(str(pin), data[pin])):
+							changeCount=changeCount+1
+						else:
+							failCount=failCount+1
 				else:
 					self.debug(1, "would write pin "+pin+", but currently nutered.")
 					nuteredCount=nuteredCount+1
@@ -247,7 +272,7 @@ class AchelRealityBridge:
 		
 		self.debug(3, "Set "+str(changeCount)+" pins. Nutered "+str(nuteredCount)+" pins. Failed to set "+str(failCount)+" pins.")
 	
-	def setPin(self, pin, value):
+	def setPWMPin(self, pin, value):
 		self.debug("3", "Got data")
 		try:
 			inMin=self.pins[pin]['inMin']
@@ -258,9 +283,22 @@ class AchelRealityBridge:
 			self.pins[pin]['physicalPin'].ChangeDutyCycle(scaled)
 			return True
 		except Exception as e:
-			self.exception(e, "setPin")
+			self.exception(e, "setPWMPin")
 			return False
-		
+	
+	def setBinaryPin(self, pin, value):
+		self.debug("3", "Got data")
+		try:
+			if (value == '0'):
+				safeValue=False
+			else:
+				safeValue=True
+			
+			self.pins[pin]['physicalPin'].output(pin, safeValue)
+			return True
+		except Exception as e:
+			self.exception(e, "setPWMPin")
+			return False
 	
 	def isGpioStarted(self):
 		if (self.gpioStarted):
