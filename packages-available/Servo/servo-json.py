@@ -139,6 +139,8 @@ class AchelRealityBridge:
 			self.pins[strPinID] = {
 				'pinID':pinID,
 				'inputBinding':inputBinding,
+				'type':'pwm',
+				'state':'active',
 				'inMin':inMin,
 				'inMax':inMax,
 				'outMin':outMin,
