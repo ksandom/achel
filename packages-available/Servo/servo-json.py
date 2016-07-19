@@ -115,24 +115,24 @@ class AchelRealityBridge:
 	
 	def registerAllPins(self):
 		try:
-			self.registerPin(7, "0", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-			self.registerPin(11, "1", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-			self.registerPin(12, "2", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-			self.registerPin(13, "3", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-			self.registerPin(15, "4", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-			self.registerPin(16, "5", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-			self.registerPin(18, "6", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
-			self.registerPin(22, "7", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPWMPin(7, "0", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPWMPin(11, "1", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPWMPin(12, "2", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPWMPin(13, "3", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPWMPin(15, "4", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPWMPin(16, "5", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPWMPin(18, "6", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPWMPin(22, "7", self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
 		except Exception as e:
 			self.exception(e, "registerAllPins.")
 	
-	def registerPinPWNDefaults(self, pin, inputBinding):
+	def registerPWMPinDefaults(self, pin, inputBinding):
 		try:
-			self.registerPin(pin, inputBinding, self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
+			self.registerPWMPin(pin, inputBinding, self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
 		except Exception as e:
-			self.exception(e, "registerPinPWNDefaults. PinID="+str(pinID)+" inputBinding="+str(inputBinding))
+			self.exception(e, "registerPWMPinDefaults. PinID="+str(pinID)+" inputBinding="+str(inputBinding))
 	
-	def registerPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter, frequency):
+	def registerPWMPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter, frequency):
 		
 		try:
 			strPinID=str(inputBinding)
@@ -294,9 +294,9 @@ class AchelRealityBridge:
 				self.debug(2, "Set all pins to generic PWM based servos.")
 			elif (data['command'] == "setPinGenericServo"):
 				try:
-					self.registerPinPWNDefaults(data['data']['pin'], data['data']['binding'])
+					self.registerPWMPinDefaults(data['data']['pin'], data['data']['binding'])
 				except Exception as e:
-					self.exception(e, "registerPin. PinID="+str(pinID)+" inputBinding="+str(inputBinding))
+					self.exception(e, "registerPWMPin. PinID="+str(pinID)+" inputBinding="+str(inputBinding))
 			elif (data['command'] == "setData"):
 				self.setPins(data['data'])
 			elif (data['command'] == "isGpioStarted"):
