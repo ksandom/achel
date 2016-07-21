@@ -1,5 +1,5 @@
 # All pins set to PWM. --setPinLayoutAllPWM=faucetName ~ servo,pin,layout
-#onDefine aliasFeature,setPinLayoutAllPWM,setServoAllPWM
+#onDefine aliasFeature setPinLayoutAllPWM,setServoAllPWM
 parameters {"faucetName":"servo"}
 
 setPinGenericServo ~!Local,faucetName!~,7,0
