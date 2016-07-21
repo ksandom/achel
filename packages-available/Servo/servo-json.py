@@ -334,7 +334,12 @@ class AchelRealityBridge:
 				try:
 					self.registerPWMPinDefaults(data['data']['pin'], data['data']['binding'])
 				except Exception as e:
-					self.exception(e, "registerPWMPin. PinID="+str(pinID)+" inputBinding="+str(inputBinding))
+					self.exception(e, "registerPWMPin. PinID="+str(data['data']['pin'])+" inputBinding="+str(data['data']['binding']))
+			elif (data['command'] == "setPinBinary"):
+				try:
+					self.registerBinaryPin(data['data']['pin'], data['data']['binding'], data['data']['defaultValue'])
+				except Exception as e:
+					self.exception(e, "registerBinaryPin. PinID="+str(data['data']['pin'])+" inputBinding="+str(data['data']['binding'])+" defaultValue="+str(data['data']['defaultValue']))
 			elif (data['command'] == "setData"):
 				self.setPins(data['data'])
 			elif (data['command'] == "isGpioStarted"):

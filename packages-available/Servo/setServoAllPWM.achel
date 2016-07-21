@@ -1,8 +1,0 @@
-# Setup the Servo faucet to use all GPIO pins as software controlled PWM. This is great for prototyping, there will be more precise options available soon. This acts on an existing faucet using --createServoFaucet . --setServoAllPWM=faucetName ~ pwm,servo,prototyping
-parameters {"FaucetName":"servo"}
-
-cd ~!Local,FaucetName!~
-
-deliver proc,default,{"command":"setAllGenericServos"}
-
-cd ..

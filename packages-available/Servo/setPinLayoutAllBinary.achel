@@ -1,0 +1,11 @@
+# All pins set to binary. --setPinLayoutAllPWM=faucetName ~ servo,pin,layout
+parameters {"faucetName":"servo"}
+
+setPinBinary ~!Local,faucetName!~,7,0,0
+setPinBinary ~!Local,faucetName!~,11,1,0
+setPinBinary ~!Local,faucetName!~,12,2,0
+setPinBinary ~!Local,faucetName!~,13,3,0
+setPinBinary ~!Local,faucetName!~,15,4,0
+setPinBinary ~!Local,faucetName!~,16,5,0
+setPinBinary ~!Local,faucetName!~,18,6,0
+setPinBinary ~!Local,faucetName!~,22,7,0
