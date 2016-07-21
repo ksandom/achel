@@ -130,13 +130,14 @@ class AchelRealityBridge:
 		try:
 			self.registerPWMPin(pin, inputBinding, self.servoInMin, self.servoInMax, self.servoOutMin, self.servoOutMax, self.servoOutCenter, self.servoFrequency)
 		except Exception as e:
-			self.exception(e, "registerPWMPinDefaults. PinID="+str(pinID)+" inputBinding="+str(inputBinding))
+			self.exception(e, "registerPWMPinDefaults. PinID="+str(pin)+" inputBinding="+str(inputBinding))
 	
 	def registerPWMPin(self, pinID, inputBinding, inMin, inMax, outMin, outMax, outCenter, frequency):
 		try:
-			strPinID=str(inputBinding)
-			self.pins[strPinID] = {
-				'pinID':pinID,
+			key=str(inputBinding)
+			strPinID=str(pinID)
+			self.pins[key] = {
+				'pinID':strPinID,
 				'inputBinding':inputBinding,
 				'type':'pwm',
 				'state':'active',
@@ -146,38 +147,39 @@ class AchelRealityBridge:
 				'outCenter':outCenter,
 				'outMax':outMax}
 			
-			self.debug(2, 'registering pin ' + str(pinID) +' as '+str(inputBinding))
+			self.debug(2, 'registering PWM pin ' + strPinID +' as '+str(inputBinding))
 			
 			# TODO Refactor so that it doesn't stamp on previously written values.
 			# TODO add the possibility for a default value.
 			self.inputData[inputBinding]=inMin
 			
-			GPIO.setup(pinID,GPIO.OUT)
-			self.pins[strPinID]['physicalPin'] = GPIO.PWM(pinID, frequency)
-			self.pins[strPinID]['physicalPin'].start(outCenter)
+			GPIO.setup(strPinID, GPIO.OUT)
+			self.pins[key]['physicalPin'] = GPIO.PWM(strPinID, frequency)
+			self.pins[key]['physicalPin'].start(outCenter)
 			
 		except NameError as e:
-			self.error(2, "NameError while registering pin PinID="+str(pinID)+" inputBinding="+str(inputBinding))
+			self.error(2, "NameError while registering PWM pin PinID="+strPinID+" inputBinding="+str(inputBinding))
 	
 	def registerBinaryPin(self, pinID, inputBinding, defaultValue):
 		try:
-			strPinID=str(inputBinding)
-			self.pins[strPinID] = {
-				'pinID':pinID,
+			key=str(inputBinding)
+			strPinID=str(pinID)
+			self.pins[key] = {
+				'pinID':strPinID,
 				'inputBinding':inputBinding,
 				'type':'pwm',
 				'state':'active',
 				'defaultValue':defaultValue}
 			
-			self.debug(2, 'registering pin ' + str(pinID) +' as '+str(inputBinding))
+			self.debug(2, 'registering binary pin ' + strPinID +' as '+str(inputBinding))
 			
 			self.inputData[inputBinding]=inMin
 			
-			GPIO.setup(pinID,GPIO.OUT)
-			self.setBinaryPin(pinID, defaultValue)
+			GPIO.setup(strPinID,GPIO.OUT)
+			self.setBinaryPin(strPinID, defaultValue)
 			
 		except NameError as e:
-			self.error(2, "NameError while registering pin PinID="+str(pinID)+" inputBinding="+str(inputBinding))
+			self.error(2, "NameError while registering binary pin PinID="+strPinID+" inputBinding="+str(inputBinding))
 	
 	def scale(self, value, inMin, inMax, outMin, outMax):
 		# Takes a value, checks it's within bounds and scales accordingly.
@@ -324,6 +326,7 @@ class AchelRealityBridge:
 		
 		try:
 			data=json.loads(line)
+			
 			# Work out what do do with it
 			if (data['command'] == "ping"):
 				self.returnData('pong', "0", "", "Returned from requested ping.")
@@ -334,12 +337,12 @@ class AchelRealityBridge:
 				try:
 					self.registerPWMPinDefaults(data['data']['pin'], data['data']['binding'])
 				except Exception as e:
-					self.exception(e, "registerPWMPin. PinID="+str(data['data']['pin'])+" inputBinding="+str(data['data']['binding']))
+					self.exception(e, "cmd registerPWMPin. PinID="+str(data['data']['pin'])+" inputBinding="+str(data['data']['binding']))
 			elif (data['command'] == "setPinBinary"):
 				try:
 					self.registerBinaryPin(data['data']['pin'], data['data']['binding'], data['data']['defaultValue'])
 				except Exception as e:
-					self.exception(e, "registerBinaryPin. PinID="+str(data['data']['pin'])+" inputBinding="+str(data['data']['binding'])+" defaultValue="+str(data['data']['defaultValue']))
+					self.exception(e, "cmd registerBinaryPin. PinID="+str(data['data']['pin'])+" inputBinding="+str(data['data']['binding'])+" defaultValue="+str(data['data']['defaultValue']))
 			elif (data['command'] == "setData"):
 				self.setPins(data['data'])
 			elif (data['command'] == "isGpioStarted"):

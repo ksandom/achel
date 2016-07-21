@@ -71,5 +71,5 @@ defineTest Servo - faucet - setPinGenericServo,
 	resetKeys
 	stashResults Test,default
 	
-	expect registering pin 7 as 0,~!Test,default,0!~
+	expect registering PWM pin 7 as 0,~!Test,default,0!~
 
