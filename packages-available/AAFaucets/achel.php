@@ -37,7 +37,7 @@ class FaucetEnvironment
 		$this->core=core::assert();
 	}
 	
-	public static function assert()
+	public static function &assert()
 	{
 		if (!isset(self::$environment)) self::$environment=new FaucetEnvironment();
 		return self::$environment;
@@ -69,7 +69,7 @@ class Faucets extends Module
 		$core=core::assert();
 		$this->setCore($core);
 		
-		$this->environment=&FaucetEnvironment::assert();
+		$this->environment=FaucetEnvironment::assert();
 		
 		$amIFaucets=($className==__CLASS__);
 		$this->environment->createEvironment($amIFaucets);
