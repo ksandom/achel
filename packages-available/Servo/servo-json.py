@@ -153,12 +153,15 @@ class AchelRealityBridge:
 			# TODO add the possibility for a default value.
 			self.inputData[inputBinding]=inMin
 			
-			GPIO.setup(strPinID, GPIO.OUT)
-			self.pins[key]['physicalPin'] = GPIO.PWM(strPinID, frequency)
-			self.pins[key]['physicalPin'].start(outCenter)
+			if not (self.nutered):
+				GPIO.setup(strPinID, GPIO.OUT)
+				self.pins[key]['physicalPin'] = GPIO.PWM(strPinID, frequency)
+				self.pins[key]['physicalPin'].start(outCenter)
 			
 		except NameError as e:
-			self.error(2, "NameError while registering PWM pin PinID="+strPinID+" inputBinding="+str(inputBinding))
+			self.exception(e, "NameError while registering PWM pin PinID="+strPinID+" inputBinding="+str(inputBinding)+". GPIO not loaded?")
+		except Exception as e:
+			self.exception(e, "Registering PWM pin PinID="+strPinID+" inputBinding="+str(inputBinding))
 	
 	def registerBinaryPin(self, pinID, inputBinding, defaultValue):
 		try:
@@ -173,13 +176,16 @@ class AchelRealityBridge:
 			
 			self.debug(2, 'registering binary pin ' + strPinID +' as '+str(inputBinding))
 			
-			self.inputData[inputBinding]=inMin
+			self.inputData[inputBinding]=defaultValue
 			
-			GPIO.setup(strPinID,GPIO.OUT)
-			self.setBinaryPin(strPinID, defaultValue)
+			if not (self.nutered):
+				GPIO.setup(strPinID,GPIO.OUT)
+				self.setBinaryPin(strPinID, defaultValue)
 			
 		except NameError as e:
-			self.error(2, "NameError while registering binary pin PinID="+strPinID+" inputBinding="+str(inputBinding))
+			self.exception(e, "NameError while registering binary pin PinID="+strPinID+" inputBinding="+str(inputBinding)+". GPIO not loaded?")
+		except Exception as e:
+			self.exception(e, "Registering binary pin PinID="+strPinID+" inputBinding="+str(inputBinding))
 	
 	def scale(self, value, inMin, inMax, outMin, outMax):
 		# Takes a value, checks it's within bounds and scales accordingly.
@@ -378,7 +384,8 @@ class AchelRealityBridge:
 		sys.stderr.write("Error: Level="+str(level)+" What=\""+what+"\" Why=\""+why+"\"\n")
 	
 	def exception(self, e, context='NA'):
-		template = "An exception of type {0} occured. Arguments:\n{1!r}"
+		lineNumber=sys.exc_info()[-1].tb_lineno
+		template = "An exception on line "+str(lineNumber)+" of type {0} occured. Arguments:\n{1!r}"
 		message = template.format(type(e).__name__, e.args)
 		self.returnData("exception", "0", context, message)
 	

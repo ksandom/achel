@@ -53,7 +53,7 @@ defineTest Servo - faucet - send live data,
 	
 	expect Set 0 pins. Nutered 3 pins. Failed to set 0 pins.,~!Test,default,0!~
 
-defineTest Servo - faucet - setPinGenericServo,
+defineTest Servo - faucet - setPinPWM,
 	testFaucets
 		createServoFaucet servo
 		createLastFaucet last
@@ -62,7 +62,7 @@ defineTest Servo - faucet - setPinGenericServo,
 		createPipe .,servo
 		
 		servoNuter servo
-		setPinGenericServo servo,7,0
+		setPinPWM servo,7,0
 		
 		deliverAll 10000
 		
@@ -73,3 +73,22 @@ defineTest Servo - faucet - setPinGenericServo,
 	
 	expect registering PWM pin 7 as 0,~!Test,default,0!~
 
+defineTest Servo - faucet - setPinBinary,
+	testFaucets
+		createServoFaucet servo
+		createLastFaucet last
+		createPipe servo,last,message
+		createPipe last,.
+		createPipe .,servo
+		
+		servoNuter servo
+		setPinBinary servo,7,0,0
+		
+		deliverAll 10000
+		
+	retrieveResults Test,default
+	last
+	resetKeys
+	stashResults Test,default
+	
+	expect registering binary pin 7 as 0,~!Test,default,0!~

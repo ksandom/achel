@@ -2,11 +2,11 @@
 #onDefine aliasFeature setPinLayoutAllPWM,setServoAllPWM
 parameters {"faucetName":"servo"}
 
-setPinGenericServo ~!Local,faucetName!~,7,0
-setPinGenericServo ~!Local,faucetName!~,11,1
-setPinGenericServo ~!Local,faucetName!~,12,2
-setPinGenericServo ~!Local,faucetName!~,13,3
-setPinGenericServo ~!Local,faucetName!~,15,4
-setPinGenericServo ~!Local,faucetName!~,16,5
-setPinGenericServo ~!Local,faucetName!~,18,6
-setPinGenericServo ~!Local,faucetName!~,22,7
+setPinPWM ~!Local,faucetName!~,7,0
+setPinPWM ~!Local,faucetName!~,11,1
+setPinPWM ~!Local,faucetName!~,12,2
+setPinPWM ~!Local,faucetName!~,13,3
+setPinPWM ~!Local,faucetName!~,15,4
+setPinPWM ~!Local,faucetName!~,16,5
+setPinPWM ~!Local,faucetName!~,18,6
+setPinPWM ~!Local,faucetName!~,22,7
