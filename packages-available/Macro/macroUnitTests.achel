@@ -70,7 +70,7 @@ defineTest macro - loop gets correct previous data,
 
 defineTest getProgressKey,
 	getProgressKey Local,progressKey
-	expect progress-macroUnitTests-6,~!Local,progressKey!~
+	expect progress-macroUnitTests-7,~!Local,progressKey!~
 
 defineTest macro - loop removes next and previous keys,
 	unset Local,testResult
