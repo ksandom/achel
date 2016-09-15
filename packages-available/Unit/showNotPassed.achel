@@ -1,0 +1,3 @@
+# Show just the tests that didn't pass. --showNotPassed . ~ unit,results
+
+excludeItem result,pass
