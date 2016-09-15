@@ -1,7 +1,8 @@
 # Show unit tests in real time. At the end display the normal summary, but only show the failed tests so those can easily be focussed on. ~ unit,user
 #onDefine aliasFeature unitTestsRealTime,unitTests
+parameters regex
 
 showTests
 noProgress
-unitTestsFull
+unitTestsFull ~!Local,regex!~
 showNotPassed
