@@ -1006,6 +1006,12 @@ class core extends Module
 
 	}
 	
+	function getRealFeatureName($featureName)
+	{
+		$feature=$this->core->get('Features', $featureName);
+		return $feature['name'];
+	}
+	
 	function debugResultSet($label='undefined')
 	{
 		if ($this->isVerboseEnough(4))
