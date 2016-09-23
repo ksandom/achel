@@ -111,6 +111,8 @@ class Events extends Module
 						if ($value!='') $valueToSend=($eventee['featureValue'])?$eventee['featureValue'].','.$value:$value;
 						else $valueToSend=$eventee['featureValue'];
 						
+						$this->core->debug(4,"trigger $category, $eventName, v=$valueToSend");
+						
 						$result=$this->core->callFeature($eventee['featureName'], $valueToSend);
 						$this->core->setResultSet($result); // This is necessary because the feature being called may rely on it being there.
 					}

@@ -1,5 +1,5 @@
 # Handel network connections. ~ network,hidden
-parameters ID,channel
+parameters ID,connectChannel
 
 pass
 	getCategory Network
@@ -7,8 +7,9 @@ pass
 	outNow
 
 pwd Network,originFaucet
-debug 0,ID=~!Local,ID!~ faucet=~!Network,~!Local,ID!~,faucet!~ originFaucet=~!Network,originFaucet!~
+debug 0,%%%% ID=~!Local,ID!~ faucet=~!Network,~!Local,ID!~,faucet!~ originFaucet=~!Network,originFaucet!~ channel=~!Local,connectChannel!~
 changeFaucet ~!Network,~!Local,ID!~,faucet!~
-callFeatureReturn ~!Network,~!Local,ID!~,eventFeature!~,~!Local,ID!~,~!Local,channel!~
+callFeatureReturn ~!Network,~!Local,ID!~,eventFeature!~,~!Local,ID!~,~!Local,connectChannel!~
+debug 0,CONNECT callFeatureReturn ~!Network,~!Local,ID!~,eventFeature!~,~!Local,ID!~,~!Local,connectChannel!~ connectChannel=~!Local,connectChannel!~ ID=~!Local,ID!~
 changeFaucet ~!Network,originFaucet!~
 unset Network,originFaucet

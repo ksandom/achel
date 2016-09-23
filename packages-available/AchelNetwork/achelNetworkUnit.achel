@@ -71,26 +71,43 @@ defineTest network - handelConnect,
 
 defineTest network - simpleFaucet - forward,
 	testFaucets
-		createSimpleNetworkServerFaucet server,localhost,22005,
-			parameters channel
-			
-			debug 0,GOT HERE server
+		createSimpleNetworkServerFaucet server1,localhost,22005,
+			parameters ID,channel
+			getPipes
+			nested
+			outNow
+			# TODO potentially miss-matching channel
+			debug 0,GOT HERE server channel=~!Local,channel!~
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
+			pwd
+			getPipes
+			nested
+			outNow
 		
-		createSimpleNetworkClientFaucet client,localhost,22005,
-			parameters channel
+		createSimpleNetworkClientFaucet client1,localhost,22005,
+			parameters ID,channel
 			
-			debug 0,GOT HERE client
+			getPipes
+			nested
+			outNow
+			debug 0,GOT HERE client channel=~!Local,channel!~
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
+			pwd
+			getPipes
+			nested
+			outNow
 		
-		createPipe server,client,out,in
-		createPipe client,.,out
+		createPipe server1,client1,out,in
+		createPipe client1,.,default
 		
-		deliver server,in,forward
+		deliver server1,in,forward
 	
 	expect forward,~!Test,default,0!~
+	getCategory Test
+	nested
+	outNow
 
 
 pass

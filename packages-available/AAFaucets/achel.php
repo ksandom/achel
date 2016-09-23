@@ -1152,6 +1152,8 @@ class MetaFaucet extends ThroughBasedFaucet
 			'toFaucet'=>$this->findRealFaucetName($parms[toFaucet]),
 			'toChannel'=>$parms[toChannel],
 			'context'=>$parms[context]);
+			
+		$this->core->debug(0,"createPipe: ".implode(", ", $newRecord));
 		
 		if (!isset($this->faucets[$newRecord['fromFaucet']]) and $newRecord['fromFaucet']!='.')
 		{

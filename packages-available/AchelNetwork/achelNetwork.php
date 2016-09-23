@@ -78,11 +78,13 @@ class SocketServerFaucet extends ThroughBasedFaucet
 		$this->connectEvent=$connectEvent;
 		$this->disconnectEvent=$disconnectEvent;
 		$this->closeEvent=($closeEvent)?$closeEvent:$disconnectEvent;
+		$this->core->debug(0, "connect=$connectEvent disconnect=$disconnectEvent close=$closeEvent");
 	}
 	
 	public function listen($address, $port)
 	{
 		$this->isListener=true;
+		$this->core->debug(0,"listen: address=$address port=$port");
 		if ($address) return $this->listenOnSpecificAddress($address, $port);
 		else return $this->listenOnAllAddresses($port);
 	}
@@ -255,7 +257,8 @@ class SocketServerFaucet extends ThroughBasedFaucet
 				$key=$keys[count($keys)-1];
 			}
 			
-			$this->core->debug(2, "SocketServerFaucet->checkForConnections: A client connected using key $key");
+			$this->core->debug(0, "SocketServerFaucet->checkForConnections: A client connected using key $key");
+			# TODO The problem is that the key is not being passed. Instead the first parameter is being taken instead. See createSimpleNetworkServerFaucet.achel:15
 			$this->core->callFeature('triggerEvent', "SocketServerFaucet,{$this->connectEvent},$key");
 		}
 	}
@@ -313,9 +316,10 @@ class SocketServerFaucet extends ThroughBasedFaucet
 		
 		foreach ($this->clients as $channel=>$value)
 		{
+			// $this->core->debug(0, "network->preGet($channel) (".$this->getInstanceName().")");
 			if ($output=$this->getResource($channel))
 			{
-				$this->core->debug(4, __CLASS__.'->'.__FUNCTION__.": Got input for channel \"$channel\" \"$output[0]\"");
+				$this->core->debug(0, __CLASS__.'->'.__FUNCTION__.": Got input for channel \"$channel\" \"$output[0]\"");
 				$this->outFill($output, $channel);
 				$this->clearInput($channel);
 				$gotSomething=true;
@@ -341,15 +345,16 @@ class SocketServerFaucet extends ThroughBasedFaucet
 					}
 					break;
 				default:
+					$this->core->debug(0,"network put: $channel - a");
 					if (!isset($this->clients[$channel]))
 					{
-						$this->core->debug(1, "SocketServerFaucet->put: Channel $channel doesn't exist.");
+						$this->core->debug(0, "SocketServerFaucet->put: Channel $channel doesn't exist.");
 						break;
 					}
 					
 					foreach ($data as $line)
 					{
-						$this->core->debug(4, __CLASS__.'->'.__FUNCTION__.": Sending line \"$line\"");
+						$this->core->debug(0, __CLASS__.'->'.__FUNCTION__.": Sending line \"$line\"");
 						$lineOut="$line{$this->outEOL}";
 						if (is_string($line))
 						{

@@ -658,6 +658,7 @@ class core extends Module
 	
 	function parameters($args)
 	{
+		$this->debug(4,"Parameters: ".implode(', ', $args));
 		// localScopeVarName vs nestedPrivateVarsName
 		$categoryForParameters=localScopeVarName;
 		$categoryForFeedBack=localScopeVarName;
@@ -731,7 +732,8 @@ class core extends Module
 					$default=$args[$details];
 					$this->debug(3,"parameters: Simple name. [$categoryForParameters][$scopeKey][$key] value=$value nesting=$nesting default=$default");
 				}
-				$this->store[$categoryForParameters][$scopeKey][$key]=($value)?$value:$default;
+				$this->store[$categoryForParameters][$scopeKey][$key]=($value!==false or $value!='')?$value:$default;
+				$this->debug(3, "   key=$key value=".$this->store[$categoryForParameters][$scopeKey][$key]);
 			}
 		}
 	}
