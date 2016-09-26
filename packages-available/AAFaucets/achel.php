@@ -940,6 +940,15 @@ class MetaFaucet extends ThroughBasedFaucet
 		
 		$this->registerConfigItem('sourceType', '', 'What type of source is it? file|macro|generated.', 'string');
 		$this->setConfigItem('sourceType', '', 'generated');
+		
+		
+		$this->fromColour=$this->core->get('Color', 'cyan');
+		$this->toColour=$this->core->get('Color', 'brightPurple');
+		$this->keyColour=$this->core->get('Color', 'brightBlack');
+		$this->dataColour=$this->core->get('Color', 'brightBlue');
+		$this->contentColour=$this->core->get('Color', 'green');
+		
+		$this->defaultColour=$this->core->get('Color', 'default');
 	}
 	
 	function deconstruct()
@@ -1328,7 +1337,6 @@ class MetaFaucet extends ThroughBasedFaucet
 			$this->core->set('General', 'pipeDebugLevel', $pipeDebugLevel);
 		}
 		
-		
 		$resultValue=true;
 		foreach ($this->pipes as $fromFaucet=>$fromFaucetPipes)
 		{
@@ -1339,7 +1347,7 @@ class MetaFaucet extends ThroughBasedFaucet
 			}
 			elseif (!$fromFaucetName=$this->findRealFaucetName($fromFaucet))
 			{
-				$this->core->debug(2, "processPipes: Can not find $fromFaucet. Removing pipes for $fromFaucet.");
+				$this->core->debug($pipeDebugLevel, "processPipes: Can not find $fromFaucet. Removing pipes for $fromFaucet.");
 				unset($this->pipes[$fromFaucet]);
 				continue; // Skip if the faucet doesn't exist
 			}
@@ -1431,7 +1439,7 @@ class MetaFaucet extends ThroughBasedFaucet
 					{
 						if (!$toFaucetName=$this->findRealFaucetName($pipe['toFaucet']))
 						{
-							$this->core->debug(2, "deliverAll: Can not find {$pipe['toFaucet']}. Removing pipe from $fromFaucetName to $toFaucetName.");
+							$this->core->debug($pipeDebugLevel, "deliverAll: Can not find {$pipe['toFaucet']}. Removing pipe from $fromFaucetName to $toFaucetName.");
 							$this->deletePipe($key);
 							continue;
 						}
@@ -1440,7 +1448,7 @@ class MetaFaucet extends ThroughBasedFaucet
 						{
 							$debugData=json_encode($input);
 							$numberOfItems=count($input);
-							$this->core->debug($pipeDebugLevel, "deliverAll: Delivering ".gettype($input)." $numberOfItems entries from $fromFaucetName,$fromChannel to $toFaucetName,{$pipe['toChannel']} using context {$pipe['context']} and key $key. Data=$debugData");
+							$this->core->debug($pipeDebugLevel, "deliverAll: {$this->contentColour}".gettype($input)."*$numberOfItems {$this->fromColour}$fromFaucetName,$fromChannel {$this->keyColour}--> {$this->toColour}$toFaucetName,{$pipe['toChannel']} {$this->keyColour}context={$this->defaultColour}{$pipe['context']} {$this->keyColour}key={$this->defaultColour}$key. {$this->keyColour}Data={$this->dataColour}$debugData");
 						}
 						
 						if ($toFaucetName=='.') $this->outFill($input, $pipe['toChannel']);
