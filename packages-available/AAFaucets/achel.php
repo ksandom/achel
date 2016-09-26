@@ -910,6 +910,7 @@ class MetaFaucet extends ThroughBasedFaucet
 	private $rootFaucet=null;
 	private $parentFaucet=null;
 	private $myName='';
+	private $fullPath='';
 	
 	# Stuff that connects to each other
 	private $pipes=null;
@@ -947,8 +948,16 @@ class MetaFaucet extends ThroughBasedFaucet
 		$this->keyColour=$this->core->get('Color', 'brightBlack');
 		$this->dataColour=$this->core->get('Color', 'brightBlue');
 		$this->contentColour=$this->core->get('Color', 'green');
+		$this->pathColour=$this->core->get('Color', 'yellow');
 		
 		$this->defaultColour=$this->core->get('Color', 'default');
+		
+		$this->pipeDebugLevel=$this->core->get('General', 'pipeDebugLevel');
+		if ($this->pipeDebugLevel=='')
+		{
+			$this->pipeDebugLevel=5;
+			$this->core->set('General', 'pipeDebugLevel', $this->pipeDebugLevel);
+		}
 	}
 	
 	function deconstruct()
@@ -994,14 +1003,21 @@ class MetaFaucet extends ThroughBasedFaucet
 	
 	function getFullPath()
 	{
+		if ($this->fullPath)
+		{
+			return $this->fullPath;
+		}
+		
 		if ($this->myName == 'root')
 		{
-			return '';
+			$this->fullPath='';
 		}
 		else
 		{
-			return $this->parentFaucet->getFullPath().'/'.$this->myName;
+			$this->fullPath=$this->parentFaucet->getFullPath().'/'.$this->myName;
 		}
+		
+		return $this->fullPath;
 	}
 	
 	function createFaucet($faucetName, $type, &$faucetObject)
@@ -1154,6 +1170,8 @@ class MetaFaucet extends ThroughBasedFaucet
 	
 	function createPipe($key)
 	{
+		$this->path=$this->pathColour.$this->getFullPath().$this->defaultColour;
+		
 		$parms=$this->core->interpretParms($key, 6, 2);
 		$newRecord=array(
 			'fromFaucet'=>$this->findRealFaucetName($parms[fromFaucet]),
@@ -1162,7 +1180,7 @@ class MetaFaucet extends ThroughBasedFaucet
 			'toChannel'=>$parms[toChannel],
 			'context'=>$parms[context]);
 			
-		$this->core->debug(0,"createPipe: ".implode(", ", $newRecord));
+		$this->core->debug($this->pipeDebugLevel,"createPipe ".$this->path.':'.implode(", ", $newRecord));
 		
 		if (!isset($this->faucets[$newRecord['fromFaucet']]) and $newRecord['fromFaucet']!='.')
 		{
@@ -1330,12 +1348,7 @@ class MetaFaucet extends ThroughBasedFaucet
 	
 	private function processPipes()
 	{
-		$pipeDebugLevel=$this->core->get('General', 'pipeDebugLevel');
-		if ($pipeDebugLevel=='')
-		{
-			$pipeDebugLevel=5;
-			$this->core->set('General', 'pipeDebugLevel', $pipeDebugLevel);
-		}
+		$this->path=$this->pathColour.$this->getFullPath().$this->defaultColour;
 		
 		$resultValue=true;
 		foreach ($this->pipes as $fromFaucet=>$fromFaucetPipes)
@@ -1347,7 +1360,7 @@ class MetaFaucet extends ThroughBasedFaucet
 			}
 			elseif (!$fromFaucetName=$this->findRealFaucetName($fromFaucet))
 			{
-				$this->core->debug($pipeDebugLevel, "processPipes: Can not find $fromFaucet. Removing pipes for $fromFaucet.");
+				$this->core->debug($this->pipeDebugLevel, "processPipes: Can not find $fromFaucet. Removing pipes for $fromFaucet.");
 				unset($this->pipes[$fromFaucet]);
 				continue; // Skip if the faucet doesn't exist
 			}
@@ -1432,14 +1445,14 @@ class MetaFaucet extends ThroughBasedFaucet
 				
 				if (count($input) and $input!==false)
 				{
-					$isVerboseEnough=$this->core->isVerboseEnough($pipeDebugLevel);
+					$isVerboseEnough=$this->core->isVerboseEnough($this->pipeDebugLevel);
 					
 					$resultValue=true;
 					foreach ($channelPipes as $key=>$pipe)
 					{
 						if (!$toFaucetName=$this->findRealFaucetName($pipe['toFaucet']))
 						{
-							$this->core->debug($pipeDebugLevel, "deliverAll: Can not find {$pipe['toFaucet']}. Removing pipe from $fromFaucetName to $toFaucetName.");
+							$this->core->debug($this->pipeDebugLevel, "deliverAll: Can not find {$pipe['toFaucet']}. Removing pipe from $fromFaucetName to $toFaucetName.");
 							$this->deletePipe($key);
 							continue;
 						}
@@ -1448,7 +1461,7 @@ class MetaFaucet extends ThroughBasedFaucet
 						{
 							$debugData=json_encode($input);
 							$numberOfItems=count($input);
-							$this->core->debug($pipeDebugLevel, "deliverAll: {$this->contentColour}".gettype($input)."*$numberOfItems {$this->fromColour}$fromFaucetName,$fromChannel {$this->keyColour}--> {$this->toColour}$toFaucetName,{$pipe['toChannel']} {$this->keyColour}context={$this->defaultColour}{$pipe['context']} {$this->keyColour}key={$this->defaultColour}$key. {$this->keyColour}Data={$this->dataColour}$debugData");
+							$this->core->debug($this->pipeDebugLevel, "deliverAll $this->path: {$this->contentColour}".gettype($input)."*$numberOfItems {$this->fromColour}$fromFaucetName,$fromChannel {$this->keyColour}--> {$this->toColour}$toFaucetName,{$pipe['toChannel']} {$this->keyColour}context={$this->defaultColour}{$pipe['context']} {$this->keyColour}key={$this->defaultColour}$key. {$this->keyColour}Data={$this->dataColour}$debugData");
 						}
 						
 						if ($toFaucetName=='.') $this->outFill($input, $pipe['toChannel']);
