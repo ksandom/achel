@@ -658,7 +658,10 @@ class core extends Module
 	
 	function parameters($args)
 	{
-		$this->debug(4,"Parameters: ".implode(', ', $args));
+		if ($this->isVerboseEnough(4))
+		{
+			$this->debug(4,"Parameters: ".json_encode($args));
+		}
 		// localScopeVarName vs nestedPrivateVarsName
 		$categoryForParameters=localScopeVarName;
 		$categoryForFeedBack=localScopeVarName;
