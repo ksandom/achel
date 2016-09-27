@@ -1346,9 +1346,19 @@ class MetaFaucet extends ThroughBasedFaucet
 		return array($bentInput);
 	}
 	
+	private function cycleAllSubFaucets()
+	{
+		if (!is_array($this->faucets)) return false;
+		foreach ($this->faucets as $key=>&$faucet)
+		{
+			$faucet['object']->preGet();
+		}
+	}
+	
 	private function processPipes()
 	{
 		$this->path=$this->pathColour.$this->getFullPath().$this->defaultColour;
+		# $this->cycleAllSubFaucets();
 		
 		$resultValue=true;
 		foreach ($this->pipes as $fromFaucet=>$fromFaucetPipes)
@@ -1366,6 +1376,7 @@ class MetaFaucet extends ThroughBasedFaucet
 			}
 			else
 			{
+				# TODO move this to cycleAllSubFaucets.
 				if (!$this->faucets[$fromFaucet]['object']->preGet()) continue; // Skip if the faucet has no new data
 			}
 			
