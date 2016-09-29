@@ -138,7 +138,7 @@ class AchelRealityBridge:
 			strPinID=str(pinID)
 			self.pins[key] = {
 				'pinID':strPinID,
-				'inputBinding':inputBinding,
+				'inputBinding':int(inputBinding),
 				'type':'pwm',
 				'state':'active',
 				'inMin':inMin,
@@ -169,8 +169,8 @@ class AchelRealityBridge:
 			strPinID=str(pinID)
 			self.pins[key] = {
 				'pinID':strPinID,
-				'inputBinding':inputBinding,
-				'type':'pwm',
+				'inputBinding':int(inputBinding),
+				'type':'binary',
 				'state':'active',
 				'defaultValue':defaultValue}
 			
@@ -179,8 +179,9 @@ class AchelRealityBridge:
 			self.inputData[inputBinding]=defaultValue
 			
 			if not (self.nutered):
-				GPIO.setup(strPinID,GPIO.OUT)
-				self.setBinaryPin(strPinID, defaultValue)
+				GPIO.setup(int(pinID),GPIO.OUT)
+				self.setBinaryPin(inputBinding, defaultValue)
+				self.pins[key]['physicalPin'] = GPIO
 			
 		except NameError as e:
 			self.exception(e, "NameError while registering binary pin PinID="+strPinID+" inputBinding="+str(inputBinding)+". GPIO not loaded?")
@@ -298,14 +299,15 @@ class AchelRealityBridge:
 		self.debug("3", "Got data")
 		try:
 			if (value == '0'):
-				safeValue=False
+				safeValue=0
 			else:
-				safeValue=True
+				safeValue=1
 			
-			self.pins[pin]['physicalPin'].output(pin, safeValue)
+			# self.pins[pin]['physicalPin'].output(pin, safeValue)
+			GPIO.output(int(self.pins[pin]['pinID']), safeValue)
 			return True
 		except Exception as e:
-			self.exception(e, "setPWMPin")
+			self.exception(e, "setBinaryPin pin="+str(pin)+" binding="+str(self.pins[pin]['inputBinding'])+" value="+str(safeValue))
 			return False
 	
 	def isGpioStarted(self):
