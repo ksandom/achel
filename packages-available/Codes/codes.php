@@ -170,6 +170,7 @@ class Codes extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Codes());
+$amcodes=new Codes();
+$core->registerModule($amcodes);
  
 ?>

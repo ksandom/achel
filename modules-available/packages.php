@@ -111,6 +111,7 @@ class Packages extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Packages());
+$packages=new Packages();
+$core->registerModule($packages);
  
 ?>

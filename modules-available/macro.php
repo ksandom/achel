@@ -429,6 +429,7 @@ class Macro extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Macro());
+$macro=new Macro();
+$core->registerModule($macro);
  
 ?>

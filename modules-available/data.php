@@ -209,6 +209,7 @@ class Data extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Data());
+$data=new Data();
+$core->registerModule($data);
  
 ?>

@@ -304,6 +304,7 @@ class Template extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Template());
+$template=new Template();
+$core->registerModule($template);
  
 ?>
