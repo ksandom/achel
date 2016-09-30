@@ -89,4 +89,5 @@ class EventFaucet extends ThroughBasedFaucet
 
 
 $core=core::assert();
-$core->registerModule(new AchelEvent());
+$achelEvent=new AchelEvent();
+$core->registerModule($achelEvent);

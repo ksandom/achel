@@ -168,6 +168,7 @@ class Timer extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Timer());
+$timer=new Timer();
+$core->registerModule($timer);
  
 ?>

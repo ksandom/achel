@@ -355,4 +355,5 @@ class DynamicLastSeenFaucet extends ThroughBasedFaucet
 
 
 $core=core::assert();
-$core->registerModule(new UIFaucets());
+$uiFaucets=new UIFaucets();
+$core->registerModule($uiFaucets);
