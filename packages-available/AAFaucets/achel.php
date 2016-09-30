@@ -1685,6 +1685,7 @@ function captureBreak()
 */
 
 $core=core::assert();
-$core->registerModule(new Faucets());
+$achelF=new Faucets();
+$core->registerModule($achelF);
  
 ?>

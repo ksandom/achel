@@ -292,4 +292,5 @@ class ProcFaucet extends Faucet
 
 
 $core=core::assert();
-$core->registerModule(new GeneralIOFaucets());
+$generalIO=new GeneralIOFaucets();
+$core->registerModule($generalIO);

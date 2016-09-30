@@ -229,4 +229,5 @@ class InlineCallFaucet extends ThroughBasedFaucet
 
 
 $core=core::assert();
-$core->registerModule(new CallFaucets());
+$callFaucets=new CallFaucets();
+$core->registerModule($callFaucets);

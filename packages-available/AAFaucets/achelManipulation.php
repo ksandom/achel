@@ -465,4 +465,5 @@ class RegexGetFaucet extends ThroughBasedFaucet
 
 
 $core=core::assert();
-$core->registerModule(new ManipulationFaucets());
+$achelManipulation=new ManipulationFaucets();
+$core->registerModule($achelManipulation);
