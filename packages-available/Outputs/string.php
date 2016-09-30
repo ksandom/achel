@@ -87,6 +87,7 @@ class AchelString extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new AchelString());
+$achelString=new AchelString();
+$core->registerModule($achelString);
  
 ?>

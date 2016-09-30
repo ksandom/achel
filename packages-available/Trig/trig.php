@@ -101,7 +101,8 @@ class Trig extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Trig());
+$trig=new Trig();
+$core->registerModule($trig);
 
 
 

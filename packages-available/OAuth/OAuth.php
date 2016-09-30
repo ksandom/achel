@@ -81,6 +81,7 @@ foreach ($oAuthLibrary as $title=>$directory)
 }
 
 
-$core->registerModule(new OAuth());
- 
+$oauth=new OAuth();
+$core->registerModule($oauth);
+
 ?>

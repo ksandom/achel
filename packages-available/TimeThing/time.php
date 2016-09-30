@@ -206,6 +206,7 @@ class TimeThing extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new TimeThing());
- 
+$timeThing=new TimeThing();
+$core->registerModule($timeThing);
+
 ?>

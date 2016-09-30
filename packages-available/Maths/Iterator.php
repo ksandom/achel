@@ -85,6 +85,7 @@ class AchelIterator extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new AchelIterator());
- 
+$achelIterator=new AchelIterator();
+$core->registerModule($achelIterator);
+
 ?>

@@ -63,6 +63,7 @@ class AchelHash extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new AchelHash());
+$hash=new AchelHash();
+$core->registerModule($hash);
  
 ?>

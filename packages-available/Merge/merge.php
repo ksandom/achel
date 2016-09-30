@@ -97,6 +97,7 @@ class Merge extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Merge());
+$merge=new Merge();
+$core->registerModule($merge);
 
 ?>

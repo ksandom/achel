@@ -41,6 +41,7 @@ class NullData extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new NullData());
+$nullData=new NullData();
+$core->registerModule($nullData);
  
 ?>

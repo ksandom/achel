@@ -72,6 +72,7 @@ class YAML extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new YAML());
+$yaml=new YAML();
+$core->registerModule($yaml);
 
 ?>

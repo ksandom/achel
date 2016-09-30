@@ -105,6 +105,7 @@ class Maths extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Maths());
- 
+$maths=new Maths();
+$core->registerModule($maths);
+
 ?>

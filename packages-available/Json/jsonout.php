@@ -92,6 +92,7 @@ class AchelJsonOut extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new AchelJsonOut());
+$jsonOut=new AchelJsonOut();
+$core->registerModule($jsonOut);
  
 ?>

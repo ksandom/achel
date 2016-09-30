@@ -209,6 +209,7 @@ class Condition extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Condition());
+$condition=new Condition();
+$core->registerModule($condition);
  
 ?>

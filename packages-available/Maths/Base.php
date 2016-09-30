@@ -95,8 +95,7 @@ class Base extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Base());
-
-
+$base=new Base();
+$core->registerModule($base);
 
 ?>

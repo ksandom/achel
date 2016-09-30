@@ -46,6 +46,7 @@ class Types extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Types());
+$types=new Types();
+$core->registerModule($types);
  
 ?>

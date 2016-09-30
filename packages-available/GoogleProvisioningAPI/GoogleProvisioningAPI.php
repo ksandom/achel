@@ -141,6 +141,6 @@ class GoogleProvisioningAPI extends Module
 }
 
 $core=core::assert();
-
-$core->registerModule(new GoogleProvisioningAPI());
+$googleProvisioningAPI=new GoogleProvisioningAPI();
+$core->registerModule($googleProvisioningAPI);
 ?>

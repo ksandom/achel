@@ -219,6 +219,7 @@ class Help extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Help());
+$help=new Help();
+$core->registerModule($help);
  
 ?>

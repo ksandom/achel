@@ -153,6 +153,7 @@ class GetThing extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new GetThing());
+$getThing=new GetThing();
+$core->registerModule($getThing);
  
 ?>

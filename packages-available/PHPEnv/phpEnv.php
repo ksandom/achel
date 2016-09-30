@@ -41,6 +41,7 @@ class PHPEnv extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new PHPEnv());
+$phpEnv=new PHPEnv();
+$core->registerModule($phpEnv);
  
 ?>

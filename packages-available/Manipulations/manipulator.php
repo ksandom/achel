@@ -1082,6 +1082,7 @@ class Manipulator extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Manipulator());
- 
+$manipulator=new Manipulator();
+$core->registerModule($manipulator);
+
 ?>

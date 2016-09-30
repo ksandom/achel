@@ -38,6 +38,7 @@ class GenerateStrings extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new GenerateStrings());
+$generateString=new GenerateStrings();
+$core->registerModule($generateString);
  
 ?>

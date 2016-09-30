@@ -114,6 +114,7 @@ class JsonGeneral extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new JsonGeneral());
+$jsonGeneral=new JsonGeneral();
+$core->registerModule($jsonGeneral);
  
 ?>
