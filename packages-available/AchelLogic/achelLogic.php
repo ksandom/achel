@@ -115,4 +115,5 @@ class AtLeast extends ThroughBasedFaucet
 
 
 $core=core::assert();
-$core->registerModule(new LogicFaucets());
+$achelLogic=new LogicFaucets();
+$core->registerModule($achelLogic);

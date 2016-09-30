@@ -37,6 +37,7 @@ class System extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new System());
+$asystem=new System();
+$core->registerModule($asystem);
  
 ?>

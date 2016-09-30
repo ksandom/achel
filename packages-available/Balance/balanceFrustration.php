@@ -155,6 +155,7 @@ class BalanceFrustration extends BalanceVectorAlgorithm
 
 
 $core=core::assert();
-$core->registerSubModule(new BalanceFrustration());
+$balanceFrustration=new BalanceFrustration();
+$core->registerSubModule($balanceFrustration);
 
 ?>

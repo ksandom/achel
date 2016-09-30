@@ -537,4 +537,5 @@ class BalanceAlgorithm extends SubModule
 
 
 $core=core::assert();
-$core->registerModule(new BalanceFaucets());
+$balanceFaucets=new BalanceFaucets();
+$core->registerModule($balanceFaucets);

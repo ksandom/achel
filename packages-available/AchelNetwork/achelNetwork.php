@@ -433,4 +433,5 @@ class SocketServerFaucet extends ThroughBasedFaucet
 
 
 $core=core::assert();
-$core->registerModule(new NetworkFaucets());
+$achelNetwork=new NetworkFaucets();
+$core->registerModule($achelNetwork);

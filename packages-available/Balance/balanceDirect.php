@@ -80,6 +80,7 @@ class BalanceDirect extends BalanceAlgorithm
 
 
 $core=core::assert();
-$core->registerSubModule(new BalanceDirect());
+$balanceDirect=new BalanceDirect();
+$core->registerSubModule($balanceDirect);
 
 ?>

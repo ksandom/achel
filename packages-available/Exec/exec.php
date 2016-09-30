@@ -64,6 +64,7 @@ class ExExec extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new ExExec());
+$exExec=new ExExec();
+$core->registerModule($exExec);
 
 ?>

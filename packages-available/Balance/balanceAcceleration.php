@@ -216,6 +216,7 @@ class BalanceAcceleration extends BalanceVectorAlgorithm
 
 
 $core=core::assert();
-$core->registerSubModule(new BalanceAcceleration());
+$balanceAcceleration=new BalanceAcceleration();
+$core->registerSubModule($balanceAcceleration);
 
 ?>
