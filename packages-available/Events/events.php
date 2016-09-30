@@ -153,6 +153,7 @@ class Events extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Events());
+$events=new Events();
+$core->registerModule($events);
  
 ?>

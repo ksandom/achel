@@ -78,6 +78,7 @@ class DetectStuff extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new DetectStuff());
+$detectStuff=new DetectStuff();
+$core->registerModule($detectStuff);
  
 ?>

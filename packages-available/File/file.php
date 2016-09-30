@@ -35,6 +35,7 @@ class FileSystem extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new FileSystem());
+$file=new FileSystem();
+$core->registerModule($file);
 
 ?>

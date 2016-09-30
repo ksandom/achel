@@ -106,6 +106,7 @@ class FlexiImport extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new FlexiImport());
+$flexiImport=new FlexiImport();
+$core->registerModule($flexiImport);
  
 ?>
