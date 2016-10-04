@@ -735,7 +735,7 @@ class core extends Module
 					$default=$args[$details];
 					$this->debug(3,"parameters: Simple name. [$categoryForParameters][$scopeKey][$key] value=$value nesting=$nesting default=$default");
 				}
-				$this->store[$categoryForParameters][$scopeKey][$key]=($value!==false or $value!='')?$value:$default;
+				$this->store[$categoryForParameters][$scopeKey][$key]=($value!==false and $value!='')?$value:$default;
 				$this->debug(3, "   key=$key value=".$this->store[$categoryForParameters][$scopeKey][$key]);
 			}
 		}
