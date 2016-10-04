@@ -34,6 +34,7 @@ class Loop extends Module
 }
 
 $core=core::assert();
-$core->registerModule(new Loop());
- 
+$loop=new Loop();
+$core->registerModule($loop);
+
 ?>
