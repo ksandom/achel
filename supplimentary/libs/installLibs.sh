@@ -114,7 +114,7 @@ function uninstallAchelOrMass
 function checkPrereqs
 {
 	for prereq in php;do
-		if ! which $prereq 1>/dev/null; then
+		if ! command -v $prereq 1>/dev/null; then
 			echo "Could not find $prereq in \$PATH" >&2
 			exit 1
 		fi
