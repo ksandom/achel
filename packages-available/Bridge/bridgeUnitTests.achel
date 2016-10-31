@@ -16,9 +16,9 @@ defineTest Bridge - end to end - forward,
 		deliver bridgeConnect,b,buzz
 		deliver bridgeConnect,c,side
 	
-	expect thing,~!Test,a,0!~
-	expect buzz,~!Test,b,0!~
-	expect side,~!Test,c,0!~
+	devExpect thing,~!Test,a,0!~
+	devExpect buzz,~!Test,b,0!~
+	devExpect side,~!Test,c,0!~
 
 defineTest Bridge - end to end - reverse,
 	testFaucets
@@ -36,6 +36,6 @@ defineTest Bridge - end to end - reverse,
 		deliver bridgeListener,b,buzz
 		deliver bridgeListener,c,side
 	
-	expect thing,~!Test,a,0!~
-	expect buzz,~!Test,b,0!~
-	expect side,~!Test,c,0!~
+	devExpect thing,~!Test,a,0!~
+	devExpect buzz,~!Test,b,0!~
+	devExpect side,~!Test,c,0!~
