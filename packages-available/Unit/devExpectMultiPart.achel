@@ -1,0 +1,14 @@
+# Deveopment version of --expectMultiPart . Expect a particular multipart value. Use this when you are developing code that you want to test, but is not ready for production usage. --expectMultiPart=["expectedValue","actualValue","comment","authoritive"] (note that for json arguments like this, the [] are json, not the normal indication of an optional parameter) . If authoritive is true, this test will override previous results. Default is false. ~ unit,result
+parameters expectedValue,actualValue,comment,authoritive
+
+if ["~!Local,expectedValue!~","==","~!Local,actualValue!~"],
+	if ["~!UnitResults,currentResult!~","==",""],
+		passTest Got expected multipart result.
+	else
+		if ~!Local,authoritive!~,==,true,
+			passTest Got expected multipart result. NOTE that this test has been explicitly decreased from a fail to warn because it is not production ready. Once it's production ready, --devExpect (or equivalent) can be replaced with --expect (or equivalent) in the unitTest.
+		else
+			debug 1,Got expected result ("~!Local,actualValue!~"), but already set result. So not setting again.
+else
+	warnTest ["Expected \"~!Local,expectedValue!~\" but got \"~!Local,actualValue!~\". ~!Local,comment!~"] . NOTE that this test has been explicitly decreased from a fail to warn because it is not production ready. Once it's production ready, --devExpect (or equivalent) can be replaced with --expect (or equivalent) in the unitTest.
+	debug ["0","Expected \"~!Local,expectedValue!~\" but got \"~!Local,actualValue!~\". ~!Local,comment!~"]
