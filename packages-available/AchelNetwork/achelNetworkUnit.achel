@@ -1,4 +1,4 @@
-# Unit tests for achelNetwork ~ network,unitTest,hidden
+# Unit tests for achelNetwork ~ network,unitTest,hidden,dev
 
 defineTest network - can send/recieve message while binding to 127.0.0.1,
 	# create a listener
@@ -64,7 +64,7 @@ defineTest network - handelConnect,
 	
 	handleConnect ~!Me,ID!~,123
 	
-	expect /testEnv/thing1/thing2/thing3,~!Test,result!~
+	devExpect /testEnv/thing1/thing2/thing3,~!Test,result!~
 
 	deleteFaucet testEnv
 
@@ -104,10 +104,10 @@ defineTest network - simpleFaucet - forward,
 		
 		deliver server1,in,forward
 	
-	expect forward,~!Test,default,0!~
-	getCategory Test
-	nested
-	outNow
+	devExpect forward,~!Test,default,0!~
+	# getCategory Test
+	# nested
+	# outNow
 
 
 pass
