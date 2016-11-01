@@ -1043,7 +1043,10 @@ class core extends Module
 			$eol=$this->get('General', 'EOL', false); # TODO This can be improved
 			
 			$scopeName=$this->get('General', 'scopeName');
-			$output="$dim$scopeName:$default ".$output;
+			if ($this->verbosity> 0)
+			{
+				$output="$dim$scopeName:$default ".$output;
+			}
 			
 			if ($output!=$this->lastMessage['value'])
 			{
