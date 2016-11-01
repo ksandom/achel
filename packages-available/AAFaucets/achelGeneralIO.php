@@ -210,6 +210,8 @@ class ProcFaucet extends Faucet
 	
 	function preGet()
 	{
+		# TODO this is almost certainly unnecessary.
+		# flush();
 		if ($input=$this->getResource(procIn))
 		{
 			$output=explode(inputLineSeparator, $input);
