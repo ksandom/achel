@@ -923,7 +923,7 @@ class MetaFaucet extends ThroughBasedFaucet
 	
 	function __construct($name)
 	{
-		$this->debugID=rand(1,100000);
+		$this->debugID=rand(1, 100000);
 		
 		parent::__construct(__CLASS__);
 		
@@ -1451,6 +1451,8 @@ class MetaFaucet extends ThroughBasedFaucet
 						$input=$this->faucets[$fromFaucetName]['object']->get($fromChannel);
 						
 					}
+					
+					$this->clearInput();
 				}
 				
 				
@@ -1479,6 +1481,8 @@ class MetaFaucet extends ThroughBasedFaucet
 						else $this->faucets[$toFaucetName]['object']->put($input, $pipe['toChannel']);
 					}
 				}
+				
+				
 			}
 		}
 		
