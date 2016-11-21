@@ -1,3 +1,5 @@
+*status:* Active.
+
 # Achel
 is a programming langue specilising in small data sets and _______ (the ___ will be released soon). I'm building it to scratch a very specific itch and I doubt the full picture it will be useful to many people. In fact, most of it isn't in the public repo yet. However the foundations, which are already released, are really useful for tools like mass which was written as a Sysadmin tool.
 
