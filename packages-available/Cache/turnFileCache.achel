@@ -1,0 +1,4 @@
+# Turn file cache on or off. ~ cache
+parameters state
+
+set FileListCache,desiredState,~!Local,state!~
