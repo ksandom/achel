@@ -1,5 +1,12 @@
 # Unit tests for Cache. ~ cache,unitTest,hidden
 
+defineTest initialise,
+	unset FileListCache,dummyEntry
+	
+	initialiseFileListCache
+	
+	expectNot ,~!FileListCache,dummyEntry!~
+
 defineTest clearFileListCache,
 	getCategory FileListCache
 	stashResults Tmp,originalCache
@@ -18,3 +25,18 @@ defineTest clearFileListCache,
 		passTest Cleared ~!Local,originalCache!~ -> ~!Local,clearedCache!~
 	else
 		failTest Unexpected values ~!Local,originalCache!~ -> ~!Local,clearedCache!~
+
+defineTest turnFileCache - on,
+	unset FileListCache,desiredState
+	
+	turnFileCache on
+	
+	expect on,~!FileListCache,desiredState!~
+
+defineTest turnFileCache - off,
+	unset FileListCache,desiredState
+	
+	turnFileCache off
+	
+	expect off,~!FileListCache,desiredState!~
+
