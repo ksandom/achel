@@ -1,0 +1,20 @@
+# Unit tests for Cache. ~ cache,unitTest,hidden
+
+defineTest clearFileListCache,
+	getCategory FileListCache
+	stashResults Tmp,originalCache
+	
+	countToVar Local,originalCache
+	
+	clearFileListCache
+	
+	getCategory FileListCache
+	countToVar Local,clearedCache
+	
+	retrieveResults Tmp,originalCache
+	unset Tmp,originalCache
+	
+	if ~!Local,originalCache!~,>,~!Local,clearedCache!~,
+		passTest Cleared ~!Local,originalCache!~ -> ~!Local,clearedCache!~
+	else
+		failTest Unexpected values ~!Local,originalCache!~ -> ~!Local,clearedCache!~
