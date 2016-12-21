@@ -409,6 +409,16 @@ class core extends Module
 	
 	function getFileList($path)
 	{
+		if (!$contents = $this->get('FileListCache', $path))
+		{
+			$contents = $this->doGetFileList($path);
+			$this->set('FileListCache', $path, $contents);
+		}
+		return $contents;
+	}
+	
+	function doGetFileList($path)
+	{
 		# TODO This can be done much better internally in PHP
 		if (is_file($path))
 		{
@@ -431,6 +441,28 @@ class core extends Module
 			else return false;
 		}
 		return $output;
+	}
+	
+	function getFileList2($path, $withAttributes=false)
+	{
+		@$result=scandir($path, SCANDIR_SORT_ASCENDING);
+		
+		$prePendPath=($path=='/')?'/':$path.'/';
+		
+		if ($result)
+		{
+			$output=array();
+			foreach ($result as $file)
+			{
+				if ($file != '.' and $file != '..')
+				{
+					$output[$file]=$prePendPath.$file;
+				}
+			}
+			
+			return $output;
+		}
+		else return array();
 	}
 	
 	function getFileTree($path, $withAttributes=false)
