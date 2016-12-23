@@ -417,7 +417,7 @@ class core extends Module
 		}
 		else
 		{
-			$this->set('FileListCacheStats', 'misses', $this->get('FileListCacheStats', 'hits')+1);
+			$this->set('FileListCacheStats', 'hits', $this->get('FileListCacheStats', 'hits')+1);
 		}
 		return $contents;
 	}
