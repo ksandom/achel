@@ -2,3 +2,4 @@
 parameters state
 
 set FileListCache,desiredState,~!Local,state!~
+fileListCacheChanged

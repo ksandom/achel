@@ -1,3 +1,4 @@
 # Initialise the FileListCache ~ cache,hidden
 
 set FileListCache,dummyEntry,hyuck!
+fileListCacheChanged

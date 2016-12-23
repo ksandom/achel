@@ -3,4 +3,4 @@
 
 initialiseFileListCache
 turnFileCache on
-saveStoreToConfig FileListCache
+persistCache
