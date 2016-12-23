@@ -1,0 +1,6 @@
+# Display statistics for the state of caching. ~ cache,user
+
+getCategory FileListCache
+countToVar FileListCacheStats,cacheSize
+
+getCategory FileListCacheStats

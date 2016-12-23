@@ -413,6 +413,11 @@ class core extends Module
 		{
 			$contents = $this->doGetFileList($path);
 			$this->set('FileListCache', $path, $contents);
+			$this->set('FileListCacheStats', 'misses', $this->get('FileListCacheStats', 'misses')+1);
+		}
+		else
+		{
+			$this->set('FileListCacheStats', 'misses', $this->get('FileListCacheStats', 'hits')+1);
 		}
 		return $contents;
 	}
