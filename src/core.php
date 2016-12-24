@@ -1869,6 +1869,7 @@ class core extends Module
 		
 		$this->module[$name]=&$obj;
 		$this->module[$name]->setCore($this);
+		$this->setNestedViaPath("Modules,$name,path", $this->get('Modules', 'currentModulePath'));
 		return true;
 	}
 	
@@ -2097,7 +2098,9 @@ function loadModules(&$core, $sourcePath, $callInits=true)
 			
 			if ($filenameParts[$lastPos]=='php'or $filenameParts[$lastPos]=='module')
 			{
+				$core->set('Modules', 'currentModulePath', $path);
 				include ($path);
+				$core->doUnset(array('Modules', 'currentModulePath'));
 			}
 		}
 		else
