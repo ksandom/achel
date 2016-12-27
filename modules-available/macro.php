@@ -430,7 +430,7 @@ class Macro extends Module
 		$this->core->callFeature('triggerEvent', 'Macro,allLoaded');
 		$loadFinish=microtime(true);
 		$loadTime=$loadFinish-$loadStart;
-		$this->core->debug(0, "Loaded macros in $loadTime seconds. start=$loadStart fimish=$loadFinish");
+		$this->core->debug(4, "Loaded macros in $loadTime seconds. start=$loadStart fimish=$loadFinish");
 	}
 }
 

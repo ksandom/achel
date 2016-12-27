@@ -2126,7 +2126,7 @@ function loadModules(&$core, $sourcePath, $callInits=true)
 	$initTime=$finishTime-$initStartTime;
 	$total=$finishTime-$loadTime;
 	
-	$core->debug(0, "Loaded modules in $loadTime. Initalised modules in $initTime. Total=$total.");
+	$core->debug(4, "Loaded modules in $loadTime. Initalised modules in $initTime. Total=$total.");
 }
 
 
