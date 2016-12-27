@@ -376,6 +376,7 @@ class Macro extends Module
 	
 	function loadSavedMacros()
 	{
+		$loadStart=microtime(true);
 		# TODO This is repeated below. It should be done once.
 		$profile=$this->core->get('General', 'profile');
 		$fileList=$this->core->addItemsToAnArray('Core', 'macrosToLoad', $this->core->getFileList($this->core->get('General', 'configDir')."/profiles/$profile/macros"));
@@ -389,8 +390,11 @@ class Macro extends Module
 			if ($nameParts[1]=='achel' or $nameParts[1]=='macro') // Only invest further time if it actually is a macro.
 			{
 				$macroName=$nameParts[0];
+				$this->core->set("MacroListCache", $macroName, $fileName);
+				
 				$contents=file_get_contents($fullPath);
 				$contentsParts=explode("\n", $contents);
+				$this->core->set("MacroRawContents", $macroName, $contentsParts);
 				if (substr($contentsParts[0], 0, 2)=='# ')
 				{
 					$firstLine=substr($contentsParts[0], 2);
@@ -413,8 +417,7 @@ class Macro extends Module
 			if ($nameParts[1]=='achel' or $nameParts[1]=='macro') // Only invest further time if it actually is a macro.
 			{
 				$macroName=$nameParts[0];
-				$contents=file_get_contents($fullPath);
-				$contentsParts=explode("\n", $contents);
+				$contentsParts=$this->core->get("MacroRawContents", $macroName);
 				
 				if (substr($contentsParts[0], 0, 2)=='# ')
 				{
@@ -425,6 +428,9 @@ class Macro extends Module
 		}
 		
 		$this->core->callFeature('triggerEvent', 'Macro,allLoaded');
+		$loadFinish=microtime(true);
+		$loadTime=$loadFinish-$loadStart;
+		$this->core->debug(0, "Loaded macros in $loadTime seconds. start=$loadStart fimish=$loadFinish");
 	}
 }
 
