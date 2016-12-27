@@ -7,3 +7,4 @@ if ~!FileListCache,changed!~,==,true,
 	saveStoreToConfig FileListCache
 else
 	debug 3,There have been no changes. Not persisting to disk.
+

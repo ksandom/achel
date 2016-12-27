@@ -2086,6 +2086,8 @@ class core extends Module
 
 function loadModules(&$core, $sourcePath, $callInits=true)
 {
+	$loadStartTime=microtime(true);
+	
 	foreach ($core->getModules($sourcePath) as $path)
 	{
 		$path=$path;
@@ -2109,12 +2111,22 @@ function loadModules(&$core, $sourcePath, $callInits=true)
 		}
 	}
 	
+	$initStartTime=microtime(true);
+	
 	if ($callInits)
 	{
 		$core->callInits(); // Basic init only
 		$core->callInits('followup'); // Any action that needs to be taken once all modules are loaded.
 		$core->callInits('last'); // Any action that needs to be taken once all modules are loaded.
 	}
+	
+	$finishTime=microtime(true);
+	
+	$loadTime=$initStartTime-$loadStartTime;
+	$initTime=$finishTime-$initStartTime;
+	$total=$finishTime-$loadTime;
+	
+	$core->debug(0, "Loaded modules in $loadTime. Initalised modules in $initTime. Total=$total.");
 }
 
 
