@@ -436,21 +436,23 @@ class Macro extends Module
 		}
 		
 		# Interpret and define all macros.
-		foreach ($fileList as $fileName=>$fullPath)
+		foreach ($macroList as $macroName=>$details)
 		{
-			if($fileName=='*') break;
+			$fullPath=$details['fullPath'];
 			
-			$nameParts=explode('.', $fileName);
-			if ($nameParts[1]=='achel' or $nameParts[1]=='macro') // Only invest further time if it actually is a macro.
+			$contentsParts=$this->core->get("MacroRawContents", $macroName);
+			
+			if (is_array($contentsParts))
 			{
-				$macroName=$nameParts[0];
-				$contentsParts=$this->core->get("MacroRawContents", $macroName);
-				
 				if (substr($contentsParts[0], 0, 2)=='# ')
 				{
 					$this->defineMacro($contents, false, $macroName);
 				}
-				else $this->core->complain($this, "$fullPath appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+				else $this->core->complain($this, "${details['fullPath']} appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+			}
+			else
+			{
+				$this->core->debug(0, "Something went very wrong trying to load macro $macroName.");
 			}
 		}
 		
