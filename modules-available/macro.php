@@ -422,6 +422,7 @@ class Macro extends Module
 			
 			$contents=file_get_contents($fullPath);
 			$contentsParts=explode("\n", $contents);
+			$this->core->debug(0, "macro pre-registering $macroName");
 			$this->core->set("MacroRawContents", $macroName, $contentsParts);
 			if (substr($contentsParts[0], 0, 2)=='# ')
 			{
@@ -438,6 +439,7 @@ class Macro extends Module
 		# Interpret and define all macros.
 		foreach ($macroList as $macroName=>$details)
 		{
+			$this->core->debug(0, "macro interpreting $macroName");
 			$fullPath=$details['fullPath'];
 			
 			$contentsParts=$this->core->get("MacroRawContents", $macroName);
@@ -448,7 +450,11 @@ class Macro extends Module
 				{
 					$this->defineMacro($contents, false, $macroName);
 				}
-				else $this->core->complain($this, "${details['fullPath']} appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+				else
+				{
+					$this->core->complain($this, "${details['fullPath']} appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+					$this->core->debug(0, "${details['fullPath']} appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+				}
 			}
 			else
 			{
