@@ -374,14 +374,18 @@ class Macro extends Module
 		$this->core->doUnset(array('ProgressData', $this->getProgressKey()));
 	}
 	
-	function loadSavedMacros()
+	function getFileList()
 	{
-		$loadStart=microtime(true);
-		# TODO This is repeated below. It should be done once.
 		$profile=$this->core->get('General', 'profile');
 		$fileList=$this->core->addItemsToAnArray('Core', 'macrosToLoad', $this->core->getFileList($this->core->get('General', 'configDir')."/profiles/$profile/macros"));
 		
-		# Pre-register all macros so that they can be nested without issue.
+		return $fileList;
+	}
+	
+	function getJustMacros($fileList)
+	{
+		$output=array();
+		
 		foreach ($fileList as $fileName=>$fullPath)
 		{
 			if($fileName=='*') break;
@@ -390,22 +394,45 @@ class Macro extends Module
 			if ($nameParts[1]=='achel' or $nameParts[1]=='macro') // Only invest further time if it actually is a macro.
 			{
 				$macroName=$nameParts[0];
-				$this->core->set("MacroListCache", $macroName, $fileName);
-				
-				$contents=file_get_contents($fullPath);
-				$contentsParts=explode("\n", $contents);
-				$this->core->set("MacroRawContents", $macroName, $contentsParts);
-				if (substr($contentsParts[0], 0, 2)=='# ')
-				{
-					$firstLine=substr($contentsParts[0], 2);
-					$firstLineParts=explode('~', $firstLine);
-					#$description=$firstLine;
-					$description=$firstLineParts[0];
-					$tags=(isset($firstLineParts[1]))?'macro,'.trim($firstLineParts[1]):'';
-					$this->core->registerFeature($this, array($macroName), $macroName, $description, $tags, true, $fullPath);
-				}
-				else $this->core->complain($this, "$fullPath appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+				$output[$macroName]=array(
+					'fileName'=>$fileName,
+					'macroName'=>$macroName,
+					'fullPath'=>$fullPath);
 			}
+		}
+		
+		return $output;
+	}
+	
+	function loadSavedMacros()
+	{
+		$loadStart=microtime(true);
+		# TODO This is repeated below. It should be done once.
+		
+		$fileList=$this->getFileList();
+		
+		# Pre-register all macros so that they can be nested without issue.
+		$macroList=$this->getJustMacros($fileList);
+		foreach ($macroList as $macroName=>$details)
+		{
+			$fileName=$details['fileName'];
+			$fullPath=$details['fullPath'];
+			
+			$this->core->set("MacroListCache", $macroName, $fileName);
+			
+			$contents=file_get_contents($fullPath);
+			$contentsParts=explode("\n", $contents);
+			$this->core->set("MacroRawContents", $macroName, $contentsParts);
+			if (substr($contentsParts[0], 0, 2)=='# ')
+			{
+				$firstLine=substr($contentsParts[0], 2);
+				$firstLineParts=explode('~', $firstLine);
+				#$description=$firstLine;
+				$description=$firstLineParts[0];
+				$tags=(isset($firstLineParts[1]))?'macro,'.trim($firstLineParts[1]):'';
+				$this->core->registerFeature($this, array($macroName), $macroName, $description, $tags, true, $fullPath);
+			}
+			else $this->core->complain($this, "$fullPath appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
 		}
 		
 		# Interpret and define all macros.
