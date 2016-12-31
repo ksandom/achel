@@ -439,10 +439,11 @@ class Macro extends Module
 		# Interpret and define all macros.
 		foreach ($macroList as $macroName=>$details)
 		{
-			$this->core->debug(0, "macro interpreting $macroName");
 			$fullPath=$details['fullPath'];
 			
 			$contentsParts=$this->core->get("MacroRawContents", $macroName);
+			
+			$this->core->debug(0, "macro interpreting $macroName ".count($contentsParts));
 			
 			if (is_array($contentsParts))
 			{
