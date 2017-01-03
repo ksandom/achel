@@ -422,7 +422,7 @@ class Macro extends Module
 			
 			$contents=file_get_contents($fullPath);
 			$contentsParts=explode("\n", $contents);
-			$this->core->debug(0, "macro pre-registering $macroName");
+			$this->core->debug(0, "macro pre-registering $macroName ".count($contentsParts));
 			$this->core->set("MacroRawContents", $macroName, $contentsParts);
 			if (substr($contentsParts[0], 0, 2)=='# ')
 			{
