@@ -85,17 +85,19 @@ class Macro extends Module
 		else $actualMacro=$macro;
 		$this->lastCreatedMacro=$macroName;
 		
+		if (!is_array($actualMacro)) $actualMacro=explode("\n", $actualMacro);
+		
 		$preCompile=array();
 		
 		if ($useSemiColon)
 		{
 			# Strip out new line characters and split into lines using ;
-			$lines=explode(';', implode('', explode("\n", $actualMacro)));
+			$lines=explode(';', implode('', $actualMacro));
 		}
 		else
 		{
 			# Split into lines usong \n
-			$lines=explode("\n", $actualMacro);
+			$lines=$actualMacro;
 		}
 		
 		# Precompile macro into a nested array of commands.
@@ -422,7 +424,6 @@ class Macro extends Module
 			
 			$contents=file_get_contents($fullPath);
 			$contentsParts=explode("\n", $contents);
-			$this->core->debug(0, "macro pre-registering $macroName ".count($contentsParts));
 			$this->core->set("MacroRawContents", $macroName, $contentsParts);
 			if (substr($contentsParts[0], 0, 2)=='# ')
 			{
@@ -443,13 +444,11 @@ class Macro extends Module
 			
 			$contentsParts=$this->core->get("MacroRawContents", $macroName);
 			
-			$this->core->debug(0, "macro interpreting $macroName ".count($contentsParts));
-			
 			if (is_array($contentsParts))
 			{
 				if (substr($contentsParts[0], 0, 2)=='# ')
 				{
-					$this->defineMacro($contents, false, $macroName);
+					$this->defineMacro($contentsParts, false, $macroName);
 				}
 				else
 				{
