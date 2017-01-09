@@ -27,8 +27,10 @@ if (isset($argv[1]))
 
 # initiate core
 $core=core::assert($verbosity);
+$cacheDir=configDir.'/profiles/'.$profile.'/cache';
 $core->set('General', 'EOL', "\n");
 $core->set('General', 'configDir', configDir);
+$core->set('General', 'cacheDir', $cacheDir);
 $core->set('General', 'docsDir', docsDir);
 $core->set('General', 'storageDir', storageDir);
 $core->set('General', 'installType', installType);
@@ -39,6 +41,16 @@ $core->set('General', 'programName', programName);
 $core->set('General', 'description', $description);
 $core->set('General', 'delayProcessingArgs', true);
 $core->set('General', 'exitCode', 0);
+
+if (file_exists($cacheDir))
+{
+	$core->loadCache($cacheDir);
+}
+else
+{
+	$core->debug(0, "No cache found. A re-install may be required.");
+}
+
 include (configDir.'/interfaces/commandLine.php');
 $core->setRef('CommandLine', 'arguments', $argv);
 loadModules($core, configDir."/profiles/$profile/modules");

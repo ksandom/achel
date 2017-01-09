@@ -407,6 +407,18 @@ class core extends Module
 		else return $parts;
 	}
 	
+	function loadCache($path)
+	{
+		$fileList=$this->getFileList($path);
+		
+		foreach ($fileList as $fileName=>$filePath)
+		{
+			$nameParts=explode('.', $fileName);
+			# $this->callFeature('loadStoreFromFile', "$filePath,{$nameParts[0]}");
+			$this->setCategoryModule($nameParts[0], json_decode(file_get_contents($filePath), 1));
+		}
+	}
+	
 	function getFileList($path)
 	{
 		if (!$contents = $this->get('FileListCache', $path))

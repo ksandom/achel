@@ -111,7 +111,7 @@ function userRemoveExec
 function createBareProfile
 {
 	name="$1"
-	mkdir -p $configDir/profiles/$name/{packages,modules,macros,templates}
+	mkdir -p $configDir/profiles/$name/{packages,modules,macros,templates,cache}
 }
 
 function removeBareProfile
