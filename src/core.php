@@ -1936,6 +1936,8 @@ class core extends Module
 	function aliasFeature($feature, $flags)
 	{
 		$entry=&$this->get('Features', $feature);
+		$macroCacheEntry=$this->get('MacroListCache', $feature);
+		
 		foreach ($flags as $flag)
 		{
 			if (!isset($this->store['Features'][$flag]))
@@ -1951,6 +1953,11 @@ class core extends Module
 				$existing=$this->get('Features', $flag);
 				$existingName=$existing['obj']->getName();
 				$this->complain($this, "Feature $flag has already been registered by $existingName");
+			}
+			
+			if ($macroCacheEntry)
+			{
+				$this->set('MacroListCache', $flag, $macroCacheEntry);
 			}
 		}
 	}

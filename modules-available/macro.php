@@ -420,7 +420,7 @@ class Macro extends Module
 			$fileName=$details['fileName'];
 			$fullPath=$details['fullPath'];
 			
-			$this->core->set("MacroListCache", $macroName, $fileName);
+			$this->core->set("MacroListCache", $macroName, $fullPath);
 			
 			$contents=file_get_contents($fullPath);
 			$contentsParts=explode("\n", $contents);
