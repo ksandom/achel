@@ -645,63 +645,66 @@ class core extends Module
 		if ($argument and $argument != '#' and $argument != '//')
 		{ // Only process non-white space
 			$obj=&$this->core->get('Features', $argument);
-			if (is_array($obj))
+			
+			if (!is_array($obj))
 			{
-				# NOTE This has been done this way for performance. However it may be worth abstracting it out into setNestedViaPath.
-				$this->store[isolatedNestedPrivateVarsName][$nesting]['featureName']=$argument;
-				
-				$indentation=str_repeat('  ', $nesting);
-				$valueIn=$this->processValue($value);
-				
-				$this->debug(4, "INVOKE-Enter {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn");
-				
-				$this->setStackEntry($nesting, $argument, $valueIn);
-				
-				if ($this->isVerboseEnough(5))
-				{
-					$this->debugResultSet($obj['name']);
-				}
-				
-				$numberOfArgs=$this->makeArgsAvailableToTheScript($obj['name'], $valueIn);
-				$result=$obj['obj']->event($obj['name']);
-				
-				if (isset($obj['featureType']))
-				{
-					$this->core->debug(4, "callFeature: ".$obj['featureType']);
-					if ($outDataType=$this->getNested(array('Semantics', 'featureTypes', $obj['featureType'], 'outDataType')))
-					{
-						if ($dataType=$this->getNested(array('Semantics', 'dataTypes', $outDataType)))
-						{
-							$semanticsTemplate=$this->get('Settings', 'semanticsTemplate');
-							$this->core->debug(4, "callFeature: Applying --{$dataType['action']}={$dataType[$semanticsTemplate]}");
-							$this->callFeature($dataType['action'], $dataType[$semanticsTemplate]);
-							$dataType['chosenTemplate']=$dataType[$semanticsTemplate];
-							$this->set('SemanticsState', 'currentDataType', $dataType);
-							$this->set('SemanticsState', 'currentFeatureType', $obj['featureType']);
-						}
-						else $this->core->debug(4, "callFeature: Could not find dataType $outDataType");
-					}
-					else $this->core->debug(4, "callFeature: Could not find featureType ".$obj['featureType']);
-				}
-				
-				if (cleanupArgs)
-				{
-					$this->removeArgs($obj['name'], $numberOfArgs);
-				}
-				
-				$this->unsetStackEntry($nesting);
-				
-				if ($this->isVerboseEnough(4))
-				{
-					$resultCount=count($result);
-					$nesting=$this->get('Core', 'nesting');
-					$isArray=is_array($result)?'True':'False';;
-					$this->debug(4, "INVOKE-Exit  {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn resultCount=$resultCount is_array=$isArray smCount=".$this->getResultSetCount());
-					# $this->debugResultSet($obj['name']);
-				}
-				return $result;
+				if (!$this->assertAvailableMacro($argument, 'callFeature')) return false;
+				$obj=&$this->core->get('Features', $argument);
 			}
-			else $this->complain(null, "Could not find a module to match '$argument'", 'callFeature');
+			
+			# NOTE This has been done this way for performance. However it may be worth abstracting it out into setNestedViaPath.
+			$this->store[isolatedNestedPrivateVarsName][$nesting]['featureName']=$argument;
+			
+			$indentation=str_repeat('  ', $nesting);
+			$valueIn=$this->processValue($value);
+			
+			$this->debug(4, "INVOKE-Enter {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn");
+			
+			$this->setStackEntry($nesting, $argument, $valueIn);
+			
+			if ($this->isVerboseEnough(5))
+			{
+				$this->debugResultSet($obj['name']);
+			}
+			
+			$numberOfArgs=$this->makeArgsAvailableToTheScript($obj['name'], $valueIn);
+			$result=$obj['obj']->event($obj['name']);
+			
+			if (isset($obj['featureType']))
+			{
+				$this->core->debug(4, "callFeature: ".$obj['featureType']);
+				if ($outDataType=$this->getNested(array('Semantics', 'featureTypes', $obj['featureType'], 'outDataType')))
+				{
+					if ($dataType=$this->getNested(array('Semantics', 'dataTypes', $outDataType)))
+					{
+						$semanticsTemplate=$this->get('Settings', 'semanticsTemplate');
+						$this->core->debug(4, "callFeature: Applying --{$dataType['action']}={$dataType[$semanticsTemplate]}");
+						$this->callFeature($dataType['action'], $dataType[$semanticsTemplate]);
+						$dataType['chosenTemplate']=$dataType[$semanticsTemplate];
+						$this->set('SemanticsState', 'currentDataType', $dataType);
+						$this->set('SemanticsState', 'currentFeatureType', $obj['featureType']);
+					}
+					else $this->core->debug(4, "callFeature: Could not find dataType $outDataType");
+				}
+				else $this->core->debug(4, "callFeature: Could not find featureType ".$obj['featureType']);
+			}
+			
+			if (cleanupArgs)
+			{
+				$this->removeArgs($obj['name'], $numberOfArgs);
+			}
+			
+			$this->unsetStackEntry($nesting);
+			
+			if ($this->isVerboseEnough(4))
+			{
+				$resultCount=count($result);
+				$nesting=$this->get('Core', 'nesting');
+				$isArray=is_array($result)?'True':'False';;
+				$this->debug(4, "INVOKE-Exit  {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn resultCount=$resultCount is_array=$isArray smCount=".$this->getResultSetCount());
+				# $this->debugResultSet($obj['name']);
+			}
+			return $result;
 		}
 		else $this->debug(3,"Core->callFeature: Non executable code \"$argument\" sent. We shouldn't have got this.");
 		return false;
@@ -1043,22 +1046,36 @@ class core extends Module
 		return $output;
 	}
 	
+	function assertAvailableMacro($macroName, $context)
+	{
+		$macroPath=$this->get('MacroListCache', $macroName);
+		if ($macroPath)
+		{
+			$this->callFeature('loadMacro', $macroName);
+			return true;
+		}
+		else
+		{
+			$macroDetails=($lineNumber)?"$macroName:$lineNumber":"$macroName";
+			$this->complain(null, "Could not find a module to match '$macroName' in $macroDetails", $context);
+			
+			return false;
+		}
+	}
+	
 	function addAction($argument, $value=null, $macroName='default', $lineNumber=false)
 	{
 		if (!isset($this->store['Macros'])) $this->store['Macros']=array();
 		if (!isset($this->store['Macros'][$macroName])) $this->store['Macros'][$macroName]=array();
 		
 		$obj=&$this->core->get('Features', $argument);
-		if (is_array($obj))
+		if (!is_array($obj))
 		{
-			$this->store['Macros'][$macroName][]=array('obj'=>&$obj, 'name'=>$obj['name'], 'value'=>$value, 'lineNumber'=>$lineNumber);
-			$this->store['Features'][$argument]['referenced']++;
+			if (!$this->assertAvailableMacro($argument, 'addAction')) return false;
 		}
-		else
-		{
-			$macroDetails=($lineNumber)?"$macroName:$lineNumber":"$macroName";
-			$this->complain(null, "Could not find a module to match '$argument' in $macroDetails", 'addAction');
-		}
+		
+		$this->store['Macros'][$macroName][]=array('obj'=>&$obj, 'name'=>$obj['name'], 'value'=>$value, 'lineNumber'=>$lineNumber);
+		$this->store['Features'][$argument]['referenced']++;
 
 	}
 	

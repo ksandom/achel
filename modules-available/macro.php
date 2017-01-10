@@ -29,6 +29,8 @@ class Macro extends Module
 				$this->core->registerFeature($this, array('forEach'), 'forEach', "For each result in the resultSet, run this command. The whole resultSet will temporarily be set to the result in the current iteration, and the resultSet of that iteration will replace the original result in the original resultSet. Basically it's a way to work with nested results and be able to send their results back. --foreEach=feature,value", array('loop', 'iterate', 'resultset')); # TODO This should probably move to a language module
 				
 				$this->core->registerFeature($this, array('getProgressKey'), 'getProgressKey', "Progress information is now stored in a unique location for each level nesting so that nested loops in the same macro can operate without interfereing with each others' progress information.", array('loop', 'iterate', 'resultset'));
+				$this->core->registerFeature($this, array('loadMacro'), 'loadMacro', "Load a macro from disk. This is not currenly for general use.", array('hidden'));
+				$this->core->registerFeature($this, array('loadAllMacros'), 'loadAllMacros', "Load all macros from disk. This is not currenly for general use.", array('hidden'));
 				break;
 			case 'singleLineMacro':
 				$this->defineMacro($this->core->get('Global', $event), true);
@@ -59,16 +61,23 @@ class Macro extends Module
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 1);
 				return $this->doForEach($this->core->getResultSet(), $parms[0], $parms[1]);
 			case 'followup':
-				$this->loadSavedMacros();
+				$this->followup();
 				break;
 			case 'getProgressKey':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2);
 				$this->core->set($parms[0], $parms[1], $this->getProgressKey('previousScopeName'));
 				break;
+			case 'loadMacro':
+				$macroName=$this->core->get('Global', $event);
+				$this->loadMacro($macroName);
+				break;
+			case 'loadAllMacros':
+				$this->loadSavedMacros();
+				break;
 			case 'last':
 				break;
 			default:
-				return$this->runMacro($event);
+				return $this->runMacro($event);
 				break;
 		}
 	}
@@ -205,6 +214,7 @@ class Macro extends Module
 			}
 			else
 			{
+				# TODO follow through to automatically load the macro if it doesn't exist.
 				$this->core->addAction(trim($action['argument']), $action['value'], $macroName, $action['lineNumber']);
 			}
 		}
@@ -406,6 +416,62 @@ class Macro extends Module
 		return $output;
 	}
 	
+	function getMacroNameDetailss($fullPath)
+	{
+		# Get fileName
+		$pathParts=explode('/', $fullPath);
+		$fileName=$pathParts[count($pathParts)-1];
+		
+		# Get original macroName
+		$nameParts=explode('.', $fileName);
+		$originalName=$nameParts[0];
+		$extention=$nameParts[1];
+		
+		return array(
+			'fileName' => $fileName,
+			'originalName' => $originalName,
+			'extention' => $extention
+		);
+	}
+	
+	function loadMacro($macroName)
+	{
+		$this->core->debug(0, "Trying to load $macroName");
+		$macroPath=$this->core->get('MacroListCache', $macroName);
+		if (!$macroPath)
+		{
+			$this->core->debug(0, "Could not find $macroName in the cache.");
+			return false;
+		}
+		
+		$macroDetails=$this->getMacroNameDetailss($macroPath);
+		$this->loadMacroRegisterFeature($macroDetails['fileName'], $macroPath, $macroDetails['originalName']);
+		$contentsParts=$this->core->get("MacroRawContents", $macroName);
+		$this->defineMacro($contentsParts, false, $macroName);
+	}
+	
+	function loadMacroRegisterFeature($fileName, $fullPath, $macroName)
+	{
+		$contents=file_get_contents($fullPath);
+		$contentsParts=explode("\n", $contents);
+		$this->core->set("MacroRawContents", $macroName, $contentsParts);
+		if (substr($contentsParts[0], 0, 2)=='# ')
+		{
+			$firstLine=substr($contentsParts[0], 2);
+			$firstLineParts=explode('~', $firstLine);
+			#$description=$firstLine;
+			$description=$firstLineParts[0];
+			$tags=(isset($firstLineParts[1]))?'macro,'.trim($firstLineParts[1]):'';
+			$this->core->registerFeature($this, array($macroName), $macroName, $description, $tags, true, $fullPath);
+		}
+		else $this->core->complain($this, "$fullPath appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+	}
+	
+	function followup()
+	{
+		# $this->loadSavedMacros();
+	}
+	
 	function loadSavedMacros()
 	{
 		$loadStart=microtime(true);
@@ -422,19 +488,7 @@ class Macro extends Module
 			
 			$this->core->set("MacroListCache", $macroName, $fullPath);
 			
-			$contents=file_get_contents($fullPath);
-			$contentsParts=explode("\n", $contents);
-			$this->core->set("MacroRawContents", $macroName, $contentsParts);
-			if (substr($contentsParts[0], 0, 2)=='# ')
-			{
-				$firstLine=substr($contentsParts[0], 2);
-				$firstLineParts=explode('~', $firstLine);
-				#$description=$firstLine;
-				$description=$firstLineParts[0];
-				$tags=(isset($firstLineParts[1]))?'macro,'.trim($firstLineParts[1]):'';
-				$this->core->registerFeature($this, array($macroName), $macroName, $description, $tags, true, $fullPath);
-			}
-			else $this->core->complain($this, "$fullPath appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+			$this->loadMacroRegisterFeature($fileName, $fullPath, $macroName);
 		}
 		
 		# Interpret and define all macros.
