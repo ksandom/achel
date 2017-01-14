@@ -469,7 +469,11 @@ class Macro extends Module
 	
 	function followup()
 	{
-		# $this->loadSavedMacros();
+		$cachedMacroList=$this->core->getCategoryModule('MacroListCache');
+		if (!(count($cachedMacroList)>1))
+		{
+			$this->loadSavedMacros();
+		}
 	}
 	
 	function loadSavedMacros()
