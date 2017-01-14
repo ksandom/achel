@@ -1046,7 +1046,7 @@ class core extends Module
 		return $output;
 	}
 	
-	function assertAvailableMacro($macroName, $context, $lineNumber)
+	function assertAvailableMacro($macroName, $context, $lineNumber='NA')
 	{
 		$macroPath=$this->get('MacroListCache', $macroName);
 		if ($macroPath)
