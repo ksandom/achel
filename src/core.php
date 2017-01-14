@@ -1046,7 +1046,7 @@ class core extends Module
 		return $output;
 	}
 	
-	function assertAvailableMacro($macroName, $context)
+	function assertAvailableMacro($macroName, $context, $lineNumber)
 	{
 		$macroPath=$this->get('MacroListCache', $macroName);
 		if ($macroPath)
@@ -1071,7 +1071,7 @@ class core extends Module
 		$obj=&$this->core->get('Features', $argument);
 		if (!is_array($obj))
 		{
-			if (!$this->assertAvailableMacro($argument, 'addAction')) return false;
+			if (!$this->assertAvailableMacro($argument, 'addAction', $lineNumber)) return false;
 		}
 		
 		$this->store['Macros'][$macroName][]=array('obj'=>&$obj, 'name'=>$obj['name'], 'value'=>$value, 'lineNumber'=>$lineNumber);
