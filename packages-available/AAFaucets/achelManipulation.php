@@ -39,7 +39,8 @@ class ManipulationFaucets extends Faucets
 				break;
 			case 'createDumbReplaceFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'dumbReplace', new DumbReplaceFaucet($parms[1]));
+				$dumbReplaceFaucet=new DumbReplaceFaucet($parms[1]);
+				$this->environment->currentFaucet->createFaucet($parms[0], 'dumbReplace', $dumbReplaceFaucet);
 				break;
 			case 'createDumbInsertFaucetAfter':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2);
@@ -51,7 +52,8 @@ class ManipulationFaucets extends Faucets
 				break;
 			case 'createLabelFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'label', new LabelFaucet());
+				$labelFaucet=new LabelFaucet();
+				$this->environment->currentFaucet->createFaucet($parms[0], 'label', $labelFaucet);
 				break;
 			case 'createReplaceFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
