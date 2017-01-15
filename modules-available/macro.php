@@ -436,7 +436,6 @@ class Macro extends Module
 	
 	function loadMacro($macroName)
 	{
-		$this->core->debug(0, "Trying to load $macroName");
 		$macroPath=$this->core->get('MacroListCache', $macroName);
 		if (!$macroPath)
 		{
