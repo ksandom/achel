@@ -1072,9 +1072,11 @@ class core extends Module
 		if (!is_array($obj))
 		{
 			if (!$this->assertAvailableMacro($argument, 'addAction', $lineNumber)) return false;
+			$obj=&$this->core->get('Features', $argument);
 		}
 		
 		$this->store['Macros'][$macroName][]=array('obj'=>&$obj, 'name'=>$obj['name'], 'value'=>$value, 'lineNumber'=>$lineNumber);
+		if (!isset($this->store['Features'][$argument]['referenced'])) $this->store['Features'][$argument]['referenced']=0;
 		$this->store['Features'][$argument]['referenced']++;
 
 	}
@@ -1279,10 +1281,18 @@ class core extends Module
 			}
 			else
 			{
-				$this->complain($this, "hmmmm, I don't think you asked me to do anything...");
 				$obj=&$this->get('Features', 'helpDefault');
-				$obj['obj']->event('helpDefault');
-				return $emptyResult;
+				if (is_object($obj))
+				{
+					$this->complain($this, "hmmmm, I don't think you asked me to do anything...");
+					$obj['obj']->event('helpDefault');
+					return $emptyResult;
+				}
+				else
+				{
+					$this->complain($this, "hmmmm, I don't think you asked me to do anything... But I'm also unable to load help. Alllllll BYYYY MY selllllllf...");
+					return $emptyResult;
+				}
 			}
 		}
 		else
