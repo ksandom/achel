@@ -1057,7 +1057,7 @@ class core extends Module
 		else
 		{
 			$macroDetails=($lineNumber)?"$macroName:$lineNumber":"$macroName";
-			$this->complain(null, "Could not find a module to match '$macroName' in $macroDetails", $context);
+			$this->complain(null, "Could not find a module to match '$macroName' in $macroDetails", $context.'/assertAvailableMacro');
 			
 			return false;
 		}
@@ -1073,6 +1073,12 @@ class core extends Module
 		{
 			if (!$this->assertAvailableMacro($argument, 'addAction', $lineNumber)) return false;
 			$obj=&$this->core->get('Features', $argument);
+			
+			if (!is_array($obj))
+			{
+				$this->complain($this, "Failed to assert macro $argument.", 'addAction');
+				return false;
+			}
 		}
 		
 		$this->store['Macros'][$macroName][]=array('obj'=>&$obj, 'name'=>$obj['name'], 'value'=>$value, 'lineNumber'=>$lineNumber);

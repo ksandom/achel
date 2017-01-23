@@ -72,7 +72,7 @@ class Macro extends Module
 				$this->loadMacro($macroName);
 				break;
 			case 'loadAllMacros':
-				$this->loadSavedMacros();
+				$this->loadSavedMacros(true);
 				break;
 			case 'last':
 				break;
@@ -82,8 +82,11 @@ class Macro extends Module
 		}
 	}
 	
-	function defineMacro($macro, $useSemiColon=false, $macroName=false)
+	function defineMacro($macro, $useSemiColon=false, $macroName=false, $quiet=false)
 	{
+				# This case happens when we load all macros in a cached environment.
+		if ($this->core->get('MacroRawContents', $macroName) and $quiet) return true;
+		
 		# Get macroName
 		if (!$macroName)
 		{
@@ -207,6 +210,9 @@ class Macro extends Module
 			if (count($action['nesting']))
 			{
 				$subName="$macroName--{$action['lineNumber']}";
+				
+				$macroPath=$this->core->get('MacroListCache', $macroName);
+				$this->core->set('MacroListCache', $subName, $macroPath);
 				
 				$this->core->registerFeature($this, array($subName), $subName, "Derived macro for $macroName", "$macroName,hidden", true, 'nesting');
 				$outputArray[$key]['nesting']=$this->compileFromArray($subName, $action['nesting']);
@@ -449,8 +455,11 @@ class Macro extends Module
 		$this->defineMacro($contentsParts, false, $macroName);
 	}
 	
-	function loadMacroRegisterFeature($fileName, $fullPath, $macroName)
+	function loadMacroRegisterFeature($fileName, $fullPath, $macroName, $quiet=false)
 	{
+		# This case happens when we load all macros in a cached environment.
+		if ($this->core->get('MacroRawContents', $macroName) and $quiet) return true;
+		
 		$contents=file_get_contents($fullPath);
 		$contentsParts=explode("\n", $contents);
 		$this->core->set("MacroRawContents", $macroName, $contentsParts);
@@ -475,7 +484,7 @@ class Macro extends Module
 		}
 	}
 	
-	function loadSavedMacros()
+	function loadSavedMacros($quiet=false)
 	{
 		$loadStart=microtime(true);
 		# TODO This is repeated below. It should be done once.
@@ -491,7 +500,7 @@ class Macro extends Module
 			
 			$this->core->set("MacroListCache", $macroName, $fullPath);
 			
-			$this->loadMacroRegisterFeature($fileName, $fullPath, $macroName);
+			$this->loadMacroRegisterFeature($fileName, $fullPath, $macroName, $quiet);
 		}
 		
 		# Interpret and define all macros.
@@ -505,7 +514,7 @@ class Macro extends Module
 			{
 				if (substr($contentsParts[0], 0, 2)=='# ')
 				{
-					$this->defineMacro($contentsParts, false, $macroName);
+					$this->defineMacro($contentsParts, false, $macroName, $quiet);
 				}
 				else
 				{

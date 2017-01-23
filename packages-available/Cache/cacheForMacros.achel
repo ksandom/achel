@@ -3,3 +3,4 @@
 persistCache
 saveStoreToCache Events
 saveStoreToCache MacroListCache
+saveStoreToCache Tags

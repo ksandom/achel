@@ -47,6 +47,8 @@ class Help extends Module
 	
 	function searchHelp($tags)
 	{
+		$this->core->callFeature('loadAllMacros', '');
+		
 		$output=array();
 		$this->store=$this->core->getStore();
 		
