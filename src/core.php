@@ -1218,6 +1218,14 @@ class core extends Module
 	function &go($macroName='default')
 	{
 		$emptyResult=null;
+		
+		if (!isset($this->store['Macros'][$macroName]))
+		{
+			# TODO This possibly isn't the best course of action. Think and do.
+			$this->callFeature('loadMacro', $macroName);
+			# exit (1);
+		}
+		
 		if (isset($this->store['Macros'][$macroName]))
 		{
 			if (count($this->store['Macros'][$macroName]))

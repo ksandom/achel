@@ -2,6 +2,8 @@
 #onDefine aliasFeature help,h
 #onLoaded setFeatureType help,help
 
+loadAllMacros
+
 # templateOut help
 searchHelp all
 if ~!Global,help-0!~,!=,,
