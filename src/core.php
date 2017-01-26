@@ -642,7 +642,7 @@ class core extends Module
 	{
 		$nesting=$this->get('Core', 'nesting');
 		
-		if ($argument and $argument != '#' and $argument != '//')
+		if (is_string($argument) and $argument and $argument != '#' and $argument != '//')
 		{ // Only process non-white space
 			$obj=&$this->core->get('Features', $argument);
 			
@@ -1046,7 +1046,7 @@ class core extends Module
 		return $output;
 	}
 	
-	function assertAvailableMacro($macroName, $context, $lineNumber='NA')
+	function assertAvailableMacro($macroName, $context, $lineNumber=false)
 	{
 		$macroPath=$this->get('MacroListCache', $macroName);
 		if ($macroPath)
@@ -1065,6 +1065,8 @@ class core extends Module
 	
 	function addAction($argument, $value=null, $macroName='default', $lineNumber=false)
 	{
+		if (!$argument) return false;
+		
 		if (!isset($this->store['Macros'])) $this->store['Macros']=array();
 		if (!isset($this->store['Macros'][$macroName])) $this->store['Macros'][$macroName]=array();
 		
@@ -1221,9 +1223,7 @@ class core extends Module
 		
 		if (!isset($this->store['Macros'][$macroName]))
 		{
-			# TODO This possibly isn't the best course of action. Think and do.
-			$this->callFeature('loadMacro', $macroName);
-			# exit (1);
+			$this->assertAvailableMacro($macroName);
 		}
 		
 		if (isset($this->store['Macros'][$macroName]))
