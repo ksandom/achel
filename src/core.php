@@ -1065,6 +1065,8 @@ class core extends Module
 	
 	function addAction($argument, $value=null, $macroName='default', $lineNumber=false)
 	{
+		$this->debug(0, "addAction: Adding $argument,$value to $macroName");
+		
 		if (!$argument) return false;
 		
 		if (!isset($this->store['Macros'])) $this->store['Macros']=array();
@@ -1092,6 +1094,12 @@ class core extends Module
 	function getRealFeatureName($featureName)
 	{
 		$feature=$this->core->get('Features', $featureName);
+		if (!$feature)
+		{
+			$this->assertAvailableMacro($featureName, 'getRealFeatureName');
+			$feature=$this->core->get('Features', $featureName);
+		}
+		
 		return $feature['name'];
 	}
 	
@@ -1223,7 +1231,7 @@ class core extends Module
 		
 		if (!isset($this->store['Macros'][$macroName]))
 		{
-			$this->assertAvailableMacro($macroName);
+			$this->assertAvailableMacro($macroName, 'go');
 		}
 		
 		if (isset($this->store['Macros'][$macroName]))
@@ -1311,10 +1319,18 @@ class core extends Module
 		}
 		else
 		{
-			$this->complain($this, "Could not find macro '$macroName'. This can happen if you haven't asked me to do anything.");
-			
 			$obj=&$this->get('Features', 'helpDefault');
-			$obj['obj']->event('helpDefault');
+			
+			if ($obj)
+			{
+				$this->complain($this, "Could not find macro '$macroName'. This can happen if you haven't asked me to do anything.");
+				
+				$obj['obj']->event('helpDefault');
+			}
+			else
+			{
+				$this->complain($this, "Could not find macro '$macroName' and couldn't find helpDefault. This generally begins if you haven't asked me to do anything, but to not find either suggests something is wrong with the cache. Clearing it may help.");
+			}
 			return $emptyResult;
 		}
 	}
