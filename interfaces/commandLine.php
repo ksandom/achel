@@ -67,7 +67,6 @@ class CommandLine extends Module
 	function processArgs()
 	{
 		$arg=&$this->core->get('CommandLine', 'arguments');
-		#print_r($arg);
 		$max=count($arg);
 		$possibleFlagsRemaining=true;
 		$stray=array();
@@ -91,9 +90,11 @@ class CommandLine extends Module
 					{
 						$equalsPos=strpos($arg[$i], '=');
 						$argument=substr($arg[$i], 2, $equalsPos-2);
+						$this->core->debug(0, "processArgs: $argument, na ({$arg[$i]})");
 						$argument=$this->core->getRealFeatureName($argument);
 						$value=substr($arg[$i], $equalsPos+1);
 						$this->core->set('Global', $argument, $value);
+						$this->core->debug(0, "processArgs: $argument, $value ({$arg[$i]})");
 						$this->core->addAction($argument, $value);
 					}
 					else
