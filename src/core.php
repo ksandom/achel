@@ -150,7 +150,7 @@ class core extends Module
 				return array($this->getNested($parms));
 				break;
 			case 'set':
-				$parms=$this->interpretParms($this->get('Global', $event), 3, 2, true);
+				$parms=$this->interpretParms($this->get('Global', $event), 2, 2, true);
 				$this->set($parms[0], $parms[1], $parms[2]);
 				break;
 			case 'makeMeAvailable':
@@ -1065,7 +1065,7 @@ class core extends Module
 	
 	function addAction($argument, $value=null, $macroName='default', $lineNumber=false)
 	{
-		$this->debug(0, "addAction: Adding $argument,$value to $macroName");
+		$this->debug(4, "addAction: Adding $argument,$value to $macroName");
 		
 		if (!$argument) return false;
 		
@@ -1319,7 +1319,7 @@ class core extends Module
 		}
 		else
 		{
-			$obj=&$this->get('Features', 'helpDefault');
+			$obj=&$this->getFeature('helpDefault', 'go');
 			
 			if ($obj)
 			{
@@ -1332,6 +1332,22 @@ class core extends Module
 				$this->complain($this, "Could not find macro '$macroName' and couldn't find helpDefault. This generally begins if you haven't asked me to do anything, but to not find either suggests something is wrong with the cache. Clearing it may help.");
 			}
 			return $emptyResult;
+		}
+	}
+	
+	function &getFeature($featureName, $context='na/getFeature')
+	{
+		# To be used in more generic situations than assertAvailableMacro which is only for macros.
+		$obj=&$this->get('Features', 'helpDefault');
+		if ($obj) return $obj;
+		else
+		{
+			if ($this->assertAvailableMacro($featureName, $context.'/getFeature'))
+			{
+				$obj=&$this->get('Features', 'helpDefault');
+				return $obj;
+			}
+			else return false;
 		}
 	}
 	

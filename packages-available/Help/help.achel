@@ -2,13 +2,28 @@
 #onDefine aliasFeature help,h
 #onLoaded setFeatureType help,help
 
+# debug 0,help: loadAllMacros begin
 loadAllMacros
+# debug 0,help: loadAllMacros end
 
-# templateOut help
-searchHelp all
+templateOut help
+# searchHelp all
+
+getCategory Features
+
 if ~!Global,help-0!~,!=,,
 	requireEach ~!Global,help!~
 else
 	requireEach ~!Help,default!~
 
 excludeItem tagString,hidden
+
+# Now we have a small dataset, make ready for general usage.
+keyOn name
+
+loop
+	isolate
+		retrieveResults Result,flags
+		getSingleStringUsingSeparator , --
+		stashResults Result,combinedFlags
+	set Result,commandLineFlags,--~!Result,combinedFlags,0!~
