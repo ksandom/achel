@@ -24,6 +24,7 @@ keyOn name
 loop
 	isolate
 		retrieveResults Result,flags
-		getSingleStringUsingSeparator , --
+		getSingleStringUsingSeparatorNoNL , --
 		stashResults Result,combinedFlags
 	set Result,commandLineFlags,--~!Result,combinedFlags,0!~
+	
