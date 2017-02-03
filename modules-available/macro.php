@@ -442,7 +442,7 @@ class Macro extends Module
 	
 	function loadMacro($macroName)
 	{
-		$this->core->debug(0, "Loading $macroName.");
+		$this->core->debug(4, "Loading macro $macroName.");
 		
 		$macroPath=$this->core->get('MacroListCache', $macroName);
 		if (!$macroPath)
@@ -493,8 +493,6 @@ class Macro extends Module
 		
 		$fileList=$this->getFileList();
 		
-		$this->core->debug(0, "loadSavedMacros: stage 1");
-		
 		# Pre-register all macros so that they can be nested without issue.
 		$macroList=$this->getJustMacros($fileList);
 		foreach ($macroList as $macroName=>$details)
@@ -507,7 +505,6 @@ class Macro extends Module
 			$this->loadMacroRegisterFeature($fileName, $fullPath, $macroName, $quiet);
 		}
 		
-		$this->core->debug(0, "loadSavedMacros: stage 2");
 		# Interpret and define all macros.
 		foreach ($macroList as $macroName=>$details)
 		{
@@ -532,14 +529,10 @@ class Macro extends Module
 				$this->core->debug(0, "Something went very wrong trying to load macro $macroName.");
 			}
 		}
-		$this->core->debug(0, "loadSavedMacros: stage 3");
-		
 		$this->core->callFeature('triggerEvent', 'Macro,allLoaded');
 		$loadFinish=microtime(true);
 		$loadTime=$loadFinish-$loadStart;
 		$this->core->debug(4, "Loaded macros in $loadTime seconds. start=$loadStart fimish=$loadFinish");
-		
-		$this->core->debug(0, "loadSavedMacros: stage 4");
 	}
 }
 
