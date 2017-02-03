@@ -937,6 +937,11 @@ class Manipulator extends Module
 			{
 				$this->core->debug(1, "findPoint: Result with key \"{$keys[$half]}\" does not have a value named $valueName. This could be a bug in the macro, or corrupted data.");
 				$half++;
+				if ($half > $max)
+				{
+					$this->core->debug(3, "findPoint: half ($half) > max $max, method is $method and there is nowhere left to go.");
+					return null;
+				}
 				continue;
 			}
 			
