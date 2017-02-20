@@ -1590,7 +1590,7 @@ class core extends Module
 
 	function setRef($category, $valueName, &$args, $nestingOffset=0)
 	{ // set a variable for a module
-		$argString=(is_string($args))?$argString:'[non-string]';
+		$argString=(is_string($args))?$args:'[non-string]';
 		$this->debug(5,"setRef($category, $valueName, $argString)");
 		if (!isset($this->store[$category])) $this->store[$category]=array();
 		
@@ -2018,6 +2018,7 @@ class core extends Module
 				$this->core->debug(4, "Aliasing $flag => $feature");
 				$this->setRef('Features', $flag, $entry);
 				$entry['flags'][]=$flag;
+				$this->setRef('FeatureAliases', $entry['name'], $flag);
 			}
 			elseif ($flag==$feature)
 			{}
