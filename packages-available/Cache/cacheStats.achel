@@ -1,11 +1,4 @@
 # Display statistics for the state of caching. ~ cache,user
 
-# Get cache size.
-getCategory FileListCache
-countToVar FileListCacheStats,cacheSize
-
-# Get misc info.
-set FileListCacheStats,changed,~!FileListCache,changed!~
-
 # Get the final stats.
-getCategory FileListCacheStats
+getCategory CacheStats

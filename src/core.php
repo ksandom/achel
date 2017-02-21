@@ -414,8 +414,13 @@ class core extends Module
 		foreach ($fileList as $fileName=>$filePath)
 		{
 			$nameParts=explode('.', $fileName);
-			# $this->callFeature('loadStoreFromFile', "$filePath,{$nameParts[0]}");
-			$this->setCategoryModule($nameParts[0], json_decode(file_get_contents($filePath), 1));
+			$categoryName=$nameParts[0];
+			$cacheContents=json_decode(file_get_contents($filePath), 1);
+			$this->setCategoryModule($categoryName, $cacheContents);
+			
+			$cacheSize=count($cacheContents);
+			$this->setRef('CacheStats', $categoryName, $cacheSize);
+			$this->debug(4,"Loaded cache \"$categoryName\" ($cacheSize)");
 		}
 	}
 	
@@ -423,15 +428,16 @@ class core extends Module
 	{
 		if (!$contents = $this->get('FileListCache', $path))
 		{
+			$listCache=array_keys($this->getCategoryModule('FileListCache'));
 			$contents = $this->doGetFileList($path);
 			$this->set('FileListCache', $path, $contents);
-			$misses=$this->get('FileListCacheStats', 'misses')+1;
-			$this->set('FileListCacheStats', 'misses', $misses);
-			$this->set('FileListCache', 'changed', 'true');
+			$misses=$this->get('CacheStats', 'FileListHitsMisses')+1;
+			$this->set('CacheStats', 'FileListHitsMisses', $misses);
+			$this->set('CacheStats', 'FileListChanged', 'true');
 		}
 		else
 		{
-			$this->set('FileListCacheStats', 'hits', $this->get('FileListCacheStats', 'hits')+1);
+			$this->set('CacheStats', 'FileListHits', $this->get('CacheStats', 'FileListHitsHits')+1);
 		}
 		return $contents;
 	}

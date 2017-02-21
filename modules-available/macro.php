@@ -482,6 +482,7 @@ class Macro extends Module
 		$cachedMacroList=$this->core->getCategoryModule('MacroListCache');
 		if (!(count($cachedMacroList)>1))
 		{
+			$this->core->debug(4, "Loading machos from scratch.");
 			$this->loadSavedMacros();
 		}
 	}
