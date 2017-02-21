@@ -431,8 +431,8 @@ class core extends Module
 			$listCache=array_keys($this->getCategoryModule('FileListCache'));
 			$contents = $this->doGetFileList($path);
 			$this->set('FileListCache', $path, $contents);
-			$misses=$this->get('CacheStats', 'FileListHitsMisses')+1;
-			$this->set('CacheStats', 'FileListHitsMisses', $misses);
+			$misses=$this->get('CacheStats', 'FileListMisses')+1;
+			$this->set('CacheStats', 'FileListMisses', $misses);
 			$this->set('CacheStats', 'FileListChanged', 'true');
 		}
 		else
@@ -1054,10 +1054,16 @@ class core extends Module
 	
 	function assertAvailableMacro($macroName, $context, $lineNumber=false)
 	{
-		$macroPath=$this->get('MacroListCache', $macroName);
-		if ($macroPath)
+		if ($macroPath=$this->get('MacroListCache', $macroName))
 		{
-			$this->callFeature('loadMacro', $macroName);
+			if ($originName=$this->get('FeatureAliases', $macroName))
+			{
+				$this->callFeature('loadMacro', $originName);
+			}
+			else
+			{
+				$this->callFeature('loadMacro', $macroName);
+			}
 			return true;
 		}
 		else
@@ -2024,7 +2030,7 @@ class core extends Module
 				$this->core->debug(4, "Aliasing $flag => $feature");
 				$this->setRef('Features', $flag, $entry);
 				$entry['flags'][]=$flag;
-				$this->setRef('FeatureAliases', $entry['name'], $flag);
+				$this->setRef('FeatureAliases', $flag, $entry['name']);
 			}
 			elseif ($flag==$feature)
 			{}

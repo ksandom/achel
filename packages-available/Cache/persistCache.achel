@@ -1,10 +1,10 @@
 # Save the cache to disk. ~ cache,hidden
 #onDefine registerForEvent Achel,finishLate,persistCache
 
-if ~!CacheStats,misses!~,>,1,
-	debug 3,There have been ~!CacheStats,misses!~ changes. Persisting to disk.
+if ~!CacheStats,FileListMisses!~,>,1,
+	debug 4,There have been ~!CacheStats,FileListMisses!~ changes/misses. Persisting to disk.
 	set FileListCache,changed,false
 	saveStoreToCache FileListCache
 else
-	debug 3,There have been no changes. Not persisting to disk.
+	debug 4,There have been no changes/misses. Not persisting to disk. ~!CacheStats,FileListMisses!~
 
