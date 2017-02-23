@@ -487,11 +487,16 @@ class Macro extends Module
 		}
 	}
 	
+	private function complainAboutDuplicates($shouldComplain=true)
+	{
+		$this->core->setRef('General', 'complainAboutDuplicateMacros', $shouldComplain);
+	}
+	
 	function loadSavedMacros($quiet=false)
 	{
 		$loadStart=microtime(true);
-		# TODO This is repeated below. It should be done once.
 		
+		$this->complainAboutDuplicates(!$quiet);
 		$fileList=$this->getFileList();
 		
 		# Pre-register all macros so that they can be nested without issue.
@@ -534,6 +539,8 @@ class Macro extends Module
 		$loadFinish=microtime(true);
 		$loadTime=$loadFinish-$loadStart;
 		$this->core->debug(4, "Loaded macros in $loadTime seconds. start=$loadStart fimish=$loadFinish");
+		
+		$this->complainAboutDuplicates(false);
 	}
 }
 

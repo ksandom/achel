@@ -2011,9 +2011,12 @@ class core extends Module
 			}
 			else
 			{
-				$existing=$this->get('Features', $flag);
-				$existingName=$existing['obj']->getName();
-				$this->complain($obj, "Feature $flag has already been registered by $existingName");
+				if ($this->get('General', 'complainAboutDuplicateMacros'))
+				{
+					$existing=$this->get('Features', $flag);
+					$existingName=$existing['obj']->getName();
+					$this->complain($obj, "Feature $flag has already been registered by $existingName");
+				}
 			}
 		}
 	}
@@ -2036,9 +2039,12 @@ class core extends Module
 			{}
 			else
 			{
-				$existing=$this->get('Features', $flag);
-				$existingName=$existing['obj']->getName();
-				$this->complain($this, "Feature $flag has already been registered by $existingName");
+				if ($this->get('General', 'complainAboutDuplicateMacros'))
+				{
+					$existing=$this->get('Features', $flag);
+					$existingName=$existing['obj']->getName();
+					$this->complain($this, "Feature $flag has already been registered by $existingName");
+				}
 			}
 			
 			if ($macroCacheEntry)
