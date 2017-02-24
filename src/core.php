@@ -786,14 +786,16 @@ class core extends Module
 					$value=$this->core->get('Global',"$lastMacro-$details");
 					# TODO This was false. Double check this change hasn't broken any assumptions.
 					$default=$value;
-					$this->debug(3,"parameters: Simple numeric. [$categoryForParameters][$scopeKey][$key] value=$value nesting=$nesting");
+					$this->debug(0,"parameters: Simple numeric. [$categoryForParameters][$scopeKey][$key] value=$value    key=$key nesting=$nesting globalKey=$lastMacro-$details json=".json_encode($args));
+					
+					# print_r($this->core->getCategoryModule('Global'));
 				}
 				else
 				{ // Basic name assignment
 					$key=$details;
 					$value=$this->core->get('Global',"$lastMacro-$position");
 					$default=$args[$details];
-					$this->debug(3,"parameters: Simple name. [$categoryForParameters][$scopeKey][$key] value=$value nesting=$nesting default=$default");
+					$this->debug(0,"parameters: Simple name. [$categoryForParameters][$scopeKey]  [$key] value=$value nesting=$nesting default=$default");
 				}
 				$this->store[$categoryForParameters][$scopeKey][$key]=($value!==false and $value!='')?$value:$default;
 				$this->debug(3, "   key=$key value=".$this->store[$categoryForParameters][$scopeKey][$key]);
@@ -1058,11 +1060,15 @@ class core extends Module
 		{
 			if ($originName=$this->get('FeatureAliases', $macroName))
 			{
+				$this->incrementNesting();
 				$this->callFeature('loadMacro', $originName);
+				$this->decrementNesting();
 			}
 			else
 			{
+				$this->incrementNesting();
 				$this->callFeature('loadMacro', $macroName);
+				$this->decrementNesting();
 			}
 			return true;
 		}
