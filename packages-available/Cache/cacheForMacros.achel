@@ -1,6 +1,5 @@
 # Cache everything needed to make macro startup time faster. This is something that you won't need to run often. Ideal times would be during development or installation. ~ cache
 
-persistCache
 saveStoreToCache Events
 saveStoreToCache MacroListCache
 saveStoreToCache Tags

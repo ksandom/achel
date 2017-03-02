@@ -8,3 +8,5 @@ if ~!CacheStats,FileListMisses!~,>,1,
 else
 	debug 4,There have been no changes/misses. Not persisting to disk. ~!CacheStats,FileListMisses!~
 
+if ~!CacheStats,MacroListCache!~,<,1,
+	cacheForMacros
