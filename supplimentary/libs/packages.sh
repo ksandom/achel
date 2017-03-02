@@ -127,6 +127,27 @@ function removeBareProfile
 	fi
 }
 
+function isValidProfile
+{
+	profileName="$1"
+	profilePath="`getProfilePath \"$profileName\"`"
+	
+	if [ -e "$profilePath/cache" ] &&
+		[ -e "$profilePath/modules" ] &&
+		[ -e "$profilePath/packages" ] &&
+		[ -e "$profilePath/templates" ]; then
+		
+		return 0
+	else
+		return 1
+	fi
+}
+
+function getProfilePath
+{
+	echo "$configDir/profiles/$1"
+}
+
 function enableEverythingForProfile
 {
 	name="$1"
