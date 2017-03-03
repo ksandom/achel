@@ -45,11 +45,11 @@ $core->set('General', 'exitCode', 0);
 if (file_exists($cacheDir))
 {
 	$core->loadCache($cacheDir);
+	$core->set('General', 'cache', 'true');
 }
 else
 {
 	$core->debug(0, "No cache found. A re-install may be required.");
-	$core->set('General', 'noCache', 'true');
 }
 
 include (configDir.'/interfaces/commandLine.php');

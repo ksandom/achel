@@ -1,7 +1,7 @@
 # Save the cache to disk. ~ cache,hidden
 #onDefine registerForEvent Achel,finishLate,persistCache
 
-if ~!General,noCache!~,!=,true,
+if ~!General,cache!~,==,true,
 	if ~!CacheStats,FileListMisses!~,>,1,
 		debug 4,There have been ~!CacheStats,FileListMisses!~ changes/misses. Persisting to disk.
 		set FileListCache,changed,false
@@ -12,4 +12,4 @@ if ~!General,noCache!~,!=,true,
 	if ~!CacheStats,MacroListCache!~,<,1,
 		cacheForMacros
 else
-	debug 1,No caching performed since General,noCache has been set to true.
+	debug 1,Caching does not appear to be active. A reinstall may be necessary.
