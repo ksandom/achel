@@ -1,7 +1,10 @@
 # Cache everything needed to make macro startup time faster. This is something that you won't need to run often. Ideal times would be during development or installation. ~ cache
 
-saveStoreToCache Events
-saveStoreToCache MacroListCache
-saveStoreToCache Tags
-saveStoreToCache FeatureAliases
-saveStoreToCache Features
+if ~!General,noCache!~,!=,true,
+	saveStoreToCache Events
+	saveStoreToCache MacroListCache
+	saveStoreToCache Tags
+	saveStoreToCache FeatureAliases
+	saveStoreToCache Features
+else
+	debug 1,No caching performed since General,noCache has been set to true.

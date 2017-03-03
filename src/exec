@@ -49,6 +49,7 @@ if (file_exists($cacheDir))
 else
 {
 	$core->debug(0, "No cache found. A re-install may be required.");
+	$core->set('General', 'noCache', 'true');
 }
 
 include (configDir.'/interfaces/commandLine.php');
