@@ -674,7 +674,7 @@ class core extends Module
 			}
 			
 			$numberOfArgs=$this->makeArgsAvailableToTheScript($obj['name'], $valueIn);
-			$result=$obj['obj']->event($obj['name']);
+			$result=$this->module[$obj['provider']]->event($obj['name']);
 			
 			if (isset($obj['featureType']))
 			{
@@ -1325,7 +1325,7 @@ class core extends Module
 				if (is_object($obj))
 				{
 					$this->complain($this, "hmmmm, I don't think you asked me to do anything...");
-					$obj['obj']->event('helpDefault');
+					$this->module[$obj['provider']]->event('helpDefault');
 					return $emptyResult;
 				}
 				else
@@ -1343,7 +1343,7 @@ class core extends Module
 			{
 				$this->complain($this, "Could not find macro '$macroName'. This can happen if you haven't asked me to do anything.");
 				
-				$obj['obj']->event('helpDefault');
+				$this->module[$obj['provider']]->event('helpDefault');
 			}
 			else
 			{
@@ -2007,7 +2007,7 @@ class core extends Module
 		$tagString=implode(',', $arrayTags);
 		
 		# TODO Remove the tag string from descriptoin once we have proper integration with help
-		$entry=array('obj'=>&$obj, 'flags'=>$flags, 'name'=>$name, 'description'=>$description, 'tagString'=>$tagString, 'provider'=>$obj->getName(), 'isMacro'=>$isMacro, 'source'=>$source, 'referenced'=>0);
+		$entry=array('flags'=>$flags, 'name'=>$name, 'description'=>$description, 'tagString'=>$tagString, 'provider'=>$obj->getName(), 'isMacro'=>$isMacro, 'source'=>$source, 'referenced'=>0);
 		
 		foreach ($flags as $flag)
 		{

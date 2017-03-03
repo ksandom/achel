@@ -4,3 +4,4 @@ saveStoreToCache Events
 saveStoreToCache MacroListCache
 saveStoreToCache Tags
 saveStoreToCache FeatureAliases
+saveStoreToCache Features
