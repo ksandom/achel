@@ -1,6 +1,12 @@
 # Expect a particular value. --expect=expectedValue,actualValue,comment,[authoritive] . If authoritive is true, this test will override previous results. Default is false. ~ unit,result
 parameters expectedValue,actualValue,comment,authoritive
 
+debug 0,expectGlobal: "~!Global,expect!~"
+
+debug 0,0-expected: "~!Local,expectedValue!~"
+debug 0,0-actual: "~!Local,actualValue!~"
+debug 0,0-comment: "~!Local,comment!~"
+
 if ~!Local,expectedValue!~,==,~!Local,actualValue!~,
 	if ~!UnitResults,currentResult!~,==,,
 		passTest Got expected result ("~!Local,actualValue!~"). ~!Local,comment!~
@@ -11,3 +17,6 @@ if ~!Local,expectedValue!~,==,~!Local,actualValue!~,
 			debug 1,Got expected result ("~!Local,actualValue!~"), but already set result. So not setting again.
 else
 	failTest Expected "~!Local,expectedValue!~" but got "~!Local,actualValue!~". ~!Local,comment!~
+	debug 0,1-expected: "~!Local,expectedValue!~"
+	debug 0,1-actual: "~!Local,actualValue!~"
+	debug 0,1-comment: "~!Local,comment!~"

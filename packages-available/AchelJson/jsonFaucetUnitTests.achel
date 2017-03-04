@@ -151,8 +151,12 @@ defineTest AchelJson - jsonToChannel,
 	achelJsonJsonToChannel
 	
 	stashResults Local,example
+	nested
+	outNow
 	
+	debug 0,### Test A
 	expect 1,~!Local,example,A!~
+	debug 0,### Test B
 
 defineTest AchelJson - channelToJson,
 	setNested Local,example,A,1
