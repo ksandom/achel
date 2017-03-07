@@ -421,11 +421,6 @@ class core extends Module
 			$cacheSize=count($cacheContents);
 			$this->setRef('CacheStats', $categoryName, $cacheSize);
 			$this->debug(4,"Loaded cache \"$categoryName\" ($cacheSize)");
-			
-			if ("$fileName" == 'Features.cache.json')
-			{
-				$this->set('General', 'complainAboutDuplicateMacros', false);
-			}
 		}
 	}
 	
