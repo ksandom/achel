@@ -18,6 +18,7 @@ requiredParms="$1"
 . `dirname $0`/libs/includeLibs.sh
 . $libDir/repoInstall.sh
 . $libDir/getRepo.sh
+. $libDir/cache.sh
 . $libDir/repoParms.sh
 . $libDir/packages.sh
 . $libDir/installLibs.sh

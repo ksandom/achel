@@ -136,6 +136,9 @@ function installRepo_setup
 				# TODO If there is no execName, see if the profileName matches an existing repo. If so flag that repo for reInstall
 			fi
 			
+			# clear cache
+			clearCache "$profileRefName"
+			
 			# Handel documentation
 			documentationAddProfile "$profileRefName"
 		else
