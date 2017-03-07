@@ -421,6 +421,11 @@ class core extends Module
 			$cacheSize=count($cacheContents);
 			$this->setRef('CacheStats', $categoryName, $cacheSize);
 			$this->debug(4,"Loaded cache \"$categoryName\" ($cacheSize)");
+			
+			if ("$fileName" == 'Features.cache.json')
+			{
+				$this->set('General', 'complainAboutDuplicateMacros', false);
+			}
 		}
 	}
 	
@@ -2045,11 +2050,10 @@ class core extends Module
 			{}
 			else
 			{
-				if ($this->get('General', 'complainAboutDuplicateMacros'))
+				if ($this->get('General', 'complainAboutDuplicateMacros')!==false)
 				{
 					$existing=$this->get('Features', $flag);
-					$existingName=$existing['obj']->getName();
-					$this->complain($this, "Feature $flag has already been registered by $existingName");
+					$this->complain($this, "Feature $flag has already been registered by {$existing['provider']}({$existing['source']})");
 				}
 			}
 			
