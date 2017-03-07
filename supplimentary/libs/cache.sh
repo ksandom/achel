@@ -5,7 +5,7 @@ function clearCache
 	profileName="$1"
 	
 	if isValidProfile "$profileName"; then
-		cd "`getProfilePath \"$profileName\"`/cache" && rm *
+		cd "`getProfilePath \"$profileName\"`/cache" && rm -f *
 	else
 		echo "Could not find profile \"$profileName\"" >&2
 		exit 1
