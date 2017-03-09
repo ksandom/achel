@@ -220,9 +220,8 @@ class core extends Module
 				return $this->getNested($parms);
 				break;
 			case 'setJson':
-				$parms=$this->interpretParms($this->get('Global', $event));
-				echo $this->get('Global', 'setJson')."\n";
-				$this->set($parms[0], $parms[1], json_decode($parms[2]));
+				$parms=$this->interpretParms($this->get('Global', $event), 2, 2, true);
+				$this->set($parms[0], $parms[1], json_decode($parms[2], 1));
 				break;
 			case 'dump':
 				return $this->dumpState();
