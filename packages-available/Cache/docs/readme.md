@@ -12,6 +12,7 @@ It's enabled by default at install/re-install time.
 ```
 cd ~/.achel/repos/achel
 ./install.sh
+manageAchel repoReinstall
 ```
 
 Developers may not want it enabled at all, see "Turning cache off" below.
