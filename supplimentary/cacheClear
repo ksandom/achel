@@ -1,13 +1,13 @@
 #!/bin/bash
 # Description
-#   Build cache for an Achel application.
+#   Clear cache for an Achel application.
 #
 # Syntax:
 #   $0 profileName
-#     profileName is the name of the profile to remove the cache from.
+#     profileName is the name of the profile to clear the cache from.
 #
 # Examples:
-#   Builds the cache for the doneIt application
+#   clears the cache for the doneIt application
 #     $0 doneIt
 
 requiredParms="$1"

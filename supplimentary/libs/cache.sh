@@ -11,3 +11,14 @@ function clearCache
 		exit 1
 	fi
 }
+
+function turnCacheOn
+{
+	achel --unset=Settings,disableCache --saveStoreToConfig=Settings
+}
+
+function turnCacheOff
+{
+	# TODO Clear cache for every profile.
+	achel --set=Settings,disableCache,true --saveStoreToConfig=Settings
+}
