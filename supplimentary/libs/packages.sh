@@ -145,7 +145,12 @@ function isValidProfile
 
 function getProfilePath
 {
-	echo "$configDir/profiles/$1"
+	echo "`getProfileHomePath`/$1"
+}
+
+function getProfileHomePath
+{
+    echo "$configDir/profiles"
 }
 
 function enableEverythingForProfile

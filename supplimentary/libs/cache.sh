@@ -12,6 +12,11 @@ function clearCache
 	fi
 }
 
+function clearAllCache
+{
+	rm `getProfileHomePath`/*/cache/*
+}
+
 function turnCacheOn
 {
 	achel --unset=Settings,disableCache --saveStoreToConfig=Settings
@@ -19,6 +24,6 @@ function turnCacheOn
 
 function turnCacheOff
 {
-	# TODO Clear cache for every profile.
+	clearAllCache
 	achel --set=Settings,disableCache,true --saveStoreToConfig=Settings
 }
