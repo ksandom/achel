@@ -3,12 +3,12 @@
 #   Create a bug report that can be filed with the appropriate repo. Eg https://github.com/ksandom/achel/issues
 #
 # Syntax:
-#   $0 profileName
-#     profileName is the name of the profile to clear the cache from.
+#   $0 appName
+#     appName is the name of the application you want to create the bug report for.
 #
 # Examples:
 #   Creates a bug report for the doneIt app.
-#     $0 doneIt
+#     $0 doneit
 
 requiredParms="$1"
 . `dirname $0`/libs/includeLibs.sh
@@ -16,6 +16,6 @@ requiredParms="$1"
 . $libDir/packages.sh
 
 
-profileName="$1"
+appName="${1:-achel}"
 
-creatBugReport "$profileName"
+creatBugReport "$appName"
