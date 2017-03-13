@@ -44,14 +44,7 @@ Context: System wide.
 The normal use-case is now with cache enabled. Therefore there are two reasons for turning on cache
 
 * You are a developer rapidly adding/removing features to/from an app.
-* You have a cache-specific bug that you have reported as described in "Raising a bug" below.
-
-### Raising a bug
-
-* Please go [here](https://github.com/ksandom/achel/issues) and check to see if someone else has reported your issue. 
-* If they haven't, please create an issue with the following information
- * Which tag/branch/git commit are you using?
- * 
+* You have a cache-specific bug that you have reported as described in the [Reporting bugs](https://github.com/ksandom/achel/blob/master/docs/reportingBugs.md) section.
 
 ## How it works
 
@@ -65,3 +58,11 @@ The normal use-case is now with cache enabled. Therefore there are two reasons f
 * If there are additions to the FileListCache, it will be persisted to disk now.
 
 ## What is cached
+
+* CacheUnitTest.cache.json - This is the result of a unit test. It will be cleaned up in a future version. You can safely ignore it.
+* Events.cache.json - Registrations for events (eg using --registerForEvent). This is one less reason Features need to be processed at startup.
+* Features.cache.json - A catalog of all features and where to load them from when needed.
+* FeatureAliases.cache.json - This is almost obsolete due to Features.cache.json. It will be removed in a future version.
+* FileListCache.cache.json - Every time a file list is requested, and achel doesn't already know about it, it's added here. This is a massive performance boost, but comes at the cost of not detecting new or removed Features/Macros. If you are developing new features, `manageAchel cacheClear` will be your friend.
+* MacroListCache.cache.json - This is almost obsolete due to Features.cache.json. It will be removed in a future version.
+* Tags.cache.json - A list of tags and what features they match against.
