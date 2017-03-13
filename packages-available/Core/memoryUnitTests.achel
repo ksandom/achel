@@ -210,3 +210,12 @@ defineTest massSet,
 	expect 2,~!Test,massSet,v,w,x,y,z,b!~
 	expect 1,~!Test,massSet,v,w,x,y,z,a!~
 	unset Test,massSet
+
+
+defineTest getCategory,
+	getCategory Settings
+	unsetCategory UnitTestResult001
+	stashResults UnitTestResult001,result
+	
+	expectNot ,~!UnitTestResult001,result,timestampFormat!~
+	unsetCategory UnitTestResult001
