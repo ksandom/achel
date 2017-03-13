@@ -15,7 +15,7 @@ function creatBugReport
 	
 	possibleRepoPath=`$commandName --set='Local,possibleRepoPath,~!General,configDir!~/repos/~!General,programName!~' --get=Local,possibleRepoPath -s`
 	
-	echo;echo "Recent git items"
+	echo;echo "Recent git items"; echo
 	if [ -e "$possibleRepoPath" ]; then
 		cd "$possibleRepoPath"
 		git log -n 5 --pretty=oneline

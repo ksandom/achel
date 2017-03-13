@@ -10,7 +10,7 @@
 #   Creates a bug report for the doneIt app.
 #     $0 doneit
 
-requiredParms="$1"
+requiredParms="$0"
 . `dirname $0`/libs/includeLibs.sh
 . $libDir/bug.sh
 . $libDir/packages.sh
