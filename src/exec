@@ -49,6 +49,8 @@ if (file_exists($cacheDir))
 }
 else
 {
+	$core->set('General', 'cache', 'false');
+	$core->set('General', 'noCacheReason', 'Could not find '.$cacheDir.'.');
 	$core->debug(0, "No cache found. A re-install may be required.");
 }
 
