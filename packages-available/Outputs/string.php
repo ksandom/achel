@@ -68,6 +68,7 @@ class AchelString extends Module
 	
 	function singleStringNow($filename, $output, $separator="\n", $endChar="\n")
 	{
+		print_r($output);
 		$readyValue=(is_array($output))?implode($separator, $output).$endChar:$output;
 		if ($filename) 
 		{
