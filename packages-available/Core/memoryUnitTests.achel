@@ -219,3 +219,9 @@ defineTest getCategory,
 	
 	expectNot ,~!UnitTestResult001,result,timestampFormat!~
 	unsetCategory UnitTestResult001
+
+pass defineTest Unexpected array,
+	set Local,possibleRepoPath,~!General,configDir!~/repos/~!General,programName!~
+	get Local,possibleRepoPath
+	singleString
+	
