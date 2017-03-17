@@ -4,11 +4,11 @@
 if ~!Settings,disableCache!~,!=,true,
 	if ~!General,cache!~,==,true,
 		if ~!CacheStats,FileListMisses!~,>,1,
-			debug 4,There have been ~!CacheStats,FileListMisses!~ changes/misses. Persisting to disk.
+			debug 1,There have been ~!CacheStats,FileListMisses!~ changes/misses. Persisting to disk.
 			set FileListCache,changed,false
 			saveStoreToCache FileListCache
 		else
-			debug 4,There have been no changes/misses. Not persisting to disk. ~!CacheStats,FileListMisses!~
+			debug 1,There have been no changes/misses. Not persisting to disk. ~!CacheStats,FileListMisses!~
 
 		if ~!CacheStats,MacroListCache!~,<,1,
 			cacheForMacros
