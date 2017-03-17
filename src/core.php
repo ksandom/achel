@@ -143,7 +143,9 @@ class core extends Module
 				break;
 			case 'get':
 				$parms=$this->interpretParms($this->get('Global', $event));
-				return array($this->get($parms[0], $parms[1]));
+				$value=array($this->get($parms[0], $parms[1]));
+				print_r($value);
+				return $value;
 				break;
 			case 'getNested':
 				$parms=$this->interpretParms($this->get('Global', $event));
@@ -430,11 +432,15 @@ class core extends Module
 	
 	function getFileList($path)
 	{
-		if (!$contents = $this->get('FileListCache', $path))
+		$index=md5($path);
+		$contents = $this->get('FileListCache', $index);
+		if (count($contents)<1)
 		{
+			print_r($contents);
+			$this->debug(0,"getFileList path=$path index=$index");
 			$listCache=array_keys($this->getCategoryModule('FileListCache'));
 			$contents = $this->doGetFileList($path);
-			$this->set('FileListCache', $path, $contents);
+			$this->set('FileListCache', $index, $contents);
 			$misses=$this->get('CacheStats', 'FileListMisses')+1;
 			$this->set('CacheStats', 'FileListMisses', $misses);
 			$this->set('CacheStats', 'FileListChanged', 'true');
