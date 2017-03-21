@@ -131,7 +131,8 @@ class Faucets extends Module
 				break;
 			case 'createThroughFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'through', new ThroughFaucet());
+				$throughFaucet=new ThroughFaucet();
+				$this->environment->currentFaucet->createFaucet($parms[0], 'through', $throughFaucet);
 				break;
 			case 'create2WayThroughFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
@@ -139,7 +140,8 @@ class Faucets extends Module
 				break;
 			case 'createNullFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'null', new NullFaucet());
+				$nullFaucet=new NullFaucet();
+				$this->environment->currentFaucet->createFaucet($parms[0], 'null', $nullFaucet);
 				break;
 			case 'createRawMetaFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);

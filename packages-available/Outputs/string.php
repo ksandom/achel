@@ -23,6 +23,7 @@ class AchelString extends Module
 				$this->core->registerFeature($this, array('singleStringNow'), 'singleStringNow', 'Send returned output as a string. Each entry will be separated by a new line. --singleStringNow[=filename] . If filename is omitted, stdout will be used instead.', array('string'));
 				$this->core->registerFeature($this, array('getSingleString'), 'getSingleString', 'Return a single string containing all the results.', array('string'));
 				$this->core->registerFeature($this, array('getSingleStringUsingSeparator'), 'getSingleStringUsingSeparator', 'Return a single string containing all the results with a custom separator --getSingleStringUsingSeparator=separator .', array('string'));
+				$this->core->registerFeature($this, array('getSingleStringUsingSeparatorNoNL'), 'getSingleStringUsingSeparatorNoNL', 'Return a single string containing all the results with a custom separator, without an extra new line appended at the end. --getSingleStringUsingSeparatorNoNL=separator .', array('string'));
 				break;
 			case 'followup':
 				break;
@@ -44,6 +45,8 @@ class AchelString extends Module
 				break;
 			case 'getSingleStringUsingSeparator':
 				return $this->singleStringNow(false, $this->core->getResultSet(), $this->core->get('Global', $event));
+			case 'getSingleStringUsingSeparatorNoNL':
+				return $this->singleStringNow(false, $this->core->getResultSet(), $this->core->get('Global', $event), '');
 				break;
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
@@ -63,9 +66,9 @@ class AchelString extends Module
 		$this->core->setRef('General', 'outputObject', $this);
 	}
 	
-	function singleStringNow($filename, $output, $separator="\n")
+	function singleStringNow($filename, $output, $separator="\n", $endChar="\n")
 	{
-		$readyValue=(is_array($output))?implode($separator, $output)."\n":$output;
+		$readyValue=(is_array($output))?implode($separator, $output).$endChar:$output;
 		if ($filename) 
 		{
 			$this->core->debug(3, "singleStringNow: Sending to $filename");

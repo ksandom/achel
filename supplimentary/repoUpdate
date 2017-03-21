@@ -27,6 +27,7 @@ requiredParms="$0"
 # Stuff for repo management
 . $libDir/repoInstall.sh
 . $libDir/getRepo.sh
+. $libDir/cache.sh
 . $libDir/repoParms.sh
 . $libDir/packages.sh
 . $libDir/installLibs.sh

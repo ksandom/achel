@@ -1,0 +1,6 @@
+# Install the file cache config so that it loads on startup. ~ cache,hidden
+#onDefine registerForEvent Install,general,installFileCache
+
+initialiseFileListCache
+turnFileCache on
+persistCache

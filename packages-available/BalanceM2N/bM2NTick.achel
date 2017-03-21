@@ -12,7 +12,7 @@ loop
 	# ~!BalanceM2N,current,ruleSet!~
 	# ~!BalanceM2N,current,instanceName!~
 	
-	set ["Tmp","rules",~!BalanceM2N,rules,~!BalanceM2N,current,ruleSet!~,~!BalanceM2N,current,state!~!~]
+	setJson ["Tmp","rules",~!BalanceM2N,rules,~!BalanceM2N,current,ruleSet!~,~!BalanceM2N,current,state!~!~]
 	isolate
 		retrieveResults Tmp,rules
 		loop
@@ -21,7 +21,7 @@ loop
 			
 			debug 1,bM2NTick: Trying to process instanceName="~!BalanceM2N,current,instanceName!~" ruleSet="~!BalanceM2N,current,ruleSet!~" state="~!BalanceM2N,current,state!~" rule="~!BalanceM2N,current,rule!~"
 			
-			set ["Tmp","inputs",~!BalanceM2N,rules,~!BalanceM2N,current,ruleSet!~,~!BalanceM2N,current,state!~,~!BalanceM2N,current,rule!~,inputs!~]
+			setJson ["Tmp","inputs",~!BalanceM2N,rules,~!BalanceM2N,current,ruleSet!~,~!BalanceM2N,current,state!~,~!BalanceM2N,current,rule!~,inputs!~]
 			isolate
 				retrieveResults Tmp,inputs
 				loop
@@ -33,7 +33,7 @@ loop
 				callFeature ~!BalanceM2N,rules,~!BalanceM2N,current,ruleSet!~,~!BalanceM2N,current,state!~,~!BalanceM2N,current,rule!~,process!~
 			
 			# output
-			set ["Tmp","outputs",~!BalanceM2N,rules,~!BalanceM2N,current,ruleSet!~,~!BalanceM2N,current,state!~,~!BalanceM2N,current,rule!~,outputs!~]
+			setJson ["Tmp","outputs",~!BalanceM2N,rules,~!BalanceM2N,current,ruleSet!~,~!BalanceM2N,current,state!~,~!BalanceM2N,current,rule!~,outputs!~]
 			isolate
 				retrieveResults Tmp,outputs
 				loop

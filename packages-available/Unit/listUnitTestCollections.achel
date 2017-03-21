@@ -1,6 +1,4 @@
 # List out the unitTests ~ unit
 #onLoaded setFeatureType listUnitTestCollections,generateUnitTestCollections
 
-searchFeatures unitTest
-requireItem tagString,unitTest
-excludeItem name,--
+getFeaturesForTag unitTest

@@ -140,7 +140,11 @@ class Data extends Module
 		if (!$storeName) $storeName=$filenameParts[0];
 		
 		$stuffToSave=($variableName)?$this->core->get($storeName,$variableName):$this->core->getCategoryModule($storeName);
-		file_put_contents($fileName, json_encode($stuffToSave));
+		
+		if (!file_put_contents($fileName, json_encode($stuffToSave)))
+		{
+			$this->core->debug(0, "Was unable to save $fileName. Two common causes are permissions and the destination directory not existing. If you previously got a message \"No cache found. A re-install may be required.\" in this output, please re-install.");
+		}
 	}
 	
 	function loadStoreEntryFromName($storeName, $source='config')

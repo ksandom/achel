@@ -30,11 +30,13 @@ class LogicFaucets extends Faucets
 				break;
 			case 'createAtLeastFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'regex', new AtLeast($parms[1]));
+				$atLeast=new AtLeast($parms[1]);
+				$this->environment->currentFaucet->createFaucet($parms[0], 'regex', $atLeast);
 				break;
 			case 'createAtLeastAndAddFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 4, 4);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'regex', new AtLeast($parms[1], $parms[2], $parms[3]));
+				$atLeast=new AtLeast($parms[1], $parms[2], $parms[3]);
+				$this->environment->currentFaucet->createFaucet($parms[0], 'regex', $atLeast);
 				break;
 			
 			default:

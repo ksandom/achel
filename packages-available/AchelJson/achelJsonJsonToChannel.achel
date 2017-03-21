@@ -1,10 +1,6 @@
 # AchelJson. Takes json in the default channel, and puts its contents into the appropriate channels. ~ hidden,achel,json,worker
 
 stashResults Local,jsonChannels
-set ["Local","interpreted",~!Local,jsonChannels,default!~]
+setJson ["Local","interpreted",~!Local,jsonChannels,default!~]
 
 retrieveResults Local,interpreted
-
-# nested
-# outNow
-

@@ -6,5 +6,5 @@ retrieveResults Core,stack
 basicMaths Local,nesting,~!Core,nesting!~,-,~!Local,nestingOffset!~
 basicMaths Local,nesting,~!Local,nesting!~,-,2
 
-set ["~!Local,Category!~","~!Local,variable!~",~!Core,stack,~!Local,nesting!~!~]
+setJson ["~!Local,Category!~","~!Local,variable!~",~!Core,stack,~!Local,nesting!~!~]
 makeLocalAvailable ~!Local,variable!~

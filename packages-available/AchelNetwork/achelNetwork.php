@@ -212,7 +212,7 @@ class SocketServerFaucet extends ThroughBasedFaucet
 		{
 			if (!is_numeric($this->socket))
 			{
-				socket_close($this->socket);
+				@socket_close($this->socket);
 			}
 		}
 		$this->socket=null;

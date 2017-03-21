@@ -143,14 +143,15 @@ class core extends Module
 				break;
 			case 'get':
 				$parms=$this->interpretParms($this->get('Global', $event));
-				return array($this->get($parms[0], $parms[1]));
+				$value=array($this->get($parms[0], $parms[1]));
+				return $value;
 				break;
 			case 'getNested':
 				$parms=$this->interpretParms($this->get('Global', $event));
 				return array($this->getNested($parms));
 				break;
 			case 'set':
-				$parms=$this->interpretParms($this->get('Global', $event), 3, 2, true);
+				$parms=$this->interpretParms($this->get('Global', $event), 2, 2, true);
 				$this->set($parms[0], $parms[1], $parms[2]);
 				break;
 			case 'makeMeAvailable':
@@ -220,9 +221,8 @@ class core extends Module
 				return $this->getNested($parms);
 				break;
 			case 'setJson':
-				$parms=$this->interpretParms($this->get('Global', $event));
-				echo $this->get('Global', 'setJson')."\n";
-				$this->set($parms[0], $parms[1], json_decode($parms[2]));
+				$parms=$this->interpretParms($this->get('Global', $event), 2, 2, true);
+				$this->set($parms[0], $parms[1], json_decode($parms[2], 1));
 				break;
 			case 'dump':
 				return $this->dumpState();
@@ -407,7 +407,49 @@ class core extends Module
 		else return $parts;
 	}
 	
+	function loadCache($path)
+	{
+		$fileList=$this->getFileList($path);
+		
+		foreach ($fileList as $fileName=>$filePath)
+		{
+			$nameParts=explode('.', $fileName);
+			$categoryName=$nameParts[0];
+			$cacheContents=json_decode(file_get_contents($filePath), 1);
+			$this->setCategoryModule($categoryName, $cacheContents);
+			
+			$cacheSize=count($cacheContents);
+			$this->setRef('CacheStats', $categoryName, $cacheSize);
+			$this->debug(4,"Loaded cache \"$categoryName\" ($cacheSize)");
+			
+			if ("$fileName" == 'Features.cache.json')
+			{
+				$this->set('General', 'complainAboutDuplicateMacros', false);
+			}
+		}
+	}
+	
 	function getFileList($path)
+	{
+		$index=md5($path);
+		$contents = $this->get('FileListCache', $index);
+		if (count($contents)<1)
+		{
+			$listCache=array_keys($this->getCategoryModule('FileListCache'));
+			$contents = $this->doGetFileList($path);
+			$this->set('FileListCache', $index, $contents);
+			$misses=$this->get('CacheStats', 'FileListMisses')+1;
+			$this->set('CacheStats', 'FileListMisses', $misses);
+			$this->set('CacheStats', 'FileListChanged', 'true');
+		}
+		else
+		{
+			$this->set('CacheStats', 'FileListHits', $this->get('CacheStats', 'FileListHitsHits')+1);
+		}
+		return $contents;
+	}
+	
+	function doGetFileList($path)
 	{
 		# TODO This can be done much better internally in PHP
 		if (is_file($path))
@@ -431,6 +473,28 @@ class core extends Module
 			else return false;
 		}
 		return $output;
+	}
+	
+	function getFileList2($path, $withAttributes=false)
+	{
+		@$result=scandir($path, SCANDIR_SORT_ASCENDING);
+		
+		$prePendPath=($path=='/')?'/':$path.'/';
+		
+		if ($result)
+		{
+			$output=array();
+			foreach ($result as $file)
+			{
+				if ($file != '.' and $file != '..')
+				{
+					$output[$file]=$prePendPath.$file;
+				}
+			}
+			
+			return $output;
+		}
+		else return array();
 	}
 	
 	function getFileTree($path, $withAttributes=false)
@@ -591,66 +655,69 @@ class core extends Module
 	{
 		$nesting=$this->get('Core', 'nesting');
 		
-		if ($argument and $argument != '#' and $argument != '//')
+		if (is_string($argument) and $argument and $argument != '#' and $argument != '//')
 		{ // Only process non-white space
 			$obj=&$this->core->get('Features', $argument);
-			if (is_array($obj))
+			
+			if (!is_array($obj))
 			{
-				# NOTE This has been done this way for performance. However it may be worth abstracting it out into setNestedViaPath.
-				$this->store[isolatedNestedPrivateVarsName][$nesting]['featureName']=$argument;
-				
-				$indentation=str_repeat('  ', $nesting);
-				$valueIn=$this->processValue($value);
-				
-				$this->debug(4, "INVOKE-Enter {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn");
-				
-				$this->setStackEntry($nesting, $argument, $valueIn);
-				
-				if ($this->isVerboseEnough(5))
-				{
-					$this->debugResultSet($obj['name']);
-				}
-				
-				$numberOfArgs=$this->makeArgsAvailableToTheScript($obj['name'], $valueIn);
-				$result=$obj['obj']->event($obj['name']);
-				
-				if (isset($obj['featureType']))
-				{
-					$this->core->debug(4, "callFeature: ".$obj['featureType']);
-					if ($outDataType=$this->getNested(array('Semantics', 'featureTypes', $obj['featureType'], 'outDataType')))
-					{
-						if ($dataType=$this->getNested(array('Semantics', 'dataTypes', $outDataType)))
-						{
-							$semanticsTemplate=$this->get('Settings', 'semanticsTemplate');
-							$this->core->debug(4, "callFeature: Applying --{$dataType['action']}={$dataType[$semanticsTemplate]}");
-							$this->callFeature($dataType['action'], $dataType[$semanticsTemplate]);
-							$dataType['chosenTemplate']=$dataType[$semanticsTemplate];
-							$this->set('SemanticsState', 'currentDataType', $dataType);
-							$this->set('SemanticsState', 'currentFeatureType', $obj['featureType']);
-						}
-						else $this->core->debug(4, "callFeature: Could not find dataType $outDataType");
-					}
-					else $this->core->debug(4, "callFeature: Could not find featureType ".$obj['featureType']);
-				}
-				
-				if (cleanupArgs)
-				{
-					$this->removeArgs($obj['name'], $numberOfArgs);
-				}
-				
-				$this->unsetStackEntry($nesting);
-				
-				if ($this->isVerboseEnough(4))
-				{
-					$resultCount=count($result);
-					$nesting=$this->get('Core', 'nesting');
-					$isArray=is_array($result)?'True':'False';;
-					$this->debug(4, "INVOKE-Exit  {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn resultCount=$resultCount is_array=$isArray smCount=".$this->getResultSetCount());
-					# $this->debugResultSet($obj['name']);
-				}
-				return $result;
+				if (!$this->assertAvailableMacro($argument, 'callFeature')) return false;
+				$obj=&$this->core->get('Features', $argument);
 			}
-			else $this->complain(null, "Could not find a module to match '$argument'", 'callFeature');
+			
+			# NOTE This has been done this way for performance. However it may be worth abstracting it out into setNestedViaPath.
+			$this->store[isolatedNestedPrivateVarsName][$nesting]['featureName']=$argument;
+			
+			$indentation=str_repeat('  ', $nesting);
+			$valueIn=$this->processValue($value);
+			
+			$this->debug(4, "INVOKE-Enter {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn");
+			
+			$this->setStackEntry($nesting, $argument, $valueIn);
+			
+			if ($this->isVerboseEnough(5))
+			{
+				$this->debugResultSet($obj['name']);
+			}
+			
+			$numberOfArgs=$this->makeArgsAvailableToTheScript($obj['name'], $valueIn);
+			$result=$this->module[$obj['provider']]->event($obj['name']);
+			
+			if (isset($obj['featureType']))
+			{
+				$this->core->debug(4, "callFeature: ".$obj['featureType']);
+				if ($outDataType=$this->getNested(array('Semantics', 'featureTypes', $obj['featureType'], 'outDataType')))
+				{
+					if ($dataType=$this->getNested(array('Semantics', 'dataTypes', $outDataType)))
+					{
+						$semanticsTemplate=$this->get('Settings', 'semanticsTemplate');
+						$this->core->debug(4, "callFeature: Applying --{$dataType['action']}={$dataType[$semanticsTemplate]}");
+						$this->callFeature($dataType['action'], $dataType[$semanticsTemplate]);
+						$dataType['chosenTemplate']=$dataType[$semanticsTemplate];
+						$this->set('SemanticsState', 'currentDataType', $dataType);
+						$this->set('SemanticsState', 'currentFeatureType', $obj['featureType']);
+					}
+					else $this->core->debug(4, "callFeature: Could not find dataType $outDataType");
+				}
+				else $this->core->debug(4, "callFeature: Could not find featureType ".$obj['featureType']);
+			}
+			
+			if (cleanupArgs)
+			{
+				$this->removeArgs($obj['name'], $numberOfArgs);
+			}
+			
+			$this->unsetStackEntry($nesting);
+			
+			if ($this->isVerboseEnough(4))
+			{
+				$resultCount=count($result);
+				$nesting=$this->get('Core', 'nesting');
+				$isArray=is_array($result)?'True':'False';;
+				$this->debug(4, "INVOKE-Exit  {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn resultCount=$resultCount is_array=$isArray smCount=".$this->getResultSetCount());
+				# $this->debugResultSet($obj['name']);
+			}
+			return $result;
 		}
 		else $this->debug(3,"Core->callFeature: Non executable code \"$argument\" sent. We shouldn't have got this.");
 		return false;
@@ -726,14 +793,16 @@ class core extends Module
 					$value=$this->core->get('Global',"$lastMacro-$details");
 					# TODO This was false. Double check this change hasn't broken any assumptions.
 					$default=$value;
-					$this->debug(3,"parameters: Simple numeric. [$categoryForParameters][$scopeKey][$key] value=$value nesting=$nesting");
+					$this->debug(4,"parameters: Simple numeric. [$categoryForParameters][$scopeKey][$key] value=$value    key=$key nesting=$nesting globalKey=$lastMacro-$details");
+					
+					# print_r($this->core->getCategoryModule('Global'));
 				}
 				else
 				{ // Basic name assignment
 					$key=$details;
 					$value=$this->core->get('Global',"$lastMacro-$position");
 					$default=$args[$details];
-					$this->debug(3,"parameters: Simple name. [$categoryForParameters][$scopeKey][$key] value=$value nesting=$nesting default=$default");
+					$this->debug(4,"parameters: Simple name. [$categoryForParameters][$scopeKey]  [$key] value=$value nesting=$nesting default=$default");
 				}
 				$this->store[$categoryForParameters][$scopeKey][$key]=($value!==false and $value!='')?$value:$default;
 				$this->debug(3, "   key=$key value=".$this->store[$categoryForParameters][$scopeKey][$key]);
@@ -992,28 +1061,70 @@ class core extends Module
 		return $output;
 	}
 	
-	function addAction($argument, $value=null, $macroName='default', $lineNumber=false)
+	function assertAvailableMacro($macroName, $context, $lineNumber=false)
 	{
-		if (!isset($this->store['Macros'])) $this->store['Macros']=array();
-		if (!isset($this->store['Macros'][$macroName])) $this->store['Macros'][$macroName]=array();
-		
-		$obj=&$this->core->get('Features', $argument);
-		if (is_array($obj))
+		if ($macroPath=$this->get('MacroListCache', $macroName))
 		{
-			$this->store['Macros'][$macroName][]=array('obj'=>&$obj, 'name'=>$obj['name'], 'value'=>$value, 'lineNumber'=>$lineNumber);
-			$this->store['Features'][$argument]['referenced']++;
+			if ($originName=$this->get('FeatureAliases', $macroName))
+			{
+				$this->incrementNesting();
+				$this->callFeature('loadMacro', $originName);
+				$this->decrementNesting();
+			}
+			else
+			{
+				$this->incrementNesting();
+				$this->callFeature('loadMacro', $macroName);
+				$this->decrementNesting();
+			}
+			return true;
 		}
 		else
 		{
 			$macroDetails=($lineNumber)?"$macroName:$lineNumber":"$macroName";
-			$this->complain(null, "Could not find a module to match '$argument' in $macroDetails", 'addAction');
+			$this->complain(null, "Could not find a module to match '$macroName' in $macroDetails", $context.'/assertAvailableMacro');
+			
+			return false;
 		}
+	}
+	
+	function addAction($argument, $value=null, $macroName='default', $lineNumber=false)
+	{
+		$this->debug(4, "addAction: Adding $argument,$value to $macroName");
+		
+		if (!$argument) return false;
+		
+		if (!isset($this->store['Macros'])) $this->store['Macros']=array();
+		if (!isset($this->store['Macros'][$macroName])) $this->store['Macros'][$macroName]=array();
+		
+		$obj=&$this->core->get('Features', $argument);
+		if (!is_array($obj))
+		{
+			if (!$this->assertAvailableMacro($argument, 'addAction', $lineNumber)) return false;
+			$obj=&$this->core->get('Features', $argument);
+			
+			if (!is_array($obj))
+			{
+				$this->complain($this, "Failed to assert macro $argument.", 'addAction');
+				return false;
+			}
+		}
+		
+		$this->store['Macros'][$macroName][]=array('obj'=>&$obj, 'name'=>$obj['name'], 'value'=>$value, 'lineNumber'=>$lineNumber);
+		if (!isset($this->store['Features'][$argument]['referenced'])) $this->store['Features'][$argument]['referenced']=0;
+		$this->store['Features'][$argument]['referenced']++;
 
 	}
 	
 	function getRealFeatureName($featureName)
 	{
 		$feature=$this->core->get('Features', $featureName);
+		if (!$feature)
+		{
+			$this->assertAvailableMacro($featureName, 'getRealFeatureName');
+			$feature=$this->core->get('Features', $featureName);
+		}
+		
 		return $feature['name'];
 	}
 	
@@ -1142,6 +1253,12 @@ class core extends Module
 	function &go($macroName='default')
 	{
 		$emptyResult=null;
+		
+		if (!isset($this->store['Macros'][$macroName]))
+		{
+			$this->assertAvailableMacro($macroName, 'go');
+		}
+		
 		if (isset($this->store['Macros'][$macroName]))
 		{
 			if (count($this->store['Macros'][$macroName]))
@@ -1211,19 +1328,51 @@ class core extends Module
 			}
 			else
 			{
-				$this->complain($this, "hmmmm, I don't think you asked me to do anything...");
 				$obj=&$this->get('Features', 'helpDefault');
-				$obj['obj']->event('helpDefault');
-				return $emptyResult;
+				if (is_object($obj))
+				{
+					$this->complain($this, "hmmmm, I don't think you asked me to do anything...");
+					$this->module[$obj['provider']]->event('helpDefault');
+					return $emptyResult;
+				}
+				else
+				{
+					$this->complain($this, "hmmmm, I don't think you asked me to do anything... But I'm also unable to load help. Alllllll BYYYY MY selllllllf...");
+					return $emptyResult;
+				}
 			}
 		}
 		else
 		{
-			$this->complain($this, "Could not find macro '$macroName'. This can happen if you haven't asked me to do anything.");
+			$obj=&$this->getFeature('helpDefault', 'go');
 			
-			$obj=&$this->get('Features', 'helpDefault');
-			$obj['obj']->event('helpDefault');
+			if ($obj)
+			{
+				$this->complain($this, "Could not find macro '$macroName'. This can happen if you haven't asked me to do anything.");
+				
+				$this->module[$obj['provider']]->event('helpDefault');
+			}
+			else
+			{
+				$this->complain($this, "Could not find macro '$macroName' and couldn't find helpDefault. This generally begins if you haven't asked me to do anything, but to not find either suggests something is wrong with the cache. Clearing it may help.");
+			}
 			return $emptyResult;
+		}
+	}
+	
+	function &getFeature($featureName, $context='na/getFeature')
+	{
+		# To be used in more generic situations than assertAvailableMacro which is only for macros.
+		$obj=&$this->get('Features', 'helpDefault');
+		if ($obj) return $obj;
+		else
+		{
+			if ($this->assertAvailableMacro($featureName, $context.'/getFeature'))
+			{
+				$obj=&$this->get('Features', 'helpDefault');
+				return $obj;
+			}
+			else return false;
 		}
 	}
 	
@@ -1466,7 +1615,7 @@ class core extends Module
 
 	function setRef($category, $valueName, &$args, $nestingOffset=0)
 	{ // set a variable for a module
-		$argString=(is_string($args))?$argString:'[non-string]';
+		$argString=(is_string($args))?$args:'[non-string]';
 		$this->debug(5,"setRef($category, $valueName, $argString)");
 		if (!isset($this->store[$category])) $this->store[$category]=array();
 		
@@ -1830,6 +1979,7 @@ class core extends Module
 		
 		$this->module[$name]=&$obj;
 		$this->module[$name]->setCore($this);
+		$this->setNestedViaPath("Modules,$name,path", $this->get('Modules', 'currentModulePath'));
 		return true;
 	}
 	
@@ -1864,7 +2014,7 @@ class core extends Module
 		$tagString=implode(',', $arrayTags);
 		
 		# TODO Remove the tag string from descriptoin once we have proper integration with help
-		$entry=array('obj'=>&$obj, 'flags'=>$flags, 'name'=>$name, 'description'=>$description, 'tagString'=>$tagString, 'provider'=>$obj->getName(), 'isMacro'=>$isMacro, 'source'=>$source, 'referenced'=>0);
+		$entry=array('flags'=>$flags, 'name'=>$name, 'description'=>$description, 'tagString'=>$tagString, 'provider'=>$obj->getName(), 'isMacro'=>$isMacro, 'source'=>$source, 'referenced'=>0);
 		
 		foreach ($flags as $flag)
 		{
@@ -1874,9 +2024,12 @@ class core extends Module
 			}
 			else
 			{
-				$existing=$this->get('Features', $flag);
-				$existingName=$existing['obj']->getName();
-				$this->complain($obj, "Feature $flag has already been registered by $existingName");
+				if ($this->get('General', 'complainAboutDuplicateMacros'))
+				{
+					$existing=$this->get('Features', $flag);
+					$existingName=$existing['obj']->getName();
+					$this->complain($obj, "Feature $flag has already been registered by $existingName");
+				}
 			}
 		}
 	}
@@ -1884,6 +2037,8 @@ class core extends Module
 	function aliasFeature($feature, $flags)
 	{
 		$entry=&$this->get('Features', $feature);
+		$macroCacheEntry=$this->get('MacroListCache', $feature);
+		
 		foreach ($flags as $flag)
 		{
 			if (!isset($this->store['Features'][$flag]))
@@ -1891,14 +2046,22 @@ class core extends Module
 				$this->core->debug(4, "Aliasing $flag => $feature");
 				$this->setRef('Features', $flag, $entry);
 				$entry['flags'][]=$flag;
+				$this->setRef('FeatureAliases', $flag, $entry['name']);
 			}
 			elseif ($flag==$feature)
 			{}
 			else
 			{
-				$existing=$this->get('Features', $flag);
-				$existingName=$existing['obj']->getName();
-				$this->complain($this, "Feature $flag has already been registered by $existingName");
+				if ($this->get('General', 'complainAboutDuplicateMacros')!==false)
+				{
+					$existing=$this->get('Features', $flag);
+					$this->complain($this, "Feature $flag has already been registered by {$existing['provider']}({$existing['source']})");
+				}
+			}
+			
+			if ($macroCacheEntry)
+			{
+				$this->set('MacroListCache', $flag, $macroCacheEntry);
 			}
 		}
 	}
@@ -2046,6 +2209,8 @@ class core extends Module
 
 function loadModules(&$core, $sourcePath, $callInits=true)
 {
+	$loadStartTime=microtime(true);
+	
 	foreach ($core->getModules($sourcePath) as $path)
 	{
 		$path=$path;
@@ -2058,7 +2223,9 @@ function loadModules(&$core, $sourcePath, $callInits=true)
 			
 			if ($filenameParts[$lastPos]=='php'or $filenameParts[$lastPos]=='module')
 			{
+				$core->set('Modules', 'currentModulePath', $path);
 				include ($path);
+				$core->doUnset(array('Modules', 'currentModulePath'));
 			}
 		}
 		else
@@ -2067,12 +2234,22 @@ function loadModules(&$core, $sourcePath, $callInits=true)
 		}
 	}
 	
+	$initStartTime=microtime(true);
+	
 	if ($callInits)
 	{
 		$core->callInits(); // Basic init only
 		$core->callInits('followup'); // Any action that needs to be taken once all modules are loaded.
 		$core->callInits('last'); // Any action that needs to be taken once all modules are loaded.
 	}
+	
+	$finishTime=microtime(true);
+	
+	$loadTime=$initStartTime-$loadStartTime;
+	$initTime=$finishTime-$initStartTime;
+	$total=$finishTime-$loadTime;
+	
+	$core->debug(4, "Loaded modules in $loadTime. Initalised modules in $initTime. Total=$total.");
 }
 
 

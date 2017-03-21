@@ -22,7 +22,7 @@ if ~!Local,regex!~,!=,,
 
 loop
 	displayProgress
-	callOutOfScope ~!Result,name!~
+	callOutOfScope ~!Result,line!~
 	# setNested UnitResults,testSetName,~!Result,name!~
 finishProgress
 

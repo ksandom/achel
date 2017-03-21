@@ -29,6 +29,8 @@ class Macro extends Module
 				$this->core->registerFeature($this, array('forEach'), 'forEach', "For each result in the resultSet, run this command. The whole resultSet will temporarily be set to the result in the current iteration, and the resultSet of that iteration will replace the original result in the original resultSet. Basically it's a way to work with nested results and be able to send their results back. --foreEach=feature,value", array('loop', 'iterate', 'resultset')); # TODO This should probably move to a language module
 				
 				$this->core->registerFeature($this, array('getProgressKey'), 'getProgressKey', "Progress information is now stored in a unique location for each level nesting so that nested loops in the same macro can operate without interfereing with each others' progress information.", array('loop', 'iterate', 'resultset'));
+				$this->core->registerFeature($this, array('loadMacro'), 'loadMacro', "Load a macro from disk. This is not currenly for general use.", array('hidden'));
+				$this->core->registerFeature($this, array('loadAllMacros'), 'loadAllMacros', "Load all macros from disk. This is not currenly for general use.", array('hidden'));
 				break;
 			case 'singleLineMacro':
 				$this->defineMacro($this->core->get('Global', $event), true);
@@ -59,22 +61,32 @@ class Macro extends Module
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 1);
 				return $this->doForEach($this->core->getResultSet(), $parms[0], $parms[1]);
 			case 'followup':
-				$this->loadSavedMacros();
+				$this->followup();
 				break;
 			case 'getProgressKey':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2);
 				$this->core->set($parms[0], $parms[1], $this->getProgressKey('previousScopeName'));
 				break;
+			case 'loadMacro':
+				$macroName=$this->core->get('Global', $event);
+				$this->loadMacro($macroName);
+				break;
+			case 'loadAllMacros':
+				$this->loadSavedMacros(true);
+				break;
 			case 'last':
 				break;
 			default:
-				return$this->runMacro($event);
+				return $this->runMacro($event);
 				break;
 		}
 	}
 	
-	function defineMacro($macro, $useSemiColon=false, $macroName=false)
+	function defineMacro($macro, $useSemiColon=false, $macroName=false, $quiet=false)
 	{
+				# This case happens when we load all macros in a cached environment.
+		if ($this->core->get('MacroRawContents', $macroName) and $quiet) return true;
+		
 		# Get macroName
 		if (!$macroName)
 		{
@@ -85,17 +97,19 @@ class Macro extends Module
 		else $actualMacro=$macro;
 		$this->lastCreatedMacro=$macroName;
 		
+		if (!is_array($actualMacro)) $actualMacro=explode("\n", $actualMacro);
+		
 		$preCompile=array();
 		
 		if ($useSemiColon)
 		{
 			# Strip out new line characters and split into lines using ;
-			$lines=explode(';', implode('', explode("\n", $actualMacro)));
+			$lines=explode(';', implode('', $actualMacro));
 		}
 		else
 		{
 			# Split into lines usong \n
-			$lines=explode("\n", $actualMacro);
+			$lines=$actualMacro;
 		}
 		
 		# Precompile macro into a nested array of commands.
@@ -197,12 +211,16 @@ class Macro extends Module
 			{
 				$subName="$macroName--{$action['lineNumber']}";
 				
+				$macroPath=$this->core->get('MacroListCache', $macroName);
+				$this->core->set('MacroListCache', $subName, $macroPath);
+				
 				$this->core->registerFeature($this, array($subName), $subName, "Derived macro for $macroName", "$macroName,hidden", true, 'nesting');
 				$outputArray[$key]['nesting']=$this->compileFromArray($subName, $action['nesting']);
 				$this->core->addAction(trim($action['argument']), $action['value'].$subName, $macroName, $action['lineNumber']);
 			}
 			else
 			{
+				# TODO follow through to automatically load the macro if it doesn't exist.
 				$this->core->addAction(trim($action['argument']), $action['value'], $macroName, $action['lineNumber']);
 			}
 		}
@@ -374,13 +392,18 @@ class Macro extends Module
 		$this->core->doUnset(array('ProgressData', $this->getProgressKey()));
 	}
 	
-	function loadSavedMacros()
+	function getFileList()
 	{
-		# TODO This is repeated below. It should be done once.
 		$profile=$this->core->get('General', 'profile');
 		$fileList=$this->core->addItemsToAnArray('Core', 'macrosToLoad', $this->core->getFileList($this->core->get('General', 'configDir')."/profiles/$profile/macros"));
 		
-		# Pre-register all macros so that they can be nested without issue.
+		return $fileList;
+	}
+	
+	function getJustMacros($fileList)
+	{
+		$output=array();
+		
 		foreach ($fileList as $fileName=>$fullPath)
 		{
 			if($fileName=='*') break;
@@ -389,42 +412,135 @@ class Macro extends Module
 			if ($nameParts[1]=='achel' or $nameParts[1]=='macro') // Only invest further time if it actually is a macro.
 			{
 				$macroName=$nameParts[0];
-				$contents=file_get_contents($fullPath);
-				$contentsParts=explode("\n", $contents);
-				if (substr($contentsParts[0], 0, 2)=='# ')
-				{
-					$firstLine=substr($contentsParts[0], 2);
-					$firstLineParts=explode('~', $firstLine);
-					#$description=$firstLine;
-					$description=$firstLineParts[0];
-					$tags=(isset($firstLineParts[1]))?'macro,'.trim($firstLineParts[1]):'';
-					$this->core->registerFeature($this, array($macroName), $macroName, $description, $tags, true, $fullPath);
-				}
-				else $this->core->complain($this, "$fullPath appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+				$output[$macroName]=array(
+					'fileName'=>$fileName,
+					'macroName'=>$macroName,
+					'fullPath'=>$fullPath);
 			}
+		}
+		
+		return $output;
+	}
+	
+	function getMacroNameDetailss($fullPath)
+	{
+		# Get fileName
+		$pathParts=explode('/', $fullPath);
+		$fileName=$pathParts[count($pathParts)-1];
+		
+		# Get original macroName
+		$nameParts=explode('.', $fileName);
+		$originalName=$nameParts[0];
+		$extention=$nameParts[1];
+		
+		return array(
+			'fileName' => $fileName,
+			'originalName' => $originalName,
+			'extention' => $extention
+		);
+	}
+	
+	function loadMacro($macroName)
+	{
+		$this->core->debug(4, "Loading macro $macroName.");
+		
+		$macroPath=$this->core->get('MacroListCache', $macroName);
+		if (!$macroPath)
+		{
+			$this->core->debug(0, "Could not find $macroName in the cache.");
+			return false;
+		}
+		
+		$macroDetails=$this->getMacroNameDetailss($macroPath);
+		$this->loadMacroRegisterFeature($macroDetails['fileName'], $macroPath, $macroDetails['originalName']);
+		$contentsParts=$this->core->get("MacroRawContents", $macroName);
+		$this->defineMacro($contentsParts, false, $macroName);
+	}
+	
+	function loadMacroRegisterFeature($fileName, $fullPath, $macroName, $quiet=false)
+	{
+		# This case happens when we load all macros in a cached environment.
+		if ($this->core->get('MacroRawContents', $macroName) and $quiet) return true;
+		
+		$contents=file_get_contents($fullPath);
+		$contentsParts=explode("\n", $contents);
+		$this->core->set("MacroRawContents", $macroName, $contentsParts);
+		if (substr($contentsParts[0], 0, 2)=='# ')
+		{
+			$firstLine=substr($contentsParts[0], 2);
+			$firstLineParts=explode('~', $firstLine);
+			#$description=$firstLine;
+			$description=$firstLineParts[0];
+			$tags=(isset($firstLineParts[1]))?'macro,'.trim($firstLineParts[1]):'';
+			$this->core->registerFeature($this, array($macroName), $macroName, $description, $tags, true, $fullPath);
+		}
+		else $this->core->complain($this, "$fullPath appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+	}
+	
+	function followup()
+	{
+		$cachedMacroList=$this->core->getCategoryModule('MacroListCache');
+		if (!(count($cachedMacroList)>1))
+		{
+			$this->core->debug(4, "Loading machos from scratch.");
+			$this->loadSavedMacros();
+		}
+	}
+	
+	private function complainAboutDuplicates($shouldComplain=true)
+	{
+		$this->core->setRef('General', 'complainAboutDuplicateMacros', $shouldComplain);
+	}
+	
+	function loadSavedMacros($quiet=false)
+	{
+		$loadStart=microtime(true);
+		
+		$this->complainAboutDuplicates(!$quiet);
+		$fileList=$this->getFileList();
+		
+		# Pre-register all macros so that they can be nested without issue.
+		$macroList=$this->getJustMacros($fileList);
+		foreach ($macroList as $macroName=>$details)
+		{
+			$fileName=$details['fileName'];
+			$fullPath=$details['fullPath'];
+			
+			$this->core->set("MacroListCache", $macroName, $fullPath);
+			
+			$this->loadMacroRegisterFeature($fileName, $fullPath, $macroName, $quiet);
 		}
 		
 		# Interpret and define all macros.
-		foreach ($fileList as $fileName=>$fullPath)
+		foreach ($macroList as $macroName=>$details)
 		{
-			if($fileName=='*') break;
+			$fullPath=$details['fullPath'];
 			
-			$nameParts=explode('.', $fileName);
-			if ($nameParts[1]=='achel' or $nameParts[1]=='macro') // Only invest further time if it actually is a macro.
+			$contentsParts=$this->core->get("MacroRawContents", $macroName);
+			
+			if (is_array($contentsParts))
 			{
-				$macroName=$nameParts[0];
-				$contents=file_get_contents($fullPath);
-				$contentsParts=explode("\n", $contents);
-				
 				if (substr($contentsParts[0], 0, 2)=='# ')
 				{
-					$this->defineMacro($contents, false, $macroName);
+					$this->defineMacro($contentsParts, false, $macroName, $quiet);
 				}
-				else $this->core->complain($this, "$fullPath appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+				else
+				{
+					$this->core->complain($this, "${details['fullPath']} appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+					$this->core->debug(0, "${details['fullPath']} appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+				}
+			}
+			else
+			{
+				$this->core->debug(0, "Something went very wrong trying to load macro $macroName.");
 			}
 		}
-		
 		$this->core->callFeature('triggerEvent', 'Macro,allLoaded');
+		$loadFinish=microtime(true);
+		$loadTime=$loadFinish-$loadStart;
+		$this->core->debug(4, "Loaded macros in $loadTime seconds. start=$loadStart fimish=$loadFinish");
+		
+		$this->complainAboutDuplicates(false);
 	}
 }
 

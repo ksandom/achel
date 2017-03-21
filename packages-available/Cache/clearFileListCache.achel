@@ -1,0 +1,5 @@
+# Clear the FileList cache. ~ cache
+
+unsetCategory FileListCache
+initialiseFileListCache
+saveStoreToConfig FileListCache

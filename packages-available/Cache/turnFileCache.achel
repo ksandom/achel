@@ -1,0 +1,5 @@
+# Turn file cache on or off. --turnFileCache=state . state can be on or off ~ cache
+parameters state
+
+set FileListCache,desiredState,~!Local,state!~
+fileListCacheChanged

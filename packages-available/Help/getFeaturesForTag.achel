@@ -1,0 +1,4 @@
+# Get features for a given tag. --getFeaturesForTag=tag ~ help,search,tag
+parameters tag
+
+retrieveResults Tags,~!Local,tag!~

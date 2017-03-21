@@ -1,0 +1,60 @@
+# Unit tests for Cache. ~ cache,unitTest,hidden
+
+defineTest initialise,
+	unset FileListCache,dummyEntry
+	
+	initialiseFileListCache
+	
+	expectNot ,~!FileListCache,dummyEntry!~
+
+defineTest clearFileListCache,
+	getCategory FileListCache
+	stashResults Tmp,originalCache
+	
+	countToVar Local,originalCache
+	
+	clearFileListCache
+	
+	getCategory FileListCache
+	countToVar Local,clearedCache
+	
+	retrieveResults Tmp,originalCache
+	unset Tmp,originalCache
+	
+	if ~!Local,originalCache!~,>,~!Local,clearedCache!~,
+		passTest Cleared ~!Local,originalCache!~ -> ~!Local,clearedCache!~
+	else
+		failTest Unexpected values ~!Local,originalCache!~ -> ~!Local,clearedCache!~
+
+defineTest turnFileCache - on,
+	unset FileListCache,desiredState
+	
+	turnFileCache on
+	
+	expect on,~!FileListCache,desiredState!~
+
+defineTest turnFileCache - off,
+	unset FileListCache,desiredState
+	
+	turnFileCache off
+	
+	expect off,~!FileListCache,desiredState!~
+
+defineTest saveStoreToCache,
+	# Paranoia incase there's cache lying around (at the time of this writing, there's a TODO to delete this from Cache.)
+	unsetCategory CacheUnitTest
+	
+	# Save stuff and remove it from memory.
+	set CacheUnitTest,thingy,Wooo!
+	saveStoreToCache CacheUnitTest
+	unsetCategory CacheUnitTest
+	
+	# Load the cache using a similar-enough method to what is used at startup.
+	loadStoreFromFile ~!General,cacheDir!~/CacheUnitTest.cache.json,CacheUnitTest
+	
+	# Test
+	expect Wooo!,~!CacheUnitTest,thingy!~
+	
+	# Cleanup
+	unsetCategory CacheUnitTest
+	# TODO work out how to delete CacheUnitTest.cache.json

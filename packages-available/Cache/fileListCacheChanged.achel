@@ -1,0 +1,3 @@
+# Tell the cache that it has changed, which will cause it to persist to disk when Achel terminates. ~ cache,hidden
+
+set FileListCache,changed,true

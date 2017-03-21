@@ -1,0 +1,20 @@
+#!/bin/bash
+# Description
+#   Turns off all persistent caching.
+#   This is useful for development where code is changing regularly.
+#   If you have code that breaks with the 2017-03 release, this may make a difference. If it does, please raise a bug report at https://github.com/ksandom/achel
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Turns off caching for all Achel applications.
+#     $0
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/cache.sh
+. $libDir/packages.sh
+
+
+turnCacheOff

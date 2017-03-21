@@ -1,0 +1,19 @@
+#!/bin/bash
+# Description
+#   Turns on all persistent caching.
+#   This is useful for development where code is changing regularly.
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Turns on caching for all Achel applications.
+#     $0
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/cache.sh
+. $libDir/packages.sh
+
+
+turnCacheOn

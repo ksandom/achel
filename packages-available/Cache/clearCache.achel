@@ -1,0 +1,4 @@
+# Clear all cache. ~ cache,developer
+
+clearCacheForMacros
+clearFileListCache

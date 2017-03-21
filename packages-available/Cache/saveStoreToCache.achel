@@ -1,0 +1,4 @@
+# Save the contents of a store to cache. This will get loaded very early in the normal startup flow. --saveStoreToCache=storeName ~ cache,store
+parameters storeName
+
+saveStoreToFile ~!General,cacheDir!~/~!Local,storeName!~.cache.json,~!Local,storeName!~

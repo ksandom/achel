@@ -111,7 +111,7 @@ function userRemoveExec
 function createBareProfile
 {
 	name="$1"
-	mkdir -p $configDir/profiles/$name/{packages,modules,macros,templates}
+	mkdir -p $configDir/profiles/$name/{packages,modules,macros,templates,cache}
 }
 
 function removeBareProfile
@@ -125,6 +125,32 @@ function removeBareProfile
 	else
 		echo "Could not find a profile called \"$name\". I looked in \"$profileToRemove\""
 	fi
+}
+
+function isValidProfile
+{
+	profileName="$1"
+	profilePath="`getProfilePath \"$profileName\"`"
+	
+	if [ -e "$profilePath/cache" ] &&
+		[ -e "$profilePath/modules" ] &&
+		[ -e "$profilePath/packages" ] &&
+		[ -e "$profilePath/templates" ]; then
+		
+		return 0
+	else
+		return 1
+	fi
+}
+
+function getProfilePath
+{
+	echo "`getProfileHomePath`/$1"
+}
+
+function getProfileHomePath
+{
+    echo "$configDir/profiles"
 }
 
 function enableEverythingForProfile

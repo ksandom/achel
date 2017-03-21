@@ -1,0 +1,4 @@
+# Display statistics for the state of caching. ~ cache,user
+
+# Get the final stats.
+getCategory CacheStats

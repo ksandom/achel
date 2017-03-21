@@ -1,0 +1,21 @@
+#!/bin/bash
+# Description
+#   Create a bug report that can be filed with the appropriate repo. Eg https://github.com/ksandom/achel/issues
+#
+# Syntax:
+#   $0 appName
+#     appName is the name of the application you want to create the bug report for.
+#
+# Examples:
+#   Creates a bug report for the doneIt app.
+#     $0 doneit
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/bug.sh
+. $libDir/packages.sh
+
+
+appName="${1:-achel}"
+
+creatBugReport "$appName"

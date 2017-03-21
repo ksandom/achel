@@ -67,7 +67,6 @@ class CommandLine extends Module
 	function processArgs()
 	{
 		$arg=&$this->core->get('CommandLine', 'arguments');
-		#print_r($arg);
 		$max=count($arg);
 		$possibleFlagsRemaining=true;
 		$stray=array();

@@ -29,19 +29,23 @@ class CallFaucets extends Faucets
 				break;
 			case 'create1-1CallFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
-				$this->environment->currentFaucet->createFaucet($parms[0], '1-1Call', new CallFaucet($parms[1], $parms[2]));
+				$callFaucet=new CallFaucet($parms[1], $parms[2]);
+				$this->environment->currentFaucet->createFaucet($parms[0], '1-1Call', $callFaucet);
 				break;
 			case 'createMappedCallFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'mappedCall', new MappedCallFaucet($parms[1], $parms[2]));
+				$mappedCallFaucet=new MappedCallFaucet($parms[1], $parms[2]);
+				$this->environment->currentFaucet->createFaucet($parms[0], 'mappedCall', $mappedCallFaucet);
 				break;
 			case 'createSemiInlineCallFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'semiInlineCall', new CallFaucet($parms[1], $parms[2], true));
+				$callFaucet=new CallFaucet($parms[1], $parms[2], true);
+				$this->environment->currentFaucet->createFaucet($parms[0], 'semiInlineCall', $callFaucet);
 				break;
 			case 'createInlineCallFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'inlineCall', new InlineCallFaucet());
+				$inlineCallFaucet=new InlineCallFaucet();
+				$this->environment->currentFaucet->createFaucet($parms[0], 'inlineCall', $inlineCallFaucet);
 				break;
 			
 			default:
