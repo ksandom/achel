@@ -1,0 +1,19 @@
+# Generate the generic details for a bug report that can be submitted on github. When submitting the bug report, please also include specific details about your problem. ~ bug,report
+
+debug 0,Cache stats
+cacheStats
+nested
+outNow
+
+debug 0,Settings
+getCategory Settings
+nested
+outNow
+
+debug 0,General
+getCategory General
+nested
+outNow
+
+clear
+null
