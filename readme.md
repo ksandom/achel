@@ -11,7 +11,8 @@ This is a tiny percentage of the final vision, so there's a lot more to come!
 # Important updates
 
 * As a general rule, when ever you update, you should re-run install.sh to apply any structural changes as the internals are regularly being refactored.
-* The method for adding unknown terminal types has changed. Documentation for this will be in packages-available/Terminal/docs
+* 2017-03-21: Caching is now active by default. For any questions you have, like how it works and how to manage it, see the [cache documentation](https://github.com/ksandom/achel/tree/master/packages-available/Cache/docs/readme.md).
+* 2017-03-21: If you strike a bug, you can raise it [here](https://github.com/ksandom/achel/issues). Make sure you include the output from `manageAchel bugReportCreate`.
 
 # Install
 
