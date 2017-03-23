@@ -5,13 +5,7 @@ function creatBugReport
 	commandName="$1"
 	
 	echo;echo "Cache stats"
-	$commandName --cacheStats
-	
-	echo;echo "Settings"
-	$commandName --getCategory=Settings
-	
-	echo;echo "General"
-	$commandName --getCategory=General
+	$commandName --generateBugReport
 	
 	possibleRepoPath=`$commandName --set='Local,possibleRepoPath,~!General,configDir!~/repos/~!General,programName!~' --get=Local,possibleRepoPath -s`
 	
