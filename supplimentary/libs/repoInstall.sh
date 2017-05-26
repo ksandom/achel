@@ -141,6 +141,9 @@ function installRepo_setup
 			
 			# Handel documentation
 			documentationAddProfile "$profileRefName"
+			
+			# Handel tab completion
+			installBashCompletion "$execName"
 		else
 			echo "installRepo_setup: profileRefName=\"$profileRefName\""
 		fi

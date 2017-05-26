@@ -27,6 +27,7 @@ cd `dirname $0`
 . supplimentary/libs/repoParms.sh
 . supplimentary/libs/syntaxHighlighting.sh
 . supplimentary/libs/cache.sh
+. supplimentary/libs/bashCompletion.sh
 
 
 
