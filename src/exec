@@ -12,6 +12,7 @@ define('docsDir', '~%docsDir%~');
 define('storageDir', '~%storageDir%~');
 define('installType', '~%installType%~');
 define('binExec', '~%binExec%~');
+define('repoDir', '~%repoDir%~');
 
 include configDir.'/core.php';
 
@@ -36,6 +37,7 @@ $core->set('General', 'storageDir', storageDir);
 $core->set('General', 'installType', installType);
 $core->set('General', 'binExec', binExec);
 $core->set('General', 'profile', $profile);
+$core->set('General', 'repoDir', repoDir);
 $core->set('General', 'hostsDir', storageDir.'/data/1LayerHosts');
 $core->set('General', 'programName', programName);
 $core->set('General', 'description', $description);

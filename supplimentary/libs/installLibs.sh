@@ -160,6 +160,7 @@ function copyTemplatedFile
 		s#~%installType%~#'$installType'#g;
 		s#~%binExec%~#'$binExec'#g;
 		s#~%programName%~#'$programName'#g;
+		s#~%repoDir%~#'$repoDir'#g;
 		s#~%languageName%~#achel#g;
 		s#~%.*%~##g' > "$dst"
 }
