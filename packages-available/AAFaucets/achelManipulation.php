@@ -35,7 +35,8 @@ class ManipulationFaucets extends Faucets
 				break;
 			case 'createRegexFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'regex', new RegexFaucet());
+				$newFaucet=new RegexFaucet();
+				$this->environment->currentFaucet->createFaucet($parms[0], 'regex', $newFaucet);
 				break;
 			case 'createDumbReplaceFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2);
@@ -44,11 +45,13 @@ class ManipulationFaucets extends Faucets
 				break;
 			case 'createDumbInsertFaucetAfter':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'dumbInsertAfter', new DumbInsertFaucet($parms[1], false));
+				$newFaucet=new DumbInsertFaucet($parms[1], false);
+				$this->environment->currentFaucet->createFaucet($parms[0], 'dumbInsertAfter', $newFaucet);
 				break;
 			case 'createDumbInsertFaucetBefore':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'dumbInsertBefore', new DumbInsertFaucet($parms[1], true));
+				$newFaucet=new DumbInsertFaucet($parms[1], true);
+				$this->environment->currentFaucet->createFaucet($parms[0], 'dumbInsertBefore', $newFaucet);
 				break;
 			case 'createLabelFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
@@ -57,11 +60,13 @@ class ManipulationFaucets extends Faucets
 				break;
 			case 'createReplaceFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'replace', new ReplaceFaucet());
+				$newFaucet=new ReplaceFaucet();
+				$this->environment->currentFaucet->createFaucet($parms[0], 'replace', $newFaucet);
 				break;
 			case 'createRegexGetFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 1);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'regexGet', new RegexGetFaucet());
+				$newFaucet=new RegexGetFaucet();
+				$this->environment->currentFaucet->createFaucet($parms[0], 'regexGet', $newFaucet);
 				break;
 			
 			default:
