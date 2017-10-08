@@ -1110,7 +1110,14 @@ class core extends Module
 			}
 		}
 		
-		$this->store['Macros'][$macroName][]=array('obj'=>&$obj, 'name'=>$obj['name'], 'value'=>$value, 'lineNumber'=>$lineNumber);
+		// Add the the action to the macro.
+		$this->store['Macros'][$macroName][]=array(
+			'obj'=>&$obj, 
+			'name'=>$obj['name'], 
+			'value'=>$value, 
+			'lineNumber'=>$lineNumber);
+		
+		// Stats.
 		if (!isset($this->store['Features'][$argument]['referenced'])) $this->store['Features'][$argument]['referenced']=0;
 		$this->store['Features'][$argument]['referenced']++;
 
