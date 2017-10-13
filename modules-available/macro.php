@@ -84,7 +84,7 @@ class Macro extends Module
 	
 	function defineMacro($macro, $useSemiColon=false, $macroName=false, $quiet=false)
 	{
-				# This case happens when we load all macros in a cached environment.
+		# This case happens when we load all macros in a cached environment.
 		if ($this->core->get('MacroRawContents', $macroName) and $quiet) return true;
 		
 		# Get macroName
@@ -482,7 +482,7 @@ class Macro extends Module
 		$cachedMacroList=$this->core->getCategoryModule('MacroListCache');
 		if (!(count($cachedMacroList)>1))
 		{
-			$this->core->debug(4, "Loading machos from scratch.");
+			$this->core->debug(4, "Loading macros from scratch.");
 			$this->loadSavedMacros();
 		}
 	}
