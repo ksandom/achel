@@ -1,0 +1,11 @@
+# Unit tests for debugging tools. ~ unitTest,debug,hidden
+
+defineTest whatUses,
+	whatUses if
+	countToVar Local,whatUsesIf
+	
+	if ~!Local,whatUsesIf!~,>,5,
+		passTest Got ~!Local,whatUsesIf!~ occurances of if.
+		debug 0,Got ~!Local,whatUsesIf!~ occurances of if.
+	else
+		failTest Only got ~!Local,whatUsesIf!~ occurances of if.
