@@ -1379,7 +1379,11 @@ class core extends Module
 				$obj=&$this->get('Features', 'helpDefault');
 				return $obj;
 			}
-			else return false;
+			else
+			{
+				$result=false;
+				return $result;
+			}
 		}
 	}
 	

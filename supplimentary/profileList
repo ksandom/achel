@@ -16,7 +16,7 @@ requiredParms="none"
 
 case $1 in
 	'--short')
-		profileList
+		ls -1 "$configDir"/profiles
 	;;
 	*)
 		resolveSymlinks "$configDir"/profiles | tabsToSpacedDashes

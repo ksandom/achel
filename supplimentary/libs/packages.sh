@@ -267,7 +267,7 @@ function enabledPacakge
 		exit 1
 	fi
 
-	profiles=`$managementTool profileList | grep "$profileNameRegex"`
+	profiles=`$managementTool profileList --short | grep "$profileNameRegex"`
 	if [ "$profiles" == '' ]; then
 		echo "Did not match any profiles using regex \"$profileNameRegex\""
 		exit 1
