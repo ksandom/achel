@@ -52,10 +52,10 @@ class Maths extends Module
 		switch ($operator)
 		{
 			case '*': # Multiply
-				return $value1*$value2;
+				return $this->sanitise($value1)*$this->sanitise($value2);
 				break;
 			case '/': # Divide - Complain loudly on divide by 0.
-				if ($value2!=0) return $value1/$value2;
+				if ( $this->sanitise($value2)!=0) return $this->sanitise($value1)/$this->sanitise($value2);
 				else
 				{
 					$this->core->debug(1, "Divide by zero in $value1,$operator,$value2 . Returning false.");
@@ -63,7 +63,7 @@ class Maths extends Module
 				}
 				break;
 			case '/!': # Divide - Assume false on divide by 0.
-				if ($value2!=0) return $value1/$value2;
+				if ( $this->sanitise($value2)!=0) return $this->sanitise($value1)/$this->sanitise($value2);
 				else
 				{
 					$this->core->debug(3, "Divide by zero in $value1,$operator,$value2 . Returning false since /! was specified.");
@@ -71,36 +71,47 @@ class Maths extends Module
 				}
 				break;
 			case '/>': # Divide - Assume value2 (0) on divide by 0.
-				if ($value2!=0) return $value1/$value2;
+				if ( $this->sanitise($value2)!=0) return $this->sanitise($value1)/$this->sanitise($value2);
 				else
 				{
 					$this->core->debug(3, "Divide by zero in $value1,$operator,$value2 . Assuming value2($value2) since the operator was />.");
-					return $value2;
+					return $this->sanitise($value2);
 				}
 				break;
 			case '/<': # Divide - Assume value1 on divide by 0.
-				if ($value2!=0) return $value1/$value2;
+				if ($value2!=0) return $this->sanitise($value1)/$this->sanitise($value2);
 				else
 				{
 					$this->core->debug(3, "Divide by zero in $value1,$operator,$value2 . Assuming value1($value1) since the operator was /<.");
-					return $value1;
+					return $this->sanitise($value1);
 				}
 				break;
 			case '+': # Add
-				return $value1+$value2;
+				return $this->sanitise($value1)+$this->sanitise($value2);
 				break;
 			case '-': # Subtract
-				return $value1-$value2;
+				return $this->sanitise($value1)-$this->sanitise($value2);
 				break;
 			case '%': # Modulus
-				return $value1%$value2;
+				return $this->sanitise($value1)%$this->sanitise($value2);
 				break;
 			case '^': # Exponent
-				return pow($value1,$value2);
+				return pow($this->sanitise($value1), $this->sanitise($value2));
 			case 'sr': # Square Root
 				return sqrt($value1);
 				break;
 		}
+	}
+	
+	function sanitise($value)
+	{
+            if (is_numeric($value)) return $value;
+            elseIf ($value=='') return 0;
+            else
+            {
+                $this->core->complain($this, "I don't know how to handle this as a number. Going to see if PHP can figure it out.", $value);
+                return $value;
+            }
 	}
 }
 
