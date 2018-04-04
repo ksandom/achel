@@ -182,11 +182,11 @@ class Manipulator extends Module
 				return $this->duplicate($this->core->getResultSet(), $this->core->get('Global', $event));
 				break;
 			case 'count':
-				return array(count($this->core->getResultSet()));
+				return array($this->countResultSet());
 				break;
 			case 'countToVar':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 2);
-				$this->core->set($parms[0], $parms[1], count($this->core->getResultSet()));
+				$this->core->set($parms[0], $parms[1], $this->countResultSet());
 				break;
 			case 'pos':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 2);
@@ -263,6 +263,20 @@ class Manipulator extends Module
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
 				break;
+		}
+	}
+	
+	function countResultSet()
+	{
+		$resultSet=$this->core->getResultSet();
+		
+		if (is_null($resultSet))
+		{
+			return 0;
+		}
+		else
+		{
+			return count($resultSet);
 		}
 	}
 	

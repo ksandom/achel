@@ -433,6 +433,11 @@ class core extends Module
 	{
 		$index=md5($path);
 		$contents = $this->get('FileListCache', $index);
+		if (is_null($contents))
+		{
+			$contents=array();
+		}
+		
 		if (count($contents)<1)
 		{
 			$listCache=array_keys($this->getCategoryModule('FileListCache'));
@@ -446,6 +451,7 @@ class core extends Module
 		{
 			$this->set('CacheStats', 'FileListHits', $this->get('CacheStats', 'FileListHitsHits')+1);
 		}
+		
 		return $contents;
 	}
 	
@@ -1295,8 +1301,6 @@ class core extends Module
 				foreach ($this->store['Macros'][$macroName] as $actionItem)
 				{
 					$entryNesting=$this->get('Core', 'nesting');
-					$this->debug(5, "ITER $macroName/$nesting - {$actionItem['name']}: Result count before invoking=".count($this->getResultSet()));
-					# $this->debugResultSet("$macroName - {$actionItem['name']}");
 					
 					$returnedValue1=$this->callFeature($actionItem['name'], $actionItem['value']);
 					if (is_array($returnedValue1)) $returnedValue=$returnedValue1;
@@ -1304,7 +1308,6 @@ class core extends Module
 					$exitNesting=$this->get('Core', 'nesting');
 					$this->setResultSet($returnedValue);
 					if ($entryNesting!=$nesting) $this->debug(0, "go: WARNING entryNesting($entryNesting) != exitNesting($exitNesting) for macro $macroName/{$actionItem['name']}. This is certainly a bug! $macroName began with $nesting.");
-					$this->debug(4, "ITER $macroName/$entryNesting -> $macroName/$exitNesting - {$actionItem['name']}: Result count after set=".count($this->getResultSet()));
 				}
 				$resultSet=$this->getResultSet();
 				
