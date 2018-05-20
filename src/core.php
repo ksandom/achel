@@ -1403,6 +1403,7 @@ class core extends Module
 	function setCategoryModule($category, $contents)
 	{
 		$this->store[$category]=$contents;
+		$this->markCategory($category);
 	}
 	
 	function unsetCategoryModule($category)
