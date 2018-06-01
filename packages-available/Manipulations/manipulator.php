@@ -327,13 +327,8 @@ class Manipulator extends Module
 		{
 			if (is_array($line))
 			{
-				# TODO It would be nice to make this recursive.
 				$outputLine=$this->core->processValue($template);
-				#foreach ($line as $key=>$value)
-				#{
-					//$this->core->debug(0, "$key, $value, $outputLine");
-					$outputLine=$this->processResultVarsInString($line, $outputLine);
-				#}
+				$outputLine=$this->processResultVarsInString($line, $outputLine);
 				$output[]=$outputLine;
 			}
 			else
@@ -355,11 +350,19 @@ class Manipulator extends Module
 		# TODO This really needs to recursively go through the result set since it can be nested.
 		$outputLine=$string;;
 		
-		foreach ($input as $key=>$value)
+		
+		$iterations=50;
+		$previousValue='';
+		while (strpos($outputLine, '~%')>0 and $iterations>0 and $previousValue!=$outputLine)
 		{
-			if (!is_array($value)) $outputLine=$this->replace($outputLine, resultVarBegin."$key".resultVarEnd, $value);
-			else $this->core->debug(4, "processResultVarsInString: value for key $key is an array, so the replace has not been attempted.");
-			# $this->core->debug(3, "processResultVarsInString: In=\"$string\" Out=\"$outputLine\" Search=$key Value=$value");
+			$previousValue=$outputLine;
+			$iterations--;
+			foreach ($input as $key=>$value)
+			{
+				if (!is_array($value)) $outputLine=$this->replace($outputLine, resultVarBegin."$key".resultVarEnd, $value);
+				else $this->core->debug(4, "processResultVarsInString: value for key $key is an array, so the replace has not been attempted.");
+				# $this->core->debug(3, "processResultVarsInString: In=\"$string\" Out=\"$outputLine\" Search=$key Value=$value");
+			}
 		}
 		
 		return $outputLine;
