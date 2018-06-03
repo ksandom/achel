@@ -1,0 +1,6 @@
+# Unit tests for syntax ~ unitTest,syntax,hidden
+
+# This is prep (early experimentation with space indentation in achel code.)
+defineTest Tab indented code,
+	passTest syntax parsed.
+
