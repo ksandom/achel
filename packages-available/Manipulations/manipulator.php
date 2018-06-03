@@ -347,13 +347,14 @@ class Manipulator extends Module
 	
 	function processResultVarsInString($input, $string)
 	{
+		# TODO I just re-read this code. This is an incredibly slow way to do it. Instead, do look through the demplate and resolve the variables. Note that this will require a bit more care to code to handle nested variables.It may be possible to reuse the code the parses normal variables.
 		# TODO This really needs to recursively go through the result set since it can be nested.
 		$outputLine=$string;;
 		
 		
 		$iterations=50;
 		$previousValue='';
-		while (strpos($outputLine, '~%')>0 and $iterations>0 and $previousValue!=$outputLine)
+		while (strpos($outputLine, '~%')!==false and $iterations>0 and $previousValue!=$outputLine)
 		{
 			$previousValue=$outputLine;
 			$iterations--;
@@ -361,7 +362,7 @@ class Manipulator extends Module
 			{
 				if (!is_array($value)) $outputLine=$this->replace($outputLine, resultVarBegin."$key".resultVarEnd, $value);
 				else $this->core->debug(4, "processResultVarsInString: value for key $key is an array, so the replace has not been attempted.");
-				# $this->core->debug(3, "processResultVarsInString: In=\"$string\" Out=\"$outputLine\" Search=$key Value=$value");
+				$this->core->debug(4, "processResultVarsInString: In=\"$string\" Out=\"$outputLine\" Search=$key Value=$value");
 			}
 		}
 		
