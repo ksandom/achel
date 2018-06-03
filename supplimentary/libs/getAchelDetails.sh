@@ -23,7 +23,11 @@ supplimentaryDir="$configDir/supplimentary"
 profileDir="$configDir/profiles"
 repoDir="$configDir/repos"
 
-managementTool="achelctl"
+if which achelctl; then
+	managementTool="achelctl"
+else
+	managementTool=manageAchel
+fi
 
 # TODO Does this actually need to be in a condition? I think probably not.
 if [ "$scriptName" == '' ]; then
