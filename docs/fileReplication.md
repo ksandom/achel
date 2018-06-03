@@ -14,11 +14,11 @@ This example sets up mass to replicate to other users. It assumes you already ha
 
 Find the file with the definitions you want to replicate.
 
-    $ manageAchel fileRepFileList
+    $ achelctl fileRepFileList
 
 Tell it which files we want to replicate
 
-    $ manageAchel fileRepFileAdd data/1LayerHosts/manual.json
+    $ achelctl fileRepFileAdd data/1LayerHosts/manual.json
     fileRepAddFile: "/home/ksandom/Dropbox/Achel/data/1LayerHosts/manual.json" Already didn't exist. Copying.
 
 Now go to dropbox and share the `Achel` folder within the Dropbox folder with whoever you want to be able to recieve the updates.
@@ -27,7 +27,7 @@ Now go to dropbox and share the `Achel` folder within the Dropbox folder with wh
 
 Tell achel that we want to replicate this file.
 
-    $ manageAchel fileRepFileAdd data/1LayerHosts/manual.json
+    $ achelctl fileRepFileAdd data/1LayerHosts/manual.json
 
 *This assumes that the file has been shared with this person.*
 
@@ -42,7 +42,7 @@ The important parts are
 
 ### First, let's see what we have
 
-    $ manageAchel fileRepShowConfig
+    $ achelctl fileRepShowConfig
     
       Providers:
         dropbox: /home/ksandom/Dropbox/Achel
@@ -52,9 +52,9 @@ This tells us that we have one provider, called `dropbox`, which is sitting in `
 
 ### Adding a different provider
 
-    $ manageAchel fileRepProviderAdd googleDrive ~/gDrive
+    $ achelctl fileRepProviderAdd googleDrive ~/gDrive
 
-This creates a provider that looks like this (using `manageAchel fileRepShowConfig`)
+This creates a provider that looks like this (using `achelctl fileRepShowConfig`)
 
         googleDrive: /home/ksandom/gDrive/Achel
 
@@ -62,9 +62,9 @@ This creates a provider that looks like this (using `manageAchel fileRepShowConf
 
 Simply specify the subfolder you want as the next parameter
 
-    $ manageAchel fileRepProviderAdd googleDrive ~/gDrive Achel-work
+    $ achelctl fileRepProviderAdd googleDrive ~/gDrive Achel-work
 
-This creates a provider that looks like this (using `manageAchel fileRepShowConfig`)
+This creates a provider that looks like this (using `achelctl fileRepShowConfig`)
 
         googleDrive: /home/ksandom/gDrive/Achel-work
 
@@ -74,11 +74,11 @@ Here I've amended the config with this method, but it would work equally well do
 
 When specifying a file that you want to replicate, you can specify which provider you want to use. If you don't, the default one will be used.
 
-Find which provider you want to make default with `manageAchel fileRepShowConfig`.
+Find which provider you want to make default with `achelctl fileRepShowConfig`.
 
-    $ manageAchel fileRepDefaultProvider googleDrive
+    $ achelctl fileRepDefaultProvider googleDrive
 
 ### Removing a provider
 
-    $ manageAchel fileRepProviderRemove googleDrive
+    $ achelctl fileRepProviderRemove googleDrive
     autoSetDefaultProvider: "dropbox" has been assigned as the default provider. Use fileRepDefaultProvider to change it.

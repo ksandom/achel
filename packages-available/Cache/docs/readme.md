@@ -12,7 +12,7 @@ It's enabled by default at install/re-install time.
 ```
 cd ~/.achel/repos/achel
 ./install.sh
-manageAchel repoReinstall
+achelctl repoReinstall
 ```
 
 Note: Developers may not want it enabled at all, see "Turning cache off" below.
@@ -21,23 +21,23 @@ Note: Developers may not want it enabled at all, see "Turning cache off" below.
 
 Context: Specific to app/profile.
 
-    manageAchel cacheClear doneit
+    achelctl cacheClear doneit
 
 Will clear cache for the `doneit` app.
 
-For more information type `manageAchel cacheClear`.
+For more information type `achelctl cacheClear`.
 
 ### Turning cache off
 
 Context: System wide.
 
-    manageAchel cacheOff
+    achelctl cacheOff
 
 ### Turning cache on
 
 Context: System wide.
 
-    manageAchel cacheOn
+    achelctl cacheOn
 
 ## Why would you want it on or off?
 
@@ -63,6 +63,6 @@ The normal use-case is now with cache enabled. Therefore there are two reasons f
 * Events.cache.json - Registrations for events (eg using --registerForEvent). This is one less reason Features need to be processed at startup.
 * Features.cache.json - A catalog of all features and where to load them from when needed.
 * FeatureAliases.cache.json - This is almost obsolete due to Features.cache.json. It will be removed in a future version.
-* FileListCache.cache.json - Every time a file list is requested, and achel doesn't already know about it, it's added here. This is a massive performance boost, but comes at the cost of not detecting new or removed Features/Macros. If you are developing new features, `manageAchel cacheClear` will be your friend.
+* FileListCache.cache.json - Every time a file list is requested, and achel doesn't already know about it, it's added here. This is a massive performance boost, but comes at the cost of not detecting new or removed Features/Macros. If you are developing new features, `achelctl cacheClear` will be your friend.
 * MacroListCache.cache.json - This is almost obsolete due to Features.cache.json. It will be removed in a future version.
 * Tags.cache.json - A list of tags and what features they match against.

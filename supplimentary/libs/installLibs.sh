@@ -290,10 +290,15 @@ function doInstall
 	
 	# Make it executable
 	cd "$binExec"
-	rm -f "$programName" "manageMass" "manageAchel"
+	rm -f "$programName" "manageMass" "achelctl"
 	copyTemplatedFile "$startDir/src/exec" "$programName"
-	copyTemplatedFile "$startDir/src/manage" manageAchel
-	chmod 755 "$programName" "manageAchel"
+	copyTemplatedFile "$startDir/src/manage" achelctl
+	chmod 755 "$programName" "achelctl"
+	
+	# If someone has the old manageAchel command installed, replace it with a symlink to achelctl.
+	if [ -f manageAchel ]; then
+		ln -sfv achelctl manageAchel
+	fi
 	
 	
 	# Set up profiles

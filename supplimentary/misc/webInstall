@@ -52,7 +52,7 @@ function earlySelfConfigure
 	fi
 	
 	# Check if there is a working installation already
-	if which achel | out && which manageAchel | out; then
+	if which achel | out && which achelctl | out; then
 		achelState="found"
 		achelStateComment="Found but not functional."
 		
@@ -122,7 +122,7 @@ function installAchel
 		./install.sh --installType='cp' 2>&1 | out
 		
 		if [ -d ~/.mass ]; then
-			manageAchel migrateMass 2>&1 | out
+			achelctl migrateMass 2>&1 | out
 		fi
 		
 		
@@ -135,9 +135,9 @@ function installAchel
 function setAchelVersion
 {
 	if [ "$achelVersion" != '' ]; then
-		manageAchel repoInstall "git@github.com:ksandom/achel.git=$achelVersion"
+		achelctl repoInstall "git@github.com:ksandom/achel.git=$achelVersion"
 		out "The version of achel requested is \"$achelVersion\". You can change it to sommething else like so"
-		out "  manageAchel repoInstall \"git@github.com:ksandom/achel.git=master\""
+		out "  achelctl repoInstall \"git@github.com:ksandom/achel.git=master\""
 	fi
 }
 
@@ -148,12 +148,12 @@ function installAnyExtraRepos
 		out "extraSrc was soecified as \"$extraSrc\""
 		for src in $extraSrc; do
 			out "Going to install \"$src\""
-			manageAchel repoInstall "$src" 2>&1 | out
+			achelctl repoInstall "$src" 2>&1 | out
 		done
 	else
 		echo "No extraSrc specified. So no extra repos will be installed at this time.\nIf you would like to do so, you can by running
-		manageAchel repoInstall "repoAddress"\n\nFor help about repoInstall run
-		manageAchel repoInstall" | out
+		achelctl repoInstall "repoAddress"\n\nFor help about repoInstall run
+		achelctl repoInstall" | out
 	fi
 }
 
@@ -165,8 +165,8 @@ function cleanUp
 	# When this version goes into master, it line 162 will become 166.
 	cd ~-
 	
-	if which manageAchel | out; then
-		configDir=`manageAchel getEnv | grep '^configDir=' | cut -d= -f2-`
+	if which achelctl | out; then
+		configDir=`achelctl getEnv | grep '^configDir=' | cut -d= -f2-`
 		logDestination="$configDir/obsolete"
 		logDestinationFile="$logDestination/$logFileName"
 		
@@ -198,7 +198,7 @@ function cleanUp
 
 function setupSyntaxHighlighting
 {
-	manageAchel syntaxHTInstall
+	achelctl syntaxHTInstall
 }
 
 

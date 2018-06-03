@@ -37,8 +37,8 @@ done
 filename="achel"
 removeFilesIfExisting ~/bin/$filename /usr/bin/$filename /usr/local/bin/$filename
 
- # Remove manageAchel executable
-filename="manageAchel"
+ # Remove achelctl executable
+filename="achelctl"
 removeFilesIfExisting ~/bin/$filename /usr/bin/$filename /usr/local/bin/$filename
 
  # Remove achel home

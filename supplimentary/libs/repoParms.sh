@@ -299,7 +299,7 @@ function wizard_createRepo_takeAction
 	
 	# commit back to the repo
 	git add readme.md parameters.json
-	git commit -m "InitialSetup: Created readme.md and parameters.json using manageAchel repoCreateUsingWizard."
+	git commit -m "InitialSetup: Created readme.md and parameters.json using achelctl repoCreateUsingWizard."
 	
 	if [ "$backedUpOldFiles" == 'true' ]; then
 		for oldFile in README.md parameters.json readme.md; do

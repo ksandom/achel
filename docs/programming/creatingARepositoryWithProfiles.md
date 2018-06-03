@@ -2,13 +2,13 @@
 
 When you create a repo, you will likely want profiles to be automatically configured when the repo is installed. This document describes how to do it.
 
-In most situations, your easiest way of defining the parameters is to use `manageAchel repoCreateUsingWizard` which will run you through creating the repository and setting the parameters accordingly.
+In most situations, your easiest way of defining the parameters is to use `achelctl repoCreateUsingWizard` which will run you through creating the repository and setting the parameters accordingly.
 
 # Detail
 
 ## Every day scenario
 
-Use `manageAchel repoCreateUsingWizard` to create/setup a repository. It will guide you and take care of the chicken & egg scenario for you :)
+Use `achelctl repoCreateUsingWizard` to create/setup a repository. It will guide you and take care of the chicken & egg scenario for you :)
 
 Most of this document relies on you having used the wizard to get set up since you need a repository to be installed to use repoParms, but you need repoParms to be defined to install the repository.
 
@@ -22,7 +22,7 @@ This example works with the kevtest2345 repo.
 
 Let's see what repositories we could pull from?
 
-    $ manageAchel repoList --short
+    $ achelctl repoList --short
     achel
     colouredWeb
     doneIt
@@ -32,11 +32,11 @@ Let's see what repositories we could pull from?
 
 Let's pull from doneIt
 
-    $ manageAchel repoParmDefinePackages kevtest2345 profiles123 pacakgeSetName123 doneIt '.*'
+    $ achelctl repoParmDefinePackages kevtest2345 profiles123 pacakgeSetName123 doneIt '.*'
 
 And it looks like this
 
-    $ manageAchel repoList kev
+    $ achelctl repoList kev
     kevtest2345
     
       name: kevtest2345
@@ -58,7 +58,7 @@ And it looks like this
 
 Let's apply these changes
 
-    $ manageAchel repoReinstall kevtest2345
+    $ achelctl repoReinstall kevtest2345
 
 * Here we've specified we wanted all packages (`.*`) from `doneIt`. We could restrict this down by replacing the `.*` with a more restrictive regex.
  * If you want to specify several packages, rather than making a nasty regex with lots of logical ORs, use multiple entries instead. The only requirement is that the packageSetName (`pacakgeSetName123`) is unique.
@@ -69,17 +69,17 @@ Here we are going to push to the `doneIt` profile from `kevtest2345`. You would 
 
 First we need to set a name and description. In the future these will not be needed any more for this purpose, however currerently they are still needed for sanity checks to pass.
 
-    $ manageAchel repoParmSet kevtest2345 doneIt name doneIt
-    $ manageAchel repoParmSet kevtest2345 doneIt description 'Send functionality to doneIt'
+    $ achelctl repoParmSet kevtest2345 doneIt name doneIt
+    $ achelctl repoParmSet kevtest2345 doneIt description 'Send functionality to doneIt'
 
 Now let's say that we want the packages to be sent over.
 
-    $ manageAchel repoParmDefinePackages kevtest2345 doneIt SELF
+    $ achelctl repoParmDefinePackages kevtest2345 doneIt SELF
     /home/ksandom/.achel/supplimentary/repoParmDefinePackages: Assumed sourceRepo="kevtest2345" and packageRegex=".*"
 
 And it looks like this
 
-    $ manageAchel repoList kev
+    $ achelctl repoList kev
     kevtest2345
     
       name: kevtest2345
@@ -105,7 +105,7 @@ And it looks like this
 
 Let's apply these changes
 
-    $ manageAchel repoReinstall kevtest2345
+    $ achelctl repoReinstall kevtest2345
 
 * Here we've specified we want all to send all packages (`.*`) from `kevtest2345` to the `doneIt` profile. We could restrict this down by replacing the `.*` with a more restrictive regex.
  * If you want to specify several packages, rather than making a nasty regex with lots of logical ORs, use multiple entries instead. The only requirement is that the packageSetName (`pacakgeSetName123`) is unique.

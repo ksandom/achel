@@ -4,4 +4,4 @@ This is the URL from which the repository will be checked out. The wizard will t
 
 * The repository that this URL represents should exist BEFORE completing this wizard.
 * The repository should be initialised.
-* For compatibility with the manageAchel automation tools, it should not be HTTP based.
+* For compatibility with the achelctl automation tools, it should not be HTTP based.

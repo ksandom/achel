@@ -46,11 +46,11 @@ The advantage of this way is that if Achel isn't installed, it will get installe
 
 ### Easy way 2
 
-* Use `manageAchel repoInstall` to install the app directly from the git url.
+* Use `achelctl repoInstall` to install the app directly from the git url.
 
 eg
 
-    $ manageAchel repoInstall https://github.com/ksandom/doneIt.git
+    $ achelctl repoInstall https://github.com/ksandom/doneIt.git
 
 The advantage of this is that it's easier for you to derive if you already have Achel already installed.
 
@@ -58,13 +58,13 @@ The advantage of this is that it's easier for you to derive if you already have 
 
 * Get into the directory where you clone your repositories.
 * Clone the repository.
-* Use `manageAchel repoInstall` to install directly from the cloned repository.
+* Use `achelctl repoInstall` to install directly from the cloned repository.
 
 eg
 
     $ cd ~/repos
     $ git clone https://github.com/ksandom/doneIt.git
-    $ manageAchel repoInstall ~/repos/doneIt
+    $ achelctl repoInstall ~/repos/doneIt
 
 The advantage of this is that you can develop within your own directory structure.
 
