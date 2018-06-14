@@ -362,7 +362,6 @@ class Manipulator extends Module
 			{
 				if (!is_array($value)) $outputLine=$this->replace($outputLine, resultVarBegin."$key".resultVarEnd, $value);
 				else $this->core->debug(4, "processResultVarsInString: value for key $key is an array, so the replace has not been attempted.");
-				$this->core->debug(4, "processResultVarsInString: In=\"$string\" Out=\"$outputLine\" Search=$key Value=$value");
 			}
 		}
 		
