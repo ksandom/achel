@@ -1,5 +1,5 @@
 <?php
-# Copyright (c) 2013, Kevin Sandom under the BSD License. See LICENSE for full details.
+# Copyright (c) 2013-2018, Kevin Sandom under the GPL License. See LICENSE for full details.
 
 # GoogleProvisioningAPI integration
 

@@ -1,5 +1,5 @@
 <?php
-# Copyright (c) 2014, Kevin Sandom under the BSD License. See LICENSE for full details.
+# Copyright (c) 2014-2018, Kevin Sandom under the GPL License. See LICENSE for full details.
 
 # YAML conversions
 # Most/all of this implementation will map directly to the PHP code.

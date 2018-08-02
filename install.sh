@@ -1,6 +1,6 @@
 #!/bin/bash
 # Install the program
-# Copyright (c) 2012, Kevin Sandom under the BSD License. See LICENSE for full details.
+# Copyright (c) 2012-2018, Kevin Sandom under the GPL License. See LICENSE for full details.
 
 # If installed using the root user, the program will be available to all users. Otherwise it will be installed locally to the current user.
 # Alternatively, if you install it as a non-root user, you can do a linked install like this:
