@@ -66,6 +66,14 @@ function removeProfile
 }
 
 
+function getExecTemplates
+{
+	echo "startup-normal:
+		startup-debug:debug-
+		startup-regenerateCache:regenerateCache-
+		startup-uncached:uncached-" | sed 's/^	//g'
+}
+
 function createExec
 {
 	name="$1"
@@ -75,10 +83,15 @@ function createExec
 		programName="$name"
 	fi
 	cd "$binExec"
-	srcFile="${languageRepo:-$startDir}/src/exec"
 	
-	copyTemplatedFile "$srcFile" "$name"
-	chmod 755 "$name"
+	for templateFile in `getExecTemplates` ;do
+		srcTemplate=`echo $templateFile | cut -d: -f1`
+		templatePrefix=`echo $templateFile | cut -d: -f2`
+		templateOut="$templatePrefix$name"
+		
+		copyTemplatedFile "${languageRepo:-$startDir}/src/$srcTemplate" "$templateOut"
+		chmod 755 "$templateOut"
+	done
 }
 
 function removeExec
@@ -86,13 +99,15 @@ function removeExec
 	name="$1"
 	
 	cd "$binExec"
-	if [ ! "$name" == '' ] && [ -e "$binExec/$name" ]; then
-		rm "$name"
-	else
-		return 1
-	fi
-	
-	
+	for templateFile in `getExecTemplates` ;do
+		srcTemplate=`echo $templateFile | cut -d: -f1`
+		templatePrefix=`echo $templateFile | cut -d: -f2`
+		templateOut="$templatePrefix$name"
+		
+		if [ ! "$templateOut" == '' ] && [ -e "$binExec/$templateOut" ]; then
+			rm "$templateOut"
+		fi
+	done
 }
 
 function userRemoveExec

@@ -1,0 +1,83 @@
+#!/usr/bin/php
+<?php
+# Achel application starter.
+# Copyright (c) 2012-2018, Kevin Sandom under the GPL License. See LICENSE for full details.
+ 
+define('programName', '~%programName%~');
+$description="~%description%~";
+$profile=programName;
+
+define('configDir', '~%configDir%~');
+define('docsDir', '~%docsDir%~');
+define('storageDir', '~%storageDir%~');
+define('installType', '~%installType%~');
+define('binExec', '~%binExec%~');
+
+include configDir.'/core.php';
+
+# Early processing of -q
+$verbosity=0;
+$shouldCache=true;
+if (isset($argv[1]))
+{
+	$firstArg=$argv[1];
+	if ($firstArg=='-q' or $firstArg=='--quiet') $verbosity=-1;
+	elseif ($firstArg=='--debugStartup') $verbosity=4;
+	elseif ($firstArg=='--noCache') $shouldCache=false;
+}
+
+
+# initiate core
+$core=core::assert($verbosity);
+$cacheDir=configDir.'/profiles/'.$profile.'/cache';
+$core->set('General', 'EOL', "\n");
+$core->set('General', 'configDir', configDir);
+$core->set('General', 'cacheDir', $cacheDir);
+$core->set('General', 'docsDir', docsDir);
+$core->set('General', 'storageDir', storageDir);
+$core->set('General', 'installType', installType);
+$core->set('General', 'binExec', binExec);
+$core->set('General', 'profile', $profile);
+$core->set('General', 'hostsDir', storageDir.'/data/1LayerHosts');
+$core->set('General', 'programName', programName);
+$core->set('General', 'description', $description);
+$core->set('General', 'delayProcessingArgs', true);
+$core->set('General', 'exitCode', 0);
+
+
+# Process cache
+if (file_exists($cacheDir) and $shouldCache)
+{
+	$core->loadCache($cacheDir);
+	$core->set('General', 'cache', 'true');
+}
+elseif ($shouldCache===false)
+{
+	$core->debug(0, "Cache manually disabled. This should only be used for debugging purposes. If you need it for every-day usage, that is a bug. Please report it.");
+	$core->set('General', 'cache', 'false');
+	$core->set('General', 'noCacheReason', 'Manually disabled with '.$firstArg);
+}
+else
+{
+	$core->set('General', 'cache', 'false');
+	$core->set('General', 'noCacheReason', 'Could not find '.$cacheDir.'.');
+	$core->debug(0, "No cache found. A re-install may be required.");
+}
+
+include (configDir.'/interfaces/commandLine.php');
+$core->setRef('CommandLine', 'arguments', $argv);
+loadModules($core, configDir."/profiles/$profile/modules");
+$core->callFeature("triggerEvent", "Achel,interfaceStartup");
+$core->callFeature("registerForEvent", "Achel,finishLate,outNow");
+
+# Make it happen!
+$core->go();
+
+# We're finished, return an exit code to the command line.
+$exitCode=$core->get('General', 'exitCode');
+if (is_numeric($exitCode))
+{
+	exit(intval($exitCode));
+}
+
+?>

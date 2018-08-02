@@ -293,9 +293,15 @@ function doInstall
 	# Make it executable
 	cd "$binExec"
 	rm -f "$programName" "manageMass" "achelctl"
-	copyTemplatedFile "$startDir/src/exec" "$programName"
-	copyTemplatedFile "$startDir/src/manage" achelctl
-	chmod 755 "$programName" "achelctl"
+
+	for templateFile in `getExecTemplates` ;do
+		srcTemplate=`echo $templateFile | cut -d: -f1`
+		templatePrefix=`echo $templateFile | cut -d: -f2`
+		templateOut="$templatePrefix$programName"
+		
+		copyTemplatedFile "${languageRepo:-$startDir}/src/$srcTemplate" "$templateOut"
+		chmod 755 "$templateOut"
+	done
 	
 	# If someone has the old manageAchel command installed, replace it with a symlink to achelctl.
 	if [ -f manageAchel ]; then
