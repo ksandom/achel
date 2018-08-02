@@ -59,6 +59,7 @@ function linkedInstall
 function chooseInstallSettings
 {
 	# Choose defaults based on whether we are root or not.
+	description="A language for robotics. It's achely pretty good!"
 	if [ `id -u` -gt 0 ];then
 		linkedInstall
 	else
@@ -160,6 +161,7 @@ function copyTemplatedFile
 		s#~%installType%~#'$installType'#g;
 		s#~%binExec%~#'$binExec'#g;
 		s#~%programName%~#'$programName'#g;
+		s#~%description%~#'"$description"'#g;
 		s#~%languageName%~#achel#g;
 		s#~%.*%~##g' > "$dst"
 }

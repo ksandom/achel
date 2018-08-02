@@ -115,6 +115,7 @@ function installRepo_setup
 			# Get the logical name of the profile
 			profileName=`repoGetParm "$irs_repoName" "$profileRefName" "name"`
 			execName=`repoGetParm "$irs_repoName"  "$profileName" execName`
+			description=`repoGetParm "$irs_repoName"  "$profileName" description`
 			
 			# create profile
 			createProfile "$profileName"
