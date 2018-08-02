@@ -1,3 +1,4 @@
 # Remove the test colour. ~ improveColors
+#onDefine registerForEvent Color,generate,improveColorsNoTest
 
 removeColor testColor

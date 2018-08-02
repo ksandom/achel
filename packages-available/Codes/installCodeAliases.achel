@@ -1,0 +1,9 @@
+# Install color codes ~ install,color,codes
+#onDefine registerForEvent Install,late,installCodeAliases
+
+debug 1,Generating default code aliases.
+generateDefaultAliases
+
+triggerEvent CodeAliases,generate
+
+saveStoreToConfig Codes

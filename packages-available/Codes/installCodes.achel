@@ -1,0 +1,9 @@
+# Install control codes ~ install,control,codes
+#onDefine registerForEvent Install,early,installCodes
+
+debug 1,Generating codes.
+generateControlCodes
+
+triggerEvent Codes,generate
+
+saveStoreToConfig Codes

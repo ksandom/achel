@@ -1,4 +1,5 @@
 # Remove all the blink colors ~ improveColors
+#onDefine registerForEvent Color,generate,improveColorsNoBlink
 
 debug 2,improveColorsNoBlink: Removing nasty colour combinations
 

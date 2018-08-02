@@ -15,8 +15,10 @@ class Codes extends Module
 		switch ($event)
 		{
 			case 'init':
-				$this->loadCodes();
+				#$this->loadCodes();
 				$this->core->registerFeature($this, array('generateColors'), 'generateColors', 'Generate colors.', array('userExtra'));
+				$this->core->registerFeature($this, array('generateControlCodes'), 'generateControlCodes', 'Generate control codes.', array('userExtra'));
+				$this->core->registerFeature($this, array('generateDefaultAliases'), 'generateDefaultAliases', 'Generate default code aliases.', array('userExtra'));
 				#$this->core->registerFeature($this, array('noColor', 'nocolor', 'b'), 'noColor', 'Turn off colored output.', array('userExtra'));
 
 				break;
@@ -27,9 +29,15 @@ class Codes extends Module
 			case 'generateColors':
 				$this->loadColorCodes(true);
 				break;
+			case 'generateControlCodes':
+				$this->loadControlCodes();(true);
+				break;
+			case 'generateDefaultAliases':
+				$this->loadDefaultAliases();(true);
+				break;
 			#case 'noColor':
 			#	$this->loadColorCodes(false);
-				break;
+			#	break;
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
 				break;

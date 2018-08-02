@@ -1,12 +1,10 @@
-# Install color codes ~ install,color
+# Install color codes ~ install,color,codes
 #onDefine registerForEvent Install,early,installColor
 
+debug 1,Generating ~!Color,red!~c~!Color,yellow!~o~!Color,brightYellow!~l~!Color,brightGreen!~o~!Color,brightBlue!~r~!Color,purple!~s~!Color,default!~.
 generateColors
+debug 1,Generated ~!Color,red!~c~!Color,yellow!~o~!Color,brightYellow!~l~!Color,brightGreen!~o~!Color,brightBlue!~r~!Color,purple!~s~!Color,default!~.
 
 triggerEvent Color,generate
-
-# TODO this will need to be done smarter
-improveColorsNoBlink
-improveColorsNoTest
 
 saveStoreToConfig Color
