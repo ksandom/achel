@@ -1,0 +1,17 @@
+# Create a faucet unit test. --defineFaucetTest=Description, . ~ faucets,unit
+parameters description,containingFunction
+
+# Create containing meta faucet and anchor containing faucet to parent?
+createRawMetaFaucet ~!Local,description!~
+createPipe ~!Local,description!~,.
+
+# Set the context for test results.
+setNested FaucetUnit,current,description,~!Local,description!~
+
+# Execute containingFunction.
+changeFaucet ~!Local,description!~
+callFeatureNoReturn ~!Local,containingFunction!~
+changeFaucet ..
+
+# Clean up.
+unset FaucetUnit,currentTest

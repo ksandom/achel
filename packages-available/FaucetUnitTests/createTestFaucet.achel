@@ -1,0 +1,48 @@
+# Create a faucet for recieving results during unit testing --createTestFaucet=uniqueResultName,description,(expect|expectNot),expectedResult . ~ faucet,unit
+parameters name,description,action,expectedResult
+escapeForJson Local,resultName,~!Local,description!~
+
+
+# Derive globallyUnique test name so that final results will not clash.
+set FaucetUnit,currentTest,currentResult,name,~!FaucetUnit,currentTest,description!~/~!Local,name!~
+
+# Register details for tracking when the tests have completed.
+set FaucetUnitTests,~!FaucetUnit,currentTest,currentResult,name!~,expectedResult,~!Local,expectedResult!~
+
+if ~!Local,action!~,==,expect,
+	set FaucetUnitTests,~!FaucetUnit,currentTest,currentResult,name!~,action,==
+elseIf ~!Local,action!~,==,expect,
+	set FaucetUnitTests,~!FaucetUnit,currentTest,currentResult,name!~,action,!=
+
+# Test the result.
+set FaucetUnit,testHandeler,
+	parameters resultName
+	debug 0,blah..~!Local,resultName!~
+	
+	if ~!Result,default!~,~!FaucetUnitTests,~!Local,resultName!~,action!~,~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~,
+		# TODO write success
+		set Local,result,pass
+		set Local,escapedComment,Yay!
+	else
+		# TODO write failure
+		set Local,result,fail
+		set Local,escapedComment,Expected ~!Result,default!~ ~!FaucetUnitTests,~!Local,resultName!~,action!~ ~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~
+	
+	# Store the result
+	set Local,resultColor,~!UnitResults,~!Local,result!~Color!~
+	setNested ["UnitResults","results","~!Local,resultName!~","description","~!Local,resultName!~"]
+	setNested ["UnitResults","results","~!Local,resultName!~","result","~!Local,result!~"]
+	setNested ["UnitResults","results","~!Local,resultName!~","resultComment","~!Local,escapedComment!~"]
+	setNested ["UnitResults","results","~!Local,resultName!~","resultColor","~!Local,resultColor!~"]
+	setNested ["UnitResults","results","~!Local,resultName!~","stackTrace","NA."]
+	set UnitResults,didExecute,true
+
+	# Clean up.
+	unset FaucetUnitTests,~!Local,resultName!~
+
+# NOTE 1 to take continual results, store the test details separately from the FaucetUnitTests category so that the results can continue to be tested after the cleanup has happened.
+# NOTE 2 to take continual results up to a specified quantity this could be tracked in the test details. In both cases, this should be a separate macro to this one.
+
+# Create faucet for recieving the result and anchor faucet to parent faucet.
+create1-1CallFaucet ~!Local,name!~,~!FaucetUnit,testHandeler!~,~!FaucetUnit,currentTest,currentResult,name!~
+createPipe ~!Local,name!~,.

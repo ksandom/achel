@@ -1,0 +1,14 @@
+# The first unit faucet unit test set. ~ unitTest,faucet,faucetTestSet,hidden
+
+debug 0,Also got here akjsdfkjfj
+defineFaucetTestSet
+	debug 0, GOT here asdasd
+	defineFaucetTest The first test,
+		createTestFaucet result1,Should be happy,expect,yay
+		deliver result1,,yay
+
+	defineFaucetTest Second test,
+		createTestFaucet result1,Should be happy,expect,yay
+		createTestFaucet result2,Should be sad,expect,boo
+		deliver result1,,yay
+		deliver result2,,boo

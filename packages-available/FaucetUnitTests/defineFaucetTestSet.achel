@@ -1,0 +1,38 @@
+# Contain several related faucet unit tests that can be grouped together. ~ faucets,unit
+parameters containingFunction
+
+# Add tracking.
+set UnitResults,didExecute,false
+
+
+# Create and anchor parent meta faucet to null.
+createRawMetaFaucet testSet
+createNullFaucet null
+
+createPipe testSet,null
+
+# Execute containingFunction.
+changeFaucet testSet
+debug 0,callFeatureNoReturn ~!Local,containingFunction!~
+callFeatureNoReturn ~!Local,containingFunction!~
+changeFaucet ..
+
+# TODO Deliver until done.
+deliverAll 10000
+# TODO Return results if needed.
+
+
+# Clean up.
+deleteFaucet testSet
+deleteFaucet null
+deletePipe testSet,null
+
+
+defineTest ~!Local,containingFunction!~,
+	# Check that the test ran.
+	if ~!UnitResults,didExecute!~,==,true,
+		passTest FaucetTest got a result.
+	else
+		failTest FaucetTest got no results.
+
+unset UnitResults,didExecute
