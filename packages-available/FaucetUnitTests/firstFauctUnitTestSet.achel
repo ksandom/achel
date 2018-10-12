@@ -1,8 +1,6 @@
 # The first unit faucet unit test set. ~ unitTest,faucet,faucetTestSet,hidden
 
-debug 0,Also got here akjsdfkjfj
 defineFaucetTestSet
-	debug 0, GOT here asdasd
 	defineFaucetTest The first test,
 		createTestFaucet result1,Should be happy,expect,yay
 		deliver result1,,yay
@@ -12,3 +10,60 @@ defineFaucetTestSet
 		createTestFaucet result2,Should be sad,expect,boo
 		deliver result1,,yay
 		deliver result2,,boo
+
+	defineFaucetTest Third test,
+		createTestFaucet result3,Should be happy,expect,yay1
+		createTestFaucet result4,Should be sad,expect,boo2
+		createTestFaucet result5,Should be happy,expect,yay3
+		createTestFaucet result6,Should be sad,expect,boo4
+		createTestFaucet result7,Should be happy,expect,yay5
+		createTestFaucet result8,Should be sad,expect,boo6
+		createTestFaucet result9,Should be happy,expect,yay7
+		createTestFaucet result10,Should be sad,expect,boo8
+		createTestFaucet result11,Should be sad,expect,boo9
+		createTestFaucet result12,Should be sad,expect,boo10
+		createTestFaucet result13,Should be sad,expect,boo11
+		createTestFaucet result14,Should be sad,expect,boo12
+		createTestFaucet result15,Should be sad,expect,boo13
+		deliver result3,,yay1
+		deliver result4,,boo2
+		deliver result5,,yay3
+		deliver result6,,boo4
+		deliver result7,,yay5
+		deliver result8,,boo6
+		deliver result9,,yay7
+		deliver result10,,boo8
+		deliver result11,,boo9
+		deliver result12,,boo10
+		deliver result13,,boo11
+		deliver result14,,boo12
+		deliver result15,,boo13
+
+	defineFaucetTest Another test 1,
+		createTestFaucet result1,Should be happy,expect,yay1
+		deliver result1,,yay1
+
+	defineFaucetTest Another test 2,
+		createTestFaucet result1,Should be happy,expect,yay2
+		deliver result1,,yay2
+
+	defineFaucetTest Another test 3,
+		createTestFaucet result1,Should be happy,expect,yay3
+		deliver result1,,yay3
+
+	defineFaucetTest Another test 4,
+		createTestFaucet result1,Should be happy,expect,yay4
+		deliver result1,,yay4
+
+	defineFaucetTest Another test 5,
+		createTestFaucet result1,Should be happy,expect,yay5
+		deliver result1,,yay5
+
+	defineFaucetTest Another test 6,
+		createTestFaucet result1,Should be happy,expect,yay6
+		deliver result1,,yay6
+
+	defineFaucetTest Another test 7,
+		createTestFaucet result1,Should be happy,expect,yay7
+		deliver result1,,yay7
+

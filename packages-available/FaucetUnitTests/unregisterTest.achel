@@ -1,0 +1,4 @@
+# Unregister a test so that its result is no longerrequired before the test set can exit. ~ registration,hidden
+parameters testName
+
+unset FaucetTestRegistrations,~!Local,testName!~

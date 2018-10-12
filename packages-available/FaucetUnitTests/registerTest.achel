@@ -1,0 +1,4 @@
+# Register a test so that its result is required before the test set can exit. ~ registration,hidden
+parameters testName
+
+set FaucetTestRegistrations,~!Local,testName!~

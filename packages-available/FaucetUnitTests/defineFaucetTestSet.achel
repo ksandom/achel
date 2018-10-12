@@ -13,12 +13,12 @@ createPipe testSet,null
 
 # Execute containingFunction.
 changeFaucet testSet
-debug 0,callFeatureNoReturn ~!Local,containingFunction!~
 callFeatureNoReturn ~!Local,containingFunction!~
 changeFaucet ..
 
 # TODO Deliver until done.
-deliverAll 10000
+# deliverAll 10000
+deliverUnitTests
 # TODO Return results if needed.
 
 

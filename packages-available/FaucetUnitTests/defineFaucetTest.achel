@@ -6,7 +6,10 @@ createRawMetaFaucet ~!Local,description!~
 createPipe ~!Local,description!~,.
 
 # Set the context for test results.
+# TODO Do we still need this fist one?
 setNested FaucetUnit,current,description,~!Local,description!~
+setNested FaucetUnit,currentTest,description,~!Local,description!~
+
 
 # Execute containingFunction.
 changeFaucet ~!Local,description!~

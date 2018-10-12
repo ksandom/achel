@@ -118,6 +118,7 @@ class Faucets extends Module
 				
 				$this->core->registerFeature($this, array('deliver'), 'deliver', "Deliver text directly to a faucet. --deliver=faucetName,channel,textToSend", array());
 				$this->core->registerFeature($this, array('deliverAll'), 'deliverAll', "Invoke every pipe to check for contents from it's fromFaucet and deliver any contents to it's toFaucet. This will become very inefficient as the number of faucets grows. --deliverAll[=maximumRevolutions] . maximumRevolutions defaults to 10.", array());
+				$this->core->registerFeature($this, array('deliverUnitTests'), 'deliverUnitTests', "Deliver until all unit tests have returned something. TODO Add timeout.", array());
 				break;
 			case 'followup':
 				break;
@@ -257,6 +258,9 @@ class Faucets extends Module
 				break;
 			case 'deliverAll':
 				return $this->environment->rootFaucet->deliverAll($this->core->get('Global', $event));
+				break;
+			case 'deliverUnitTests':
+				return $this->environment->rootFaucet->deliverUnitTests($this->core->get('Global', $event));
 				break;
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
@@ -1313,6 +1317,21 @@ class MetaFaucet extends ThroughBasedFaucet
 		}
 		
 		return $this->core->getResultSet();
+	}
+	
+	function deliverUnitTests($timeoutSeconds)
+	{
+		# TODO Add timeout
+		$registeredTests=$this->core->getCategoryModule('FaucetTestRegistrations');
+		$count=count($registeredTests);
+		
+		while ($count>0)
+		{
+			$resultValue=$this->processPipes();
+			
+			$registeredTests=$this->core->getCategoryModule('FaucetTestRegistrations');
+			$count=count($registeredTests);
+		}
 	}
 
 	function last($series)
