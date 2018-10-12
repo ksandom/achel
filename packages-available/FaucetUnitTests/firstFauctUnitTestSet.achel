@@ -66,4 +66,3 @@ defineFaucetTestSet
 	defineFaucetTest Another test 7,
 		createTestFaucet result1,Should be happy,expect,yay7
 		deliver result1,,yay7
-

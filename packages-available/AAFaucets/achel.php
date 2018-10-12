@@ -1321,16 +1321,18 @@ class MetaFaucet extends ThroughBasedFaucet
 	
 	function deliverUnitTests($timeoutSeconds)
 	{
-		# TODO Add timeout
+		$startTime=time();
+		$currentTime=$startTime;
 		$registeredTests=$this->core->getCategoryModule('FaucetTestRegistrations');
 		$count=count($registeredTests);
 		
-		while ($count>0)
+		while ($count>0 and $currentTime-$startTime<$timeoutSeconds)
 		{
 			$resultValue=$this->processPipes();
 			
 			$registeredTests=$this->core->getCategoryModule('FaucetTestRegistrations');
 			$count=count($registeredTests);
+			$currentTime=time();
 		}
 	}
 

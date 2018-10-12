@@ -6,10 +6,12 @@ unsetCategory UnitResults
 set UnitResults,pass,0
 set UnitResults,fail,0
 set UnitResults,warn,0
+set UnitResults,time,0
 
 set UnitResults,passColor,green
 set UnitResults,failColor,red
 set UnitResults,warnColor,yellow
+set UnitResults,timeColor,purple
 
 debug 3,unitTests: Set colours ~!UnitResults,passColor!~pass~!Color,brightBlack!~, ~!UnitResults,failColor!~fail~!Color,brightBlack!~, ~!UnitResults,warnColor!~warn~!Color,default!~.
 

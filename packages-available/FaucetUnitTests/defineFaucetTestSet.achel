@@ -16,10 +16,7 @@ changeFaucet testSet
 callFeatureNoReturn ~!Local,containingFunction!~
 changeFaucet ..
 
-# TODO Deliver until done.
-# deliverAll 10000
-deliverUnitTests
-# TODO Return results if needed.
+deliverUnitTests 20
 
 
 # Clean up.

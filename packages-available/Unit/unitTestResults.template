@@ -1,4 +1,4 @@
 <~~ [~!Color,~%resultColor%~!~~%result%~~!Color,default!~] ~!Color,default!~~%description%~ ~!Color,brightBlack!~- ~!Color,green!~~%resultComment%~~!Color,default!~
 
 ~>
-~!Color,~!UnitResults,passColor!~!~Pass~!Color,brightBlack!~=~!Color,default!~~!UnitResults,pass!~, ~!Color,~!UnitResults,warnColor!~!~Warn~!Color,brightBlack!~=~!Color,default!~~!UnitResults,warn!~, ~!Color,~!UnitResults,failColor!~!~Fail~!Color,brightBlack!~=~!Color,default!~~!UnitResults,fail!~~!Color,default!~
+~!Color,~!UnitResults,passColor!~!~Pass~!Color,brightBlack!~=~!Color,default!~~!UnitResults,pass!~, ~!Color,~!UnitResults,warnColor!~!~Warn~!Color,brightBlack!~=~!Color,default!~~!UnitResults,warn!~, ~!Color,~!UnitResults,failColor!~!~Fail~!Color,brightBlack!~=~!Color,default!~~!UnitResults,fail!~, ~!Color,~!UnitResults,timeColor!~!~Timeout~!Color,brightBlack!~=~!Color,default!~~!UnitResults,time!~~!Color,default!~
