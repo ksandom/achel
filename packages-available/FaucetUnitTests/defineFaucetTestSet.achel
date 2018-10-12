@@ -33,3 +33,4 @@ defineTest ~!Local,containingFunction!~,
 		failTest FaucetTest got no results.
 
 unset UnitResults,didExecute
+unsetCategory FaucetTestRegistrations
