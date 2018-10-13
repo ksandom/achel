@@ -32,38 +32,38 @@ basicMaths UnitResults,time,~!UnitResults,time!~,+,1
 set FaucetUnit,testHandeler,
 	parameters resultName,resultValue
 	
-	# Get the result into a useable state.
-	retrieveResults Local,resultValue
-	loop
-		set Local,result,~!Result,line!~
-	
-	# Figure out if the test passes or fails.
-	if ~!Local,result!~,~!FaucetUnitTests,~!Local,resultName!~,action!~,~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~,
-		set Local,result,pass
-		set Local,escapedComment,Yay!
-	else
-		set Local,result,fail
-		set Local,escapedComment,Expected ~!Local,resultValue!~ ~!FaucetUnitTests,~!Local,resultName!~,action!~ ~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~
-	
-	# Store the result
-	set Local,resultColor,~!UnitResults,~!Local,result!~Color!~
-	setNested ["UnitResults","results","~!Local,resultName!~","description","~!Local,resultName!~"]
-	setNested ["UnitResults","results","~!Local,resultName!~","result","~!Local,result!~"]
-	setNested ["UnitResults","results","~!Local,resultName!~","resultComment","~!Local,escapedComment!~"]
-	setNested ["UnitResults","results","~!Local,resultName!~","resultColor","~!Local,resultColor!~"]
-	setNested ["UnitResults","results","~!Local,resultName!~","stackTrace","NA."]
-	set UnitResults,didExecute,true
-	
 	if ~!UnitResults,result,~!Local,resultName!~,hasResult!~,!=,true,
+		# Get the result into a useable state.
+		retrieveResults Local,resultValue
+		loop
+			set Local,result,~!Result,line!~
+		
+		# Figure out if the test passes or fails.
+		if ~!Local,result!~,~!FaucetUnitTests,~!Local,resultName!~,action!~,~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~,
+			set Local,result,pass
+			set Local,escapedComment,Yay!
+		else
+			set Local,escapedComment,Expected ~!Local,result!~ ~!FaucetUnitTests,~!Local,resultName!~,action!~ ~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~
+			set Local,result,fail
+		
+		# Store the result
+		set Local,resultColor,~!UnitResults,~!Local,result!~Color!~
+		setNested ["UnitResults","results","~!Local,resultName!~","description","~!Local,resultName!~"]
+		setNested ["UnitResults","results","~!Local,resultName!~","result","~!Local,result!~"]
+		setNested ["UnitResults","results","~!Local,resultName!~","resultComment","~!Local,escapedComment!~"]
+		setNested ["UnitResults","results","~!Local,resultName!~","resultColor","~!Local,resultColor!~"]
+		setNested ["UnitResults","results","~!Local,resultName!~","stackTrace","NA."]
+		set UnitResults,didExecute,true
+		
 		basicMaths UnitResults,~!Local,result!~,~!UnitResults,~!Local,result!~!~,+,1
 		basicMaths UnitResults,time,~!UnitResults,time!~,-,1
-	
-	# Show live output.
-	if ~!UnitConfig,showTests!~,==,true,
-		debug 0,[~!Color,~!Local,resultColor!~!~~!Local,result!~~!Color,default!~] ~!Local,resultName!~: ~!Local,escapedComment!~
-	
-	unregisterTest ~!Local,resultName!~
-	setNested ["UnitResults","results","~!Local,resultName!~","hasResult","true"]
+		
+		# Show live output.
+		if ~!UnitConfig,showTests!~,==,true,
+			debug 0,[~!Color,~!Local,resultColor!~!~~!Local,result!~~!Color,default!~] ~!Local,resultName!~: ~!Local,escapedComment!~
+		
+		unregisterTest ~!Local,resultName!~
+		setNested ["UnitResults","results","~!Local,resultName!~","hasResult","true"]
 
 
 
