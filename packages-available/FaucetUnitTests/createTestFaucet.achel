@@ -46,7 +46,7 @@ set FaucetUnit,testHandeler,
 		# Show live output.
 		if ~!UnitConfig,showTests!~,==,true,
 			set Local,resultColor,~!UnitResults,~!Local,result!~Color!~
-			debug 0,[~!Color,~!Local,resultColor!~!~~!Local,result!~~!Color,default!~] ~!Local,resultName!~: ~!Local,escapedComment!~
+			debug 0,[~!Color,~!Local,resultColor!~!~~!Local,result!~~!Color,default!~]  ~!Color,brightBlack!~v--~!Color,default!~[~!Color,~!UnitResults,faucetColor!~!~faucet~!Color,brightBlack!~]~!Color,default!~ ~!Local,resultName!~: ~!Local,escapedComment!~
 		
 		unregisterTest ~!Local,resultName!~
 		setNested ["UnitResults","results","~!Local,resultName!~","hasResult","true"]

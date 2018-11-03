@@ -12,6 +12,10 @@ set UnitResults,passColor,green
 set UnitResults,failColor,red
 set UnitResults,warnColor,yellow
 set UnitResults,timeColor,purple
+set UnitResults,faucetColor,cyan
+set UnitResults,traditionalColor,brightGreen
+set UnitResults,legacyColor,brightPurple
+set UnitResults,deprecatedColor,grey
 
 debug 3,unitTests: Set colours ~!UnitResults,passColor!~pass~!Color,brightBlack!~, ~!UnitResults,failColor!~fail~!Color,brightBlack!~, ~!UnitResults,warnColor!~warn~!Color,default!~.
 
