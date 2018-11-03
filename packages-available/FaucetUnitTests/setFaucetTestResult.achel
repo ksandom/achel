@@ -1,0 +1,19 @@
+# Set a result from a faucet unit test. ~ hidden
+parameters resultName,result,escapedComment,preset
+
+
+set Local,resultColor,~!UnitResults,~!Local,result!~Color!~
+
+setNested ["UnitResults","results","~!Local,resultName!~","description","~!Local,resultName!~"]
+setNested ["UnitResults","results","~!Local,resultName!~","result","~!Local,result!~"]
+setNested ["UnitResults","results","~!Local,resultName!~","resultComment","~!Local,escapedComment!~"]
+setNested ["UnitResults","results","~!Local,resultName!~","resultColor","~!Local,resultColor!~"]
+setNested ["UnitResults","results","~!Local,resultName!~","stackTrace","NA."]
+setNested ["UnitResults","results","~!Local,resultName!~","type","faucet"]
+set UnitResults,didExecute,true
+
+if ~!Local,preset!~,!=,true,
+	basicMaths UnitResults,~!Local,result!~,~!UnitResults,~!Local,result!~!~,+,1
+	basicMaths UnitResults,time,~!UnitResults,time!~,-,1
+else
+	basicMaths UnitResults,time,~!UnitResults,time!~,+,1

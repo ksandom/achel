@@ -19,14 +19,8 @@ else
 	debug 0,No action/condition set for ~!FaucetUnit,currentTest,currentResult,name!~.
 
 # Set the timeout state
-set Local,resultColor,~!UnitResults,timeColor!~
-setNested ["UnitResults","results","~!FaucetUnit,currentTest,currentResult,name!~","description","~!FaucetUnit,currentTest,currentResult,name!~"]
-setNested ["UnitResults","results","~!FaucetUnit,currentTest,currentResult,name!~","result","time"]
-setNested ["UnitResults","results","~!FaucetUnit,currentTest,currentResult,name!~","resultComment","Timeout."]
-setNested ["UnitResults","results","~!FaucetUnit,currentTest,currentResult,name!~","resultColor","~!Local,resultColor!~"]
-setNested ["UnitResults","results","~!FaucetUnit,currentTest,currentResult,name!~","stackTrace","NA."]
+setFaucetTestResult ~!FaucetUnit,currentTest,currentResult,name!~,time,Timeout.,true
 set UnitResults,didExecute,true
-basicMaths UnitResults,time,~!UnitResults,time!~,+,1
 
 # Test the result.
 set FaucetUnit,testHandeler,
@@ -47,19 +41,11 @@ set FaucetUnit,testHandeler,
 			set Local,result,fail
 		
 		# Store the result
-		set Local,resultColor,~!UnitResults,~!Local,result!~Color!~
-		setNested ["UnitResults","results","~!Local,resultName!~","description","~!Local,resultName!~"]
-		setNested ["UnitResults","results","~!Local,resultName!~","result","~!Local,result!~"]
-		setNested ["UnitResults","results","~!Local,resultName!~","resultComment","~!Local,escapedComment!~"]
-		setNested ["UnitResults","results","~!Local,resultName!~","resultColor","~!Local,resultColor!~"]
-		setNested ["UnitResults","results","~!Local,resultName!~","stackTrace","NA."]
-		set UnitResults,didExecute,true
-		
-		basicMaths UnitResults,~!Local,result!~,~!UnitResults,~!Local,result!~!~,+,1
-		basicMaths UnitResults,time,~!UnitResults,time!~,-,1
+		setFaucetTestResult ~!Local,resultName!~,~!Local,result!~,~!Local,escapedComment!~
 		
 		# Show live output.
 		if ~!UnitConfig,showTests!~,==,true,
+			set Local,resultColor,~!UnitResults,~!Local,result!~Color!~
 			debug 0,[~!Color,~!Local,resultColor!~!~~!Local,result!~~!Color,default!~] ~!Local,resultName!~: ~!Local,escapedComment!~
 		
 		unregisterTest ~!Local,resultName!~
