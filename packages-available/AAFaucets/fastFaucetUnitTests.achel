@@ -1,6 +1,7 @@
 # Unit tests for faucets. ~ hidden,unitTest,faucetStructure,faucets,fastFaucet
 
 defineTest Faucets - pwd - store,
+	setTestType legacy
 	createMetaFaucet thing1,
 		createMetaFaucet thing2,
 			pwd Test,result
@@ -13,6 +14,7 @@ defineTest Faucets - pwd - store,
 
 
 defineTest Faucets - changeFaucet graceful failure,
+	setTestType legacy
 	cd ..
 	cd ..
 	cd ..
@@ -20,6 +22,7 @@ defineTest Faucets - changeFaucet graceful failure,
 
 
 defineTest Faucets - changeFaucet - root,
+	setTestType legacy
 	createMetaFaucet thing1,
 		createMetaFaucet thing2,
 			changeFaucet root
@@ -32,6 +35,7 @@ defineTest Faucets - changeFaucet - root,
 	deleteFaucet thing2
 
 defineTest Faucets - changeFaucet - .,
+	setTestType legacy
 	createMetaFaucet thing1,
 		createMetaFaucet thing2,
 			changeFaucet .
@@ -44,6 +48,7 @@ defineTest Faucets - changeFaucet - .,
 	deleteFaucet thing2
 
 defineTest Faucets - changeFaucet - invalid input,
+	setTestType legacy
 	createMetaFaucet thing1,
 		createMetaFaucet thing2,
 			changeFaucet alfdkhjsdflkjas
@@ -56,6 +61,7 @@ defineTest Faucets - changeFaucet - invalid input,
 	deleteFaucet thing2
 
 defineTest Faucets - changeFaucet - ..,
+	setTestType legacy
 	createMetaFaucet thing1,
 		createMetaFaucet thing2,
 			changeFaucet ..
@@ -68,6 +74,7 @@ defineTest Faucets - changeFaucet - ..,
 	deleteFaucet thing2
 
 defineTest Faucets - changeFaucet - thing1 via root,
+	setTestType legacy
 	createMetaFaucet thing1,
 		createMetaFaucet thing2,
 			changeFaucet root/thing1
@@ -80,6 +87,7 @@ defineTest Faucets - changeFaucet - thing1 via root,
 	deleteFaucet thing2
 
 defineTest Faucets - changeFaucet - thing1 via empty string,
+	setTestType legacy
 	createMetaFaucet thing1,
 		createMetaFaucet thing2,
 			changeFaucet root/thing1

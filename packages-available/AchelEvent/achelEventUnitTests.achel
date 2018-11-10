@@ -7,6 +7,7 @@ set Tmp,eventHandeler,
 
 
 defineTest EventFaucet - default source default(null),
+	setTestType legacy
 	# Set up
 	createEventFaucet event,Event
 	createPipe event,null
@@ -25,6 +26,7 @@ defineTest EventFaucet - default source default(null),
 	unregisterForEvent Event,default,~!Tmp,eventHandeler!~
 
 defineTest EventFaucet - test1 source default(null),
+	setTestType legacy
 	# Set up
 	createEventFaucet event,Event
 	createPipe event,null
@@ -43,6 +45,7 @@ defineTest EventFaucet - test1 source default(null),
 	unregisterForEvent Event,test1,~!Tmp,eventHandeler!~
 
 defineTest EventFaucet - test1 source default(null) - No residual event,
+	setTestType legacy
 	# Set up
 	createEventFaucet event,Event
 	createPipe event,null
@@ -62,6 +65,7 @@ defineTest EventFaucet - test1 source default(null) - No residual event,
 
 # test null
 defineTest EventFaucet - test1 source null,
+	setTestType legacy
 	# Set up
 	createEventFaucet event,Event,null
 	createPipe event,null
@@ -81,6 +85,7 @@ defineTest EventFaucet - test1 source null,
 
 # TODO test lines
 defineTest EventFaucet - test1 source lines - 1,
+	setTestType legacy
 	# Set up
 	createEventFaucet event,Event,lines
 	createPipe event,null
@@ -99,6 +104,7 @@ defineTest EventFaucet - test1 source lines - 1,
 	unregisterForEvent Event,test1,~!Tmp,eventHandeler!~
 
 defineTest EventFaucet - test1 source lines - 3,
+	setTestType legacy
 	# Set up
 	createEventFaucet event,Event,lines
 	createPipe event,null
@@ -120,6 +126,7 @@ defineTest EventFaucet - test1 source lines - 3,
 
 # test channel
 defineTest EventFaucet - test1 source channel,
+	setTestType legacy
 	# Set up
 	createEventFaucet event,Event,channel
 	createPipe event,null
@@ -138,6 +145,7 @@ defineTest EventFaucet - test1 source channel,
 	unregisterForEvent Event,test1,~!Tmp,eventHandeler!~
 
 defineTest EventFaucet - test2 source channel,
+	setTestType legacy
 	# Set up
 	createEventFaucet event,Event,channel
 	createPipe event,null

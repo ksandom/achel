@@ -1,6 +1,7 @@
 # Unit tests for generalIO ~ achel,proc,faucet,unitTest,hidden
 
 defineTest createProcFaucet - simple execution,
+	setTestType legacy
 	createProcFaucet procDemo,echo hi
 	createDumpFaucet procDump,ProcDemo
 	createPipe procDemo,procDump
@@ -13,6 +14,7 @@ defineTest createProcFaucet - simple execution,
 	deleteFaucet procDump
 
 defineTest createProcFaucet - double quotes,
+	setTestType legacy
 	createProcFaucet procDemo,echo "ho"
 	createDumpFaucet procDump,ProcDemo
 	createPipe procDemo,procDump
@@ -25,6 +27,7 @@ defineTest createProcFaucet - double quotes,
 	deleteFaucet procDump
 
 defineTest createProcFaucet - single quotes,
+	setTestType legacy
 	createProcFaucet procDemo,echo 'hey'
 	createDumpFaucet procDump,ProcDemo
 	createPipe procDemo,procDump
@@ -37,6 +40,7 @@ defineTest createProcFaucet - single quotes,
 	deleteFaucet procDump
 
 defineTest createProcFaucet - curly brace,
+	setTestType legacy
 	createProcFaucet procDemo,echo '_{a}'
 	createDumpFaucet procDump,ProcDemo
 	createPipe procDemo,procDump
@@ -49,6 +53,7 @@ defineTest createProcFaucet - curly brace,
 	deleteFaucet procDump
 
 defineTest createProcFaucet - hard coded json,
+	setTestType legacy
 	createProcFaucet procDemo,echo '_{"A":"1"}'
 	createDumpFaucet procDump,ProcDemo
 	createPipe procDemo,procDump

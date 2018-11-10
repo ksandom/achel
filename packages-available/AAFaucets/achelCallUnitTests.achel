@@ -28,6 +28,7 @@ deliver unitCall,unitCall,
 deliverAll 100
 
 defineTest Call faucet have results,
+	setTestType legacy
 	if ~!Tmp,unitCallResultCountInsideCall!~,==,0,
 		failTest Got 0 results. Check the unit test.
 	elseIf ~!Tmp,unitCallResultCountInsideCall!~,==,,
@@ -38,6 +39,7 @@ defineTest Call faucet have results,
 		failTest Got ~!Tmp,unitCallResultCountInsideCall!~ results. Check the unit test.
 
 defineTest Call faucet results match inside and out,
+	setTestType legacy
 	# TODO this is failing because the call is being made withint the dataset. Sensible refactoring of the achelCall.php module is required.
 	if ~!Tmp,unitCallResultCountInsideCall!~,==,~!Tmp,unitCallResultCountOutsideCall!~,
 		passTest Both results are ~!Tmp,unitCallResultCountInsideCall!~
@@ -45,6 +47,7 @@ defineTest Call faucet results match inside and out,
 		failTest inside=~!Tmp,unitCallResultCountInsideCall!~ outside=~!Tmp,unitCallResultCountOutsideCall!~
 
 defineTest Call faucet results match first and second,
+	setTestType legacy
 	# TODO this is failing because the call is being made withint the dataset. Sensible refactoring of the achelCall.php module is required.
 	if ~!Tmp,unitCallResultCountInsideCall!~,==,~!Tmp,unitCallResultCountSecondCall!~,
 		passTest Both results are ~!Tmp,unitCallResultCountInsideCall!~

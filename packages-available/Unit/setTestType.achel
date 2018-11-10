@@ -1,0 +1,4 @@
+# Set the type of unit test. Generally used to mark something as legacy. ~ unit
+parameters type
+
+set UnitResults,currentResultType,~!Local,type!~

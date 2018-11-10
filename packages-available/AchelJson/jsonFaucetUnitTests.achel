@@ -27,6 +27,7 @@ defineTest AchelJson - Internal - to var,
 	expect 0,~!Local,jsonTest,mr nul!~
 
 defineTest AchelJson - Create faucet and send data to it (json->var),
+	setTestType legacy
 	createJsonToVarFaucet jsonDemo,Tmp,jsonDemo
 	createNullFaucet jsonNull
 	createPipe jsonDemo,jsonNull
@@ -41,6 +42,7 @@ defineTest AchelJson - Create faucet and send data to it (json->var),
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - Create shell json faucet,
+	setTestType legacy
 	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,echo '{"A":"987"}'
 	createNullFaucet jsonNull
 	createPipe jsonDemo,jsonNull
@@ -54,6 +56,7 @@ defineTest AchelJson - Create shell json faucet,
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - Create shell json faucet - 2 commands - true,
+	setTestType legacy
 	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,true;echo '{"A":"765"}'
 	createNullFaucet jsonNull
 	createPipe jsonDemo,jsonNull
@@ -67,6 +70,7 @@ defineTest AchelJson - Create shell json faucet - 2 commands - true,
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - Create shell json faucet - 2 commands - cd,
+	setTestType legacy
 	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,cd /tmp;echo '{"A":"4563"}'
 	createNullFaucet jsonNull
 	createPipe jsonDemo,jsonNull
@@ -80,6 +84,7 @@ defineTest AchelJson - Create shell json faucet - 2 commands - cd,
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - Create shell json faucet - 3 commands - stderr,
+	setTestType legacy
 	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,cd /tmp;echo '{"A":"4562"}';echo example error >&2
 	createNullFaucet jsonNull
 	createPipe jsonDemo,jsonNull
@@ -93,6 +98,7 @@ defineTest AchelJson - Create shell json faucet - 3 commands - stderr,
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - Create shell json faucet - 3 commands - sh/stderr,
+	setTestType legacy
 	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,sh -c "cd /tmp;echo '{\"A\":\"4561\"}';echo example error >&2"
 	createNullFaucet jsonNull
 	createPipe jsonDemo,jsonNull
@@ -106,6 +112,7 @@ defineTest AchelJson - Create shell json faucet - 3 commands - sh/stderr,
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - Create shell json faucet - 2 commands - sh,
+	setTestType legacy
 	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,sh -c "cd /tmp;echo '{\"A\":\"4560\"}'"
 	createNullFaucet jsonNull
 	createPipe jsonDemo,jsonNull
@@ -119,6 +126,7 @@ defineTest AchelJson - Create shell json faucet - 2 commands - sh,
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - Create shell json faucet - python,
+	setTestType legacy
 	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,echo "print '{\"A\":\"102\"}'" | python
 	createNullFaucet jsonNull
 	createPipe jsonDemo,jsonNull
@@ -132,6 +140,7 @@ defineTest AchelJson - Create shell json faucet - python,
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - Create shell json faucet - bash,
+	setTestType legacy
 	createJsonShellFaucet jsonDemo,Tmp,jsonDemo,echo "echo '{\"A\":\"101\"}'" | bash
 	createNullFaucet jsonNull
 	createPipe jsonDemo,jsonNull
@@ -145,6 +154,7 @@ defineTest AchelJson - Create shell json faucet - bash,
 	unset Tmp,jsonDemo
 
 defineTest AchelJson - jsonToChannel,
+	setTestType legacy
 	setNested Local,example,default,{"A":"1"}
 	retrieveResults Local,example
 	
@@ -155,6 +165,7 @@ defineTest AchelJson - jsonToChannel,
 	expect 1,~!Local,example,A!~
 
 defineTest AchelJson - channelToJson,
+	setTestType legacy
 	setNested Local,example,A,1
 	retrieveResults Local,example
 	
@@ -166,6 +177,7 @@ defineTest AchelJson - channelToJson,
 
 
 defineTest AchelJson - jsonToChannelFaucet,
+	setTestType legacy
 	createJsonToChannelsFaucet jsonChannel
 	createDumpFaucet jsonDump,JsonDump
 	createNullFaucet jsonNull
@@ -185,6 +197,7 @@ defineTest AchelJson - jsonToChannelFaucet,
 	unsetCategory JsonDump
 
 defineTest AchelJson - channelToJsonFaucet,
+	setTestType legacy
 	createChannelsToJsonFaucet jsonChannel
 	createDumpFaucet jsonDump,JsonDump
 	createNullFaucet jsonNull
@@ -205,6 +218,7 @@ defineTest AchelJson - channelToJsonFaucet,
 
 
 defineTest AchelJson - channelToJsonFaucet to jsonToChannelFaucet,
+	setTestType legacy
 	# This is the test that shows that everything is working. If we are able to send data into one faucet, connect it to another and recieve the correct data from the other faucet, things are goooood. :)
 	
 	createChannelsToJsonFaucet jsonChannelIn
@@ -228,6 +242,7 @@ defineTest AchelJson - channelToJsonFaucet to jsonToChannelFaucet,
 	unsetCategory JsonDump
 
 defineTest AchelJson - channelToJsonFaucet to jsonToChannelFaucet - lots of channels,
+	setTestType legacy
 	# This is the test that shows that everything is working. If we are able to send data into one faucet, connect it to another and recieve the correct data from the other faucet, things are goooood. :)
 	
 	createChannelsToJsonFaucet jsonChannelIn
@@ -267,6 +282,7 @@ defineTest AchelJson - channelToJsonFaucet to jsonToChannelFaucet - lots of chan
 
 # TODO This should probably be mored out to a new/different module
 defineTest AchelDump - faucet,
+	setTestType legacy
 	createDumpFaucet dumpDemo,DumpDemo
 	createNullFaucet dumpNull
 	createPipe dumpDemo,dumpNull

@@ -1,6 +1,7 @@
 # Unit tests for faucets. ~ hidden,unitTest,faucetStructure,faucets
 
 defineTest Faucets - metaFaucet - straight through,
+	setTestType legacy
 	createMetaFaucet meta,
 		createPipe .,.
 	
@@ -21,6 +22,7 @@ defineTest Faucets - metaFaucet - straight through,
 	unsetCategory MetaDump
 
 defineTest Faucets - metaFaucet - replace,
+	setTestType legacy
 	createMetaFaucet meta2,
 		createDumbReplaceFaucet replace,triumph001
 		
@@ -44,6 +46,7 @@ defineTest Faucets - metaFaucet - replace,
 	unsetCategory MetaDump2
 
 defineTest Faucets - dumbReplace - simple,
+	setTestType legacy
 	createDumbReplaceFaucet replace,thing
 	createDumpFaucet dump,DumbReplace
 	createNullFaucet null
@@ -62,6 +65,7 @@ defineTest Faucets - dumbReplace - simple,
 	deleteFaucet null
 
 defineTest Faucets - metaFaucet - many to many,
+	setTestType legacy
 	createMetaFaucet meta,
 		createPipe .,.,*,*
 	
@@ -82,6 +86,7 @@ defineTest Faucets - metaFaucet - many to many,
 	unsetCategory MetaDump
 
 defineTest Faucets - metaFaucet/normal - many to many,
+	setTestType legacy
 	pass
 		testFaucets
 			createMetaFaucet meta,
@@ -117,6 +122,7 @@ defineTest Faucets - metaFaucet/normal - many to many,
 	unsetCategory MetaDump
 
 defineTest Faucets - metaFaucet/normal - many to 1 (~ish),
+	setTestType legacy
 	createMetaFaucet meta,
 		createLabelFaucet labely
 		createPipe .,labely,*,*
@@ -139,6 +145,7 @@ defineTest Faucets - metaFaucet/normal - many to 1 (~ish),
 	unsetCategory MetaDump
 
 defineTest Faucets - metaFaucet/normal - many to 1 and 1 to many,
+	setTestType legacy
 	createMetaFaucet meta,
 		createThroughFaucet throughy
 		createPipe .,throughy,*
@@ -162,6 +169,7 @@ defineTest Faucets - metaFaucet/normal - many to 1 and 1 to many,
 
 # TODO Write tests for ~* bent input.
 defineTest Faucets - bent many to many,
+	setTestType legacy
 	testFaucets
 		createThroughFaucet throughy
 		createPipe throughy,.,~*,combined
@@ -175,6 +183,7 @@ defineTest Faucets - bent many to many,
 	expect 3,~!Test,combined,0,c!~
 
 defineTest Faucets - metaFaucet - nested 1,
+	setTestType legacy
 	testFaucets
 		createMetaFaucet test1,
 			createPipe .,.,in,out
@@ -186,6 +195,7 @@ defineTest Faucets - metaFaucet - nested 1,
 	expect thing,~!Test,default,0!~
 
 defineTest Faucets - metaFaucet - nested 2,
+	setTestType legacy
 	testFaucets
 		createMetaFaucet test1,
 			createMetaFaucet test2,
@@ -200,6 +210,7 @@ defineTest Faucets - metaFaucet - nested 2,
 	expect thing2,~!Test,default,0!~
 
 defineTest Faucets - metaFaucet - nested 3,
+	setTestType legacy
 	testFaucets
 		createMetaFaucet test1,
 			createMetaFaucet test2,

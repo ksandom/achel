@@ -1,6 +1,7 @@
 # Unit tests for the timer module. ~ unitTest,timer,hidden
 
 defineTest Timer - full setup,
+	setTestType legacy
 	# 100 milliseconds
 	createTimer testfs,100
 	

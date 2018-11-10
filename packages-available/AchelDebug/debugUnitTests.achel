@@ -2,6 +2,7 @@
 
 # TODO I haven't figured out a way to test this.
 defineTest debug - visual run through,
+	setTestType legacy
 	createDebugFaucet debugTest
 	createNullFaucet nullTest
 	

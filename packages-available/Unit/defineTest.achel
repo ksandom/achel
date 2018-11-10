@@ -24,18 +24,24 @@ basicMaths UnitResults,~!UnitResults,currentResult!~,~!UnitResults,~!UnitResults
 
 escapeForJson Local,escapedComment,~!UnitResults,currentComment!~
 
+if ~!UnitResults,currentResultType!~,!=,,
+	set Local,type,~!UnitResults,currentResultType!~
+else
+	set Local,type,traditional
+
 setNested ["UnitResults","results","~!Local,escapedDescription!~","description","~!Local,escapedDescription!~"]
 setNested ["UnitResults","results","~!Local,escapedDescription!~","result","~!UnitResults,currentResult!~"]
 setNested ["UnitResults","results","~!Local,escapedDescription!~","resultComment","~!Local,escapedComment!~"]
 setNested ["UnitResults","results","~!Local,escapedDescription!~","resultColor","~!UnitResults,currentColor!~"]
 setNested ["UnitResults","results","~!Local,escapedDescription!~","stackTrace",~!UnitResults,currentStackTrace!~]
-
+setNested ["UnitResults","results","~!Local,escapedDescription!~","type","~!Local,type!~"]
 
 if ~!UnitConfig,showTests!~,==,true,
-debug 0,[~!Color,~!UnitResults,currentColor!~!~~!UnitResults,currentResult!~~!Color,default!~]~!Color,brightBlack!~[~!Color,~!UnitResults,traditionalColor!~!~traditional~!Color,brightBlack!~]~!Color,default!~ ~!Local,description!~
+debug 0,[~!Color,~!UnitResults,currentColor!~!~~!UnitResults,currentResult!~~!Color,default!~]~!Color,brightBlack!~[~!Color,~!UnitResults,~!Local,type!~Color!~!~~!Local,type!~~!Color,brightBlack!~]~!Color,default!~ ~!Local,description!~
 
 
 resetTest
 unset Local,defineTest-description
+unset UnitResults,currentResultType
 
 debug 2,defineTest: End test "~!Local,description!~"
