@@ -4,6 +4,7 @@
 defineTest Servo - faucet - ping,
 	# This test is occasionally failing because the last faucet can only give the last result if there is a back log. If the data comes in separate iterations, the last value will be taken of each iteration. Therefore causing there to be multiple results, and choosing the first one (as done here) gives the wrong result.
 	# TODO create throttleFaucet
+	setTestType legacy
 	testFaucets
 		createServoFaucet servo
 		createLastFaucet last
@@ -17,6 +18,7 @@ defineTest Servo - faucet - ping,
 	expect Returned from requested ping.,~!Test,default,0!~
 
 defineTest Servo - faucet - nuter,
+	setTestType legacy
 	testFaucets
 		createServoFaucet servo
 		createLastFaucet last
@@ -29,6 +31,7 @@ defineTest Servo - faucet - nuter,
 
 
 defineTest Servo - faucet - send live data,
+	setTestType legacy
 	testFaucets
 		createServoFaucet servo
 		createLastFaucet last
@@ -54,6 +57,7 @@ defineTest Servo - faucet - send live data,
 	expect Set 0 pins. Nutered 3 pins. Failed to set 0 pins.,~!Test,default,0!~
 
 defineTest Servo - faucet - setPinPWM,
+	setTestType legacy
 	testFaucets
 		createServoFaucet servo
 		createLastFaucet last
@@ -74,6 +78,7 @@ defineTest Servo - faucet - setPinPWM,
 	expect registering PWM pin 7 as 0,~!Test,default,0!~
 
 defineTest Servo - faucet - setPinBinary,
+	setTestType legacy
 	testFaucets
 		createServoFaucet servo
 		createLastFaucet last

@@ -24,6 +24,7 @@
 
 
 defineTest TimeThing - tsDay/today,
+	setTestType legacy
 	failTest ~!Tmp,wrongNumberMessage!~ "~!Tmp,defineTest-description!~".
 	getTSDemoData
 	tsDay 0,,ts
@@ -31,6 +32,7 @@ defineTest TimeThing - tsDay/today,
 		passTest yay
 
 defineTest TimeThing - tsDay/yesterday,
+	setTestType legacy
 	failTest ~!Tmp,wrongNumberMessage!~ "~!Tmp,defineTest-description!~".
 	getTSDemoData
 	tsDay 1,,ts
@@ -38,6 +40,7 @@ defineTest TimeThing - tsDay/yesterday,
 		passTest yay
 
 defineTest TimeThing - tsDay/tomorrow,
+	setTestType legacy
 	failTest ~!Tmp,wrongNumberMessage!~ "~!Tmp,defineTest-description!~".
 	getTSDemoData
 	tsDay -1,,ts
@@ -45,6 +48,7 @@ defineTest TimeThing - tsDay/tomorrow,
 		passTest yay
 
 defineTest TimeThing - tsDay/yesterday and today,
+	setTestType legacy
 	failTest ~!Tmp,wrongNumberMessage!~ "~!Tmp,defineTest-description!~".
 	getTSDemoData
 	tsDay 1,2,ts
@@ -53,6 +57,7 @@ defineTest TimeThing - tsDay/yesterday and today,
 
 
 defineTest TimeThing - convertWhenToTimeStamp defaults,
+	setTestType legacy
 	setNested Local,testData,value,when,1391040000
 	
 	retrieveResults Local,testData
@@ -61,6 +66,7 @@ defineTest TimeThing - convertWhenToTimeStamp defaults,
 		expect 2014-01-30--0:00:00,~!Result,whenTimeStamp!~
 
 defineTest TimeThing - convertWhenToTimeStamp anotherField (in),
+	setTestType legacy
 	setNested Local,testData,value,anotherField,1391040001
 	
 	retrieveResults Local,testData
@@ -69,6 +75,7 @@ defineTest TimeThing - convertWhenToTimeStamp anotherField (in),
 		expect 2014-01-30--0:00:01,~!Result,whenTimeStamp!~
 
 defineTest TimeThing - convertWhenToTimeStamp andAnotherField (out),
+	setTestType legacy
 	setNested Local,testData,value,when,1391040002
 	
 	retrieveResults Local,testData
@@ -77,6 +84,7 @@ defineTest TimeThing - convertWhenToTimeStamp andAnotherField (out),
 		expect 2014-01-30--0:00:02,~!Result,andAnotherField!~
 
 defineTest TimeThing - convertWhenToTimeStamp both in and out,
+	setTestType legacy
 	setNested Local,testData,value,inField,1391040003
 	
 	retrieveResults Local,testData

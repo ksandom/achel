@@ -1,10 +1,12 @@
 # Unit tests for the Servo package. ~ unitTest,servo,servoBasic,hidden
 
 defineTest Servo - getPath,
+	setTestType legacy
 	getARBPath Local,servoPath
 	expectNot ,~!Local,servoPath!~
 
 defineTest Servo - does it start,
+	setTestType legacy
 	getARBPath Local,servoPath
 	createJsonShellFaucet servoTest,ServoTest,returnedData,~!Local,servoPath!~/servo-json.py
 	createNullFaucet null
@@ -18,6 +20,7 @@ defineTest Servo - does it start,
 	deleteFaucet servoTest
 
 defineTest Servo - ping,
+	setTestType legacy
 	getARBPath Local,servoPath
 	createProcFaucet servoTest,~!Local,servoPath!~/servo-json.py
 	createJsonToVarFaucet jsonFaucet,ServoTest,returnedData
@@ -37,6 +40,7 @@ defineTest Servo - ping,
 	deleteFaucet servoTest
 
 defineTest Servo - GPIO started,
+	setTestType legacy
 	getARBPath Local,servoPath
 	createProcFaucet servoTest,~!Local,servoPath!~/servo-json.py
 	createJsonToVarFaucet jsonFaucet,ServoTest,returnedData
@@ -55,6 +59,7 @@ defineTest Servo - GPIO started,
 	deleteFaucet servoTest
 
 defineTest Servo - Send some data,
+	setTestType legacy
 	testFaucets
 		getARBPath Local,servoPath
 		createProcFaucet servoTest,~!Local,servoPath!~/servo-json.py

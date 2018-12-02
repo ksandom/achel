@@ -1,6 +1,7 @@
 # Unit tests for the bridge faucet ~ unitTest,bridge,hidden
 
 defineTest Bridge - end to end - forward,
+	setTestType legacy
 	testFaucets
 		createNullFaucet null
 		createBridgeServerFaucet bridgeListener,localhost,22001
@@ -21,6 +22,7 @@ defineTest Bridge - end to end - forward,
 	devExpect side,~!Test,c,0!~
 
 defineTest Bridge - end to end - reverse,
+	setTestType legacy
 	testFaucets
 		createNullFaucet null
 		createBridgeServerFaucet bridgeListener,localhost,22002
