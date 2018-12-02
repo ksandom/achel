@@ -308,6 +308,10 @@ function doInstall
 		ln -sfv achelctl manageAchel
 	fi
 	
+	# Set up achelctl
+	copyTemplatedFile "${languageRepo:-$startDir}/src/manage" "achelctl"
+	chmod 755 achelctl
+	
 	
 	# Set up profiles
 	# removeProfile achel
