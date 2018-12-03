@@ -1479,33 +1479,34 @@ class MetaFaucet extends ThroughBasedFaucet
 				}
 				
 				
-				if (count($input) and $input!==false)
+				if (is_array($input))
 				{
-					$isVerboseEnough=$this->core->isVerboseEnough($this->pipeDebugLevel);
-					
-					$resultValue=true;
-					foreach ($channelPipes as $key=>$pipe)
+					if (count($input) and $input!==false)
 					{
-						if (!$toFaucetName=$this->findRealFaucetName($pipe['toFaucet']))
-						{
-							$this->core->debug($this->pipeDebugLevel, "deliverAll: Can not find {$pipe['toFaucet']}. Removing pipe from $fromFaucetName to $toFaucetName.");
-							$this->deletePipe($key);
-							continue;
-						}
+						$isVerboseEnough=$this->core->isVerboseEnough($this->pipeDebugLevel);
 						
-						if ($isVerboseEnough)
+						$resultValue=true;
+						foreach ($channelPipes as $key=>$pipe)
 						{
-							$debugData=json_encode($input);
-							$numberOfItems=count($input);
-							$this->core->debug($this->pipeDebugLevel, "deliverAll $this->path: {$this->contentColour}".gettype($input)."*$numberOfItems {$this->fromColour}$fromFaucetName,$fromChannel {$this->keyColour}--> {$this->toColour}$toFaucetName,{$pipe['toChannel']} {$this->keyColour}context={$this->defaultColour}{$pipe['context']} {$this->keyColour}key={$this->defaultColour}$key. {$this->keyColour}Data={$this->dataColour}$debugData");
+							if (!$toFaucetName=$this->findRealFaucetName($pipe['toFaucet']))
+							{
+								$this->core->debug($this->pipeDebugLevel, "deliverAll: Can not find {$pipe['toFaucet']}. Removing pipe from $fromFaucetName to $toFaucetName.");
+								$this->deletePipe($key);
+								continue;
+							}
+							
+							if ($isVerboseEnough)
+							{
+								$debugData=json_encode($input);
+								$numberOfItems=count($input);
+								$this->core->debug($this->pipeDebugLevel, "deliverAll $this->path: {$this->contentColour}".gettype($input)."*$numberOfItems {$this->fromColour}$fromFaucetName,$fromChannel {$this->keyColour}--> {$this->toColour}$toFaucetName,{$pipe['toChannel']} {$this->keyColour}context={$this->defaultColour}{$pipe['context']} {$this->keyColour}key={$this->defaultColour}$key. {$this->keyColour}Data={$this->dataColour}$debugData");
+							}
+							
+							if ($toFaucetName=='.') $this->outFill($input, $pipe['toChannel']);
+							else $this->faucets[$toFaucetName]['object']->put($input, $pipe['toChannel']);
 						}
-						
-						if ($toFaucetName=='.') $this->outFill($input, $pipe['toChannel']);
-						else $this->faucets[$toFaucetName]['object']->put($input, $pipe['toChannel']);
 					}
 				}
-				
-				
 			}
 		}
 		
