@@ -2,7 +2,9 @@
 
 function highlightingInstall
 {
-	highlightingInstallKate
+	if which kate > /dev/null; then
+		highlightingInstallKate
+	fi
 }
 
 
@@ -14,7 +16,16 @@ function highlightingInstallKate # Kate (KDE Advanced Text Editor)
 	kdeConfigDirectories="${homeDir}/.kde ${homeDir}/.kde4 ${homeDir}/.local /usr/share/kde4"
 	theRest="/share/apps/katepart /share/katepart5 /share/apps/katepart5 /share/katepart5"
 	
-	installTemplates "KateSyntaxHighlighting:syntax/achel.xml" "$kdeConfigDirectories" "$theRest"
+	version=`kate --version | cut -d\  -f2`
+	
+	case $version in
+		"18.04.3")
+			echo "Syntax highlighting: Skipping known broken version ($version)."
+		;;
+		*)
+			installTemplates "KateSyntaxHighlighting:syntax/achel.xml" "$kdeConfigDirectories" "$theRest"
+		;;
+	esac
 }
 
 function installTemplates
