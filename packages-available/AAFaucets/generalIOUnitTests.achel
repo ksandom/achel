@@ -1,67 +1,27 @@
 # Unit tests for generalIO ~ achel,proc,faucet,unitTest,hidden
 
-defineTest createProcFaucet - simple execution,
-	setTestType legacy
-	createProcFaucet procDemo,echo hi
-	createDumpFaucet procDump,ProcDemo
-	createPipe procDemo,procDump
+defineFaucetTestSet
+	defineFaucetTest createProcFaucet - simple execution,
+		createProcFaucet procDemo,echo hi
+		createTestFaucet result1,A basic execution works,expect,hi
+		createPipe procDemo,result1
 	
-	deliverAll
+	defineFaucetTest createProcFaucet - double quotes,
+		createProcFaucet procDemo,echo "ho"
+		createTestFaucet result1,Double quotes,expect,ho
+		createPipe procDemo,result1
 	
-	expect hi,~!ProcDemo,0!~
+	defineFaucetTest createProcFaucet - single quotes,
+		createProcFaucet procDemo,echo 'hey'
+		createTestFaucet result1,Single quotes,expect,hey
+		createPipe procDemo,result1
 	
-	deleteFaucet procDemo
-	deleteFaucet procDump
-
-defineTest createProcFaucet - double quotes,
-	setTestType legacy
-	createProcFaucet procDemo,echo "ho"
-	createDumpFaucet procDump,ProcDemo
-	createPipe procDemo,procDump
+	defineFaucetTest createProcFaucet - curly brace,
+		createProcFaucet procDemo,echo '_{a}'
+		createTestFaucet result1,Single quotes,expect,_{a}
+		createPipe procDemo,result1
 	
-	deliverAll
-	
-	expect ho,~!ProcDemo,0!~
-	
-	deleteFaucet procDemo
-	deleteFaucet procDump
-
-defineTest createProcFaucet - single quotes,
-	setTestType legacy
-	createProcFaucet procDemo,echo 'hey'
-	createDumpFaucet procDump,ProcDemo
-	createPipe procDemo,procDump
-	
-	deliverAll
-	
-	expect hey,~!ProcDemo,0!~
-	
-	deleteFaucet procDemo
-	deleteFaucet procDump
-
-defineTest createProcFaucet - curly brace,
-	setTestType legacy
-	createProcFaucet procDemo,echo '_{a}'
-	createDumpFaucet procDump,ProcDemo
-	createPipe procDemo,procDump
-	
-	deliverAll
-	
-	expect _{a},~!ProcDemo,0!~
-	
-	deleteFaucet procDemo
-	deleteFaucet procDump
-
-defineTest createProcFaucet - hard coded json,
-	setTestType legacy
-	createProcFaucet procDemo,echo '_{"A":"1"}'
-	createDumpFaucet procDump,ProcDemo
-	createPipe procDemo,procDump
-	
-	deliverAll
-	
-	expect _{"A":"1"},~!ProcDemo,0!~
-	
-	deleteFaucet procDemo
-	deleteFaucet procDump
-
+	defineFaucetTest createProcFaucet - hard-coded json,
+		createProcFaucet procDemo,echo '_{"A":"1"}'
+		createTestFaucet result1,Single quotes,expect,_{"A":"1"}
+		createPipe procDemo,result1
