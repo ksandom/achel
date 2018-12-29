@@ -73,35 +73,14 @@ defineTest network - simpleFaucet - forward,
 	testFaucets
 		createSimpleNetworkServerFaucet server1,localhost,22005,
 			parameters ID,channel
-			pass
-				getPipes
-				nested
-				outNow
-				# TODO potentially miss-matching channel
-				debug 0,GOT HERE server channel=~!Local,channel!~
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
-			pass
-				pwd
-				getPipes
-				nested
-				outNow
 		
 		createSimpleNetworkClientFaucet client1,localhost,22005,
 			parameters ID,channel
 			
-			pass
-				getPipes
-				nested
-				outNow
-				debug 0,GOT HERE client channel=~!Local,channel!~
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
-			pass
-				pwd
-				getPipes
-				nested
-				outNow
 		
 		createPipe server1,client1,out,in
 		createPipe client1,.,default
@@ -109,9 +88,6 @@ defineTest network - simpleFaucet - forward,
 		deliver server1,in,forward
 	
 	devExpect forward,~!Test,default,0!~
-	# getCategory Test
-	# nested
-	# outNow
 
 
 pass
