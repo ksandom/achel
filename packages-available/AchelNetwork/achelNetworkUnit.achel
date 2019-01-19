@@ -89,6 +89,84 @@ defineTest network - simpleFaucet - forward,
 	
 	devExpect forward,~!Test,default,0!~
 
+defineFaucetTestSet
+	defineFaucetTest network - simpleFaucet - basic nested single in a metafaucet,
+		createMetaFaucet nested
+		createPipe .,nested,*,*
+		createPipe nested,.,*,*
+		changeFaucet nested
+		
+		setNested Unit,network,serverConnect,
+			parameters ID,channel
+			createPipe .,network,in,~!Local,channel!~
+			createPipe network,.,~!Local,channel!~,out
+		
+		setNested Unit,network,serverDisconnect,
+			pass
+	
+		setNested Unit,network,clientConnect,
+			parameters ID,channel
+			createPipe .,network,in,~!Local,channel!~
+			createPipe network,.,~!Local,channel!~,out
+		
+		setNested Unit,network,clientDisconnect,
+			pass
+		
+		createSimpleNetworkServerFaucet server1,localhost,22006,~!Unit,network,serverConnect!~
+		createSimpleNetworkClientFaucet client1,localhost,22006,~!Unit,network,clientConnect!~
+		createTestFaucet result1,Should get forward string,expect,forward
+		
+		createPipe server1,client1,out,in
+		createPipe client1,result1
+		
+		deliver server1,in,forward
+		
+		changeFaucet ..
+	
+	defineFaucetTest network - simpleFaucet - nested in separate metafaucets,
+		createMetaFaucet server
+		createMetaFaucet client
+		createPipe .,server,*,*
+		createPipe server,.,*,*
+		createPipe .,client,*,*
+		createPipe client,.,*,*
+		
+		setNested Unit,network,serverConnect,
+			parameters ID,channel
+			createPipe .,network,in,~!Local,channel!~
+			createPipe network,.,~!Local,channel!~,out
+		
+		setNested Unit,network,serverDisconnect,
+			pass
+	
+		setNested Unit,network,clientConnect,
+			parameters ID,channel
+			createPipe .,network,in,~!Local,channel!~
+			createPipe network,.,~!Local,channel!~,out
+		
+		setNested Unit,network,clientDisconnect,
+			pass
+		
+		changeFaucet server
+		createSimpleNetworkServerFaucet server1,localhost,22007,~!Unit,network,serverConnect!~
+		createPipe .,server1,*,*
+		createPipe server1,.,*,*
+		changeFaucet ..
+		
+		changeFaucet client
+		createSimpleNetworkClientFaucet client1,localhost,22007,~!Unit,network,clientConnect!~
+		createPipe .,client1,*,*
+		createPipe client1,.,*,*
+		changeFaucet ..
+		
+		createTestFaucet result1,Should get forward string,expect,forward
+		
+		createPipe server,client,out,in
+		createPipe client,result
+		
+		deliver server,in,forward
+		
+
 
 pass
 	defineTest network - simpleFaucet - reverse,

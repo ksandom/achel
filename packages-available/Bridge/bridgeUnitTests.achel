@@ -1,5 +1,29 @@
 # Unit tests for the bridge faucet ~ unitTest,bridge,hidden
 
+defineFaucetTestSet
+	defineFaucetTest createProcFaucet - simple execution,
+		createBridgeServerFaucet bridgeListener,127.0.0.1,22011
+		createBridgeClientFaucet bridgeConnect,127.0.0.1,22011
+		
+		deliverAll
+		
+		createPipe bridgeListener,.
+		
+		# This is needed so it gets polled and realises there is data there.
+		createPipe bridgeConnect,.
+		
+		deliver bridgeConnect,a,thing
+		deliver bridgeConnect,b,buzz
+		deliver bridgeConnect,c,side
+		
+		createTestFaucet resultA,thing on a,expect,thing
+		createTestFaucet resultB,buzz on b,expect,buzz
+		createTestFaucet resultC,side on c,expect,side
+		
+		createPipe bridgeListener,resultA,a
+		createPipe bridgeListener,resultB,b
+		createPipe bridgeListener,resultC,c
+
 defineTest Bridge - end to end - forward,
 	setTestType legacy
 	testFaucets

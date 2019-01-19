@@ -2,4 +2,4 @@
 parameters channel
 
 pass
-debug 0,TODO finish bridge hooks
+debug 0,TODO client disconnect finish bridge hooks ~!Local,channel!~

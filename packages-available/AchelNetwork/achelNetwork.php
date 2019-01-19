@@ -78,31 +78,31 @@ class SocketServerFaucet extends ThroughBasedFaucet
 		$this->connectEvent=$connectEvent;
 		$this->disconnectEvent=$disconnectEvent;
 		$this->closeEvent=($closeEvent)?$closeEvent:$disconnectEvent;
-		$this->core->debug(1, "connect=$connectEvent disconnect=$disconnectEvent close=$closeEvent");
+		$this->core->debug(0, "connect=$connectEvent disconnect=$disconnectEvent close=$closeEvent");
 	}
 	
 	public function listen($address, $port)
 	{
 		$this->isListener=true;
-		$this->core->debug(1,"listen: address=$address port=$port");
+		$this->core->debug(0,"listen: address=$address port=$port");
 		if ($address) return $this->listenOnSpecificAddress($address, $port);
 		else return $this->listenOnAllAddresses($port);
 	}
 	
 	public function connect($address, $port)
 	{
-		$this->core->debug(2, "SocketServerFaucet->connect($address, $port)");
+		$this->core->debug(0, "SocketServerFaucet->connect($address, $port)");
 		$this->socket=socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 		socket_set_option($this->socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 1, 'usec' => 1000));
 		
 		if (socket_connect($this->socket, $address, $port)===false)
 		{
-			$this->core->debug(1, "SocketServerFaucet->connect($address, $port): ".socket_strerror(socket_last_error($this->socket)));
+			$this->core->debug(0, "SocketServerFaucet->connect($address, $port): ".socket_strerror(socket_last_error($this->socket)));
 			return false;
 		}
 		else
 		{
-			$this->core->debug(3, "SocketServerFaucet->connect($address, $port): Success.");
+			$this->core->debug(0, "SocketServerFaucet->connect($address, $port): Success.");
 			$this->clients['default']=&$this->socket;
 			socket_set_nonblock($this->socket);
 			return true;
@@ -257,9 +257,13 @@ class SocketServerFaucet extends ThroughBasedFaucet
 				$key=$keys[count($keys)-1];
 			}
 			
-			$this->core->debug(1, "SocketServerFaucet->checkForConnections: A client connected using key $key");
+			$this->core->debug(0, "SocketServerFaucet->checkForConnections: A client connected using key $key");
 			# TODO The problem is that the key is not being passed. Instead the first parameter is being taken instead. See createSimpleNetworkServerFaucet.achel:15
+			$this->core->debug(0,"key: SocketServerFaucet,{$this->connectEvent},$key");
+			# TODO Set context
 			$this->core->callFeature('triggerEvent', "SocketServerFaucet,{$this->connectEvent},$key");
+			$this->core->callFeature($this->connectEvent, $key);
+			# TODO Reset context
 		}
 	}
 	
