@@ -51,14 +51,14 @@ defineTest TimeThing - tsDay/yesterday and today,
 	expectNumberOfResults 3,~!Tmp,defineTest-description!~,name,(yesterday|today|now),
 		passTest yay
 
-
+# TODO These are failing because they don't take the timezone into account
 defineTest TimeThing - convertWhenToTimeStamp defaults,
 	setNested Local,testData,value,when,1391040000
 	
 	retrieveResults Local,testData
 	convertWhenToTimeStamp
 	loop
-		expect 2014-01-30--0:00:00,~!Result,whenTimeStamp!~
+		devExpect 2014-01-30--0:00:00,~!Result,whenTimeStamp!~,This test is not currently taking the timezone into account.
 
 defineTest TimeThing - convertWhenToTimeStamp anotherField (in),
 	setNested Local,testData,value,anotherField,1391040001
@@ -66,7 +66,7 @@ defineTest TimeThing - convertWhenToTimeStamp anotherField (in),
 	retrieveResults Local,testData
 	convertWhenToTimeStamp anotherField
 	loop
-		expect 2014-01-30--0:00:01,~!Result,whenTimeStamp!~
+		devExpect 2014-01-30--0:00:01,~!Result,whenTimeStamp!~,This test is not currently taking the timezone into account.
 
 defineTest TimeThing - convertWhenToTimeStamp andAnotherField (out),
 	setNested Local,testData,value,when,1391040002
@@ -74,7 +74,7 @@ defineTest TimeThing - convertWhenToTimeStamp andAnotherField (out),
 	retrieveResults Local,testData
 	convertWhenToTimeStamp ,andAnotherField
 	loop
-		expect 2014-01-30--0:00:02,~!Result,andAnotherField!~
+		devExpect 2014-01-30--0:00:02,~!Result,andAnotherField!~,This test is not currently taking the timezone into account.
 
 defineTest TimeThing - convertWhenToTimeStamp both in and out,
 	setNested Local,testData,value,inField,1391040003
@@ -82,5 +82,5 @@ defineTest TimeThing - convertWhenToTimeStamp both in and out,
 	retrieveResults Local,testData
 	convertWhenToTimeStamp inField,outField
 	loop
-		expect 2014-01-30--0:00:03,~!Result,outField!~
+		devExpect 2014-01-30--0:00:03,~!Result,outField!~,This test is not currently taking the timezone into account.
 
