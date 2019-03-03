@@ -1,6 +1,7 @@
 # Unit tests for IPC. ~ ipc,unitTest,hidden
 
 defineTest IPC - prereq - procFaucet,
+	setTestType legacy
 	testFaucets
 		createProcFaucet proc,echo Hi!
 		createPipe proc,.
@@ -9,6 +10,7 @@ defineTest IPC - prereq - procFaucet,
 
 
 defineTest IPC - prereq - procFaucet inside meta faucet (obsolete),
+	setTestType legacy
 	createMetaFaucet meta,
 		createProcFaucet proc,echo Ho!
 		
@@ -30,6 +32,7 @@ defineTest IPC - prereq - procFaucet inside meta faucet (obsolete),
 	deleteFaucet meta
 
 defineTest IPC - prereq - procFaucet inside meta faucet,
+	setTestType legacy
 	testFaucets
 		createMetaFaucet meta,
 			createProcFaucet proc,echo Ho!
@@ -42,6 +45,7 @@ defineTest IPC - prereq - procFaucet inside meta faucet,
 	expect Ho!,~!Test,default,0!~
 
 defineTest IPC - prereq - ping with raw json,
+	setTestType legacy
 	getPackagePath Local,ipcPath,achel,IPC
 	createProcFaucet proc,~!Local,ipcPath!~/ping.py
 	createDumpFaucet procDump,Proc
@@ -65,6 +69,7 @@ defineTest IPC - prereq - ping with raw json,
 
 
 defineTest IPC - json faucet,
+	setTestType legacy
 	getPackagePath Local,ipcPath,achel,IPC
 	createJsonIPCFaucet ipc,~!Local,ipcPath!~/ping.py
 	createDumpFaucet ipcDump,IPC
