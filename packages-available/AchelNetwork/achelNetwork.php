@@ -204,7 +204,14 @@ class SocketServerFaucet extends ThroughBasedFaucet
 			$this->core->debug(2, "SocketServerFaucet->deconstruct: Disconnecting from $key");
 			socket_shutdown($client);
 			socket_close($client);
-			$this->core->callFeature('triggerEvent', "SocketServerFaucet,{$this->disconnectEvent},$key");
+			if ($this->core->featureExists($this->closeEvent))
+			{
+				$this->core->callFeature($this->disconnectEvent, $key);
+			}
+			else
+			{
+				$this->core->callFeature('triggerEvent', "SocketServerFaucet,{$this->disconnectEvent},$key");
+			}
 		}
 		
 		$this->core->debug(2, "SocketServerFaucet->deconstruct: Closing socket.");
@@ -227,7 +234,14 @@ class SocketServerFaucet extends ThroughBasedFaucet
 		unset($this->clients[$clientID]);
 		
 		# TODO trigger a programmable event. Note that this doesn't need to be done before closing the connection since the connection is already gone anyway.
-		$this->core->callFeature('triggerEvent', "SocketServerFaucet,{$this->closeEvent},$clientID");
+		if ($this->core->featureExists($this->closeEvent))
+		{
+			$this->core->callFeature($this->closeEvent, $clientID);
+		}
+		else
+		{
+			$this->core->callFeature('triggerEvent', "SocketServerFaucet,{$this->closeEvent},$clientID");
+		}
 	}
 	
 	function checkForConnections()
@@ -259,10 +273,17 @@ class SocketServerFaucet extends ThroughBasedFaucet
 			
 			$this->core->debug(0, "SocketServerFaucet->checkForConnections: A client connected using key $key");
 			# TODO The problem is that the key is not being passed. Instead the first parameter is being taken instead. See createSimpleNetworkServerFaucet.achel:15
-			$this->core->debug(0,"key: SocketServerFaucet,{$this->connectEvent},$key");
 			# TODO Set context
-			$this->core->callFeature('triggerEvent', "SocketServerFaucet,{$this->connectEvent},$key");
-			$this->core->callFeature($this->connectEvent, $key);
+			if ($this->core->featureExists($this->connectEvent))
+			{
+				$this->core->debug(0,"key: SocketServerFaucet,{$this->connectEvent},$key");
+				$this->core->callFeature($this->connectEvent, $key);
+			}
+			else
+			{
+				$this->core->debug(0,"key: SocketServerFaucet,{$this->connectEvent},$key");
+				$this->core->callFeature('triggerEvent', "SocketServerFaucet,{$this->connectEvent},$key");
+			}
 			# TODO Reset context
 		}
 	}

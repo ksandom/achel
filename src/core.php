@@ -78,6 +78,7 @@ class core extends Module
 		{
 			case 'init':
 				$this->registerFeature($this, array('registerTags'), 'registerTags', 'Register tags to a feature. --registerTags=featureName'.valueSeparator.'tag1['.valueSeparator.'tag2['.valueSeparator.'tag3'.valueSeparator.'...]]');
+				$this->registerFeature($this, array('featureExists'), 'featureExists', 'Return "true" or "false" regarding whether a feature is defined/aliased to a given name. --featureExists=name');
 				$this->registerFeature($this, array('aliasFeature'), 'aliasFeature', 'Create an alias for a feature. Eg aliasing --help to -h and -h1 would be done by --aliasFeature=help'.valueSeparator.'h'.valueSeparator.'h1');
 				$this->registerFeature($this, array('setFeatureAttribute'), 'setFeatureAttribute', 'Set a feature attribute. --setFeatureAttribute=featureName,attributeName,attributeValue');
 				# $this->registerFeature($this, array('get'), 'get', 'Get a value. --get=category'.valueSeparator.'variableName', array('storeVars'));
@@ -133,6 +134,10 @@ class core extends Module
 			# TODO Oops! Somehow I missed this. It should use already existing functionality.
 			#case 'registerTags':
 			#	break;
+			case 'featureExists':
+				$parms=$this->interpretParms($this->get('Global', $event));
+				return ($this->featureExists($parms[0]))?'true':'false';
+				break;
 			case 'aliasFeature':
 				$parms=$this->interpretParms($this->get('Global', $event));
 				$this->aliasFeature($parms[0], $parms);
@@ -2013,6 +2018,11 @@ class core extends Module
 		$this->setRef($subModule['category'], $subModule['name'], $subModule);
 	}
 	
+	
+	public function featureExists($flag)
+	{
+		return(isset($this->store['Features'][$flag]));
+	}
 	
 	function registerFeature(&$obj, $flags, $name, $description, $tags=false,$isMacro=false, $source='unknown')
 	{
