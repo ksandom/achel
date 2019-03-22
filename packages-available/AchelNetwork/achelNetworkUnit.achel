@@ -2,6 +2,7 @@
 
 defineTest network - can send/recieve message while binding to 127.0.0.1,
 	# create a listener
+	setTestType legacy
 	createSocketServerFaucet serverSocket,achelNetworkUnitConnect,achelNetworkUnitDisconnect,,12345,127.0.0.1
 	deliver serverSocket,_control,inEOL n
 	deliver serverSocket,_control,outEOL n
@@ -44,6 +45,7 @@ defineTest network - can send/recieve message while binding to 127.0.0.1,
 
 
 defineTest network - handelConnect,
+	setTestType legacy
 	set Test,inner,
 		pwd Test,result
 	
@@ -70,6 +72,7 @@ defineTest network - handelConnect,
 
 
 defineTest network - simpleFaucet - forward,
+	setTestType legacy
 	testFaucets
 		createSimpleNetworkServerFaucet server1,localhost,22005,
 			parameters ID,channel
@@ -126,16 +129,18 @@ defineFaucetTestSet
 	defineFaucetTest network - simpleFaucet - nested in separate metafaucets,
 		createMetaFaucet server
 		createMetaFaucet client
-		createPipe .,server,*,*
-		createPipe server,.,*,*
-		createPipe .,client,*,*
-		createPipe client,.,*,*
+		# createPipe .,server,*,*
+		# createPipe server,.,*,*
+		# createPipe .,client,*,*
+		# createPipe client,.,*,*
+		createPipe server,.
+		createPipe client,.
 		
 		setNested Unit,network,serverConnect,
 			parameters ID,channel
 			createPipe .,network,in,~!Local,channel!~
 			createPipe network,.,~!Local,channel!~,out
-		
+			
 		setNested Unit,network,serverDisconnect,
 			pass
 	
@@ -159,12 +164,12 @@ defineFaucetTestSet
 		createPipe client1,.,*,*
 		changeFaucet ..
 		
-		createTestFaucet result1,Should get forward string,expect,forward
+		createTestFaucet result1,Should get forward5 string,expect,forward5
 		
 		createPipe server,client,out,in
-		createPipe client,result
+		createPipe client,result1
 		
-		deliver server,in,forward
+		deliver server,in,forward5
 		
 
 

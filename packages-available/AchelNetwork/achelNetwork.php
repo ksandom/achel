@@ -78,31 +78,31 @@ class SocketServerFaucet extends ThroughBasedFaucet
 		$this->connectEvent=$connectEvent;
 		$this->disconnectEvent=$disconnectEvent;
 		$this->closeEvent=($closeEvent)?$closeEvent:$disconnectEvent;
-		$this->core->debug(0, "connect=$connectEvent disconnect=$disconnectEvent close=$closeEvent");
+		$this->core->debug(2, "connect=$connectEvent disconnect=$disconnectEvent close=$closeEvent");
 	}
 	
 	public function listen($address, $port)
 	{
 		$this->isListener=true;
-		$this->core->debug(0,"listen: address=$address port=$port");
+		$this->core->debug(2,"listen: address=$address port=$port");
 		if ($address) return $this->listenOnSpecificAddress($address, $port);
 		else return $this->listenOnAllAddresses($port);
 	}
 	
 	public function connect($address, $port)
 	{
-		$this->core->debug(0, "SocketServerFaucet->connect($address, $port)");
+		$this->core->debug(3, "SocketServerFaucet->connect($address, $port)");
 		$this->socket=socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
 		socket_set_option($this->socket, SOL_SOCKET, SO_SNDTIMEO, array('sec' => 1, 'usec' => 1000));
 		
 		if (socket_connect($this->socket, $address, $port)===false)
 		{
-			$this->core->debug(0, "SocketServerFaucet->connect($address, $port): ".socket_strerror(socket_last_error($this->socket)));
+			$this->core->debug(2, "SocketServerFaucet->connect($address, $port): ".socket_strerror(socket_last_error($this->socket)));
 			return false;
 		}
 		else
 		{
-			$this->core->debug(0, "SocketServerFaucet->connect($address, $port): Success.");
+			$this->core->debug(2, "SocketServerFaucet->connect($address, $port): Success.");
 			$this->clients['default']=&$this->socket;
 			socket_set_nonblock($this->socket);
 			return true;
@@ -204,14 +204,7 @@ class SocketServerFaucet extends ThroughBasedFaucet
 			$this->core->debug(2, "SocketServerFaucet->deconstruct: Disconnecting from $key");
 			socket_shutdown($client);
 			socket_close($client);
-			if ($this->core->featureExists($this->closeEvent))
-			{
-				$this->core->callFeature($this->disconnectEvent, $key);
-			}
-			else
-			{
-				$this->core->callFeature('triggerEvent', "SocketServerFaucet,{$this->disconnectEvent},$key");
-			}
+			$this->triggerNetworkEvent($this->disconnectEvent, $key, 'disconnect');
 		}
 		
 		$this->core->debug(2, "SocketServerFaucet->deconstruct: Closing socket.");
@@ -234,14 +227,7 @@ class SocketServerFaucet extends ThroughBasedFaucet
 		unset($this->clients[$clientID]);
 		
 		# TODO trigger a programmable event. Note that this doesn't need to be done before closing the connection since the connection is already gone anyway.
-		if ($this->core->featureExists($this->closeEvent))
-		{
-			$this->core->callFeature($this->closeEvent, $clientID);
-		}
-		else
-		{
-			$this->core->callFeature('triggerEvent', "SocketServerFaucet,{$this->closeEvent},$clientID");
-		}
+		$this->triggerNetworkEvent($this->closeEvent, $key, 'close');
 	}
 	
 	function checkForConnections()
@@ -271,20 +257,53 @@ class SocketServerFaucet extends ThroughBasedFaucet
 				$key=$keys[count($keys)-1];
 			}
 			
-			$this->core->debug(0, "SocketServerFaucet->checkForConnections: A client connected using key $key");
+			$this->core->debug(1, "SocketServerFaucet->checkForConnections: A client connected using key $key");
 			# TODO The problem is that the key is not being passed. Instead the first parameter is being taken instead. See createSimpleNetworkServerFaucet.achel:15
-			# TODO Set context
-			if ($this->core->featureExists($this->connectEvent))
-			{
-				$this->core->debug(0,"key: SocketServerFaucet,{$this->connectEvent},$key");
-				$this->core->callFeature($this->connectEvent, $key);
-			}
-			else
-			{
-				$this->core->debug(0,"key: SocketServerFaucet,{$this->connectEvent},$key");
-				$this->core->callFeature('triggerEvent', "SocketServerFaucet,{$this->connectEvent},$key");
-			}
-			# TODO Reset context
+			
+			$this->triggerNetworkEvent($this->connectEvent, $key, 'connect');
+		}
+	}
+	
+	function triggerNetworkEvent($eventName, $key, $context)
+	{
+		if ($this->core->featureExists($eventName))
+		{
+			$this->core->debug(0,"$context event key via feature: SocketServerFaucet,{$eventName},$key");
+			$this->callInFaucet($eventName, $key);
+		}
+		else
+		{
+			$this->core->debug(0,"$context event key via event: SocketServerFaucet,{$eventName},$key");
+			$this->callInFaucet('triggerEvent', "SocketServerFaucet,{$eventName},$key");
+		}
+	}
+	
+	function callInFaucet($command, $parameters)
+	{
+		# Get the current path.
+		#$origin=$this->core->callFeature("pwd", '');
+		$env=&FaucetEnvironment::assert();
+		//$origin=$env->currentFaucet->getFullPath();
+		$origin=&$env->currentFaucet;
+		
+		# get the parent path.
+		$parentPath=$this->parent->getFullPath();
+		
+		if ($origin!=$parentPath)
+		{
+			$this->core->debug(0,"Changing to $parentPath to run $command $parameters.");
+			# set the current path to the parent path.
+			$this->core->callFeature("changeFaucet", $parentPath);
+		
+			$this->core->callFeature($command, $parameters);
+			
+			$this->core->debug(0,"callInFaucet: Changing back to the origin.");
+			$env->currentFaucet=&$origin;
+		}
+		else
+		{
+			$this->core->debug(0,"callInFaucet: Alread in $origin. No need to change to run $command $parameters.");
+			$this->core->callFeature($command, $parameters);
 		}
 	}
 	

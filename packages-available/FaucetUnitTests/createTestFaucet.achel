@@ -13,7 +13,7 @@ setNested FaucetUnitTests,~!FaucetUnit,currentTest,currentResult,name!~,expected
 
 if ~!Local,action!~,==,expect,
 	setNested FaucetUnitTests,~!FaucetUnit,currentTest,currentResult,name!~,action,==
-elseIf ~!Local,action!~,==,expect,
+elseIf ~!Local,action!~,==,expectNot,
 	setNested FaucetUnitTests,~!FaucetUnit,currentTest,currentResult,name!~,action,!=
 else
 	debug 0,No action/condition set for ~!FaucetUnit,currentTest,currentResult,name!~.
@@ -34,10 +34,10 @@ set FaucetUnit,testHandeler,
 		
 		# Figure out if the test passes or fails.
 		if ~!Local,result!~,~!FaucetUnitTests,~!Local,resultName!~,action!~,~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~,
+			set Local,escapedComment,Yay! (~!Local,result!~ ~!FaucetUnitTests,~!Local,resultName!~,action!~ ~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~)
 			set Local,result,pass
-			set Local,escapedComment,Yay!
 		else
-			set Local,escapedComment,Expected ~!Local,result!~ ~!FaucetUnitTests,~!Local,resultName!~,action!~ ~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~
+			set Local,escapedComment,Expected[~!FaucetUnit,currentTest,currentResult,name!~] ~!Local,result!~ ~!FaucetUnitTests,~!Local,resultName!~,action!~ ~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~
 			set Local,result,fail
 		
 		# Store the result
@@ -54,7 +54,7 @@ set FaucetUnit,testHandeler,
 
 
 	# Clean up.
-	unset FaucetUnitTests,~!Local,resultName!~
+	# unset FaucetUnitTests,~!Local,resultName!~
 
 # NOTE 1 to take continual results, store the test details separately from the FaucetUnitTests category so that the results can continue to be tested after the cleanup has happened.
 # NOTE 2 to take continual results up to a specified quantity this could be tracked in the test details. In both cases, this should be a separate macro to this one.

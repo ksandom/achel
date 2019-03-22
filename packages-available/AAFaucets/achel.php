@@ -384,6 +384,7 @@ class Faucet
 	protected $config=null;
 	protected $configRegistry=null;
 	protected $faucetInstanceName='unknown';
+	protected $parent=null;
 	
 	function __construct($objectType)
 	{
@@ -397,6 +398,11 @@ class Faucet
 	function getObjectType()
 	{
 		return $this->objectType;
+	}
+	
+	function setParent(&$parent)
+	{
+		$this->parent=&$parent;
 	}
 	
 	public function setInstanceName($instanceName)
@@ -913,7 +919,6 @@ class NullFaucet extends ThroughBasedFaucet
 class MetaFaucet extends ThroughBasedFaucet
 {
 	# Faucet structure
-	private $rootFaucet=null;
 	private $parentFaucet=null;
 	private $myName='';
 	private $fullPath='';
@@ -1035,6 +1040,7 @@ class MetaFaucet extends ThroughBasedFaucet
 		}
 		
 		$faucetObject->setInstanceName($faucetName);
+		$faucetObject->setParent($this);
 		
 		$this->core->debug(2, "createFaucet ({$this->debugID}): Created faucet $faucetName.");
 		$this->faucets[$faucetName]=array(
@@ -1472,7 +1478,6 @@ class MetaFaucet extends ThroughBasedFaucet
 					else
 					{
 						$input=$this->faucets[$fromFaucetName]['object']->get($fromChannel);
-						
 					}
 					
 					$this->clearInput();
