@@ -268,12 +268,12 @@ class SocketServerFaucet extends ThroughBasedFaucet
 	{
 		if ($this->core->featureExists($eventName))
 		{
-			$this->core->debug(0,"$context event key via feature: SocketServerFaucet,{$eventName},$key");
+			$this->core->debug(1,"$context event key via feature: SocketServerFaucet,{$eventName},$key");
 			$this->callInFaucet($eventName, $key);
 		}
 		else
 		{
-			$this->core->debug(0,"$context event key via event: SocketServerFaucet,{$eventName},$key");
+			$this->core->debug(1,"$context event key via event: SocketServerFaucet,{$eventName},$key");
 			$this->callInFaucet('triggerEvent', "SocketServerFaucet,{$eventName},$key");
 		}
 	}
@@ -291,18 +291,18 @@ class SocketServerFaucet extends ThroughBasedFaucet
 		
 		if ($origin!=$parentPath)
 		{
-			$this->core->debug(0,"Changing to $parentPath to run $command $parameters.");
+			$this->core->debug(1,"Changing to $parentPath to run $command $parameters.");
 			# set the current path to the parent path.
 			$this->core->callFeature("changeFaucet", $parentPath);
 		
 			$this->core->callFeature($command, $parameters);
 			
-			$this->core->debug(0,"callInFaucet: Changing back to the origin.");
+			$this->core->debug(1,"callInFaucet: Changing back to the origin.");
 			$env->currentFaucet=&$origin;
 		}
 		else
 		{
-			$this->core->debug(0,"callInFaucet: Alread in $origin. No need to change to run $command $parameters.");
+			$this->core->debug(1,"callInFaucet: Alread in $origin. No need to change to run $command $parameters.");
 			$this->core->callFeature($command, $parameters);
 		}
 	}
