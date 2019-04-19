@@ -122,4 +122,14 @@ defineTest Pipe test - way more meta,
 																callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~
 
 
+defineTest Pipe test - double pipe,
+	callFeatureNoReturn ~!PipeTestAbstraction,testFramework!~,
+		createPipe .,.
+		createPipe .,.
+
+defineTest Pipe test - double pipe (different types),
+	callFeatureNoReturn ~!PipeTestAbstraction,testFramework!~,
+		createPipe .,.,*,*
+		createPipe .,.,default,default
+		createPipe .,.
 
