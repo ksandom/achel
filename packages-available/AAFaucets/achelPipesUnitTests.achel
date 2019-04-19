@@ -57,3 +57,17 @@ defineTest Pipe test - foundation/through *-a,
 		
 		createPipe .,through,*,*
 		createPipe through,.
+
+defineTest Pipe test - foundation/through *-b,
+	callFeatureReturn ~!PipeTestAbstraction,testFramework!~,
+		createThroughFaucet through
+		
+		createPipe .,through
+		createPipe through,.,*,*
+
+defineTest Pipe test - foundation/through *-a+b,
+	callFeatureReturn ~!PipeTestAbstraction,testFramework!~,
+		createThroughFaucet through
+		
+		createPipe .,through,*,*
+		createPipe through,.,*,*
