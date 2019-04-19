@@ -1,0 +1,97 @@
+# Tests for how the pipes are processed. ~ hidden,unitTest,pipes
+
+# NOTE: All/most of the tests in this file will use what looks like the legacy method for testing faucets. This is intentional to precisely test a known bug that occurs at a specific moment. This is almost never needed for testing logic and should not be taken as an example for how to write tests in Achel.
+
+defineTest Pipe test - foundation/through,
+	# Test that the methodology works.
+
+	createMetaFaucet testContainer
+	createNullFaucet null
+	createDumpFaucet dump,PipeTest
+	
+	createPipe testContainer,dump
+	createPipe dunp,null
+	
+	changeFaucet testContainer
+
+	createThroughFaucet through
+
+	createPipe .,through
+	createPipe through,.
+
+	changeFaucet ..
+
+	deliver testContainer,default,test1
+	deliver testContainer,default,test2
+
+	deliverAll 10
+	
+	getCategory PipeTest
+	countToVar Local,count
+
+	unsetCategory PipeTest
+	
+	if ~!Local,count!~,==,2,
+		passTest
+	else
+		failTest Got the wrong number of results (~!Local,count!~)
+
+defineTest Pipe test - foundation/direct,
+	# Test that the methodology works.
+
+	createMetaFaucet testContainer
+	createNullFaucet null
+	createDumpFaucet dump,PipeTest
+	
+	createPipe testContainer,dump
+	createPipe dunp,null
+	
+	changeFaucet testContainer
+	createPipe .,.
+	changeFaucet ..
+
+	deliver testContainer,default,test1
+	deliver testContainer,default,test2
+	deliver testContainer,default,test3
+
+	deliverAll 10
+	
+	getCategory PipeTest
+	countToVar Local,count
+	unsetCategory PipeTest
+	
+	if ~!Local,count!~,==,3,
+		passTest
+	else
+		failTest Got the wrong number of results (~!Local,count!~)
+
+defineTest Pipe test - foundation/direct *,
+	# Test that the methodology works.
+
+	createMetaFaucet testContainer
+	createNullFaucet null
+	createDumpFaucet dump,PipeTest
+	
+	createPipe testContainer,dump
+	createPipe dunp,null
+	
+	changeFaucet testContainer
+	createPipe .,.,*,*
+	changeFaucet ..
+
+	deliver testContainer,default,test1
+	deliver testContainer,default,test2
+	deliver testContainer,default,test3
+	deliver testContainer,default,test4
+
+	deliverAll 10
+	
+	getCategory PipeTest
+	countToVar Local,count
+	unsetCategory PipeTest
+	
+	if ~!Local,count!~,==,4,
+		passTest
+	else
+		failTest Got the wrong number of results (~!Local,count!~)
+
