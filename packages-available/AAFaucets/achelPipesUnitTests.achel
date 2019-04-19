@@ -14,7 +14,7 @@ set PipeTestAbstraction,testFramework,
 	
 	changeFaucet testContainer
 
-	callFeatureReturn ~!Local,featureName!~
+	callFeatureNoReturn ~!Local,featureName!~
 
 	changeFaucet ..
 
@@ -33,41 +33,93 @@ set PipeTestAbstraction,testFramework,
 	else
 		failTest Got the wrong number of results (~!Local,count!~)
 
+set PipeTestAbstraction,makeMoreMeta,
+	parameters nextLevel
+	
+	createMetaFaucet meta
+	createPipe .,meta
+	createPipe meta,.
+	
+	changeFaucet meta
+	if ~!Local,nextLevel!~,!=,,
+		debug 0,Calling doctor ~!Local,nextLevel!~
+		callFeatureNoReturn ~!Local,nextLevel!~
+	else
+		createPipe .,.
+	changeFaucet ..
 
 
 defineTest Pipe test - foundation/through,
 	# Test that the methodology works.
-	callFeatureReturn ~!PipeTestAbstraction,testFramework!~,
+	callFeatureNoReturn ~!PipeTestAbstraction,testFramework!~,
 		createThroughFaucet through
 
 		createPipe .,through
 		createPipe through,.
 
 defineTest Pipe test - foundation/direct,
-	callFeatureReturn ~!PipeTestAbstraction,testFramework!~,
+	callFeatureNoReturn ~!PipeTestAbstraction,testFramework!~,
 		createPipe .,.
 
 defineTest Pipe test - foundation/direct *,
-	callFeatureReturn ~!PipeTestAbstraction,testFramework!~,
+	callFeatureNoReturn ~!PipeTestAbstraction,testFramework!~,
 		createPipe .,.,*,*
 
 defineTest Pipe test - foundation/through *-a,
-	callFeatureReturn ~!PipeTestAbstraction,testFramework!~,
+	callFeatureNoReturn ~!PipeTestAbstraction,testFramework!~,
 		createThroughFaucet through
 		
 		createPipe .,through,*,*
 		createPipe through,.
 
 defineTest Pipe test - foundation/through *-b,
-	callFeatureReturn ~!PipeTestAbstraction,testFramework!~,
+	callFeatureNoReturn ~!PipeTestAbstraction,testFramework!~,
 		createThroughFaucet through
 		
 		createPipe .,through
 		createPipe through,.,*,*
 
 defineTest Pipe test - foundation/through *-a+b,
-	callFeatureReturn ~!PipeTestAbstraction,testFramework!~,
+	callFeatureNoReturn ~!PipeTestAbstraction,testFramework!~,
 		createThroughFaucet through
 		
 		createPipe .,through,*,*
 		createPipe through,.,*,*
+
+defineTest Pipe test - meta meta,
+	callFeatureNoReturn ~!PipeTestAbstraction,testFramework!~,
+		createMetaFaucet meta1
+		
+		createPipe .,meta1
+		createPipe meta1,.
+		
+		changeFaucet meta1
+		createPipe .,.
+		changeFaucet ..
+
+defineTest Pipe test - more meta,
+	callFeatureNoReturn ~!PipeTestAbstraction,testFramework!~,
+		callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+			pass
+			callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~
+
+defineTest Pipe test - way more meta,
+	callFeatureNoReturn ~!PipeTestAbstraction,testFramework!~,
+		callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+			callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+				callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+					callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+						callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+							callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+								callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+									callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+										callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+											callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+												callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+													callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+														callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+															callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~,,
+																callFeatureNoReturn ~!PipeTestAbstraction,makeMoreMeta!~
+
+
+
