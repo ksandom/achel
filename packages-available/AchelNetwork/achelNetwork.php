@@ -363,7 +363,7 @@ class SocketServerFaucet extends ThroughBasedFaucet
 			// $this->core->debug(0, "network->preGet($channel) (".$this->getInstanceName().")");
 			if ($output=$this->getResource($channel))
 			{
-				$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": Got input for channel \"$channel\" \"$output[0]\"");
+				$this->core->debug(3, __CLASS__.'->'.__FUNCTION__.": Got input for channel \"$channel\" \"$output[0]\"");
 				$this->outFill($output, $channel);
 				$this->clearInput($channel);
 				$gotSomething=true;
@@ -389,7 +389,7 @@ class SocketServerFaucet extends ThroughBasedFaucet
 					}
 					break;
 				default:
-					$this->core->debug(1,"network put: $channel - a");
+					$this->core->debug(3,"network put: $channel - a");
 					if (!isset($this->clients[$channel]))
 					{
 						$this->core->debug(1, "SocketServerFaucet->put: Channel $channel doesn't exist.");
@@ -398,7 +398,7 @@ class SocketServerFaucet extends ThroughBasedFaucet
 					
 					foreach ($data as $line)
 					{
-						$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": Sending line \"$line\"");
+						$this->core->debug(3, __CLASS__.'->'.__FUNCTION__.": Sending line \"$line\"");
 						$lineOut="$line{$this->outEOL}";
 						if (is_string($line))
 						{
