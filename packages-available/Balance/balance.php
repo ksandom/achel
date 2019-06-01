@@ -414,7 +414,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			# Apply input multiplier and expo.
 			$rule['input']['live']['value']=$rule['input']['live']['value']-$rule['input']['center'];
 			$rule['input']['live']['value']=$rule['input']['live']['value']*$rule['input']['multiplier'];
-			$rule['input']['live']['value']=$this->expo($rule['input']['live']['value'],$rule['input']['expo']);
+			$rule['input']['live']['value']=$this->processExpo($rule['input']['live']['value'],$rule['input']['expo']);
 			$rule['input']['live']['value']=$rule['input']['live']['value']+$rule['input']['center'];
 			
 			
@@ -472,7 +472,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			// Calculate value after multiplier
 			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']-$rule['output']['center'];
 			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']*$rule['output']['multiplier'];
-			$rule['output']['live']['value']=$this->expo($rule['output']['live']['value'],$rule['output']['expo']);
+			$rule['output']['live']['value']=$this->processExpo($rule['output']['live']['value'],$rule['output']['expo']);
 			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']+$rule['output']['center'];
 			
 			// Dump the current rule state for debugging.

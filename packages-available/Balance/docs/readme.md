@@ -8,7 +8,11 @@ As with many prototypes, I made the wrong things easy, and the wrong things hard
 
 ## Expos
 
-Expos are for making the controls more, or less sensitive in the middle. The final deflection at the ends will still be the same; what changes is where the bias of the control happens compared to a 1:1 mapping.
+Expos are for making the controls more, or less sensitive in the middle. The final deflection at the ends will still be the same; what changes is where the bias of the control happens compared to a 1:1 mapping. I've implemented this out of curiosity. While makes a lot of sense for human input, it's unlikely to be that useful for algorythms.
+
+### Input vs Output
+
+TODO write this.
 
 Eg
 
@@ -25,7 +29,7 @@ Eg
 |______________ |_______________
 ```
 
-### Expo 2
+### Expo 0.5
 
 ```
       Input            Output
@@ -38,7 +42,7 @@ Eg
 |______________ |_______________
 ```
 
-### Expo 4
+### Expo 0.125
 
 ```
       Input            Output
@@ -51,7 +55,7 @@ Eg
 |______________ |_______________
 ```
 
-### Expo 0.5
+### Expo 2
 
 ```
       Input            Output
@@ -64,7 +68,7 @@ Eg
 |______________ |_______________
 ```
 
-### Expo 0.75
+### Expo 1.5
 
 ```
       Input            Output
