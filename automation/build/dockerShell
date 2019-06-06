@@ -1,0 +1,5 @@
+#!/bin/bash
+
+tag=`./automation/build/tag`
+
+docker run -it kjsandom/achel:$tag /bin/bash

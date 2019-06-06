@@ -1,0 +1,12 @@
+#!/bin/bash
+# Runs the Achel app from within the docker container.
+
+appName=`basename $0`
+
+if [ "$appName" == 'wrapper' ]; then
+  echo "This is not intended to be run directly." >&2
+  exit 1
+fi
+
+#docker run -it kjsandom/achel --env COMMAND=$appName --volume ~/.achel:/etc/achel /usr/installs/achel/automation/dockerInternal/internalWrapper "$@"
+docker run -it  --env COMMAND=$appName --volume ~/.achel:/etc/achel kjsandom/achel /usr/installs/achel/automation/dockerInternal/internalWrapper "$@"

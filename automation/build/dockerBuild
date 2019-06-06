@@ -1,0 +1,6 @@
+#!/bin/bash
+
+tag=`./automation/build/tag`
+
+docker build -t kjsandom/achel:$tag .
+docker build -t kjsandom/achel:latest .
