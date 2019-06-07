@@ -2,4 +2,12 @@
 
 tag=`./automation/build/tag`
 
-docker run -it kjsandom/achel:$tag /bin/bash
+appName=`basename $0`
+
+if [ "$appName" == 'wrapper' ]; then
+  echo "This is not intended to be run directly." >&2
+  exit 1
+fi
+
+docker run -it  --env COMMAND=bash kjsandom/achel:$tag /usr/installs/achel/automation/dockerInternal/internalWrapper "$@"
+

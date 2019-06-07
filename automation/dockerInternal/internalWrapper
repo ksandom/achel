@@ -13,5 +13,5 @@ if [ "$COMMAND" == '' ]; then
   exit 1
 fi
 
-set -ex
+cd /current
 exec $COMMAND "$@"
