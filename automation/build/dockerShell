@@ -9,5 +9,5 @@ if [ "$appName" == 'wrapper' ]; then
   exit 1
 fi
 
-docker run -it  --env COMMAND=bash kjsandom/achel:$tag /usr/installs/achel/automation/dockerInternal/internalWrapper "$@"
+docker run -it  --env COMMAND=bash  --volume `pwd`:/current kjsandom/achel:$tag /usr/installs/achel/automation/dockerInternal/internalWrapper "$@"
 
