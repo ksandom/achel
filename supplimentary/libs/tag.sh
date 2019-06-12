@@ -33,11 +33,14 @@ function generateTag
   . $tagFile
 
   # Figure out if we need to change anything.
-  if [ "$currentHash" != "$lastHash" ]; then
+  if [ "$currentHash" != "$lastHash" ] || [ "$requestNew" == 'true' ] ; then
     # Stuff has changed, we need a new tag.
     if [ "$currentWhen" != "$lastWhen" ]; then
       # It's a new day. Reset the point.
       point=0
+    elif [ "$requestNew" == 'true' ]; then
+      # We've requested a new tag.
+      let point=$point+1
     else
       # It's the same day. Increment the point.
       let point=$point+1
