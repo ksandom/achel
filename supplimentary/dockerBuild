@@ -1,0 +1,22 @@
+#!/bin/bash
+# Description
+#   Build the docker image for the current git repo.
+#
+#   You should be within a git repo when running this.
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Build the docker image for the current git repo.
+#     $0
+
+requiredParms="none"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/tag.sh
+. $libDir/repoParms.sh
+. $libDir/docker.sh
+. $libDir/repo.sh
+
+mustFindRepoRoot
+dockerBuild

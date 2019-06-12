@@ -27,7 +27,11 @@ function repoGetParm
 		parameterName="$profileName,$3"
 	fi
 	
-	parmFile="$configDir/repos/$repoName/parameters.json"
+	if [ "$repoName" == '.' ]; then
+    parmFile='parameters.json'
+	else
+    parmFile="$configDir/repos/$repoName/parameters.json"
+	fi
 	
 	if [ -f "$parmFile" ]; then
 		$binExec/achel --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --getNested="RepoParms,$parameterName" -s
