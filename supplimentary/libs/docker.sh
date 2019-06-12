@@ -1,7 +1,7 @@
 # Stuff for working with docker.
 
-tag=`./automation/build/tag`
-appName=`repoGetParm . . name`
+tag=`generateTag`
+appName=`repoGetParm . . name | tr '[:upper:]' '[:lower:]'`
 dockerUser=kjsandom
 dockerTag="$dockerUser/$appName:$tag"
 dockerLatest="$dockerUser/$appName:latest"
