@@ -1,6 +1,9 @@
 # Stuff for working with docker.
 
-tag=`generateTag`
+if [ "$tag" == '' ]; then
+  tag=`generateTag`
+fi
+
 appName=`repoGetParm . . name | tr '[:upper:]' '[:lower:]'`
 dockerUser=kjsandom
 dockerTag="$dockerUser/$appName:$tag"

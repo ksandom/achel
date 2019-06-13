@@ -1,0 +1,25 @@
+#!/bin/bash
+# Description
+#   Brings together all build related tasks into one command.
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Brings together all build related tasks into one command.
+#     $0
+
+requiredParms="none"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/tag.sh
+. $libDir/repo.sh
+. $libDir/git.sh
+. $libDir/docker.sh
+
+# Make sure we have a tag we can use for building docker and releaseing to git.
+mustFindRepoRoot
+tag=`generateTag`
+gitTag
+
+# Build docker.
+dockerBuild
