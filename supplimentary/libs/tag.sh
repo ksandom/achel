@@ -20,6 +20,12 @@ function setState
   point=$3" > $tagFile
 }
 
+function getTag
+{
+  . $tagFile
+  echo "$lastWhen"."$point"
+}
+
 function generateTag
 {
   # If we don't have a saved state, let's fix that.

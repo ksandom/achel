@@ -17,4 +17,4 @@ requiredParms="none"
 . $libDir/repo.sh
 
 mustFindRepoRoot
-generateTag
+getTag

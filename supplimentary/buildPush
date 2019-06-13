@@ -18,7 +18,7 @@ requiredParms="none"
 . $libDir/docker.sh
 
 mustFindRepoRoot
-tag=`generateTag`
+tag=`getTag`
 
 # Push to git.
 gitPush

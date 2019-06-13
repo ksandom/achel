@@ -19,4 +19,6 @@ requiredParms="none"
 . $libDir/repo.sh
 
 mustFindRepoRoot
+tag=`getTag`
+
 dockerPush
