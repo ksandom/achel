@@ -14,11 +14,12 @@ requiredParms="none"
 . $libDir/tag.sh
 . $libDir/repo.sh
 . $libDir/repoParms.sh
+
+tag=`getTag`
 . $libDir/git.sh
 . $libDir/docker.sh
 
 mustFindRepoRoot
-tag=`getTag`
 
 # Push to git.
 gitPush

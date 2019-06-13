@@ -2,6 +2,7 @@
 
 if [ "$tag" == '' ]; then
   tag=`generateTag`
+  echo "[Docker] generated new tag $tag."
 fi
 
 appName=`repoGetParm . . name | tr '[:upper:]' '[:lower:]'`

@@ -15,10 +15,11 @@ requiredParms="none"
 . `dirname $0`/libs/includeLibs.sh
 . $libDir/tag.sh
 . $libDir/repoParms.sh
-. $libDir/docker.sh
 . $libDir/repo.sh
 
-mustFindRepoRoot
 tag=`getTag`
+. $libDir/docker.sh
+
+mustFindRepoRoot
 
 dockerPush
