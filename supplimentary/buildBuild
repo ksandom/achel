@@ -13,6 +13,7 @@ requiredParms="none"
 . `dirname $0`/libs/includeLibs.sh
 . $libDir/tag.sh
 . $libDir/repo.sh
+. $libDir/repoParms.sh
 . $libDir/git.sh
 . $libDir/docker.sh
 
