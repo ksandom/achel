@@ -331,3 +331,10 @@ function wizard_createRepo_takeAction
 	
 	return 0
 }
+
+function listExecs
+{
+	while read repoName; do
+		repoGetParm "$repoName" "$repoName" "execName"
+	done < <(listRepos)
+}

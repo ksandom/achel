@@ -1,0 +1,18 @@
+#!/bin/bash
+# Description
+#   Lists the installed executables.
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Lists the installed executables.
+#     $0
+
+requiredParms="none"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/cache.sh
+. $libDir/repoParms.sh
+. $libDir/repoInstall.sh
+
+listExecs

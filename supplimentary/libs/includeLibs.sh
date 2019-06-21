@@ -20,7 +20,6 @@ directoryThings='packages'
 things="$fileThings $directoryThings"
 
 
-
  # Do stuff. If you want to add something that will get included in all the supplimentary scripts, this is the place to do it.
 . `dirname $0`/libs/getAchelDetails.sh
 . "$libDir/help.sh"

@@ -23,7 +23,7 @@ supplimentaryDir="$configDir/supplimentary"
 profileDir="$configDir/profiles"
 repoDir="$configDir/repos"
 
-if which achelctl; then
+if which achelctl > /dev/null; then
 	managementTool="achelctl"
 else
 	managementTool=manageAchel
@@ -31,7 +31,7 @@ fi
 
 # TODO Does this actually need to be in a condition? I think probably not.
 if [ "$scriptName" == '' ]; then
-	scriptName=`echo $0|sed 's#^.*/##g'`
+	scriptName=`basename "$0"`
 fi
 
 for parameter in $@;do

@@ -1,0 +1,57 @@
+#!/bin/bash
+# Dump the docker bins into the current directory.
+# The rationale is that you'll know where to put them for your system.
+# Name spacing can be used to have concurrent installs that don't know about each other.
+# 
+# Syntax
+#   $0 containerName [namespace]
+# 
+# Examples
+#   # Install bins for Achel in the current directory.
+#   $0 kjsandom/achel
+# 
+#   # Install Achel in Linux user-space
+#   mkdir -p ~/bin
+#   cd ~/bin
+#   $0 kjsandom/achel
+# 
+#   # Install Achel in Linux system-space
+#   mkdir -p /usr/bin
+#   cd /usr/bin
+#   $0 kjsandom/achel
+# 
+#   # Install bins for Achel in the current directory using the namespace "blah".
+#   $0 kjsandom/achel blah
+# 
+#   # Install bins for Achel in the current directory using the namespace "thing".
+#   $0 kjsandom/achel thing
+# 
+
+function showHelp
+{
+  grep '^# ' "$0" | cut -b3- | sed "s#\$0#$0#g"
+}
+
+if [ "$1" == '' ]; then
+  showHelp
+fi
+
+containerName="$1"
+namespace="$2"
+appName="$(echo $containerName | sed 's#/#-#g')"
+configDir=~/.achel
+
+if [ "$namespace" != '' ]; then
+  adaptedNamespace="-$appName-$namespace"
+else
+  adaptedNamespace="-$appName"
+fi
+
+providedCommands=$(docker run --env COMMAND=achelctl --volume "$configDir-$adaptedNamespace":/etc/achel --volume `pwd`:/current "$containerName" /usr/installs/achel/automation/dockerInternal/internalWrapper execListXOR)
+
+for providedCommand in $providedCommands achelctl bash; do
+  fileName="$providedCommand$adaptedNamespace"
+  echo "Dumping $fileName"
+  docker run --env COMMAND=/usr/installs/achel/automation/dockerInternal/dumpWrapper --volume "$configDir-$adaptedNamespace":/etc/achel --volume `pwd`:/current "$containerName" /usr/installs/achel/automation/dockerInternal/internalWrapper "$containerName" "$appName" "$configDir" "$providedCommand" > "$fileName"
+  chmod 0755 "$fileName"
+done

@@ -1,0 +1,10 @@
+#!/bin/bash
+# Dump the external wrapper
+
+containerName="$1"
+appName="$2"
+configDir="$3"
+providedCommand="$4"
+
+# Get the wrapper, and hard code the values we need.
+cat /usr/installs/achel/automation/build/wrapper | sed "s_^appName=.*\$_# NA - Not needed in this context._g; s_^command=.*\$_command='$providedCommand'_g; s_^image=.*\$_image='$containerName'_g;  s_^configDir=.*\$_configDir='$configDir'_g"
