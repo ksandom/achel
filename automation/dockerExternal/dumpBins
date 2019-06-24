@@ -4,7 +4,7 @@
 # Name spacing can be used to have concurrent installs that don't know about each other.
 # 
 # Syntax
-#   $0 containerName [namespace]
+#   $0 imageName [namespace]
 # 
 # Examples
 #   # Install bins for Achel in the current directory.
@@ -28,17 +28,17 @@
 #   $0 kjsandom/achel thing
 # 
 #   # Install bins for Achel in the current directory using the namespace "blah", using an environment variable instead of a parameter.
-#   export CONTAINER=kjsandom/achel; $0
+#   export IMAGE=kjsandom/achel; $0
 #   # or
-#   CONTAINER=kjsandom/achel; $0
+#   IMAGE=kjsandom/achel; $0
 #
 #   # One line install without having to manually download anything.
-#   export CONTAINER=kjsandom/achel; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
+#   export IMAGE=kjsandom/achel; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
 #
 #   # Two extra steps for the careful. (A good habbit in general.)
 #   curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins > dumpBins
 #   cat dumpBins # sanity check
-#   export CONTAINER=kjsandom/achel; cat dumpBins | bash
+#   export IMAGE=kjsandom/achel; cat dumpBins | bash
 
 function showHelp
 {
@@ -47,22 +47,22 @@ function showHelp
 
 # Decipher how we were called.
 if [ "$1" == '' ]; then
-  if [ "$CONTAINER" == '' ]; then
+  if [ "$IMAGE" == '' ]; then
     # Didn't find parameters or exported environment variables.
     showHelp
   else
     # Variables exported before execution.
-    containerName="$CONTAINER"
+    imageName="$IMAGE"
     namespace="$NAMESPACE"
   fi
 else
   # Parameters provided.
-  containerName="$1"
+  imageName="$1"
   namespace="$2"
 fi
 
 # Figure out some basic config.
-appName="$(echo $containerName | sed 's#/#-#g')"
+appName="$(echo $imageName | sed 's#/#-#g')"
 configDir=~/.achel
 
 # Add any namespacing as required.
@@ -74,7 +74,7 @@ fi
 adaptedConfigDir="$configDir-$adaptedNamespace"
 
 # Find what commands the requested containter provides.
-providedCommands=$(docker run --env COMMAND=achelctl --volume "$adaptedConfigDir":/etc/achel --volume `pwd`:/current "$containerName" /usr/installs/achel/automation/dockerInternal/internalWrapper execListXOR)
+providedCommands=$(docker run --env COMMAND=achelctl --volume "$adaptedConfigDir":/etc/achel --volume `pwd`:/current "$imageName" /usr/installs/achel/automation/dockerInternal/internalWrapper execListXOR)
 
 # Dump those commands.
 for providedCommand in $providedCommands achelctl bash; do
@@ -82,7 +82,7 @@ for providedCommand in $providedCommands achelctl bash; do
   
   # Dump the wrapper.
   echo "Dumping $fileName"
-  docker run --env COMMAND=/usr/installs/achel/automation/dockerInternal/dumpWrapper --volume "$adaptedConfigDir":/etc/achel --volume `pwd`:/current "$containerName" /usr/installs/achel/automation/dockerInternal/internalWrapper "$containerName" "$appName" "$adaptedConfigDir" "$providedCommand" > "$fileName"
+  docker run --env COMMAND=/usr/installs/achel/automation/dockerInternal/dumpWrapper --volume "$adaptedConfigDir":/etc/achel --volume `pwd`:/current "$imageName" /usr/installs/achel/automation/dockerInternal/internalWrapper "$imageName" "$appName" "$adaptedConfigDir" "$providedCommand" > "$fileName"
   chmod 0755 "$fileName"
   
   # Symlink to the simple name if we don't already have it.

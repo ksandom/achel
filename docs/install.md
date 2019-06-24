@@ -32,21 +32,21 @@ Eg
 
 Get into the directory where you place bins (like bash scripts) and then run the following command.
 
-    export CONTAINER=kjsandom/achel; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
+    export IMAGE=kjsandom/achel; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
 
 This can be used for any Achel based docker container. It pulls the docker container, and then extracts the wrappers for each of the commands provided by that container.
 
 If you would like multiple installations for testing, you can do so like this
 
-    export CONTAINER=kjsandom/achel; NAMESPACE=thing1; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
-    export CONTAINER=kjsandom/achel; NAMESPACE=thing2; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
-    export CONTAINER=kjsandom/achel; NAMESPACE=thing3; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
+    export IMAGE=kjsandom/achel; NAMESPACE=thing1; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
+    export IMAGE=kjsandom/achel; NAMESPACE=thing2; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
+    export IMAGE=kjsandom/achel; NAMESPACE=thing3; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
 
 ## Docker for careful people (a good habbit)
 
     curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins > dumpBins
     cat dumpBins # sanity check
-    export CONTAINER=kjsandom/achel; cat dumpBins | bash
+    export IMAGE=kjsandom/achel; cat dumpBins | bash
 
 Exactly the same as the "Docker" section above, but gives you a chance to sanity check what this code you just downloaded actually does.
 
