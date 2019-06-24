@@ -67,11 +67,11 @@ configDir=~/.achel
 
 # Add any namespacing as required.
 if [ "$namespace" != '' ]; then
-  adaptedNamespace="-$appName-$namespace"
+  adaptedNamespace="-docker-$appName-$namespace"
 else
-  adaptedNamespace="-$appName"
+  adaptedNamespace="-docker-$appName"
 fi
-adaptedConfigDir="$configDir-$adaptedNamespace"
+adaptedConfigDir="$configDir$adaptedNamespace"
 
 # Find what commands the requested containter provides.
 providedCommands=$(docker run --env COMMAND=achelctl --volume "$adaptedConfigDir":/etc/achel --volume `pwd`:/current "$imageName" /usr/installs/achel/automation/dockerInternal/internalWrapper execListXOR)
