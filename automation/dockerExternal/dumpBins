@@ -31,27 +31,41 @@
 #   export CONTAINER=kjsandom/achel; $0
 #   # or
 #   CONTAINER=kjsandom/achel; $0
+#
+#   # One line install without having to manually download anything.
+#   export CONTAINER=kjsandom/achel; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
+#
+#   # Two extra steps for the careful. (A good habbit in general.)
+#   curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins > dumpBins
+#   cat dumpBins # sanity check
+#   export CONTAINER=kjsandom/achel; cat dumpBins | bash
 
 function showHelp
 {
   grep '^# ' "$0" | cut -b3- | sed "s#\$0#$0#g"
 }
 
+# Decipher how we were called.
 if [ "$1" == '' ]; then
   if [ "$CONTAINER" == '' ]; then
+    # Didn't find parameters or exported environment variables.
     showHelp
   else
+    # Variables exported before execution.
     containerName="$CONTAINER"
     namespace="$NAMESPACE"
   fi
 else
+  # Parameters provided.
   containerName="$1"
   namespace="$2"
 fi
 
+# Figure out some basic config.
 appName="$(echo $containerName | sed 's#/#-#g')"
 configDir=~/.achel
 
+# Add any namespacing as required.
 if [ "$namespace" != '' ]; then
   adaptedNamespace="-$appName-$namespace"
 else
@@ -59,8 +73,10 @@ else
 fi
 adaptedConfigDir="$configDir-$adaptedNamespace"
 
+# Find what commands the requested containter provides.
 providedCommands=$(docker run --env COMMAND=achelctl --volume "$adaptedConfigDir":/etc/achel --volume `pwd`:/current "$containerName" /usr/installs/achel/automation/dockerInternal/internalWrapper execListXOR)
 
+# Dump those commands.
 for providedCommand in $providedCommands achelctl bash; do
   fileName="$providedCommand$adaptedNamespace"
   

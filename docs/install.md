@@ -28,6 +28,28 @@ Eg
 
 [More info](/ksandom/achel/blob/docs/install.md).
 
+## Docker
+
+Get into the directory where you place bins (like bash scripts) and then run the following command.
+
+    export CONTAINER=kjsandom/achel; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
+
+This can be used for any Achel based docker container. It pulls the docker container, and then extracts the wrappers for each of the commands provided by that container.
+
+If you would like multiple installations for testing, you can do so like this
+
+    export CONTAINER=kjsandom/achel; NAMESPACE=thing1; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
+    export CONTAINER=kjsandom/achel; NAMESPACE=thing2; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
+    export CONTAINER=kjsandom/achel; NAMESPACE=thing3; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
+
+## Docker for careful people (a good habbit)
+
+    curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins > dumpBins
+    cat dumpBins # sanity check
+    export CONTAINER=kjsandom/achel; cat dumpBins | bash
+
+Exactly the same as the "Docker" section above, but gives you a chance to sanity check what this code you just downloaded actually does.
+
 ## Other install variations
 
 There's a fair bit that you can customise with the install. The best way for you to find out how to do this is to follow the traditional way, and when you get to the `./install.sh` step, run `./install.sh --help` instead and you will recieve full documentation.

@@ -1,9 +1,7 @@
 *status:* Active.
 
 # Achel
-is a programming langue specilising in small data sets and _______ (the ___ will be released soon). I'm building it to scratch a very specific itch and I doubt the full picture it will be useful to many people. In fact, most of it isn't in the public repo yet. However the foundations, which are already released, are really useful for tools like mass which was written as a Sysadmin tool.
-
-This is a tiny percentage of the final vision, so there's a lot more to come!
+is a programming langue specilising in robotics and small data sets. I'm building it to scratch a very specific itch and I doubt the full picture it will be useful to many people. But if you are interested. Feel free to jump in.
 
 # Requirements
 
@@ -17,6 +15,8 @@ This is a tiny percentage of the final vision, so there's a lot more to come!
 * 2017-03-21: If you strike a bug, you can raise it [here](https://github.com/ksandom/achel/issues). Make sure you include the output from `achelctl bugReportCreate`.
 
 # Install
+
+If you are having troubles getting this installed, see "Docker" below, which is slightly less fully-featured, but makes it really easy to get kickstarted.
 
 ## Easy way
 
@@ -35,6 +35,23 @@ Eg
 
 [More info](http://github.com/ksandom/achel/blob/master/docs/install.md)
 
+## Docker
+
+Get into the directory where you place bins (like bash scripts) and then run the following command.
+
+    export CONTAINER=kjsandom/achel; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
+
+This can be used for any Achel based docker container. It pulls the docker container, and then extracts the wrappers for each of the commands provided by that container.
+
+## Docker for careful people (a good habbit)
+
+    curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins > dumpBins
+    cat dumpBins # sanity check
+    export CONTAINER=kjsandom/achel; cat dumpBins | bash
+
+Exactly the same as the "Docker" section above, but gives you a chance to sanity check what this code you just downloaded actually does.
+
+[More info](http://github.com/ksandom/achel/blob/master/docs/install.md)
 
 # Contributing
 
