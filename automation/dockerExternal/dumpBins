@@ -18,6 +18,7 @@
 #   # Install Achel in Linux system-space
 #   mkdir -p /usr/bin
 #   cd /usr/bin
+
 #   $0 kjsandom/achel
 # 
 #   # Install bins for Achel in the current directory using the namespace "blah".
@@ -26,6 +27,10 @@
 #   # Install bins for Achel in the current directory using the namespace "thing".
 #   $0 kjsandom/achel thing
 # 
+#   # Install bins for Achel in the current directory using the namespace "blah", using an environment variable instead of a parameter.
+#   export CONTAINER=kjsandom/achel; $0
+#   # or
+#   CONTAINER=kjsandom/achel; $0
 
 function showHelp
 {
@@ -33,11 +38,17 @@ function showHelp
 }
 
 if [ "$1" == '' ]; then
-  showHelp
+  if [ "$CONTAINER" == '' ]; then
+    showHelp
+  else
+    containerName="$CONTAINER"
+    namespace="$NAMESPACE"
+  fi
+else
+  containerName="$1"
+  namespace="$2"
 fi
 
-containerName="$1"
-namespace="$2"
 appName="$(echo $containerName | sed 's#/#-#g')"
 configDir=~/.achel
 
@@ -46,12 +57,20 @@ if [ "$namespace" != '' ]; then
 else
   adaptedNamespace="-$appName"
 fi
+adaptedConfigDir="$configDir-$adaptedNamespace"
 
-providedCommands=$(docker run --env COMMAND=achelctl --volume "$configDir-$adaptedNamespace":/etc/achel --volume `pwd`:/current "$containerName" /usr/installs/achel/automation/dockerInternal/internalWrapper execListXOR)
+providedCommands=$(docker run --env COMMAND=achelctl --volume "$adaptedConfigDir":/etc/achel --volume `pwd`:/current "$containerName" /usr/installs/achel/automation/dockerInternal/internalWrapper execListXOR)
 
 for providedCommand in $providedCommands achelctl bash; do
   fileName="$providedCommand$adaptedNamespace"
+  
+  # Dump the wrapper.
   echo "Dumping $fileName"
-  docker run --env COMMAND=/usr/installs/achel/automation/dockerInternal/dumpWrapper --volume "$configDir-$adaptedNamespace":/etc/achel --volume `pwd`:/current "$containerName" /usr/installs/achel/automation/dockerInternal/internalWrapper "$containerName" "$appName" "$configDir" "$providedCommand" > "$fileName"
+  docker run --env COMMAND=/usr/installs/achel/automation/dockerInternal/dumpWrapper --volume "$adaptedConfigDir":/etc/achel --volume `pwd`:/current "$containerName" /usr/installs/achel/automation/dockerInternal/internalWrapper "$containerName" "$appName" "$adaptedConfigDir" "$providedCommand" > "$fileName"
   chmod 0755 "$fileName"
+  
+  # Symlink to the simple name if we don't already have it.
+  if [ ! -e "$providedCommand" ]  && [ "$providedCommand" != 'bash' ] ; then
+    ln -s "$fileName" "$providedCommand"
+  fi
 done
