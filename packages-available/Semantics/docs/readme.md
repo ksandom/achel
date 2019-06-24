@@ -46,10 +46,6 @@ First let's get some data
       templateOut / task / task / task
     did / A task you have done or worked towards.
       templateOut / did / did / did
-    oAuthAPI / Defines APIs for OAuth to talk to.
-      templateOut / oAuthAPI / oAuthAPI / oAuthAPI
-    oAuthEndPoint / Defines endPoints for APIs for OAuth to talk to.
-      templateOut / oAuthEndPoint / oAuthEndPoint / oAuthEndPoint
     ELB / Elastic load balancer.
       templateOut / elbLess / elb / elbMore
     route53 / Route53 DNS entry.
@@ -65,8 +61,6 @@ We want something more concise
     feature / Features
     task / Something you can do.
     did / A task you have done or worked towards.
-    oAuthAPI / Defines APIs for OAuth to talk to.
-    oAuthEndPoint / Defines endPoints for APIs for OAuth to talk to.
     ELB / Elastic load balancer.
     route53 / Route53 DNS entry.
     host / All types of hosts.
