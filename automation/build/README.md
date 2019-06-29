@@ -17,11 +17,11 @@ TODO write this.
 To build the latest code, run
 
 ```bash
-./automation/build/dockerBuild
+achelctl buildBuild
 ```
 
 Then when you're happy with it, you can run
 
 ```bash
-./automation/build/dockerPush
+achelctl buildPush
 ```
