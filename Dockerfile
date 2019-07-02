@@ -11,3 +11,5 @@ ADD . /usr/installs/achel
 RUN cd /usr/installs/achel && \
   ./install.sh && \
   ./automation/dockerInternal/postInstall
+
+CMD automation/dockerInternal/nothingService

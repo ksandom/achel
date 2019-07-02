@@ -1,0 +1,6 @@
+#!/bin/bash
+# Sits quietly and does nothing to keep the container open.
+
+while sleep 1;do
+  true
+done
