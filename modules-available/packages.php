@@ -56,11 +56,18 @@ class Packages extends Module
 		{
 			# TODO when the path is altered, this will need to be updated
 			$packageParts=$this->core->getFileList($packageName);
-			asort($packageParts);
-			
-			foreach ($packageParts as $filename=>$fullPath)
+			if ($packageParts)
 			{
-				$this->loadComponent($filename, $fullPath);
+				asort($packageParts);
+				
+				foreach ($packageParts as $filename=>$fullPath)
+				{
+					$this->loadComponent($filename, $fullPath);
+				}
+			}
+			else
+			{
+				$this->core->debug(0, "Failed to load package $packageName . This is usually caused by a previously installed package that no longer exists. You can usually just remove the symlink, and everything will be fine.");
 			}
 		}
 		else
