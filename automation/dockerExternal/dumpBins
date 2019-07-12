@@ -64,6 +64,7 @@ fi
 # Figure out some basic config.
 appName="$(echo $imageName | sed 's#/#-#g')"
 configDir=~/.achel
+bashPath="$(which bash)"
 
 # Add any namespacing as required.
 if [ "$namespace" != '' ]; then
@@ -82,7 +83,7 @@ for providedCommand in $providedCommands achelctl bash; do
   
   # Dump the wrapper.
   echo "Dumping $fileName"
-  docker run --env COMMAND=/usr/installs/achel/automation/dockerInternal/dumpWrapper --volume "$adaptedConfigDir":/etc/achel --volume `pwd`:/current "$imageName" /usr/installs/achel/automation/dockerInternal/internalWrapper "$imageName" "$appName" "$adaptedConfigDir" "$providedCommand" "$adaptedNamespace" > "$fileName"
+  docker run --env COMMAND=/usr/installs/achel/automation/dockerInternal/dumpWrapper --volume "$adaptedConfigDir":/etc/achel --volume `pwd`:/current "$imageName" /usr/installs/achel/automation/dockerInternal/internalWrapper "$imageName" "$appName" "$adaptedConfigDir" "$providedCommand" "$adaptedNamespace" "$bashPath" > "$fileName"
   chmod 0755 "$fileName"
   
   # Symlink to the simple name if we don't already have it.
