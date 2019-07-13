@@ -31,7 +31,8 @@ class UIFaucets extends Faucets
 				break;
 			case 'createDynamicLastSeenFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 1);
-				$this->environment->currentFaucet->createFaucet($parms[0], 'dynamicLastSeen', new DynamicLastSeenFaucet($parms[1], $parms[2]));
+				$dlsf=new DynamicLastSeenFaucet($parms[1], $parms[2]);
+				$this->environment->currentFaucet->createFaucet($parms[0], 'dynamicLastSeen', $dlsf);
 				break;
 			
 			default:
