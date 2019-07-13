@@ -1,0 +1,23 @@
+#!/bin/bash
+
+countOfStuff=`ls /etc/achel | wc -l`
+
+if [ $countOfStuff -eq 0 ]; then
+  # Unpack the backup for first time use.
+  cd /etc
+  tar -xjf /usr/backups/achel.tar.bz2
+fi
+
+if [ "$COMMAND" == '' ]; then
+  echo "Doesn't appear to have been called with the wrapper from automation/build...?" >&2
+  exit 1
+fi
+
+# NOTE This is a hack to get Chef working with credentials in the home directory without letting permission changes escape the container, and without putting credentials in the container. If you know of a better way of doing it please create an issue on https://github.com/ksandom/achel/issues with suggestions on how to do it better.
+if [ -e /rootCopy ]; then
+  cp -R /rootCopy/.* /rootCopy/ /root
+  chown -R root:root /root
+fi
+
+cd /current
+exec $COMMAND "$@"

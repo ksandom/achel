@@ -92,6 +92,10 @@ class BalanceFaucet extends ThroughBasedFaucet
 						'default'=>'0.1',
 						'description'=>"The maximum change in input per second. If the motion is really really slow, this setting is a very likely candidate. Typically this should be a fraction of the total range. eg you typically wouldn't want to do an entire motion in one sample. So let's say you have a range of -1 to 1 (=2) and you want the maximum speed to be 10% per second. You would set this value to 0.2."
 						),
+          'expo'=>array(
+						'default'=>'1',
+						'description'=>'Expos are for making the controls more, or less sensitive in the middle. The final deflection at the ends will still be the same; what changes is where the bias of the control happens compared to a 1:1 mapping. See readme.md for information about setting this correctly.'
+						),
 					'events'=>array(
 						'optional'=>'1',
 						'event'=>array(
@@ -144,6 +148,10 @@ class BalanceFaucet extends ThroughBasedFaucet
 					'allowPanic'=>array(
 						'default'=>true,
 						'description'=>"Normally when we are getting too close to the goal to be able to stop in time using graceful deceleration, we want to panic to reduce our speed quickly. Sometimes it's more important slow down more gracefully and overshoot."
+						),
+          'expo'=>array(
+						'default'=>'1',
+						'description'=>'Expos are for making the controls more, or less sensitive in the middle. The final deflection at the ends will still be the same; what changes is where the bias of the control happens compared to a 1:1 mapping. See readme.md for information about setting this correctly.'
 						),
 					'events'=>array(
 						'optional'=>'1',
@@ -369,6 +377,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			// Add our vanilla value
 			$rule['input']['live']['vanillaValue']=$input;
+			$rule['input']['live']['value']=$input;
 			
 			// Add our goal
 			$goal=$this->core->getNested(explode(',', $rule['input']['goal']));
@@ -402,10 +411,11 @@ class BalanceFaucet extends ThroughBasedFaucet
 			$algorithmObject=$algorithmDefinition['obj'];
 			
 			
-			# Apply input multiplier.
-			$rule['input']['live']['value']=$input-$rule['input']['center'];
-			$rule['input']['live']['value']=$input*$rule['input']['multiplier'];
-			$rule['input']['live']['value']=$input+$rule['input']['center'];
+			# Apply input multiplier and expo.
+			$rule['input']['live']['value']=$rule['input']['live']['value']-$rule['input']['center'];
+			$rule['input']['live']['value']=$rule['input']['live']['value']*$rule['input']['multiplier'];
+			$rule['input']['live']['value']=$this->processExpo($rule['input']['live']['value'],$rule['input']['expo']);
+			$rule['input']['live']['value']=$rule['input']['live']['value']+$rule['input']['center'];
 			
 			
 			# Handel any input events.
@@ -419,7 +429,11 @@ class BalanceFaucet extends ThroughBasedFaucet
 				$rule['input']['lastInput']=$rule['input']['live']['value'];
 				$this->core->debug(3, __CLASS__.'->'.__FUNCTION__.": Set first time lastInput to \"{$rule['input']['live']['value']}\". This should only happen once per config change. Input: {$rule['input']['variable']}");
 			}
-			elseif ($rule['input']['lastInput']==$rule['input']['live']['value']) continue;
+			elseif ($rule['input']['lastInput']==$rule['input']['live']['value'])
+			{
+				# TODO This will certainly be a bug for anything that needs to do analysis of changes over time. **Come back to this.**
+				 continue;
+			}
 			
 			$rule['input']['lastInput']=$rule['input']['live']['value'];
 			$rule['output']['live']['previousMultipliedValue']=$this->core->getNested(explode(',', $rule['destination']['variable']));
@@ -458,6 +472,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			// Calculate value after multiplier
 			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']-$rule['output']['center'];
 			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']*$rule['output']['multiplier'];
+			$rule['output']['live']['value']=$this->processExpo($rule['output']['live']['value'],$rule['output']['expo']);
 			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']+$rule['output']['center'];
 			
 			// Dump the current rule state for debugging.
@@ -510,6 +525,29 @@ class BalanceFaucet extends ThroughBasedFaucet
 		}
 		
 		return $gotSomething;
+	}
+	
+	function processExpo($value, $expo)
+	{
+		/*
+		Expo working:
+		
+		0.5^2 = 0.25 => Middle is more gentle, while the edges are more extreme.
+		0.5^1 = 0.5 => Normal.
+		0.5^0.5 = 0.75
+		0.5^0 = 1
+		
+		input^expo=result
+		*/
+		
+		if ($expo==1) return $value; # Don't do any work if it is set to 1.
+		
+		
+		# We need to take out any negative value (abs()), and add it back in afterwards ($multiplier) so that we can correctly apply the exponent.
+		$multiplier=($value<0)?-1:1;
+		$result=(abs($value)^$expo)*$multiplier;
+		
+		return $result;
 	}
 }
 

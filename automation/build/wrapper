@@ -1,0 +1,22 @@
+#!/bin/bash
+# Runs the Achel app from within the docker container.
+
+# Figure out which app we are.
+appName=`basename $0` # Namespaced application name.
+
+# This gives us optional namespacing.
+command=`echo $appName | cut -d- -f1` # Internal command.
+image="kjsandom/$command" # Docker image.
+configDir=~/.achel-$appName # Config dir on the host.
+
+# Make sure we aren't being run directly.
+if [ "$appName" == 'wrapper' ]; then
+  echo "This is not intended to be run directly." >&2
+  exit 1
+fi
+
+# Assert that the configuration directory exists.
+mkdir -p "$configDir"
+
+# Let's do it!
+docker run -it --env COMMAND="$command" --env USER="$USER" --name "$appName" --volume "$configDir":/etc/achel --volume `pwd`:/current "$image" /usr/installs/achel/automation/dockerInternal/internalWrapper "$@"

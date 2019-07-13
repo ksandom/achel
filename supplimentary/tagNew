@@ -1,0 +1,21 @@
+#!/bin/bash
+# Description
+#   Lists/generates a new tag for the current repo. Dev only.
+#
+#   You should be within a git repo when running this.
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Lists/generates a new tag for the repo that you are currently in.
+#     $0
+
+requiredParms="none"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/tag.sh
+. $libDir/repo.sh
+
+requestNew='true'
+mustFindRepoRoot
+generateTag

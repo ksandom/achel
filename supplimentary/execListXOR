@@ -1,0 +1,24 @@
+#!/bin/bash
+# Description
+#   Lists the installed executables. Only list achel if other commands don't exist.
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Lists the installed executables. Only list achel if other commands don't exist.
+#     $0
+
+requiredParms="none"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/cache.sh
+. $libDir/repoParms.sh
+. $libDir/repoInstall.sh
+
+execs=$(listExecs)
+
+if [ $(echo "$execs" | wc -l) -gt 1 ]; then
+  echo "$execs" | grep -v "^achel$"
+else
+  echo "$execs"
+fi

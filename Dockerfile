@@ -1,13 +1,15 @@
-# A full, clean and light Achel install.
-FROM alpine:latest
+FROM ubuntu
 MAINTAINER Kevin Sandom
 
-RUN apk update && \
-    apk add php7 php7-curl php7-json && \
-    apk add bash && \
-    apk add git
+# Install the bare minimum to function.
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt install -y php7.2-cli php7.2-curl curl git wget
+# TODO finish timezone config
 
 ADD . /usr/installs/achel
 
-RUN cd /usr/installs/achel && ./install.sh
-    
+RUN cd /usr/installs/achel && \
+  ./install.sh && \
+  ./automation/dockerInternal/postInstall
+
+CMD automation/dockerInternal/nothingService

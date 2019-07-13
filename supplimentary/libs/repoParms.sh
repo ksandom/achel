@@ -27,7 +27,11 @@ function repoGetParm
 		parameterName="$profileName,$3"
 	fi
 	
-	parmFile="$configDir/repos/$repoName/parameters.json"
+	if [ "$repoName" == '.' ]; then
+    parmFile='parameters.json'
+	else
+    parmFile="$configDir/repos/$repoName/parameters.json"
+	fi
 	
 	if [ -f "$parmFile" ]; then
 		$binExec/achel --collectionLoadArbitrary=RepoParms,"$parmFile",noSave --getNested="RepoParms,$parameterName" -s
@@ -326,4 +330,11 @@ function wizard_createRepo_takeAction
 	fi
 	
 	return 0
+}
+
+function listExecs
+{
+	while read repoName; do
+		repoGetParm "$repoName" "$repoName" "execName"
+	done < <(listRepos)
 }

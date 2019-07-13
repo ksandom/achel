@@ -1,0 +1,12 @@
+#!/bin/bash
+# Dump the external wrapper
+
+containerName="$1"
+appName="$2"
+configDir="$3"
+providedCommand="$4"
+adaptedNamespace="$5"
+bashPath="$6"
+
+# Get the wrapper, and hard code the values we need.
+cat /usr/installs/achel/automation/build/wrapper | sed "s_^appName=.*\$_appName=\$adaptedNamespace_g; s_^command=.*\$_command='$providedCommand'_g; s_^image=.*\$_image='$containerName'_g;  s_^configDir=.*\$_configDir='$configDir'_g;s_\#\!/bin/bash_\#\!${bashPath}_g"

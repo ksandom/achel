@@ -1,0 +1,93 @@
+#!/bin/bash
+# Dump the docker bins into the current directory.
+# The rationale is that you'll know where to put them for your system.
+# Name spacing can be used to have concurrent installs that don't know about each other.
+# 
+# Syntax
+#   $0 imageName [namespace]
+# 
+# Examples
+#   # Install bins for Achel in the current directory.
+#   $0 kjsandom/achel
+# 
+#   # Install Achel in Linux user-space
+#   mkdir -p ~/bin
+#   cd ~/bin
+#   $0 kjsandom/achel
+# 
+#   # Install Achel in Linux system-space
+#   mkdir -p /usr/bin
+#   cd /usr/bin
+
+#   $0 kjsandom/achel
+# 
+#   # Install bins for Achel in the current directory using the namespace "blah".
+#   $0 kjsandom/achel blah
+# 
+#   # Install bins for Achel in the current directory using the namespace "thing".
+#   $0 kjsandom/achel thing
+# 
+#   # Install bins for Achel in the current directory using the namespace "blah", using an environment variable instead of a parameter.
+#   export IMAGE=kjsandom/achel; $0
+#   # or
+#   IMAGE=kjsandom/achel; $0
+#
+#   # One line install without having to manually download anything.
+#   export IMAGE=kjsandom/achel; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash
+#
+#   # Two extra steps for the careful. (A good habbit in general.)
+#   curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins > dumpBins
+#   cat dumpBins # sanity check
+#   export IMAGE=kjsandom/achel; cat dumpBins | bash
+
+function showHelp
+{
+  grep '^# ' "$0" | cut -b3- | sed "s#\$0#$0#g"
+}
+
+# Decipher how we were called.
+if [ "$1" == '' ]; then
+  if [ "$IMAGE" == '' ]; then
+    # Didn't find parameters or exported environment variables.
+    showHelp
+  else
+    # Variables exported before execution.
+    imageName="$IMAGE"
+    namespace="$NAMESPACE"
+  fi
+else
+  # Parameters provided.
+  imageName="$1"
+  namespace="$2"
+fi
+
+# Figure out some basic config.
+appName="$(echo $imageName | sed 's#/#-#g')"
+configDir=~/.achel
+bashPath="$(which bash)"
+
+# Add any namespacing as required.
+if [ "$namespace" != '' ]; then
+  adaptedNamespace="docker-$appName-$namespace"
+else
+  adaptedNamespace="docker-$appName"
+fi
+adaptedConfigDir="$configDir-$adaptedNamespace"
+
+# Find what commands the requested containter provides.
+providedCommands=$(docker run --env COMMAND=achelctl --volume "$adaptedConfigDir":/etc/achel --volume `pwd`:/current "$imageName" /usr/installs/achel/automation/dockerInternal/internalWrapper execListXOR)
+
+# Dump those commands.
+for providedCommand in $providedCommands achelctl bash; do
+  fileName="$providedCommand-$adaptedNamespace"
+  
+  # Dump the wrapper.
+  echo "Dumping $fileName"
+  docker run --env COMMAND=/usr/installs/achel/automation/dockerInternal/dumpWrapper --volume "$adaptedConfigDir":/etc/achel --volume `pwd`:/current "$imageName" /usr/installs/achel/automation/dockerInternal/internalWrapper "$imageName" "$appName" "$adaptedConfigDir" "$providedCommand" "$adaptedNamespace" "$bashPath" > "$fileName"
+  chmod 0755 "$fileName"
+  
+  # Symlink to the simple name if we don't already have it.
+  if [ ! -e "$providedCommand" ]  && [ "$providedCommand" != 'bash' ] ; then
+    ln -s "$fileName" "$providedCommand"
+  fi
+done

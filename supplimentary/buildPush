@@ -1,0 +1,29 @@
+#!/bin/bash
+# Description
+#   Push the current build. This is effectively "release to production".
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Push the current build. This is effectively "release to production".
+#     $0
+
+requiredParms="none"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/tag.sh
+. $libDir/repo.sh
+. $libDir/repoParms.sh
+
+tag=`getTag`
+. $libDir/git.sh
+. $libDir/docker.sh
+
+mustFindRepoRoot
+
+# Push to git.
+gitPush
+
+# Push to docker.
+dockerPush
+

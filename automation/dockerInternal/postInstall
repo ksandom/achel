@@ -1,0 +1,8 @@
+#!/bin/bash
+# Stuff to be done after an install inside docker.
+
+mkdir -p /usr/backups
+cd /etc
+tar -cjf /usr/backups/achel.tar.bz2 achel
+rm -Rf achel
+mkdir achel
