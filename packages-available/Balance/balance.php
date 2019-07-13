@@ -529,6 +529,21 @@ class BalanceAlgorithm extends SubModule
 			All the required input will be provided by $rule.
 		*/
 	}
+	
+	function getBetween($input, $rule, $inRangeBeginName, $inRangeEndName)
+	{
+		$outRangeBeginName=$inRangeBeginName;
+		$outRangeEndName=$inRangeEndName;
+		
+		$inValueDiff=$input-$rule['input'][$inRangeBeginName];
+		$inRangeDiff=$rule['input'][$inRangeEndName]-$rule['input'][$inRangeBeginName];
+		$inValuePercent=$inValueDiff/$inRangeDiff;
+		
+		$outRangeDiff=$rule['output'][$outRangeEndName]-$rule['output'][$outRangeBeginName];
+		$outValue=$outRangeDiff*$inValuePercent+$rule['output'][$outRangeBeginName];
+		
+		return $outValue;
+	}
 }
 
 
