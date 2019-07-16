@@ -146,6 +146,32 @@ function installRepo_setup
 			echo "installRepo_setup: profileRefName=\"$profileRefName\""
 		fi
 	done < <(repoGetProfiles "$irs_repoName")
+	
+	setVersion "$irs_repoName"
+}
+
+function setVersion
+(
+	local sv_repoName="$1"
+	local sv_prefix="$configDir/repos/$sv_repoName"
+	
+	if [ -e "$sv_prefix/.tag" ]; then
+		. "$sv_prefix/.tag"
+		sv_version="$lastWhen.$point"
+		sv_hash="$lastHash"
+	else
+		sv_version="Unknown"
+		sv_hash="Unknown"
+	fi
+	
+	achel --setVersion="$sv_repoName,$sv_version,$sv_hash"
+)
+
+function unsetVersion
+{
+	local uv_repoName="$1"
+	
+	achel --removeVersion="$uv_repoName"
 }
 
 function supplimentaryInstall
@@ -227,6 +253,8 @@ function userUninstallRepo
 		uninstallRepo_removeBindings "$repoName"
 		removeRepo "$repoName"
 	fi
+	
+	unsetVersion "$repoName"
 }
 
 function userUninstallRepo_confirm
