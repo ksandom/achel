@@ -1,0 +1,8 @@
+# List version and compoent versions. ~ version,user
+
+collectionLoad Version
+
+getCategory Version
+
+# TODO This is temporary until I set the data type.
+templateOut version
