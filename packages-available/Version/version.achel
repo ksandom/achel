@@ -1,8 +1,11 @@
 # List version and compoent versions. ~ version,user
 
-collectionLoad Version
-
-getCategory Version
+# TODO There has got to be a better way to do this!
+# Nest the results by one layer, so that we loop over them as a whole, rather than individually.
+getCategory General
+stashResults Tmp,general
+getCategory Tmp
+unsetCategory Tmp
 
 # TODO This is temporary until I set the data type.
 templateOut version

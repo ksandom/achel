@@ -1,6 +1,8 @@
 <?php
 # Copyright (c) 2012-2018, Kevin Sandom under the GPL License. See LICENSE for full details.
 
+define('achelVersion', '~%achelVersion%~');
+define('achelHash', '~%achelHash%~');
 define('valueSeparator', ',');
 define('storeValueBegin', '~!');
 define('storeValueEnd', '!~');

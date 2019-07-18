@@ -1,3 +1,2 @@
-<~~ ~!Color,green!~~%appName%~~!Color,default!~: ~!Color,cyan!~~%version%~~!Color,default!~
-
-~>
+<~~ ~!Color,green!~~%programName%~~!Color,default!~: ~!Color,cyan!~~%programVersion%~~!Color,default!~
+~!Color,green!~achel~!Color,default!~: ~!Color,cyan!~~%achelVersion%~~!Color,default!~ ~>

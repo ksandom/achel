@@ -155,12 +155,18 @@ function copyTemplatedFile
 	# echo "copyTemplatedFile: $src -> $dst in `pwd`"
 	rm -f "$dst"
 	cat $src | sed '
+		s*#!/bin/bash*#!'$bashPath'*g;
+		s*#!/usr/bin/php*#!'$phpPath'*g;
 		s#~%configDir%~#'$configDir'#g;
 		s#~%docsDir%~#'$configDir'/docs#g;
 		s#~%storageDir%~#'$storageDir'#g;
 		s#~%installType%~#'$installType'#g;
 		s#~%binExec%~#'$binExec'#g;
+		s#~%achelVersion%~#'$achelVersion'#g;
+		s#~%achelHash%~#'$achelHash'#g;
 		s#~%programName%~#'$programName'#g;
+		s#~%programVersion%~#'$programVersion'#g;
+		s#~%programHash%~#'$programHash'#g;
 		s#~%description%~#'"$description"'#g;
 		s#~%languageName%~#achel#g;
 		s#~%.*%~##g' > "$dst"
@@ -199,6 +205,10 @@ function restartInstall
 function doInstall
 {
 	echo "start location=`pwd`"
+	
+	# Derive some bare essentials.
+	deriveBareEssentials
+	
 	# Last sanity checks before begining.
 	mkdir -p "$storageDir" "$configDir"
 	if ! testWriteable "$storageDir" || ! testWriteable "$configDir" ; then
@@ -263,6 +273,10 @@ function doInstall
 	fi
 	
 	
+	# Figure out versions.
+	achelVersion
+	programVersion "achel"
+	
 	# Compiled documentation folder
 	mkdir -p "$configDir"/docs
 	
@@ -273,15 +287,20 @@ function doInstall
 	if [ -d interfaces ]; then
 		rm -Rf interfaces
 	fi
-	ln -sf "$repoDir/src/core.php" "$repoDir"/interfaces .
+	ln -sf "$repoDir"/interfaces .
 	
 	# Remove legacy supplimentary symlink and create a directory instead.
+	if [ -h "$configDir"/core.php ]; then
+		rm "$configDir"/core.php
+	fi
 	if [ -h "$configDir"/supplimentary ]; then
 		rm "$configDir"/supplimentary; mkdir -p "$configDir"/supplimentary/libs
 	fi
 	if [ -h "$configDir"/supplimentary/libs ]; then
 		rm "$configDir"/supplimentary/libs; mkdir -p "$configDir"/supplimentary/libs
 	fi
+	
+	copyTemplatedFile "$repoDir/src/core.php" "core.php"
 	
 	# This seems a little silly to repeat this a third time, and so probably needs to be re-thought. 
 	# The reason for the two previoius ones is so that the directory gets re-created on the same line to prevent the script dying horribly. This appeared to fix the problem at the time, but has not been scientifically tested.
@@ -340,6 +359,63 @@ function doInstall
 	rm -f "$configDir/macros-enabled/example"*
 	rm -f "$configDir/modules-enabled/example"
 	rm -f "$configDir/templates-enabled/example"
+}
+
+function deriveBareEssentials
+{
+	export bashPath=`which bash`
+	export phpPath=`which php`
+	
+	if [ "$bashPath" == '' ] || [ ! -e "$bashPath" ]; then
+		echo "Did not successfully find bash. Looked in \"$bashPath\"."
+		exit 1
+	fi
+	
+	if [ "$phpPath" == '' ] || [ ! -e "$phpPath" ]; then
+		echo "Did not successfully find php. Looked in \"$phpPath\"."
+		exit 1
+	fi
+}
+
+function achelVersion
+{
+	if version "achel"; then
+		export achelVersion="$returned_version"
+		export achelHash="$returned_hash"
+	else
+		export achelVersion="unknown"
+		export achelHash="unknown"
+	fi
+}
+
+function programVersion
+{
+	pv_programName="$1"
+	if version "$pv_programName"; then
+		export programVersion="$returned_version"
+		export programHash="$returned_hash"
+	else
+		export programVersion="unknown"
+		export programHash="unknown"
+	fi
+}
+
+function version
+{
+	v_programName="$1"
+	tagFile="$configDir/repos/$v_programName/.tag"
+	
+	if [ ! -e "$tagFile" ]; then
+		echo "$v_programName: No tag file $tagFile. Therefore can't derive version."
+		return 1
+	fi
+	
+	. "$tagFile"
+	
+	export returned_version="$lastWhen.$point"
+	export returned_hash="$lastHash"
+	
+	echo "$v_programName: version=$returned_version hash=$returned_hash."
 }
 
 function detectOldSettingsIfWeDontHaveThem

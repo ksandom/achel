@@ -1,7 +1,0 @@
-# Set the version for a given application. --setVersion=appName,version,hash ~ version,hidden
-parameters appName,version,hash
-
-collectionLoad Version
-setNested Version,~!Local,appName!~,appName,~!Local,appName!~
-setNested Version,~!Local,appName!~,version,~!Local,version!~
-setNested Version,~!Local,appName!~,hash,~!Local,hash!~

@@ -198,7 +198,11 @@ class Template extends Module
 				}
 				else
 				{
-					$this->core->debug(4, "Template: The line is not an array, inputLine=$inputLine");
+					if (is_object($inputLine))
+					{
+						$inputLine='Unstringable object.';
+					}
+					$this->core->debug(4, "Template: The line is not an array, inputLine=".strval($inputLine));
 					$templateLine=implode(strval($inputLine), explode(resultVarBegin."line".resultVarEnd, $templateLine));
 					$templateLine=implode(strval($key), explode(resultVarBegin."key".resultVarEnd, $templateLine));
 				}

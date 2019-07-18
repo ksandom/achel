@@ -48,7 +48,7 @@ function getBinCompatibility
 function setupBinCompatibilityTest
 {
 	mkdir -p ~/bin
-	echo "#!/bin/bash
+	echo "#!`which bash`
 echo \"Successfully executed $0\"
 exit 3"> ~/bin/binCompatibilityTest
 	chmod 755 ~/bin/binCompatibilityTest

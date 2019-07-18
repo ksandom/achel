@@ -63,6 +63,10 @@ function installRepo_get
 		git checkout "$repoVersion"
 	fi
 	
+	# Figure out version.
+	deriveBareEssentials
+	programVersion "$name"
+	
 	export repoName="$name"
 }
 

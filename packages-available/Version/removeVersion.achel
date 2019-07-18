@@ -1,5 +1,0 @@
-# Remove the version for a given application. This is intended for when an app is uninstalled. --setVersion=appName ~ version,hidden
-parameters appName
-
-collectionLoad Version
-unset Version,~!Local,appName!~
