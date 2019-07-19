@@ -166,7 +166,7 @@ function getDimensions
 	# TODO There has got to be a better way than this.
 	
 	if which resize > /dev/null; then
-		resize | grep COL | grep -v export | sed 's/.*=//g;s/;//g'
+		resize 2>/dev/null | grep COL | grep -v export | sed 's/.*=//g;s/;//g'
 	else
 		echo 80
 	fi

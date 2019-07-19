@@ -281,7 +281,6 @@ function doInstall
 	mkdir -p "$configDir"/docs
 	
 	
-	
 	# Linking like there's no tomorrow.
 	cd "$configDir"
 	if [ -d interfaces ]; then
@@ -307,7 +306,6 @@ function doInstall
 	mkdir -p "$configDir"/supplimentary/libs
 	
 	supplimentaryInstall achel
-	
 	
 	# Make it executable
 	cd "$binExec"

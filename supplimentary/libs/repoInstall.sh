@@ -152,7 +152,7 @@ function installRepo_setup
 	done < <(repoGetProfiles "$irs_repoName")
 }
 
-# function supplimentaryInstall
+function supplimentaryInstall
 {
 	local si_repoName="$1"
 	local si_prefix="$configDir/repos/$si_repoName"
@@ -160,7 +160,6 @@ function installRepo_setup
 		echo "supplimentaryInstall: Repo \"$si_repoName\" is not currently installed." >&2
 		return 1
 	fi
-	
 	if [ ! -e "$si_prefix/supplimentary" ]; then
 		echo "supplimentaryInstall: Repo \"$si_repoName\" does not have a supplimentary directory, so there's no need to install one." >&2
 	fi
@@ -175,9 +174,8 @@ function installRepo_setup
 			# echo "supplimentaryInstall: Adding symlink for \"$fileName\"."
 			ln -s "$si_prefix/supplimentary/$fileName" .
 		fi
-		
 	done < <(ls -1 "$si_prefix/supplimentary" 2>/dev/null)
-	
+		
 	cd "$configDir/supplimentary/libs"
 	while read fileName;do
 		if [ ! -e "$fileName" ]; then
@@ -204,8 +202,10 @@ function supplimentaryUninstall
 	# echo "supplimentaryUninstall: Removing scripts in \"$su_supplimentaryDir\" matching regex \"/$su_repoName/\"."
 	cd "$configDir/supplimentary"
 	while read fileName symlinkSrc;do
-		# echo "supplimentaryUninstall: Removing symlink \"$fileName\" which points to \"$symlinkSrc\" because it belongs to the repository \"$su_repoName\"."
-		rm "$fileName"
+		if [ "$fileName" != 'libs' ]; then
+			# echo "supplimentaryUninstall: Removing symlink \"$fileName\" which points to \"$symlinkSrc\" because it belongs to the repository \"$su_repoName\"."
+			rm "$fileName"
+		fi
 	done < <(resolveSymlinks "$su_supplimentaryDir" | grep "$su_refine")
 	cd ~-
 	
