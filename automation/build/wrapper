@@ -19,4 +19,4 @@ fi
 mkdir -p "$configDir"
 
 # Let's do it!
-docker run -it --env COMMAND="$command" --env USER="$USER" --name "$appName" --volume "$configDir":/data --volume `pwd`:/current "$image" /usr/installs/achel/automation/dockerInternal/internalWrapper "$@"
+docker run -it --env COMMAND="$command" --env USER="$USER" --name "$appName" --volume "$configDir":/usr/achelData --volume `pwd`:/current "$image" /usr/installs/achel/automation/dockerInternal/internalWrapper "$@"
