@@ -4,6 +4,6 @@ countOfStuff=`ls /etc/achel | wc -l`
 
 if [ $countOfStuff -eq 0 ]; then
   # Unpack the backup for first time use.
-  cd /etc
-  tar -xjf /usr/backups/achel.tar.bz2
+  cd /data
+  tar -xjf /usr/backups/achelData.tar.bz2
 fi

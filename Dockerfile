@@ -10,6 +10,10 @@ ADD . /usr/installs/achel
 
 RUN cd /usr/installs/achel && \
   ./install.sh && \
-  ./automation/dockerInternal/postInstall
+  mkdir -p /data && \
+  cd /etc/achel && \
+  mv config data /data && \
+  ln -s /data/* . && \
+  /etc/achel/repos/achel/automation/dockerInternal/postInstall
 
 CMD automation/dockerInternal/nothingService

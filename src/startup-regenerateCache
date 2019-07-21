@@ -41,14 +41,25 @@ $core->set('General', 'installType', installType);
 $core->set('General', 'binExec', binExec);
 $core->set('General', 'profile', $profile);
 $core->set('General', 'hostsDir', storageDir.'/data/1LayerHosts');
-$core->set('General', 'achelVersion', achelVersion);
-$core->set('General', 'achelHash', achelHash);
 $core->set('General', 'programName', programName);
 $core->set('General', 'programVersion', programVersion);
 $core->set('General', 'programHash', programHash);
 $core->set('General', 'description', $description);
 $core->set('General', 'delayProcessingArgs', true);
 $core->set('General', 'exitCode', 0);
+
+if (defined('achelVersion'))
+{
+  $core->set('General', 'achelVersion', achelVersion);
+  $core->set('General', 'achelHash', achelHash);
+}
+else
+{
+  $core->debug(0, "'achelVersion' is not defined, yet it is expected. This miss-match is usually caused when running an old docker install with a new image. You can fix it non-destructively by re-running \`export IMAGE=kjsandom/achel; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash\`. If it's not installed via docker. Try re-installing achel and your application, and raise a bug to let me know here https://github.com/ksandom/achel/issues .");
+  $core->set('General', 'achelVersion', 'Version miss-match. Try a re-install.');
+  $core->set('General', 'achelHash', 'Version miss-match. Try a re-install.');
+}
+
 
 
 # Process cache
