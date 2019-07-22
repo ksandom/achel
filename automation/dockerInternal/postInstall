@@ -3,5 +3,5 @@
 
 mkdir -p /usr/backups
 cd /usr/achelData
-tar -cjf /usr/backups/achel.tar.bz2 data config
+tar -cjf /usr/backups/achelData.tar.bz2 data config
 rm -Rf data config

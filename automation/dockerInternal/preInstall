@@ -1,6 +1,6 @@
 #!/bin/bash
 
-countOfStuff=`ls /etc/achel | wc -l`
+countOfStuff=`ls /usr/achelData | wc -l`
 
 if [ $countOfStuff -eq 0 ]; then
   # Unpack the backup for first time use.
