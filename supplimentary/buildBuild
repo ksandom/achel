@@ -20,7 +20,6 @@ requiredParms="none"
 # Make sure we have a tag we can use for building docker and releaseing to git.
 mustFindRepoRoot
 tag=`generateTag`
-gitTag
 
 # Build docker.
 dockerBuild
