@@ -2,7 +2,7 @@
 
 if [ "$tag" == '' ]; then
   tag=`generateTag`
-  echo "[Git] generated new tag $tag."
+  echo "[Git] generated tag $tag."
 fi
 
 function gitTag

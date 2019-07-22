@@ -58,18 +58,9 @@ function generateTag
     
     setState "$currentWhen" "$currentHash" $point
     # If omit the point if .0.
-    if [ "$point" == "0" ]; then
-      echo "$currentWhen"
-    else
-      echo "$currentWhen"."$point"
-    fi
+    echo "$currentWhen"."$point"
   else
     # No change. Return the current tag.
-    # If omit the point if .0.
-    if [ "$point" == "0" ]; then
-      echo "$lastWhen"
-    else
-      echo "$lastWhen"."$point"
-    fi
+    echo "$lastWhen"."$point"
   fi
 }
