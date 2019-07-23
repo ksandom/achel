@@ -20,18 +20,32 @@ function requireAppName
   fi
 }
 
+function dockerFileExists
+{
+  if [ -e Dockerfile ]; then
+    return 0
+  else
+    echo "Docker: Skipping since tere is no docker file in `pwd`."
+    return 1
+  fi
+}
+
 function dockerBuild
 {
-  requireAppName
-  docker build -t $dockerTag .
-  docker build -t $dockerLatest .
+  if dockerFileExists; then
+    requireAppName
+    docker build -t $dockerTag .
+    docker build -t $dockerLatest .
+  fi
 }
 
 function dockerPush
 {
-  requireAppName
-  docker push $dockerTag
-  docker push $dockerLatest
+  if dockerFileExists; then
+    requireAppName
+    docker push $dockerTag
+    docker push $dockerLatest
+  fi
 }
 
 function dockerShell
