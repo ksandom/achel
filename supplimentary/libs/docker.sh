@@ -34,8 +34,8 @@ function dockerBuild
 {
   if dockerFileExists; then
     requireAppName
-    docker build -t $dockerTag .
-    docker build -t $dockerLatest .
+    docker build --pull -t $dockerTag .
+    docker build --pull -t $dockerLatest .
   fi
 }
 

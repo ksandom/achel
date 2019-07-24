@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y php7.2-cli php7.2-curl curl git wget apt-utils
 # TODO finish timezone config
 
+ENV FORCE_UPDATE=1
 ADD . /usr/installs/achel
 
 RUN cd /usr/installs/achel && \
