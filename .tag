@@ -1,4 +1,4 @@
 # Tag settings
   lastWhen='2019-07-24'
-  lastHash='06c8cf88cc410f821e249735397a5b0b5c6007eb'
-  point=1
+  lastHash='2639392c5c19153edfc07683a3ad5205d23d4e6f'
+  point=2
