@@ -23,11 +23,7 @@ function setState
 function getTag
 {
   . $tagFile
-  if [ "$point" == "0" ]; then
-    echo "$lastWhen"
-  else
-    echo "$lastWhen"."$point"
-  fi
+  echo "$lastWhen"."$point"
 }
 
 function generateTag
