@@ -21,6 +21,7 @@ define('localScopeVarName', 'Local');
 define('nestedPrivateVarsName', 'Me');
 define('isolatedNestedPrivateVarsName', 'Isolated');
 
+# TODO Re-evaluate whether this is still needed.
 define('workAroundIfBug', true); // See doc/bugs/ifBug.md
 
 define ('cleanupArgs', true); // Turn this off if you strike code that relies on arguments set for other macros. This is a bad way of programming and should serve as a severe warning that the code needs to be updated. This option will be removed soon.
@@ -28,6 +29,9 @@ define ('cleanupArgs', true); // Turn this off if you strike code that relies on
 # TODO Once Achel better handels boolean values, these can be actual boolean values.
 define ('achelTrue', 'true');
 define ('achelFalse', 'false');
+
+# TODO Re-evaluate how to make this behave.
+define ('noConfigIsFatal', false); // Refuse to work if the config directory is unreadable.
 
 
 /*

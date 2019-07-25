@@ -171,10 +171,26 @@ class Data extends Module
 
 	function loadConfig()
 	{
-		$configFiles=$this->core->getFileList($this->storageDir.'/config');
-		foreach ($configFiles as $filename=>$fullPath)
+		$configDir=$this->storageDir.'/config';
+		$configFiles=$this->core->getFileList($configDir);
+		if (is_array($configFiles))
 		{
-			$this->loadStoreEntryFromFilename($fullPath);
+			foreach ($configFiles as $filename=>$fullPath)
+			{
+				$this->loadStoreEntryFromFilename($fullPath);
+			}
+		}
+		else
+		{
+			if (noConfigIsFatal)
+			{
+				$this->core->debug(0, "Could not find config. If you don't have anything important in your Achel config, you could simply delete it and re-install. Otherwise a re-install by itself is also likely to work. For debugging purposes, we were looking for config in $configDir.");
+				die("Chose to gracefully stop.\n");
+			}
+			else
+			{
+				$this->core->debug(0, "Could not find config. This isn't necessarily fatal, but is unlikely to be good. If you don't have anything important in your Achel config, you could simply delete it and re-install. Otherwise a re-install by itself is also likely to work. For debugging purposes, we were looking for config in $configDir.");
+			}
 		}
 	}
 	
