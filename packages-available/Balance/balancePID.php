@@ -17,7 +17,6 @@ class BalancePID extends BalanceAlgorithm
 				)
 			));
 		
-		$this->state=array();
 		
 		parent::__construct();
 	}
@@ -49,30 +48,43 @@ class BalancePID extends BalanceAlgorithm
 		$this->state[$ruleName]['value']=$rule['input']['live']['value'];
 		$this->state[$ruleName]['goal']=$rule['input']['live']['goal'];
 		$this->state[$ruleName]['error']=$this->state[$ruleName]['goal']-$this->state[$ruleName]['value'];
+		$this->state[$ruleName]['errorValue']=abs($this->state[$ruleName]['error']);
+		$this->state[$ruleName]['errorDirection']=($this->state[$ruleName]['error']<0)?-1:1;
 		
-		$p=$this->calculateP($ruleName);
-		$i=$this->calculateI($ruleName);
-		$d=$this->calculateD($ruleName);
-		# TODO Combine them.
+		$kP=$rule['pid']['kP'];
+		$iP=$rule['pid']['iP'];
+		$kI=$rule['pid']['kI'];
+		$iI=$rule['pid']['iI'];
+		$kD=$rule['pid']['kD'];
+		$iD=$rule['pid']['iD'];
 		
+		$p=$this->calculateP($ruleName, $iP);
+		$i=$this->calculateI($ruleName, $iI);
+		$d=$this->calculateD($ruleName, $iD);
 		
+		# TODO Check that I'm pulling the goal from the right place. I suspect not.
 		#$rule['input']['live']['inputGoal'];
-		#$rule['output']['live']['value']=$output;
+		
+		$combinedValue=($p*$kP) + ($i*$kI) + ($d*$kD);
+		$out=$this->cap(-1, $combinedValue, 1);
+		$rule['output']['live']['value']=$out;
 	}
 	
-	private function calculateP($ruleName)
+	private function calculateP($ruleName, $iP)
 	{
-		
+		return $this->getSomeDifference($this->cap($this->state[$ruleName]['error']), $iP, $ruleName, 'P');
 	}
 	
-	private function calculateI($ruleName)
+	private function calculateI($ruleName, $iI)
 	{
-		
+		# TODO Write this.
+		return 0;
 	}
 	
-	private function calculateD($ruleName)
+	private function calculateD($ruleName, $iD)
 	{
-		
+		# TODO Write this.
+		return 0;
 	}
 }
 

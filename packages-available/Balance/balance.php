@@ -179,7 +179,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 					),
 				'destination'=>array(
 					'variable'=>array(
-						'description'=>' Where to save the resulting value.'
+						'description'=>'Where to save the resulting value.'
 						),
 					'textOutput'=>array(
 						'description'=>'The text to be sent the channel. ~%value%~ will be replaced with what ever the output currently is.'
@@ -191,6 +191,32 @@ class BalanceFaucet extends ThroughBasedFaucet
 					'channel'=>array(
 						'default'=>'default',
 						'description'=>'which channel to send to.'
+						)
+					),
+				'pid'=>array(
+					'kP'=>array(
+						'description'=>'Proportional aspect of the PID controller. This gives a very direct response to how far off the goal we are. It will do a good job of getting in the general vascinity of the goal, but will be sloppy once close.',
+						'default'=>'0.9'
+						),
+					'iP'=>array(
+						'description'=>'How much of the difference between the previous goal, and the new goal should we apply. 1 Will apply everything straight away. 0.5 will apply half this time. And then half of the remaining difference next time.',
+						'default'=>'0.25'
+						),
+					'kI'=>array(
+						'description'=>'Integral aspect of the PID controller. This looks at recent history, and will increase or decrease effort accordingly to precisely get us to the goal.',
+						'default'=>'0.4'
+						),
+					'iI'=>array(
+						'description'=>'How much of the difference between the previous goal, and the new goal should we apply. 1 Will apply everything straight away. 0.5 will apply half this time. And then half of the remaining difference next time.',
+						'default'=>'1'
+						),
+					'kD'=>array(
+						'description'=>'Derivitive aspect of the PID controller. This looks for if we are going to overshoot, and applies pressure accordingly.',
+						'default'=>'1'
+						),
+					'iD'=>array(
+						'description'=>'How much of the difference between the previous goal, and the new goal should we apply. 1 Will apply everything straight away. 0.5 will apply half this time. And then half of the remaining difference next time.',
+						'default'=>'1'
 						)
 					)
 				)
@@ -468,6 +494,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			// Run the data through the algorithm
 			$algorithmObject->process($ruleName, $rule);
+			$this->core->debug(0,"ruleName=$ruleName");
 			
 			// Calculate value after multiplier
 			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']-$rule['output']['center'];
@@ -556,19 +583,22 @@ class BalanceFaucet extends ThroughBasedFaucet
 
 class BalanceAlgorithm extends SubModule
 {
+	protected $state;
+	
 	function __construct()
 	{
 		parent::__construct('BalanceAlgorithm');
+		$this->state=array();
 	}
 	
-	function process($ruleName, &$rule)
+	public function process($ruleName, &$rule)
 	{
 		/*
 			All the required input will be provided by $rule.
 		*/
 	}
 	
-	function getBetween($input, $rule, $inRangeBeginName, $inRangeEndName)
+	protected function getBetween($input, $rule, $inRangeBeginName, $inRangeEndName)
 	{
 		$outRangeBeginName=$inRangeBeginName;
 		$outRangeEndName=$inRangeEndName;
@@ -581,6 +611,46 @@ class BalanceAlgorithm extends SubModule
 		$outValue=$outRangeDiff*$inValuePercent+$rule['output'][$outRangeBeginName];
 		
 		return $outValue;
+	}
+	
+	protected function cap($min, $value, $max)
+	{ // Cap the value to a specific range.
+		$out=$value;
+		
+		if ($min<$max)
+		{ // Normal use-case.
+			if ($out>$max) $out=$max;
+			if ($out<$min) $out=$min;
+		}
+		else
+		{ // We have an inverted range.
+			if ($out<$max) $out=$max;
+			if ($out>$min) $out=$min;
+		}
+		
+		return $out;
+	}
+	
+	protected function calculateSomeDifference($currentGoal, $previousGoal, $incrementorPercent)
+	{ //Use this for the raw calculation. You may want calculateSomeDifference instead.
+		$difference=$currentGoal-$previousGoal;
+		$out=$previousGoal+$difference*$incrementorPercent;
+		
+		return $out;
+	}
+	
+	protected function getSomeDifference($goal, $incrementorPercent, $ruleName, $differenceName)
+	{ // Apply some of the requested goal, and keep track of it.
+		// Assert that the data structure is set up.
+		if (!isset($this->state[$ruleName])) $this->state[$ruleName]=array();
+		if (!isset($this->state[$ruleName][$differenceName])) $this->state[$ruleName][$differenceName]=array();
+		if (!isset($this->state[$ruleName][$differenceName]['previousGoal'])) $this->state[$ruleName][$differenceName]['previousGoal']=$goal;
+		
+		// Do the actual calculations.
+		$newGoal=$this->calculateSomeDifference($goal, $this->state[$ruleName][$differenceName]['previousGoal'], $incrementorPercent);
+		$this->state[$ruleName][$differenceName]['previousGoal']=$newGoal;
+		
+		return $newGoal;
 	}
 }
 
