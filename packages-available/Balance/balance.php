@@ -194,6 +194,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 						)
 					),
 				'pid'=>array(
+					'optional'=>true,
 					'kP'=>array(
 						'description'=>'Proportional aspect of the PID controller. This gives a very direct response to how far off the goal we are. It will do a good job of getting in the general vascinity of the goal, but will be sloppy once close.',
 						'default'=>'0.9'
@@ -494,7 +495,6 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			// Run the data through the algorithm
 			$algorithmObject->process($ruleName, $rule);
-			$this->core->debug(0,"ruleName=$ruleName");
 			
 			// Calculate value after multiplier
 			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']-$rule['output']['center'];
