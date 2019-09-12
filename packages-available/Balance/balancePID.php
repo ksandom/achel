@@ -21,9 +21,9 @@ class BalancePID extends BalanceAlgorithm
 		parent::__construct();
 	}
 	
-	private function resetState($rule)
+	private function resetState($ruleName)
 	{
-		$$this->state[$rule]=array(
+		$this->state[$ruleName]=array(
 			'p' => array (
 				'last' => 0
 			),
@@ -36,7 +36,7 @@ class BalancePID extends BalanceAlgorithm
 	function process($ruleName, &$rule)
 	{
 		// Make sure we have an initial state.
-		if (!isset($rule['output']['live']['value'])) $this->resetState($rule);
+		if (!isset($rule['output']['live']['value'])) $this->resetState($ruleName);
 		
 		// Sanity check data
 		if (!isset($rule['input']['live']['value']))
@@ -72,7 +72,7 @@ class BalancePID extends BalanceAlgorithm
 	
 	private function calculateP($ruleName, $iP)
 	{
-		return $this->getSomeDifference($this->cap($this->state[$ruleName]['error']), $iP, $ruleName, 'P');
+		return $this->getSomeDifference($this->cap(-1, $this->state[$ruleName]['error'], 1), $iP, $ruleName, 'P');
 	}
 	
 	private function calculateI($ruleName, $iI)
