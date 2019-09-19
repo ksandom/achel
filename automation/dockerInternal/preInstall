@@ -4,8 +4,9 @@ set -ex
 
 countOfStuff=`ls /usr/achelData | wc -l`
 
-if [ $countOfStuff -eq 0 ]; then
+if [ $countOfStuff -lt 2 ]; then # /tmp now skews this number.
   # Unpack the backup for first time use.
   cd /usr/achelData
   tar -xjf /usr/backups/achelData.tar.bz2
+  mkdir -p tmp
 fi
