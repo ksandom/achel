@@ -1,7 +1,9 @@
 #!/bin/bash
 # Stuff to be done after an install inside docker.
 
+set -ex
+
 mkdir -p /usr/backups
 cd /usr/achelData
-tar -cjf /usr/backups/achelData.tar.bz2 data config
+tar -cjf /usr/backups/achelData.tar.bz2 data config tmp
 rm -Rf data config

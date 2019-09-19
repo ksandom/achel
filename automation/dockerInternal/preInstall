@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 countOfStuff=`ls /usr/achelData | wc -l`
 
 if [ $countOfStuff -eq 0 ]; then

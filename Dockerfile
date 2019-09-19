@@ -11,7 +11,7 @@ ADD . /usr/installs/achel
 
 RUN cd /usr/installs/achel && \
   ./install.sh && \
-  mkdir -p /usr/achelData && \
+  mkdir -p /usr/achelData/tmp && \
   cd /etc/achel && \
   mv config data /usr/achelData && \
   ln -s /usr/achelData/* . && \
