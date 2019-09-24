@@ -68,6 +68,11 @@ class BalancePID extends BalanceAlgorithm
 		$combinedValue=($p*$kP) + ($i*$kI) + ($d*$kD);
 		$out=$this->cap(-1, $combinedValue, 1);
 		$rule['output']['live']['value']=$out;
+		
+		if ($ruleName=='yaw')
+		{
+			$this->core->debug(3,"ruleName=$ruleName value=".$this->state[$ruleName]['value']." goal=".$this->state[$ruleName]['goal']." P=($p*$kP) out=$out");
+		}
 	}
 	
 	private function calculateP($ruleName, $iP)
