@@ -198,7 +198,7 @@ function cleanUp
 
 function setupSyntaxHighlighting
 {
-	achelctl syntaxHTInstall
+	achelctl syntaxHLInstall
 }
 
 
