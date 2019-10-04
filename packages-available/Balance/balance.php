@@ -492,9 +492,31 @@ class BalanceFaucet extends ThroughBasedFaucet
 				$rule['input']['live']['inputGoal']=$rule['input']['max'];
 			}
 			
+			# TODO I think this is a raw-ish value. I thought there was some scaling. If not, do it.
+			# protected function scaleData($value, $inMin, $inCenter, $inMax, $outMin=-1, $outCenter=0, $outMax=1)
+			$value=$rule['input']['live']['value'];
+			$inputGoal=$rule['input']['live']['inputGoal'];
+			$goal=$rule['input']['live']['goal'];
+			$inMin=$rule['input']['min'];
+			$inCenter=$rule['input']['center'];
+			$inMax=$rule['input']['max'];
+			$rule['input']['live']['scaledValue']=$algorithmObject->scaleData($value, $inMin, $inCenter, $inMax);
+			$rule['input']['live']['scaledInputGoal']=$algorithmObject->scaleData($inputGoal, $inMin, $inCenter, $inMax);
+			$rule['input']['live']['scaledGoal']=$algorithmObject->scaleData($goal, $inMin, $inCenter, $inMax);
 			
+			#   //
+			#  //
+			# //
+			#//
 			// Run the data through the algorithm
 			$algorithmObject->process($ruleName, $rule);
+			#\
+			#\\
+			# \\
+			#  \\
+			#   \\
+			
+			
 			
 			// Calculate value after multiplier
 			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']-$rule['output']['center'];
@@ -651,6 +673,55 @@ class BalanceAlgorithm extends SubModule
 		$this->state[$ruleName][$differenceName]['previousGoal']=$newGoal;
 		
 		return $newGoal;
+	}
+	
+	public function scaleData($value, $inMin, $inCenter, $inMax, $outMin=-1, $outCenter=0, $outMax=1)
+	{
+		/*
+		This function takes an input of a given range, and converts it to another range.
+		This is more complicated than you'd likely initially guess because we need to cope with both
+		
+		* Inverted input.
+		* Non-zero center.
+		
+		At this time, inverted output is not supported, but that can be achieved by inverting the input.
+		*/
+		
+		
+		# Figure out which side of the center the input is on.
+		if ($inMax > $inMin)
+		{ # Normal input.
+			if ($value>$inCenter)
+			{ # Value is on the right.
+				$out=$this->calculateScaleData($value, $inMax, $inCenter, 1, $outMax, $outCenter);
+			}
+			else
+			{ # Value is on the left.
+				$out=$this->calculateScaleData($value, $inCenter, $inMin, -1, $outCenter, $outMin);
+			}
+		}
+		else
+		{ # Inverted input.
+			if ($value>$inCenter)
+			{ # Value is on the left.
+				$out=$this->calculateScaleData($value, $inMin, $inCenter, 1, $outCenter, $outMin);
+			}
+			else
+			{ # Value is on the right.
+				$out=$this->calculateScaleData($value, $inCenter, $inMax, -1, $outMax, $outCenter);
+			}
+		}
+		
+		return $out;
+	}
+	
+	private function calculateScaleData($value, $inRange1, $inRange2, $multiplier, $outRange1, $outRange2)
+	{
+		$inBase=$inRange1-$inRange2;
+		$outBase=$outRange1-$outRange2;
+		$inValue=$value-$inRange2;
+		
+		return $inValue/$inBase*$outBase*$multiplier;
 	}
 }
 

@@ -39,14 +39,16 @@ class BalancePID extends BalanceAlgorithm
 		if (!isset($rule['output']['live']['value'])) $this->resetState($ruleName);
 		
 		// Sanity check data
-		if (!isset($rule['input']['live']['value']))
+		if (!isset($rule['input']['live']['scaledInputGoal']))
 		{
 			$this->debug(1, __CLASS__.'->'.__FUNCTION__.": No input. If we've got here, this shouldn't ever happen.");
 			return false;
 		}
 		
-		$this->state[$ruleName]['value']=$rule['input']['live']['value'];
-		$this->state[$ruleName]['goal']=$rule['input']['live']['goal'];
+		# TODO inputGoal as the input value to compute against is not intuitive, even when reading a working example. Either change it, or well-document it.
+		
+		$this->state[$ruleName]['value']=$rule['input']['live']['scaledValue'];
+		$this->state[$ruleName]['goal']=$rule['input']['live']['scaledGoal'];
 		$this->state[$ruleName]['error']=$this->state[$ruleName]['goal']-$this->state[$ruleName]['value'];
 		$this->state[$ruleName]['errorValue']=abs($this->state[$ruleName]['error']);
 		$this->state[$ruleName]['errorDirection']=($this->state[$ruleName]['error']<0)?-1:1;
@@ -62,22 +64,20 @@ class BalancePID extends BalanceAlgorithm
 		$i=$this->calculateI($ruleName, $iI);
 		$d=$this->calculateD($ruleName, $iD);
 		
-		# TODO Check that I'm pulling the goal from the right place. I suspect not.
-		#$rule['input']['live']['inputGoal'];
-		
-		$combinedValue=($p*$kP) + ($i*$kI) + ($d*$kD);
+		$combinedValue=($p*$kP*-1) + ($i*$kI) + ($d*$kD);
 		$out=$this->cap(-1, $combinedValue, 1);
 		$rule['output']['live']['value']=$out;
 		
 		if ($ruleName=='yaw')
 		{
-			$this->core->debug(3,"ruleName=$ruleName value=".$this->state[$ruleName]['value']." goal=".$this->state[$ruleName]['goal']." P=($p*$kP) out=$out");
+			$this->core->debug(1,"ruleName=$ruleName value=".$this->state[$ruleName]['value']." scaledValue=".$this->state[$ruleName]['value']."(".$rule['input']['live']['value'].") goal=".$this->state[$ruleName]['goal']."(".$rule['input']['live']['goal'].") P=($p*$kP) out=$out");
 		}
 	}
 	
 	private function calculateP($ruleName, $iP)
 	{
-		return $this->getSomeDifference($this->cap(-1, $this->state[$ruleName]['error'], 1), $iP, $ruleName, 'P');
+		# return $this->getSomeDifference($this->cap(-1, $this->state[$ruleName]['error'], 1), $iP, $ruleName, 'P');
+		return $this->state[$ruleName]['error'];
 	}
 	
 	private function calculateI($ruleName, $iI)
