@@ -49,7 +49,7 @@ class BalancePID extends BalanceAlgorithm
 		
 		$this->state[$ruleName]['value']=$rule['input']['live']['scaledValue'];
 		$this->state[$ruleName]['goal']=$rule['input']['live']['scaledGoal'];
-		$this->state[$ruleName]['error']=$this->state[$ruleName]['goal']-$this->state[$ruleName]['value'];
+		$this->state[$ruleName]['error']=$this->state[$ruleName]['value']-$this->state[$ruleName]['goal'];
 		$this->state[$ruleName]['errorValue']=abs($this->state[$ruleName]['error']);
 		$this->state[$ruleName]['errorDirection']=($this->state[$ruleName]['error']<0)?-1:1;
 		
@@ -70,7 +70,7 @@ class BalancePID extends BalanceAlgorithm
 		
 		if ($ruleName=='yaw')
 		{
-			$this->core->debug(1,"ruleName=$ruleName value=".$this->state[$ruleName]['value']." scaledValue=".$this->state[$ruleName]['value']."(".$rule['input']['live']['value'].") goal=".$this->state[$ruleName]['goal']."(".$rule['input']['live']['goal'].") P=($p*$kP) out=$out");
+			$this->core->debug(1,"ruleName=$ruleName scaledValue=".$this->state[$ruleName]['value']."(".$rule['input']['live']['value'].") goal=".$this->state[$ruleName]['goal']."(".$rule['input']['live']['goal'].") P=($p*$kP) out=$out");
 		}
 	}
 	

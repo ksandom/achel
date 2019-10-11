@@ -477,6 +477,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			
 			// Mangle the input with the goal.
+			# TODO Change inputGoal to error, and adapt all algorithms to use it.
 			$rule['input']['live']['inputGoal']=$rule['input']['live']['value']-$rule['input']['live']['goal'];
 			
 			
@@ -661,7 +662,7 @@ class BalanceAlgorithm extends SubModule
 		return $out;
 	}
 	
-	protected function getSomeDifference($goal, $incrementorPercent, $ruleName, $differenceName)
+	public function getSomeDifference($goal, $incrementorPercent, $ruleName, $differenceName)
 	{ // Apply some of the requested goal, and keep track of it.
 		// Assert that the data structure is set up.
 		if (!isset($this->state[$ruleName])) $this->state[$ruleName]=array();
@@ -687,39 +688,71 @@ class BalanceAlgorithm extends SubModule
 		At this time, inverted output is not supported, but that can be achieved by inverting the input.
 		*/
 		
+		if ($value==$inCenter) return $outCenter;
 		
 		# Figure out which side of the center the input is on.
 		if ($inMax > $inMin)
 		{ # Normal input.
-			if ($value>$inCenter)
+			if ($value>=$inMax) return $outMax;
+			elseif ($value<=$inMin) return $outMin;
+			elseif ($value>$inCenter)
 			{ # Value is on the right.
 				$out=$this->calculateScaleData($value, $inMax, $inCenter, 1, $outMax, $outCenter);
+				$path="top right";
 			}
 			else
 			{ # Value is on the left.
-				$out=$this->calculateScaleData($value, $inCenter, $inMin, -1, $outCenter, $outMin);
+				$out=$this->calculateScaleData($value, $inMin, $inCenter, 1, $outMin, $outCenter);
+				$path="top left";
 			}
 		}
 		else
 		{ # Inverted input.
-			if ($value>$inCenter)
+			if ($value>=$inMin) return $outMax;
+			elseif ($value<=$inMax) return $outMin;
+			elseif ($value>$inCenter)
 			{ # Value is on the left.
-				$out=$this->calculateScaleData($value, $inMin, $inCenter, 1, $outCenter, $outMin);
+				$out=$this->calculateScaleData($value, $inMin, $inCenter, -1, $outCenter, $outMin);
+				$path="bottom left";
 			}
 			else
 			{ # Value is on the right.
-				$out=$this->calculateScaleData($value, $inCenter, $inMax, -1, $outMax, $outCenter);
+				$out=$this->calculateScaleData($value, $inMax, $inCenter, -1, $outCenter, $outMax);
+				$path="bottom right";
 			}
 		}
+		
+		$this->core->debug(0, "$path. . (v=$value, in=$inMin, ic=$inCenter, ix=$inMax, on=$outMin=-1, oc=$outCenter=0, ox=$outMax=1) OUT=$out");
 		
 		return $out;
 	}
 	
 	private function calculateScaleData($value, $inRange1, $inRange2, $multiplier, $outRange1, $outRange2)
 	{
+		$this->core->debug(2, "calculateScaleData($value, $inRange1, $inRange2, $multiplier, $outRange1, $outRange2)");
+		
+// 		if ($value>=$inRange2)
+// 		{
+// 			$this->core->debug(0, "OOB >= ($value>=$inRange2)");
+// 			return $outRange2*$multiplier;
+// 		}
+// 		if ($value<=$inRange1)
+// 		{
+// 			$this->core->debug(0, "OOB <= ($value<=$inRange1)");
+// 			return $outRange1*$multiplier;
+// 		}
+		
 		$inBase=$inRange1-$inRange2;
 		$outBase=$outRange1-$outRange2;
 		$inValue=$value-$inRange2;
+		
+		#$out=$this->calculateScaleData(v=0, ir1=-45, ir2=0, m=-1, or1=0, or2=-1);
+		#inBase=-45
+		#outBase=1
+		#inValue=0
+		# $inValue/$inBase*$outBase*$multiplier
+		# 45/45=1 1*1=1 1*-1=-1
+		# 0/-45=1 1*1=1 1*-1=-1
 		
 		return $inValue/$inBase*$outBase*$multiplier;
 	}

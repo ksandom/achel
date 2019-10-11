@@ -1,0 +1,59 @@
+#!/usr/bin/php
+<?php
+/*
+ * Some temporary unit tests.
+ * TODO Look into php unit tests for testing non-exposed functionality like this.
+*/
+
+$verbosity=1;
+
+
+include '../../src/core.php';
+include '../AAFaucets/achel.php';
+include 'balance.php';
+$core=core::assert($verbosity);
+
+$algorythm = new BalanceAlgorithm();
+$algorythm->setCore($core);
+
+include ('../../interfaces/commandLine.php');
+$core->callFeature('registerForEvent','Int,resetOutput,setCliOutput');
+
+function expect($input, $expectedValue, $label='')
+{
+	if ($input == $expectedValue)
+	{
+		echo "    pass $expectedValue\n";
+	}
+	else
+	{
+		echo "    FAIL: $input != $expectedValue ($label)\n";
+	}
+}
+
+
+// $value, $inMin, $inCenter, $inMax, $outMin=-1, $outCenter=0, $outMax=1
+expect($algorythm->scaleData(45, -90, 0, 90), 0.5);
+expect($algorythm->scaleData(-45, -90, 0, 90), -0.5);
+expect($algorythm->scaleData(0, -90, 0, 90), 0);
+expect($algorythm->scaleData(0, -45, 0, 45), 0);
+
+expect($algorythm->scaleData(45, 90, 0, -90), -0.5);
+expect($algorythm->scaleData(-45, 90, 0, -90), 0.5);
+expect($algorythm->scaleData(0, 90, 0, -90), 0);
+expect($algorythm->scaleData(0, 45, 0, -45), 0);
+
+expect($algorythm->scaleData(190, -90, 0, 90), 1);
+expect($algorythm->scaleData(-190, -90, 0, 90), -1);
+expect($algorythm->scaleData(190, -90, 0, 90), 1);
+expect($algorythm->scaleData(-190, -90, 0, 90), -1);
+
+// $goal, $incrementorPercent, $ruleName, $differenceName
+expect($algorythm->getSomeDifference(0, 0.75, 'test', 'test1'), 0);
+expect($algorythm->getSomeDifference(0, 0.5, 'test', 'test2'), 0);
+expect($algorythm->getSomeDifference(1, 0.75, 'test', 'test1'), 0.75);
+expect($algorythm->getSomeDifference(1, 0.5, 'test', 'test2'), 0.5);
+expect($algorythm->getSomeDifference(1, 0.5, 'test', 'test2'), 0.75);
+expect($algorythm->getSomeDifference(1, 0.5, 'test', 'test2'), 0.875);
+
+?>
