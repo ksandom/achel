@@ -722,43 +722,137 @@ class BalanceAlgorithm extends SubModule
 			}
 		}
 		
-		$this->core->debug(0, "$path. . (v=$value, in=$inMin, ic=$inCenter, ix=$inMax, on=$outMin=-1, oc=$outCenter=0, ox=$outMax=1) OUT=$out");
+		$this->core->debug(3, "$path. . (v=$value, in=$inMin, ic=$inCenter, ix=$inMax, on=$outMin=-1, oc=$outCenter=0, ox=$outMax=1) OUT=$out");
 		
 		return $out;
 	}
 	
 	private function calculateScaleData($value, $inRange1, $inRange2, $multiplier, $outRange1, $outRange2)
 	{
-		$this->core->debug(2, "calculateScaleData($value, $inRange1, $inRange2, $multiplier, $outRange1, $outRange2)");
-		
-// 		if ($value>=$inRange2)
-// 		{
-// 			$this->core->debug(0, "OOB >= ($value>=$inRange2)");
-// 			return $outRange2*$multiplier;
-// 		}
-// 		if ($value<=$inRange1)
-// 		{
-// 			$this->core->debug(0, "OOB <= ($value<=$inRange1)");
-// 			return $outRange1*$multiplier;
-// 		}
-		
 		$inBase=$inRange1-$inRange2;
 		$outBase=$outRange1-$outRange2;
 		$inValue=$value-$inRange2;
-		
-		#$out=$this->calculateScaleData(v=0, ir1=-45, ir2=0, m=-1, or1=0, or2=-1);
-		#inBase=-45
-		#outBase=1
-		#inValue=0
-		# $inValue/$inBase*$outBase*$multiplier
-		# 45/45=1 1*1=1 1*-1=-1
-		# 0/-45=1 1*1=1 1*-1=-1
 		
 		return $inValue/$inBase*$outBase*$multiplier;
 	}
 }
 
-
+class TimedDataHistory
+{
+	# TODO This should be in made into a package that can be used by achel programs.
+	
+	private $history=array();
+	private $minimumSeparation=0;
+	private $position=0;
+	private $size=0;
+	
+	function __construct($size, $minimumSeparation)
+	{
+		$this->minimumSeparation=$minimumSeparation;
+		$this->size=$size;
+		
+		$then=$this->now()-$minimumSeparation;
+		$item=$this->newItem(0, $then);
+		for ($position=0;$position<$size;$position++)
+		{
+			$this->history[$position]=$item;
+		}
+	}
+	
+	private function newItem($value, $then)
+	{
+		return array('value'=>$value, 'when'=>$then);
+	}
+	
+	private function now()
+	{
+		return microtime($get_as_float=true);
+	}
+	
+	private function lastEntry()
+	{
+		return $this->history[$this->position];
+	}
+	
+	private function readyForNextValue()
+	{
+		$lastEntry=$this->lastEntry();
+		$now=$this->now();
+		
+		return ($now-$lastEntry['when'] > $this->minimumSeparation);
+	}
+	
+	public function addItem($value)
+	{
+		/*
+		Add a new value to the rolling history, but only if the time since the last value is greater than the $minimumSeparation time.
+		Return true if it was added. Otherwise false.
+		*/
+		
+		if ($this->readyForNextValue())
+		{
+			$this->position++;
+			if ($this->position>=$this->size) $this->position=0;
+			$this->history[$this->position]=$this->newItem($value, $this->now());
+			return true;
+			# TODO check that now() is in the expected unit
+		}
+		else return false;
+	}
+	
+	public function item($offset=0)
+	{
+		if ($offset<$this->size*-1) $offset=$this->size*-1;
+		
+		$index=$this->position+$offset;
+		$ttl=3;
+		while ($index<0 and $ttl>=0)
+		{
+			$index +=$this->size;
+			$ttl--;
+		}
+		if ($index>=$this->size) $index=$index%$this->size;
+		
+		return $this->history[$index]['value'];
+	}
+	
+	public function mean($from, $to)
+	{
+		$total=0;
+		$stop=$to+1;
+		for ($i=$from;$i<$stop;$i++)
+		{
+			$total+=$this->item($i*-1);
+		}
+		
+		return $total/($to-$from+1);
+	}
+	
+	public function meanLast($numberOfItems)
+	{
+		$querySize=($numberOfItems>$this->size)?$this->size:$numberOfItems;
+		
+		return $this->mean(0, $querySize-1);
+	}
+	
+	public function iterationsUntilOverrun($goal, $lookBackSteps=2)
+	{
+		# TODO consider making a time-based version of this. It will be much more accurate with incosistent sampling.
+		$now=$this->item(0);
+		$previous=$this->item($lookBackSteps*-1);
+		
+		$distanceToGoal=$goal-$now;
+		$progress=$now-$previous;
+		
+		if ($progress==0) return false; // If we aren't making progress, further calculations are meaningless.
+		
+		$progressPerIteration=$progress/$lookBackSteps;
+		
+		$stepsToGoal=$distanceToGoal/$progressPerIteration;
+		
+		return $stepsToGoal;
+	}
+}
 
 
 

@@ -56,4 +56,75 @@ expect($algorythm->getSomeDifference(1, 0.5, 'test', 'test2'), 0.5);
 expect($algorythm->getSomeDifference(1, 0.5, 'test', 'test2'), 0.75);
 expect($algorythm->getSomeDifference(1, 0.5, 'test', 'test2'), 0.875);
 
+
+
+$tdh = new TimedDataHistory(4, 0.01);
+// Test setting/discarding values with and without the interval.
+expect($tdh->addItem(1), true);
+expect($tdh->addItem(2), false);
+usleep(20000);
+expect($tdh->addItem(2), true);
+usleep(20000);
+expect($tdh->addItem(3), true);
+usleep(20000);
+expect($tdh->addItem(4), true);
+
+// Test that all values have been set as expected.
+expect($tdh->item(), 4);
+expect($tdh->item(0), 4);
+expect($tdh->item(-1), 3);
+expect($tdh->item(-2), 2);
+expect($tdh->item(-3), 1);
+expect($tdh->item(-4), 4);
+expect($tdh->item(-5), 4, 'item OOB -5');
+
+// Test mean ranges.
+expect($tdh->mean(0, 1), 3.5);
+expect($tdh->mean(0, 3), 2.5);
+
+// Test mean of the last values, and exceeding the number of data points.
+expect($tdh->meanLast(2), 3.5);
+expect($tdh->meanLast(4), 2.5);
+expect($tdh->meanLast(6), 2.5);
+expect($tdh->meanLast(1000), 2.5);
+
+// Test overrun.
+expect($tdh->iterationsUntilOverrun(5, 1), 1);
+expect($tdh->iterationsUntilOverrun(6, 1), 2);
+expect($tdh->iterationsUntilOverrun(6, 2), 2);
+
+// Test looping around.
+usleep(20000);
+expect($tdh->addItem(4), true);
+usleep(20000);
+expect($tdh->addItem(4), true);
+usleep(20000);
+expect($tdh->addItem(4), true);
+usleep(20000);
+expect($tdh->addItem(4), true);
+
+// Test that we set the values as expected.
+expect($tdh->item(0), 4);
+expect($tdh->item(-1), 4);
+expect($tdh->item(-2), 4);
+expect($tdh->item(-3), 4);
+
+// Test progress of 0.
+expect($tdh->iterationsUntilOverrun(6, 1), false);
+
+// Test a new dataset.
+usleep(20000);
+expect($tdh->addItem(1), true);
+usleep(20000);
+expect($tdh->addItem(2), true);
+usleep(20000);
+expect($tdh->addItem(4), true);
+usleep(20000);
+expect($tdh->addItem(8), true);
+
+// Test overrun further.
+expect($tdh->iterationsUntilOverrun(16, 1), 2);
+expect($tdh->iterationsUntilOverrun(17, 2), 3);
+expect($tdh->iterationsUntilOverrun(36, 3), 12);
+
 ?>
