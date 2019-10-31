@@ -27,8 +27,7 @@ class BalancePID extends BalanceAlgorithm
 			'p' => array (
 				'last' => 0
 			),
-			'history' => array(
-			)
+			'history' => new TimedDataHistory(10, 1) # TODO Make this configurable.
 		);
 	}
 	
@@ -53,6 +52,8 @@ class BalancePID extends BalanceAlgorithm
 		$this->state[$ruleName]['errorValue']=abs($this->state[$ruleName]['error']);
 		$this->state[$ruleName]['errorDirection']=($this->state[$ruleName]['error']<0)?-1:1;
 		
+		$this->state[$ruleName]['history']->addItem($this->state[$ruleName]['error']);
+		
 		$kP=$rule['pid']['kP'];
 		$iP=$rule['pid']['iP'];
 		$kI=$rule['pid']['kI'];
@@ -60,36 +61,60 @@ class BalancePID extends BalanceAlgorithm
 		$kD=$rule['pid']['kD'];
 		$iD=$rule['pid']['iD'];
 		
-		$p=$this->calculateP($ruleName, $iP);
-		$i=$this->calculateI($ruleName, $iI);
-		$d=$this->calculateD($ruleName, $iD);
+		# TODO Make sure each section is going in the expected direction.
+		$p=$this->cap(-1, $this->calculateP($ruleName, $iP), 1);
+		$i=$this->cap(-1, $this->calculateI($ruleName, $iI), 1);
+		$d=$this->cap(-1, $this->calculateD($ruleName, $iD, 10), 1); # TODO Make the cutOff configurable.
 		
-		$combinedValue=($p*$kP*-1) + ($i*$kI) + ($d*$kD);
+		$combinedValue=($p*$kP) + ($i*$kI) + ($d*$kD);
 		$out=$this->cap(-1, $combinedValue, 1);
 		$rule['output']['live']['value']=$out;
 		
 		if ($ruleName=='yaw')
 		{
-			$this->core->debug(1,"ruleName=$ruleName scaledValue=".$this->state[$ruleName]['value']."(".$rule['input']['live']['value'].") goal=".$this->state[$ruleName]['goal']."(".$rule['input']['live']['goal'].") P=($p*$kP) out=$out");
+			# $this->core->debug(1,"ruleName=$ruleName scaledValue=".$this->state[$ruleName]['value']."(".$rule['input']['live']['value'].") goal=".$this->state[$ruleName]['goal']."(".$rule['input']['live']['goal'].") P=($p*$kP) out=$out");
+			$r=3;
+			$error=round($this->state[$ruleName]['error'], $r);
+			$rp=round($p, $r);
+			$ri=round($i, $r);
+			$rd=round($d, $r);
+			$rcv=round($combinedValue, $r);
+			$ro=round($out, $r);
+			$pColour=$this->core->get('Color', 'green');
+			$iColour=$this->core->get('Color', 'cyan');
+			$dColour=$this->core->get('Color', 'brightBlue');
+			$default=$this->core->get('Color', 'default');
+			$this->core->debug(1,"ruleName=$ruleName error=$error {$pColour}p=$rp{$default}*$kP*$iP {$iColour}i=$ri{$default}*$kI*$iI {$dColour}d=$rd{$default}*$kD*$iD {$default}combinedValue=$rcv out=$ro");
 		}
 	}
 	
 	private function calculateP($ruleName, $iP)
 	{
 		# return $this->getSomeDifference($this->cap(-1, $this->state[$ruleName]['error'], 1), $iP, $ruleName, 'P');
-		return $this->state[$ruleName]['error'];
+		return $this->getSomeDifference($this->state[$ruleName]['error'], $iP, $ruleName, 'P')*-1;
 	}
 	
 	private function calculateI($ruleName, $iI)
 	{
-		# TODO Write this.
-		return 0;
+		$mean=$this->getSomeDifference($this->state[$ruleName]['history']->meanLast(-1), $iI, $ruleName, 'I');
+		return $mean*-1;
 	}
 	
-	private function calculateD($ruleName, $iD)
+	private function calculateD($ruleName, $iD, $cutOff=10)
 	{
-		# TODO Write this.
-		return 0;
+		# TODO scale linearly instead of exponentially.
+		# TODO make (0, 2) configurable.
+		$stepsUntilOverrun=$this->state[$ruleName]['history']->iterationsUntilOverrun(0, 2);
+		if (abs($stepsUntilOverrun)>$cutOff) return 0;
+		$proportionalError=$stepsUntilOverrun/$cutOff;
+		
+		if ($stepsUntilOverrun==0) $force=1;
+		else
+		{
+			$force=$this->state[$ruleName]['errorDirection']*$proportionalError*-1;
+		}
+		
+		return $this->getSomeDifference($force, $iD, $ruleName, 'D');
 	}
 }
 

@@ -197,15 +197,15 @@ class BalanceFaucet extends ThroughBasedFaucet
 					'optional'=>true,
 					'kP'=>array(
 						'description'=>'Proportional aspect of the PID controller. This gives a very direct response to how far off the goal we are. It will do a good job of getting in the general vascinity of the goal, but will be sloppy once close.',
-						'default'=>'0.9'
+						'default'=>'0.5'
 						),
 					'iP'=>array(
 						'description'=>'How much of the difference between the previous goal, and the new goal should we apply. 1 Will apply everything straight away. 0.5 will apply half this time. And then half of the remaining difference next time.',
-						'default'=>'0.25'
+						'default'=>'1'
 						),
 					'kI'=>array(
 						'description'=>'Integral aspect of the PID controller. This looks at recent history, and will increase or decrease effort accordingly to precisely get us to the goal.',
-						'default'=>'0.4'
+						'default'=>'0'
 						),
 					'iI'=>array(
 						'description'=>'How much of the difference between the previous goal, and the new goal should we apply. 1 Will apply everything straight away. 0.5 will apply half this time. And then half of the remaining difference next time.',
@@ -213,7 +213,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 						),
 					'kD'=>array(
 						'description'=>'Derivitive aspect of the PID controller. This looks for if we are going to overshoot, and applies pressure accordingly.',
-						'default'=>'1'
+						'default'=>'0'
 						),
 					'iD'=>array(
 						'description'=>'How much of the difference between the previous goal, and the new goal should we apply. 1 Will apply everything straight away. 0.5 will apply half this time. And then half of the remaining difference next time.',
@@ -665,6 +665,7 @@ class BalanceAlgorithm extends SubModule
 	public function getSomeDifference($goal, $incrementorPercent, $ruleName, $differenceName)
 	{ // Apply some of the requested goal, and keep track of it.
 		// Assert that the data structure is set up.
+		
 		if (!isset($this->state[$ruleName])) $this->state[$ruleName]=array();
 		if (!isset($this->state[$ruleName][$differenceName])) $this->state[$ruleName][$differenceName]=array();
 		if (!isset($this->state[$ruleName][$differenceName]['previousGoal'])) $this->state[$ruleName][$differenceName]['previousGoal']=$goal;
@@ -830,14 +831,14 @@ class TimedDataHistory
 	
 	public function meanLast($numberOfItems)
 	{
-		$querySize=($numberOfItems>$this->size)?$this->size:$numberOfItems;
+		$querySize=($numberOfItems>$this->size or $numberOfItems==-1)?$this->size:$numberOfItems;
 		
 		return $this->mean(0, $querySize-1);
 	}
 	
 	public function iterationsUntilOverrun($goal, $lookBackSteps=2)
 	{
-		# TODO consider making a time-based version of this. It will be much more accurate with incosistent sampling.
+		# TODO consider making a time-based (vs step based) version of this. It will be much more accurate with incosistent sampling.
 		$now=$this->item(0);
 		$previous=$this->item($lookBackSteps*-1);
 		
