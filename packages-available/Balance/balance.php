@@ -356,6 +356,78 @@ class BalanceFaucet extends ThroughBasedFaucet
 		}
 	}
 	
+	function control($feature, $value)
+	{
+		switch ($feature)
+		{
+			case "reset":
+				$this->reset();
+			break;
+			default:
+				parent::control($feature, $value);
+			break;
+		}
+	}
+	
+	function reset($ruleName=null)
+	{
+		# TODO Is this taking the partial applies into account?
+		
+		if ($ruleName)
+		{
+			if (isset($this->config[$ruleName]))
+			{
+				$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.' Resetting the state of the rule $ruleName.');
+				$obj=getAlgorithmObject($ruleName);
+				$obj->resetState($this->config[$ruleName]);
+			}
+			else
+			{
+				$this->core->debug(1, __CLASS__.'->'.__FUNCTION__." $ruleName doesn't exist.");
+			}
+		}
+		else
+		{
+			$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.' Resetting the state of all rules.');
+			foreach ($this->config as $ruleName=>&$rule)
+			{
+				$obj=$this->getAlgorithmObject($ruleName);
+				$obj->resetState($this->config[$ruleName]);
+			}
+		}
+	}
+	
+	function &getAlgorithm($ruleName)
+	{
+		$algorithm=$this->config[$ruleName]['algorithm'];
+		
+		$algorithmDefinition=$this->core->get('BalanceAlgorithm', $this->config[$ruleName]['algorithm']);
+		if (!is_object($algorithmDefinition['obj']))
+		{
+			$algorithmDefinition=$this->core->get('BalanceAlgorithm', 'direct');
+			if (!is_object($algorithmDefinition['obj']))
+			{
+				$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": algorithm \"$algorithm\" not found and fallback algorithm \"direct\" not found. Rule \"$ruleName\" can not be processed.");
+				$false=false;
+				return $false;
+			}
+			else
+			{
+				$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": algorithm \"$algorithm\" not found but \"direct\" was found, so using that. This will likely cause unexpected behavior.");
+			}
+		}
+		
+		return $algorithmDefinition;
+	}
+	
+	function &getAlgorithmObject($ruleName)
+	{
+		$algorithmDefinition=$this->getAlgorithm($ruleName);
+		if ($algorithmDefinition) return $algorithmDefinition['obj'];
+		$false=false;
+		return $false;
+	}
+	
 	function preGet()
 	{
 		$gotSomething=false;
@@ -382,6 +454,8 @@ class BalanceFaucet extends ThroughBasedFaucet
 		{
 			// Check that the rule is valid before processing it.
 			# TODO This really doesn't need to be run every time, but it does need to be run at least once per rule and will need to be run again when ever a rule changes... which we currently don't have any way of tracking. A compromise could be to check each rule once if it hasn't been checked/passed before.
+			if (!isset($rule['ruleName'])) $rule['ruleName']=$ruleName;
+			
 			if (!$this->validateSpecificConfig($rule, $this->configDefinition['rule'], $ruleName))
 			{
 				$this->core->debug(1, "Rule \"$ruleName\" failed validation.");
@@ -420,22 +494,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			
 			// Get the algorithm.
-			$algorithmDefinition=$this->core->get('BalanceAlgorithm', $rule['algorithm']);
-			if (!is_object($algorithmDefinition['obj']))
-			{
-				$algorithmDefinition=$this->core->get('BalanceAlgorithm', 'direct');
-				if (!is_object($algorithmDefinition['obj']))
-				{
-					$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": algorithm \"{$rule['algorithm']}\" not found and fallback algorithm \"direct\" not found. Rule \"$ruleName\" can not be processed.");
-					continue;
-				}
-				else
-				{
-					$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": algorithm \"{$rule['algorithm']}\" not found but \"direct\" was found, so using that. This will likely cause unexpected behavior.");
-				}
-			}
-			
-			$algorithmObject=$algorithmDefinition['obj'];
+			$algorithmObject=$this->getAlgorithmObject($ruleName);
 			
 			
 			# Apply input multiplier and expo.
@@ -612,6 +671,11 @@ class BalanceAlgorithm extends SubModule
 	{
 		parent::__construct('BalanceAlgorithm');
 		$this->state=array();
+	}
+	
+	public function resetState(&$rule)
+	{
+		if (isset($this->state[$rule['ruleName']])) unset($this->state[$rule['ruleName']]);
 	}
 	
 	public function process($ruleName, &$rule)

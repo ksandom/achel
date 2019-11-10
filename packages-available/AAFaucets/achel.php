@@ -683,7 +683,8 @@ class Faucet
 		foreach ($lines as $line)
 		{
 			$part=explode(' ', $line);
-			$this->control($part[0], $part[1]);
+			$value=(isset($part[1]))?$part[1]:'';
+			$this->control($part[0], $value);
 		}
 	}
 	
