@@ -391,6 +391,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.' Resetting the state of all rules.');
 			foreach ($this->config as $ruleName=>&$rule)
 			{
+				$this->core->debug(1, "Resetting $ruleName.");
 				$obj=$this->getAlgorithmObject($ruleName);
 				$obj->resetState($this->config[$ruleName]);
 			}
@@ -537,6 +538,11 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			// Mangle the input with the goal.
 			# TODO Change inputGoal to error, and adapt all algorithms to use it.
+			# $this->core->debug(0, "wooooort? ={$rule['input']['live']['value']}-{$rule['input']['live']['goal']};");
+			if (is_array($rule['input']['live']['goal']))
+			{
+				print_r($rule['input']['live']['goal']);
+			}
 			$rule['input']['live']['inputGoal']=$rule['input']['live']['value']-$rule['input']['live']['goal'];
 			
 			

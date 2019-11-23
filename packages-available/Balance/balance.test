@@ -48,6 +48,30 @@ expect($algorythm->scaleData(-190, -90, 0, 90), -1);
 expect($algorythm->scaleData(190, -90, 0, 90), 1);
 expect($algorythm->scaleData(-190, -90, 0, 90), -1);
 
+expect($algorythm->scaleData(-10, -10, 0, 10), -1);
+expect($algorythm->scaleData(-9, -10, 0, 10), -0.9);
+expect($algorythm->scaleData(-8, -10, 0, 10), -0.8);
+expect($algorythm->scaleData(-7, -10, 0, 10), -0.7);
+expect($algorythm->scaleData(-6, -10, 0, 10), -0.6);
+expect($algorythm->scaleData(-5, -10, 0, 10), -0.5);
+expect($algorythm->scaleData(-4, -10, 0, 10), -0.4);
+expect($algorythm->scaleData(-3, -10, 0, 10), -0.3);
+expect($algorythm->scaleData(-2, -10, 0, 10), -0.2);
+expect($algorythm->scaleData(-1, -10, 0, 10), -0.1);
+expect($algorythm->scaleData(0, -10, 0, 10), 0);
+expect($algorythm->scaleData(1, -10, 0, 10), 0.1);
+expect($algorythm->scaleData(2, -10, 0, 10), 0.2);
+expect($algorythm->scaleData(3, -10, 0, 10), 0.3);
+expect($algorythm->scaleData(4, -10, 0, 10), 0.4);
+expect($algorythm->scaleData(5, -10, 0, 10), 0.5);
+expect($algorythm->scaleData(6, -10, 0, 10), 0.6);
+expect($algorythm->scaleData(7, -10, 0, 10), 0.7);
+expect($algorythm->scaleData(8, -10, 0, 10), 0.8);
+expect($algorythm->scaleData(9, -10, 0, 10), 0.9);
+expect($algorythm->scaleData(10, -10, 0, 10), 1);
+
+
+
 // $goal, $incrementorPercent, $ruleName, $differenceName
 expect($algorythm->getSomeDifference(0, 0.75, 'test', 'test1'), 0);
 expect($algorythm->getSomeDifference(0, 0.5, 'test', 'test2'), 0);
