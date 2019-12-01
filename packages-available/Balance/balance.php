@@ -463,9 +463,15 @@ class BalanceFaucet extends ThroughBasedFaucet
 				continue;
 			}
 			
+			$valueProgression=array();
+			
 			
 			$input=$this->core->getNested(explode(',', $rule['input']['variable']));
 			if (!$input) continue;
+			
+			# TODO Remove this.
+			// When to show the extra debugging.
+			$showDebug=($ruleName == 'yaw');
 			
 			
 			// Prep the rule
@@ -481,6 +487,9 @@ class BalanceFaucet extends ThroughBasedFaucet
 			$rule['input']['live']['vanillaValue']=$input;
 			$rule['input']['live']['value']=$input;
 			
+			if ($showDebug) $valueProgression['A1']=$rule['input']['live']['vanillaValue'];
+			if ($showDebug) $valueProgression['A2']=$rule['input']['live']['value'];
+			
 			// Add our goal
 			$goal=$this->core->getNested(explode(',', $rule['input']['goal']));
 			if (isset($rule['input']['live']['goal']))
@@ -492,7 +501,8 @@ class BalanceFaucet extends ThroughBasedFaucet
 				$rule['input']['live']['lastGoal']=$goal;
 			}
 			$rule['input']['live']['goal']=$goal;
-			
+			if ($showDebug) $valueProgression['g']=$rule['input']['live']['goal'];
+
 			
 			// Get the algorithm.
 			$algorithmObject=$this->getAlgorithmObject($ruleName);
@@ -500,9 +510,13 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			# Apply input multiplier and expo.
 			$rule['input']['live']['value']=$rule['input']['live']['value']-$rule['input']['center'];
+			if ($showDebug) $valueProgression['B1']=$rule['input']['live']['value'];
 			$rule['input']['live']['value']=$rule['input']['live']['value']*$rule['input']['multiplier'];
+			if ($showDebug) $valueProgression['B2']=$rule['input']['live']['value'];
 			$rule['input']['live']['value']=$this->processExpo($rule['input']['live']['value'],$rule['input']['expo']);
+			if ($showDebug) $valueProgression['B3']=$rule['input']['live']['value'];
 			$rule['input']['live']['value']=$rule['input']['live']['value']+$rule['input']['center'];
+			if ($showDebug) $valueProgression['B4']=$rule['input']['live']['value'];
 			
 			
 			# Handel any input events.
@@ -523,8 +537,10 @@ class BalanceFaucet extends ThroughBasedFaucet
 			}
 			
 			$rule['input']['lastInput']=$rule['input']['live']['value'];
+			if ($showDebug) $valueProgression['C1']=$rule['input']['live']['value'];
 			$rule['output']['live']['previousMultipliedValue']=$this->core->getNested(explode(',', $rule['destination']['variable']));
 			$rule['output']['live']['multipliedValue']='';
+			if ($showDebug) $valueProgression['C1']=$rule['output']['live']['multipliedValue'];
 			
 			/* 
 			For the simplicity the following assumption is made for the input:
@@ -544,6 +560,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 				print_r($rule['input']['live']['goal']);
 			}
 			$rule['input']['live']['inputGoal']=$rule['input']['live']['value']-$rule['input']['live']['goal'];
+			if ($showDebug) $valueProgression['IG1']=$rule['input']['live']['inputGoal'];
 			
 			
 			// Test that we aren't out of bounds.
@@ -557,6 +574,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 				$this->core->debug(3, __CLASS__.'->'.__FUNCTION__.": $ruleName: branch: upper boundary {$rule['input']['live']['inputGoal']}>={$rule['input']['max']}");
 				$rule['input']['live']['inputGoal']=$rule['input']['max'];
 			}
+			if ($showDebug) $valueProgression['IG2']=$rule['input']['live']['inputGoal'];
 			
 			# TODO I think this is a raw-ish value. I thought there was some scaling. If not, do it.
 			# protected function scaleData($value, $inMin, $inCenter, $inMax, $outMin=-1, $outCenter=0, $outMax=1)
@@ -585,10 +603,16 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			
 			// Calculate value after multiplier
+			if ($showDebug) $valueProgression['D1']=$rule['output']['live']['value'];
 			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']-$rule['output']['center'];
+			if ($showDebug) $valueProgression['MVO1']=$rule['output']['live']['multipliedValue'];
 			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']*$rule['output']['multiplier'];
+			if ($showDebug) $valueProgression['MVO2']=$rule['output']['live']['multipliedValue'];
 			$rule['output']['live']['value']=$this->processExpo($rule['output']['live']['value'],$rule['output']['expo']);
+			# TODO This (using a different variable here) is interesting. Check this.
+			if ($showDebug) $valueProgression['D2']=$rule['output']['live']['value'];
 			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']+$rule['output']['center'];
+			if ($showDebug) $valueProgression['MVO3']=$rule['output']['live']['multipliedValue'];
 			
 			// Dump the current rule state for debugging.
 			$this->core->set('AP', 'rule-'.$ruleName, $rule);
@@ -607,9 +631,11 @@ class BalanceFaucet extends ThroughBasedFaucet
 				if ($rule['output']['live']['multipliedValue']<$rule['output']['max'])
 					$rule['output']['live']['multipliedValue']=$rule['output']['max'];
 			}
+			if ($showDebug) $valueProgression['MVO4']=$rule['output']['live']['multipliedValue'];
 			
 			// Make sure the output value is safe to output
 			$rule['output']['live']['multipliedValue']=round($rule['output']['live']['multipliedValue'], 4);
+			if ($showDebug) $valueProgression['MVO5']=$rule['output']['live']['multipliedValue'];
 			
 			$rule['output']['live']['shouldUpdate']=($rule['output']['live']['multipliedValue']!=$rule['output']['live']['previousMultipliedValue']); //$rule['destination']['changeOnly']!=1 or 
 			
@@ -637,6 +663,22 @@ class BalanceFaucet extends ThroughBasedFaucet
 			}
 			
 			$this->core->debug(2, __CLASS__.'->'.__FUNCTION__.": $ruleName: input={$rule['input']['live']['value']} goal={$rule['input']['live']['goal']} inputGoal={$rule['input']['live']['inputGoal']} output={$rule['output']['live']['multipliedValue']}");
+			
+			# TODO remove or abstract this.
+			// Write debugging to a file.
+			if ($showDebug)
+			{
+				#$valueProgression
+				$fileName='/tmp/valueProgression.csv';
+				$csvOut='';
+				if (!file_exists($fileName)) $csvOut=implode(',', array_keys($valueProgression))."\n";
+				$csvOut.=implode(',', $valueProgression)."\n";
+				
+				$filePointer=fopen($fileName, 'a+');
+				fwrite($filePointer, $csvOut);
+				fclose($filePointer);
+			}
+			
 		}
 		
 		return $gotSomething;
