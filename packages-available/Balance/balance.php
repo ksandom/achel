@@ -564,16 +564,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			
 			// Test that we aren't out of bounds.
-			if ($rule['input']['live']['inputGoal']<$rule['input']['min'])
-			{ // Input is at or below lower boundary.
-				$this->core->debug(3, __CLASS__.'->'.__FUNCTION__.": $ruleName: branch: lower boundary {$rule['input']['live']['inputGoal']}<={$rule['input']['min']}");
-				$rule['input']['live']['inputGoal']=$rule['input']['min'];
-			}
-			elseif ($rule['input']['live']['inputGoal']>$rule['input']['max'])
-			{ // Input is at or above upper boundary.
-				$this->core->debug(3, __CLASS__.'->'.__FUNCTION__.": $ruleName: branch: upper boundary {$rule['input']['live']['inputGoal']}>={$rule['input']['max']}");
-				$rule['input']['live']['inputGoal']=$rule['input']['max'];
-			}
+			$rule['input']['live']['inputGoal']=$algorithmObject->cap($rule['input']['min'], $rule['input']['live']['inputGoal'], $rule['input']['max']);
 			if ($showDebug) $valueProgression['IG2']=$rule['input']['live']['inputGoal'];
 			
 			# TODO I think this is a raw-ish value. I thought there was some scaling. If not, do it.
@@ -619,18 +610,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			
 			// Correct bounds if necessary
-			if ($rule['output']['min']<0)
-			{
-				if ($rule['output']['live']['multipliedValue']<$rule['output']['min']) $rule['output']['live']['multipliedValue']=$rule['output']['min'];
-				if ($rule['output']['live']['multipliedValue']>$rule['output']['max']) $rule['output']['live']['multipliedValue']=$rule['output']['max'];
-			}
-			else
-			{ // Assume inverted output
-				if ($rule['output']['live']['multipliedValue']>$rule['output']['min'])
-					$rule['output']['live']['multipliedValue']=$rule['output']['min'];
-				if ($rule['output']['live']['multipliedValue']<$rule['output']['max'])
-					$rule['output']['live']['multipliedValue']=$rule['output']['max'];
-			}
+			$rule['output']['live']['multipliedValue']=$algorithmObject->cap($rule['output']['min'], $rule['output']['live']['multipliedValue'], $rule['output']['max']);
 			if ($showDebug) $valueProgression['MVO4']=$rule['output']['live']['multipliedValue'];
 			
 			// Make sure the output value is safe to output
@@ -748,7 +728,7 @@ class BalanceAlgorithm extends SubModule
 		return $outValue;
 	}
 	
-	protected function cap($min, $value, $max)
+	public function cap($min, $value, $max)
 	{ // Cap the value to a specific range.
 		$out=$value;
 		
