@@ -509,14 +509,11 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			
 			# Apply input multiplier and expo.
-			$rule['input']['live']['value']=$rule['input']['live']['value']-$rule['input']['center'];
-			if ($showDebug) $valueProgression['B1']=$rule['input']['live']['value'];
-			$rule['input']['live']['value']=$rule['input']['live']['value']*$rule['input']['multiplier'];
-			if ($showDebug) $valueProgression['B2']=$rule['input']['live']['value'];
-			$rule['input']['live']['value']=$this->processExpo($rule['input']['live']['value'],$rule['input']['expo']);
-			if ($showDebug) $valueProgression['B3']=$rule['input']['live']['value'];
-			$rule['input']['live']['value']=$rule['input']['live']['value']+$rule['input']['center'];
-			if ($showDebug) $valueProgression['B4']=$rule['input']['live']['value'];
+			$rule['input']['live']['value']=$algorithmObject->applyMultiplierAndExpo(
+				$rule['input']['live']['value'],
+				$rule['input']['multiplier'],
+				$rule['input']['expo'],
+				$rule['input']['center']);
 			
 			
 			# Handel any input events.
@@ -527,7 +524,6 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			if (!isset($rule['input']['lastInput']))
 			{
-				$rule['input']['lastInput']=$rule['input']['live']['value'];
 				$this->core->debug(3, __CLASS__.'->'.__FUNCTION__.": Set first time lastInput to \"{$rule['input']['live']['value']}\". This should only happen once per config change. Input: {$rule['input']['variable']}");
 			}
 			elseif ($rule['input']['lastInput']==$rule['input']['live']['value'])
@@ -594,16 +590,11 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			
 			// Calculate value after multiplier
-			if ($showDebug) $valueProgression['D1']=$rule['output']['live']['value'];
-			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']-$rule['output']['center'];
-			if ($showDebug) $valueProgression['MVO1']=$rule['output']['live']['multipliedValue'];
-			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']*$rule['output']['multiplier'];
-			if ($showDebug) $valueProgression['MVO2']=$rule['output']['live']['multipliedValue'];
-			$rule['output']['live']['value']=$this->processExpo($rule['output']['live']['value'],$rule['output']['expo']);
-			# TODO This (using a different variable here) is interesting. Check this.
-			if ($showDebug) $valueProgression['D2']=$rule['output']['live']['value'];
-			$rule['output']['live']['multipliedValue']=$rule['output']['live']['value']+$rule['output']['center'];
-			if ($showDebug) $valueProgression['MVO3']=$rule['output']['live']['multipliedValue'];
+			$rule['output']['live']['multipliedValue']=$algorithmObject->applyMultiplierAndExpo(
+				$rule['output']['live']['value'],
+				$rule['output']['multiplier'],
+				$rule['output']['expo'],
+				$rule['output']['center']);
 			
 			// Dump the current rule state for debugging.
 			$this->core->set('AP', 'rule-'.$ruleName, $rule);
@@ -663,29 +654,6 @@ class BalanceFaucet extends ThroughBasedFaucet
 		
 		return $gotSomething;
 	}
-	
-	function processExpo($value, $expo)
-	{
-		/*
-		Expo working:
-		
-		0.5^2 = 0.25 => Middle is more gentle, while the edges are more extreme.
-		0.5^1 = 0.5 => Normal.
-		0.5^0.5 = 0.75
-		0.5^0 = 1
-		
-		input^expo=result
-		*/
-		
-		if ($expo==1) return $value; # Don't do any work if it is set to 1.
-		
-		
-		# We need to take out any negative value (abs()), and add it back in afterwards ($multiplier) so that we can correctly apply the exponent.
-		$multiplier=($value<0)?-1:1;
-		$result=(abs($value)^$expo)*$multiplier;
-		
-		return $result;
-	}
 }
 
 
@@ -711,6 +679,39 @@ class BalanceAlgorithm extends SubModule
 		/*
 			All the required input will be provided by $rule.
 		*/
+	}
+	
+	protected function processExpo($value, $expo)
+	{
+		/*
+		Expo working:
+		
+		0.5^2 = 0.25 => Middle is more gentle, while the edges are more extreme.
+		0.5^1 = 0.5 => Normal.
+		0.5^0.5 = 0.75
+		0.5^0 = 1
+		
+		input^expo=result
+		*/
+		
+		if ($expo==1) return $value; # Don't do any work if it is set to 1.
+		
+		
+		# We need to take out any negative value (abs()), and add it back in afterwards ($multiplier) so that we can correctly apply the exponent.
+		$multiplier=($value<0)?-1:1;
+		$result=(abs($value)^$expo)*$multiplier;
+		
+		return $result;
+	}
+	
+	public function applyMultiplierAndExpo($value, $multiplier=1, $expo=1, $center=0)
+	{
+			$value=$value-$center;
+			$value=$value*$multiplier;
+			$value=$this->processExpo($value, $expo);
+			$value=$value+$center;
+			
+			return $value;
 	}
 	
 	protected function getBetween($input, $rule, $inRangeBeginName, $inRangeEndName)
