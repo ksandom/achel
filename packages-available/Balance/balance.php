@@ -467,7 +467,11 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			
 			$input=$this->core->getNested(explode(',', $rule['input']['variable']));
-			if (!$input) continue;
+			if (!$input)
+			{
+				//$this->core->debug(1, "No input for rule \"$ruleName\".");
+				continue;
+			}
 			
 			# TODO Remove this.
 			// When to show the extra debugging.
@@ -529,6 +533,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			elseif ($rule['input']['lastInput']==$rule['input']['live']['value'])
 			{
 				# TODO This will certainly be a bug for anything that needs to do analysis of changes over time. **Come back to this.**
+				#$this->core->debug(1, "No change for rule \"$ruleName\".");
 				 continue;
 			}
 			
@@ -601,7 +606,10 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			
 			// Correct bounds if necessary
-			$rule['output']['live']['multipliedValue']=$algorithmObject->cap($rule['output']['min'], $rule['output']['live']['multipliedValue'], $rule['output']['max']);
+			$rule['output']['live']['multipliedValue']=$algorithmObject->cap(
+				$rule['output']['min'],
+				$rule['output']['live']['multipliedValue'],
+				$rule['output']['max']);
 			if ($showDebug) $valueProgression['MVO4']=$rule['output']['live']['multipliedValue'];
 			
 			// Make sure the output value is safe to output
@@ -627,6 +635,11 @@ class BalanceFaucet extends ThroughBasedFaucet
 				if ($rule['destination']['textOutput'])
 				{
 					$outLine=implode($rule['output']['live']['multipliedValue'], explode('~%value%~', $rule['destination']['textOutput']));
+					if ($ruleName == 'groundspeed' or $ruleName == 'altitude')
+					{
+						$this->core->debug(1,"text=$outLine");
+					}
+					
 					$this->outFill(array($outLine), $rule['destination']['channel']);
 				}
 				
@@ -634,6 +647,8 @@ class BalanceFaucet extends ThroughBasedFaucet
 			}
 			
 			$this->core->debug(2, __CLASS__.'->'.__FUNCTION__.": $ruleName: input={$rule['input']['live']['value']} goal={$rule['input']['live']['goal']} inputGoal={$rule['input']['live']['inputGoal']} output={$rule['output']['live']['multipliedValue']}");
+			
+			$rule['output']['live']['value']=$rule['output']['live']['multipliedValue'];
 			
 			# TODO remove or abstract this.
 			// Write debugging to a file.
@@ -706,6 +721,11 @@ class BalanceAlgorithm extends SubModule
 	
 	public function applyMultiplierAndExpo($value, $multiplier=1, $expo=1, $center=0)
 	{
+			if (!is_numeric($value)) $this->core->debug(0, "value ($value) is not numeric.");
+			if (!is_numeric($center)) $this->core->debug(0, "center ($center) is not numeric.");
+			if (!is_numeric($multiplier)) $this->core->debug(0, "multiplier ($multiplier) is not numeric.");
+			if (!is_numeric($expo)) $this->core->debug(0, "expo ($expo) is not numeric.");
+			
 			$value=$value-$center;
 			$value=$value*$multiplier;
 			$value=$this->processExpo($value, $expo);
