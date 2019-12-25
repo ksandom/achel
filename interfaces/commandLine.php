@@ -3,6 +3,8 @@
 
 # Manage command line options
 
+define ('nestedIndentationValue', '. ');
+
 class CommandLine extends Module
 {
 	private $track=null;
@@ -160,8 +162,30 @@ class CommandLine extends Module
 		
 	}
 	
-	function out($output, $indent='', $prefix=false)
+	function getNextIndentation($previoiusIndentation, $indentationAmount)
 	{
+		$possibleColours=array(
+					'default'=>'',
+					'blue'=>'',
+					'green'=>'',
+					'red'=>'',
+					'yellow'=>'',
+					'purple'=>'',
+					'cyan'=>'',
+					'brightBlack'=>''
+		);
+		
+		$keyNumber=$indentationAmount%count($possibleColours);
+		$keys=array_keys($possibleColours);
+		$colour=$this->codes[$keys[$keyNumber]];
+		
+		return "${previoiusIndentation}${colour}".nestedIndentationValue;
+	}
+	
+	function out($output, $indent='', $indentationAmount=0, $prefix=false)
+	{
+		if ($indent=='') print_r($this->codes);
+		
 		if ($this->core->get('General', 'outputStyle')=='printr')
 		{
 			print_r($output);
@@ -180,7 +204,7 @@ class CommandLine extends Module
 				$this->core->echoOut("$indent{$this->codes['cyan']}$derivedPrefix");
 				foreach ($output as $key=>$value)
 				{
-					$this->out($value, $indent.'  ', "$key");
+					$this->out($value, $this->getNextIndentation($indent, $indentationAmount+1), $indentationAmount+1, "$key");
 				}
 			}
 			elseif (is_null($output))
