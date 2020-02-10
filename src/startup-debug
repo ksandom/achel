@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-# Achel application starter.
+# ~%description%~ [Debug enabled]
 # Copyright (c) 2012, Kevin Sandom under the GPL License. See LICENSE for full details.
  
 define('programName', '~%programName%~');
