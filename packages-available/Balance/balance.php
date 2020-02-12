@@ -203,6 +203,14 @@ class BalanceFaucet extends ThroughBasedFaucet
 						'description'=>'How much of the difference between the previous goal, and the new goal should we apply. 1 Will apply everything straight away. 0.5 will apply half this time. And then half of the remaining difference next time.',
 						'default'=>'1'
 						),
+					'kW'=>array(
+						'description'=>'Wandering aspect of the PID controller. This looks at recent history, and will increase or decrease effort accordingly to precisely get us to the goal.',
+						'default'=>'0.3'
+						),
+					'iW'=>array(
+						'description'=>'How much of the difference between the previous goal, and the new goal should we apply. 1 Will apply everything straight away. 0.5 will apply half this time. And then half of the remaining difference next time.',
+						'default'=>'1'
+						),
 					'kI'=>array(
 						'description'=>'Integral aspect of the PID controller. This looks at recent history, and will increase or decrease effort accordingly to precisely get us to the goal.',
 						'default'=>'0'
@@ -218,6 +226,10 @@ class BalanceFaucet extends ThroughBasedFaucet
 					'iD'=>array(
 						'description'=>'How much of the difference between the previous goal, and the new goal should we apply. 1 Will apply everything straight away. 0.5 will apply half this time. And then half of the remaining difference next time.',
 						'default'=>'1'
+						),
+					'wanderingTime'=>array(
+						'description'=>'How long it takes to wander from 0 to full deflection. From this, the incrementor is derived to increment in the appropriate direction to correct our current error. What is a short time, and what is a long time depends on your application. Eg 5 seconds is probably plenty for yaw during a takeoff roll. Yet 60 seconds is probably more appropriate for a slow altitude climb.',
+						'default'=>'60'
 						)
 					)
 				)
@@ -646,7 +658,13 @@ class BalanceFaucet extends ThroughBasedFaucet
 				$gotSomething=true;
 			}
 			
-			$this->core->debug(2, __CLASS__.'->'.__FUNCTION__.": $ruleName: input={$rule['input']['live']['value']} goal={$rule['input']['live']['goal']} inputGoal={$rule['input']['live']['inputGoal']} output={$rule['output']['live']['multipliedValue']}");
+			if (isset($rule['debug']))
+			{
+				if ($rule['debug'])
+				{
+					$this->core->debug(0, __CLASS__.'->'.__FUNCTION__.": $ruleName: algorithm={$rule['algorithm']} input={$rule['input']['live']['value']} goal={$rule['input']['live']['goal']} inputGoal={$rule['input']['live']['inputGoal']} output={$rule['output']['live']['multipliedValue']}");
+				}
+			}
 			
 			$rule['output']['live']['value']=$rule['output']['live']['multipliedValue'];
 			

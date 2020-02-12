@@ -25,9 +25,16 @@ class BalancePID extends BalanceAlgorithm
 	{
 		parent::resetState($rule);
 		
+		if (!isset($rule['debug'])) $rule['debug']=false;
+		
 		$this->state[$rule['ruleName']]=array(
+			'debug' => $rule['debug'],
 			'p' => array (
 				'last' => 0
+			),
+			'w' => array (
+        'incrementor' => 1/$rule['pid']['wanderingTime'],
+        'position' => 0
 			),
 			'history' => new TimedDataHistory(10, 1) # TODO Make this configurable.
 		);
@@ -59,6 +66,8 @@ class BalancePID extends BalanceAlgorithm
 		
 		$kP=$rule['pid']['kP'];
 		$iP=$rule['pid']['iP'];
+		$kW=$rule['pid']['kW'];
+		$iW=$rule['pid']['iW'];
 		$kI=$rule['pid']['kI'];
 		$iI=$rule['pid']['iI'];
 		$kD=$rule['pid']['kD'];
@@ -66,28 +75,33 @@ class BalancePID extends BalanceAlgorithm
 		
 		# TODO Make sure each section is going in the expected direction.
 		$p=$this->cap(-1, $this->calculateP($ruleName, $iP), 1);
+		$w=$this->cap(-1, $this->calculateW($ruleName, $iW), 1);
 		$i=$this->cap(-1, $this->calculateI($ruleName, $iI), 1);
 		$d=$this->cap(-1, $this->calculateD($ruleName, $iD, 10), 1); # TODO Make the cutOff configurable.
 		
-		$combinedValue=($p*$kP) + ($i*$kI) + ($d*$kD);
+		$combinedValue=($p*$kP) + ($w*$kW) + ($i*$kI) + ($d*$kD);
 		$out=$this->cap(-1, $combinedValue, 1);
 		$rule['output']['live']['value']=$out;
 		
-		if ($ruleName=='yaw')
+		if ($this->state[$rule['ruleName']]['debug'])
 		{
 			# $this->core->debug(1,"ruleName=$ruleName scaledValue=".$this->state[$ruleName]['value']."(".$rule['input']['live']['value'].") goal=".$this->state[$ruleName]['goal']."(".$rule['input']['live']['goal'].") P=($p*$kP) out=$out");
 			$r=3;
 			$error=round($this->state[$ruleName]['error'], $r);
+			$errorDirection=$this->state[$ruleName]['errorDirection'];
 			$rp=round($p, $r);
+			$rw=round($w, $r);
 			$ri=round($i, $r);
 			$rd=round($d, $r);
 			$rcv=round($combinedValue, $r);
 			$ro=round($out, $r);
+			$errorColour=$this->core->get('Color', ($error>0)?'brightPurple':'purple');
 			$pColour=$this->core->get('Color', 'green');
+			$wColour=$this->core->get('Color', ($w>0)?'brightYellow':'yellow');
 			$iColour=$this->core->get('Color', 'cyan');
 			$dColour=$this->core->get('Color', 'brightBlue');
 			$default=$this->core->get('Color', 'default');
-			$this->core->debug(1,"ruleName=$ruleName error=$error {$pColour}p=$rp{$default}*$kP*$iP {$iColour}i=$ri{$default}*$kI*$iI {$dColour}d=$rd{$default}*$kD*$iD {$default}combinedValue=$rcv out=$ro");
+			$this->core->debug(1,"ruleName=$ruleName {$errorColour}error=$error $errorDirection$default {$pColour}p=$rp{$default}*$kP*$iP {$wColour}i=$rw{$default}*$kW*$iW {$iColour}i=$ri{$default}*$kI*$iI {$dColour}d=$rd{$default}*$kD*$iD {$default}combinedValue=$rcv out=$ro");
 		}
 	}
 	
@@ -95,6 +109,23 @@ class BalancePID extends BalanceAlgorithm
 	{
 		# return $this->getSomeDifference($this->cap(-1, $this->state[$ruleName]['error'], 1), $iP, $ruleName, 'P');
 		return $this->getSomeDifference($this->state[$ruleName]['error'], $iP, $ruleName, 'P')*-1;
+	}
+	
+	private function calculateW($ruleName, $iW)
+	{
+		if ($this->state[$ruleName]['errorDirection'] > 0)
+		{
+      $this->state[$ruleName]['w']['position']+=$this->state[$ruleName]['w']['incrementor'];
+		}
+		else
+		{
+      $this->state[$ruleName]['w']['position']-=$this->state[$ruleName]['w']['incrementor'];
+		}
+		
+		$this->state[$ruleName]['w']['position']=$this->cap(-1, $this->state[$ruleName]['w']['position'], 1);
+		
+		$correction=$this->getSomeDifference($this->state[$ruleName]['w']['position'], $iW, $ruleName, 'W');
+		return $correction;
 	}
 	
 	private function calculateI($ruleName, $iI)
