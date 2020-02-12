@@ -317,6 +317,7 @@ function cleanRepos
 
 function reInstallRepos
 {
+	deriveBareEssentials
 	while read repo;do
 		echo "reInstallRepos: Doing \"$repo\""
 		installRepo_setup "$repo"
