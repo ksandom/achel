@@ -649,7 +649,8 @@ class BalanceFaucet extends ThroughBasedFaucet
 					$outLine=implode($rule['output']['live']['multipliedValue'], explode('~%value%~', $rule['destination']['textOutput']));
 					if ($ruleName == 'groundspeed' or $ruleName == 'altitude')
 					{
-						$this->core->debug(1,"text=$outLine");
+						# TODO include this in the debugging output.
+						$this->core->debug(3,"text=$outLine");
 					}
 					
 					$this->outFill(array($outLine), $rule['destination']['channel']);
