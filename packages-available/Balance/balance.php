@@ -66,15 +66,15 @@ class BalanceFaucet extends ThroughBasedFaucet
 						),
 					'min'=>array(
 						'default'=>'-1',
-						'description'=>'minimum valid input value. Default -1.'
+						'description'=>'Minimum valid input value. Default -1.'
 						),
 					'center'=>array(
 						'default'=>'0',
-						'description'=>'resting input position. Default 0.'
+						'description'=>'Resting input position. Default 0.'
 						),
 					'max'=>array(
 						'default'=>'1',
-						'description'=>'maximum valid input value. Default 1.'
+						'description'=>'Maximum valid input value. Default 1.'
 						),
 					'multiplier'=>array(
 						'default'=>'1',
@@ -95,6 +95,41 @@ class BalanceFaucet extends ThroughBasedFaucet
           'expo'=>array(
 						'default'=>'1',
 						'description'=>'Expos are for making the controls more, or less sensitive in the middle. The final deflection at the ends will still be the same; what changes is where the bias of the control happens compared to a 1:1 mapping. See readme.md for information about setting this correctly.'
+						),
+					'autoTighten'=>array(
+						'optional'=>'1',
+						'enabled'=>array(
+							'default'=>'0',
+							'description'=>'Automatically tighten the acceptable input ranges. This has the effect of honing in on the goal. 0(default) or 1.'
+							),
+						'checkInterval'=>array(
+							'default'=>'1',
+							'description'=>'Automatically check autoTighten no more than once every x seconds.'
+							),
+						'increment'=>array(
+							'default'=>'0.01',
+							'description'=>'How much to increment/decrement the max and min values with each tick. Generally you want this to be small so that the adjustment is gentle.'
+							),
+						'debug'=>array(
+							'default'=>'0',
+							'description'=>'Output when autoTighten decisions are made.'
+							),
+						'tightenThreshold'=>array(
+							'default'=>'0.8',
+							'description'=>'The threshold that must be we must be inside of to trigger auto tighten. Expressed as a 0-1 decimal percentage. Eg if the input range is -10 to 10, and the autoTighten-tightenThreshold=0.8, then values that would trigger a tighten can be expressed as -0.8<x<0.8. The range will not tighten beyond the tightenedMin and tightenedMax values. Default 0.8.'
+							),
+						'loosenThreshold'=>array(
+							'default'=>'0.95',
+							'description'=>'The threshold that must be we must be outside of to trigger auto loosen. Expressed as a 0-1 decimal percentage. Eg if the input range is -10 to 10, and the autoTighten-loosenThreshold=0.95, then values that would trigger a tighten can be expressed as -0.95>x>0.95. The range will not loosen beyond the min and max values. Default 0.95.'
+							),
+						'tightenedMin'=>array(
+							'default'=>'-0.2',
+							'description'=>'Minimum valid input value once the range has been tightened. Default -0.2.'
+							),
+						'tightenedMax'=>array(
+							'default'=>'0.2',
+							'description'=>'Maximum valid input value once the range has been tightened. Default 0.2.'
+							),
 						),
 					'events'=>array(
 						'optional'=>'1',
@@ -491,13 +526,13 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			
 			// Prep the rule
+			if (!isset($rule['name'])) $rule['name']=$ruleName;
 			if (!isset($rule['input']['live'])) $rule['input']['live']=array();
 			if (!isset($rule['output']['live'])) $rule['output']['live']=array();
 			if (!isset($rule['output']['rangeDirection']))
 			{
 				$rule['output']['rangeDirection']=($rule['output']['max']>$rule['output']['min'])?1:-1;
 			}
-			
 			
 			// Add our vanilla value
 			$rule['input']['live']['vanillaValue']=$input;
@@ -518,7 +553,21 @@ class BalanceFaucet extends ThroughBasedFaucet
 			}
 			$rule['input']['live']['goal']=$goal;
 			if ($showDebug) $valueProgression['g']=$rule['input']['live']['goal'];
-
+			
+			// AutoTighten
+			if (!isset($rule['autoTighten']))
+			{
+				$rule['autoTighten']=array();
+			}
+			if (!isset($rule['autoTighten']['enabled'])) $rule['autoTighten']['enabled']=0;
+			if ($rule['autoTighten']['enabled'])
+			{
+				if (!isset($rule['autoTighten']['obj']))
+				{
+					$rule['autoTighten']['obj'] = new AutoTighten($rule, $this->core);
+				}
+			}
+			
 			
 			// Get the algorithm.
 			$algorithmObject=$this->getAlgorithmObject($ruleName);
@@ -588,8 +637,14 @@ class BalanceFaucet extends ThroughBasedFaucet
 			$inMin=$rule['input']['min'];
 			$inCenter=$rule['input']['center'];
 			$inMax=$rule['input']['max'];
+			$rule['input']['live']['scaledInputGoal']=$algorithmObject->scaleData($inputGoal, $inMin, $inCenter, $inMax); // We need to do this before AutoTighten so we can use the value.
+			if ($rule['autoTighten']['enabled'])
+			{
+				$rule['autoTighten']['obj']->tick();
+				$rule['input']['live']['scaledInputGoal']=$algorithmObject->scaleData($inputGoal, $inMin, $inCenter, $inMax); // Max and Min have likely changed. We therefore need to recalculate this.
+			}
+			
 			$rule['input']['live']['scaledValue']=$algorithmObject->scaleData($value, $inMin, $inCenter, $inMax);
-			$rule['input']['live']['scaledInputGoal']=$algorithmObject->scaleData($inputGoal, $inMin, $inCenter, $inMax);
 			$rule['input']['live']['scaledGoal']=$algorithmObject->scaleData($goal, $inMin, $inCenter, $inMax);
 			
 			#   //
@@ -867,6 +922,98 @@ class BalanceAlgorithm extends SubModule
 		$inValue=$value-$inRange2;
 		
 		return $inValue/$inBase*$outBase*$multiplier;
+	}
+}
+
+class AutoTighten
+{
+	private $rule=null;
+	private $core=null;
+	
+	function __construct(&$rule, &$core)
+	{
+		$this->rule=&$rule;
+		$this->core=&$core;
+		
+		$this->rule['autoTighten']['loosenedMin']=$this->rule['input']['min'];
+		$this->rule['autoTighten']['loosenedMax']=$this->rule['input']['max'];
+		
+		$this->tock();
+		
+		$this->core->debug(1, "Initialised AutoTighten on {$rule['name']}");
+	}
+	
+	private function now()
+	{
+		return microtime($get_as_float=true);
+	}
+	
+	public function tick()
+	{
+		$timeSinceLastTick=$this->now()-$this->rule['autoTighten']['lastTick'];
+		if ($timeSinceLastTick>$this->rule['autoTighten']['checkInterval'])
+		{
+			$value=abs($this->rule['input']['live']['scaledInputGoal']);
+			
+			if ($value<$this->rule['autoTighten']['tightenThreshold'])
+			{
+				$this->tighten();
+			}
+			elseif ($value>$this->rule['autoTighten']['loosenThreshold'])
+			{
+				$this->loosen();
+			}
+			
+			$this->tock();
+		}
+	}
+	
+	private function modify($destinationBoundary, $direction, $boundaryLimit)
+	{
+		$inc=$this->rule['autoTighten']['increment']*$direction;
+		
+		$this->rule['input'][$destinationBoundary]+=$inc;
+		# $this->core->debug(1, "TMP0001: {$this->rule['name']} {$this->rule['input'][$destinationBoundary]}+=$inc destinationBoundary=$destinationBoundary direction=$direction boundaryLimit=$boundaryLimit");
+		
+		if ($direction<0) # Min
+		{
+			if ($this->rule['input'][$destinationBoundary]<=$boundaryLimit)
+			{
+				$this->rule['input'][$destinationBoundary]=$boundaryLimit;
+				return false;
+			}
+		}
+		else # Max
+		{
+			if ($this->rule['input'][$destinationBoundary]>=$boundaryLimit)
+			{
+				$this->rule['input'][$destinationBoundary]=$boundaryLimit;
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private function tighten()
+	{
+		$minChange=$this->modify('min', 1, $this->rule['autoTighten']['tightenedMin']);
+		$maxChange=$this->modify('max', -1, $this->rule['autoTighten']['tightenedMax']);
+		
+		if ($this->rule['autoTighten']['debug'] and ($minChange or $maxChange)) $this->core->debug(1, "{$this->rule['name']}: Tightened boundaries to {$this->rule['input']['min']}-{$this->rule['input']['max']}.");
+	}
+	
+	private function loosen()
+	{
+		$minChange=$this->modify('min', -1, $this->rule['autoTighten']['loosenedMin']);
+		$maxChange=$this->modify('max', 1, $this->rule['autoTighten']['loosenedMax']);
+		
+		if ($this->rule['autoTighten']['debug'] and ($minChange or $maxChange)) $this->core->debug(1, "{$this->rule['name']}: Loosened boundaries to {$this->rule['input']['min']}-{$this->rule['input']['max']}. inc={$this->rule['autoTighten']['increment']}");
+	}
+	
+	private function tock()
+	{
+		$this->rule['autoTighten']['lastTick']=$this->now();
 	}
 }
 

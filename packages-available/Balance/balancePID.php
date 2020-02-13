@@ -101,14 +101,14 @@ class BalancePID extends BalanceAlgorithm
 			$iColour=$this->core->get('Color', 'cyan');
 			$dColour=$this->core->get('Color', 'brightBlue');
 			$default=$this->core->get('Color', 'default');
-			$this->core->debug(1,"ruleName=$ruleName {$errorColour}error=$error $errorDirection$default {$pColour}p=$rp{$default}*$kP*$iP {$wColour}i=$rw{$default}*$kW*$iW {$iColour}i=$ri{$default}*$kI*$iI {$dColour}d=$rd{$default}*$kD*$iD {$default}combinedValue=$rcv out=$ro");
+			$this->core->debug(1,"ruleName=$ruleName {$errorColour}error=$error $errorDirection$default {$pColour}p=$rp{$default}*$kP*$iP {$wColour}w=$rw{$default}*$kW*$iW {$iColour}i=$ri{$default}*$kI*$iI {$dColour}d=$rd{$default}*$kD*$iD {$default}combinedValue=$rcv out=$ro");
 		}
 	}
 	
 	private function calculateP($ruleName, $iP)
 	{
 		# return $this->getSomeDifference($this->cap(-1, $this->state[$ruleName]['error'], 1), $iP, $ruleName, 'P');
-		return $this->getSomeDifference($this->state[$ruleName]['error'], $iP, $ruleName, 'P')*-1;
+		return $this->getSomeDifference($this->state[$ruleName]['error'], $iP, $ruleName, 'P');
 	}
 	
 	private function calculateW($ruleName, $iW)
