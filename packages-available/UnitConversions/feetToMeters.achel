@@ -1,0 +1,4 @@
+# Convert feet to meters. --feetToMeters=Category,variable,valueInFeet ~ conversion
+parameters Category,variable,valueInMeters
+
+basicMaths ~!Local,Category!~,~!Local,variable!~,~!Local,variable!~,/,0.3048
