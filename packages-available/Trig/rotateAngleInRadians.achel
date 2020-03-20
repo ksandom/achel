@@ -1,0 +1,9 @@
+# Rotate (increment) an angle by a given angle in radians. --rotateAngleInRadians=Category,value,inAngle,addAngle NOTE This feature is currently quite inefficient. --rotateAngleInDegrees may be more suitable for you. ~ trig,rotate,increment
+parameters Category,value,inAngle,addAngle
+
+radiansToDegrees Local,inAngleDegrees,~!Local,inAngle!~
+radiansToDegrees Local,addAngleDegrees,~!Local,addAngle!~
+
+rotateAngleInDegrees ~!Local,Category!~,~!Local,value!~,~!Local,inAngleDegrees!~,~!Local,addAngleDegrees!~
+
+degreesToRadians ~!Local,Category!~,~!Local,value!~,~!~!Local,Category!~,~!Local,value!~!~

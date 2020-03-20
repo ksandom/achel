@@ -1,0 +1,5 @@
+# Rotate (increment) an angle by a given angle. --rotateAngleInDegrees=Category,value,inAngle,addAngle ~ trig,rotate,increment
+parameters Category,value,inAngle,addAngle
+
+basicMaths ~!Local,Category!~,~!Local,value!~,~!Local,inAngle!~,+,~!Local,addAngle!~
+basicMaths ~!Local,Category!~,~!Local,value!~,~!~!Local,Category!~,~!Local,value!~!~,%,360

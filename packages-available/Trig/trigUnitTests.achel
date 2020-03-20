@@ -1,0 +1,49 @@
+# Trig unit tests. ~ trig,unitTest,hidden
+
+defineTest rotateAngleInDegrees 0 0,
+	rotateAngleInDegrees Tmp,result,0,0
+	expect 0,~!Tmp,result!~
+
+defineTest rotateAngleInDegrees 0 90,
+	rotateAngleInDegrees Tmp,result,0,90
+	expect 90,~!Tmp,result!~
+
+defineTest rotateAngleInDegrees 270 90,
+	rotateAngleInDegrees Tmp,result,270,90
+	expect 0,~!Tmp,result!~
+
+defineTest rotateAngleInDegrees 90 270,
+	rotateAngleInDegrees Tmp,result,90,270
+	expect 0,~!Tmp,result!~
+
+defineTest rotateAngleInDegrees 90 271,
+	rotateAngleInDegrees Tmp,result,90,271
+	expect 1,~!Tmp,result!~
+
+
+pi Tmp,pi
+basicMaths Tmp,pi2,~!Tmp,pi!~,*,2
+
+defineTest rotateAngleInRadians 0 0,
+	rotateAngleInRadians Tmp,result,0,0
+	expect 0,~!Tmp,result!~
+
+defineTest rotateAngleInRadians 0 1,
+	rotateAngleInRadians Tmp,result,0,1
+	round Tmp,result,~!Tmp,result!~,1
+	expect 1,~!Tmp,result!~
+
+defineTest rotateAngleInRadians ~!Tmp,pi!~ ~!Tmp,pi!~,
+	rotateAngleInRadians Tmp,result,~!Tmp,pi!~,~!Tmp,pi!~
+	expect 0,~!Tmp,result!~
+
+defineTest rotateAngleInRadians 7 0,
+	rotateAngleInRadians Tmp,result,7,0
+	round Tmp,result,~!Tmp,result!~,2
+	
+	basicMaths Local,expectedResult,7,-,~!Tmp,pi2!~
+	round Local,expectedResult,~!Local,expectedResult!~,2
+	expect ~!Local,expectedResult!~,~!Tmp,result!~
+
+unset Tmp,pi
+unset Tmp,pi2
