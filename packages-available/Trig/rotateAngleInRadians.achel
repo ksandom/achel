@@ -7,3 +7,5 @@ radiansToDegrees Local,addAngleDegrees,~!Local,addAngle!~
 rotateAngleInDegrees ~!Local,Category!~,~!Local,value!~,~!Local,inAngleDegrees!~,~!Local,addAngleDegrees!~
 
 degreesToRadians ~!Local,Category!~,~!Local,value!~,~!~!Local,Category!~,~!Local,value!~!~
+
+makeLocalAvailable ~!Local,variable!~
