@@ -1,0 +1,18 @@
+# Unit tests for right angle triangle calculations. ~ unitTest,right,rightAngle,rightTriangle,triangle,hidden
+
+defineTest rightTriangleGetAngleFromOppositeAndHypotenuse,
+	# First, let's derive our knowledge via other means.
+	set Local,opposite,2
+	set Local,adjacent,4
+	basicMaths Local,oppositeSQ,~!Local,opposite!~,^,2
+	basicMaths Local,adjacentSQ,~!Local,adjacent!~,^,2
+	
+	basicMaths Local,hypotenuseSQ,~!Local,oppositeSQ!~,+,~!Local,adjacentSQ!~
+	basicMaths Local,hypotenuse,~!Local,hypotenuseSQ!~,^,0.5
+	
+	rightTriangleGetOppositeAngle Local,expectedAngle,~!Local,opposite!~,~!Local,adjacent!~
+	
+	# Now let's run it.
+	rightTriangleGetAngleFromOppositeAndHypotenuse Local,result,~!Local,opposite!~,~!Local,hypotenuse!~
+	
+	expect ~!Local,expectedAngle!~,~!Local,result!~

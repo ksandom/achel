@@ -1,0 +1,6 @@
+# Get the angle from the opposite and the hypotenuse. --rightTriangleGetAngleFromOppositeAndHypotenuse=Category,variable,opposite,hypotenuse ~ trig,rightAngleTriangle
+parameters category,variable,opposite,hypotenuse
+
+basicMaths Local,division,~!Local,opposite!~,/,~!Local,hypotenuse!~
+asin ~!Local,category!~,~!Local,variable!~,~!Local,division!~
+makeLocalAvailable ~!Local,variable!~
