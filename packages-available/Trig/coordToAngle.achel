@@ -61,6 +61,8 @@ else
 		set Local,coordAdjacent,~!Local,destinationY!~
 		rightTriangleGetOppositeAngle ~!Local,category!~,~!Local,variable!~,~!Local,coordOpposite!~,~!Local,coordAdjacent!~
 
+makeLocalAvailable ~!Local,variable!~
+
 # unset Local,pi
 # unset Local,0.5Pi
 # unset Local,1.5Pi

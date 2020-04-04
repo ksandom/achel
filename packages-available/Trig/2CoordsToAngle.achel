@@ -4,4 +4,5 @@ parameters category,value,ctaOriginX,ctaOriginY,ctaDestinationX,ctaDestinationY
 2CoordsTo1Coord Local,cta,~!Local,ctaOriginX!~,~!Local,ctaOriginY!~,~!Local,ctaDestinationX!~,~!Local,ctaDestinationY!~
 
 coordToAngle ~!Local,category!~,~!Local,value!~,~!Local,cta,x!~,~!Local,cta,y!~
-makeLocalAvailable value
+# TODO Write a test, and figure out why the scoping isn't working for local variables here.
+makeLocalAvailable ~!Local,value!~
