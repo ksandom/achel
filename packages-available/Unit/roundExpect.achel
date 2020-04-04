@@ -1,0 +1,7 @@
+# Like --expect, but rounds the expected value, and the received value. --roundExpect=precision,expectedValue,actualValue,comment,[authoritive] where precision is how many decimal places to round to. ~ expect
+parameters precision,expectedValue,actualValue,comment,authoritive
+
+round Local,roundedExpectedValue,~!Local,expectedValue!~,~!Local,precision!~
+round Local,roundedActualValue,~!Local,actualValue!~,~!Local,precision!~
+
+expect ~!Local,roundedExpectedValue!~,~!Local,roundedActualValue!~,~!Local,comment!~,~!Local,authoritive!~
