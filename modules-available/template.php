@@ -24,6 +24,7 @@ class Template extends Module
 			case 'init':
 				$this->core->registerFeature($this, array('template'), 'template', 'Specify a templte to use to display the output. This will replace the result with an array containing a single string. --template=templateName . eg --template=screen');
 				$this->core->registerFeature($this, array('templateOut'), 'templateOut', 'Use a template to display the output before '.programName.' terminates. --templateOut=templateName . eg --templateOut=screen');
+				$this->core->registerFeature($this, array('templateToFile'), 'templateToFile', 'Use a template to write to a file before '.programName.' terminates. --templateToFile=templateName,fileName . eg --templateOut=screen,/tmp/landingRoute.kml');
 				$this->core->registerFeature($this, array('templateOutNoNewLine'), 'templateOutNoNewLine', 'Use a template to display the output before '.programName.' terminates. --templateOutNoNewLine=templateName . eg --templateOutNoNewLine=screen');
 				$this->core->registerFeature($this, array('noTemplateOut'), 'noTemplateOut', 'Do not allow futue --templateOutIfNotSet to be set. It will not have effect if one has already been set.');
 				$this->core->registerFeature($this, array('unsetTemplateOut'), 'unsetTemplateOut', 'Unset the current templateOut. This disables the output, but allows --templateOutIfNotSet to be used again.');
@@ -45,6 +46,15 @@ class Template extends Module
 				$this->core->setRef('General', 'outputObject', $this);
 				$this->templateOut=$this->core->get('Global', $event);
 				$this->core->debug(4, "--templateOut: set \$this->templateOut to {$this->templateOut}.");
+				break;
+			case 'templateToFile':
+				if ($parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true))
+				{
+					$this->core->setRef('General', 'outputObject', $this);
+					$this->templateOut=$parms[0];
+					$this->core->debug(4, "--templateToFile: set \$this->templateOut to {$this->templateOut}.");
+					$this->templateToFile($parms[1]);
+				}
 				break;
 			case 'templateOutNoNewLine':
 				$this->core->setRef('General', 'outputObject', $this);
@@ -275,9 +285,17 @@ class Template extends Module
 		return $this->processTemplateByName($templateName, $dataOut);
 	}
 	
-	function out($output)
+	private function templateToFile($fileName)
 	{
-		$modifiedOutput=$this->core->callFeatureWithDataset('triggerEvent', 'Template,beforeProcessing-'.$this->templateOut, $output);
+		$output=$this->doWork($this->core->getResultSet());
+		
+		# TODO put some sane error handling into this.
+		file_put_contents($fileName, $output);
+	}
+	
+	private function doWork($output)
+	{
+			$modifiedOutput=$this->core->callFeatureWithDataset('triggerEvent', 'Template,beforeProcessing-'.$this->templateOut, $output);
 		if ($modifiedOutput) $output=$modifiedOutput;
 		
 		if (is_string($output)) $this->core->echoOut("template: Unexpected string=\"$output\"");
@@ -293,8 +311,15 @@ class Template extends Module
 		}
 		
 		$modifiedResult=$this->core->callFeatureWithDataset('triggerEvent', 'Template,beforeOutput-'.$this->templateOut, $result);
-		if ($modifiedResult) $this->core->echoOut($modifiedResult[0]);
-		else $this->core->echoOut($result[0]);
+		
+		if ($modifiedResult) return $modifiedResult[0];
+		else return $result[0];
+}
+	
+	function out($output)
+	{
+		$result=$this->doWork($output);
+		$this->core->echoOut($result);
 	}
 	
 	function put($output)
