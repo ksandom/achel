@@ -166,7 +166,7 @@ class Template extends Module
 			
 			$argumentTerminatorPos=strpos($macroCode, ' ');
 			$argument=substr($macroCode, 0, $argumentTerminatorPos);
-			$value=substr($macroCode, $argumentTerminatorPos+1);
+			$value=$this->core->processValue(substr($macroCode, $argumentTerminatorPos+1));
 			
 			$result=$this->core->callFeature($argument, $value);
 		}
