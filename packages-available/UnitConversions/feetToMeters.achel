@@ -2,3 +2,5 @@
 parameters Category,variable,valueInFeet
 
 basicMaths ~!Local,Category!~,~!Local,variable!~,~!Local,valueInFeet!~,*,0.3048
+
+makeLocalAvailable ~!Local,variable!~
