@@ -47,3 +47,8 @@ defineTest rotateAngleInRadians 7 0,
 
 unset Tmp,pi
 unset Tmp,pi2
+
+defineTest abcSquared,
+	abcSquared Local,abcTest,2,3
+	
+	roundExpect 2,3.61,~!Local,abcTest!~

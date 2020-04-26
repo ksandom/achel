@@ -1,0 +1,10 @@
+# Calcuate the remaining side of a right angle triangle given the two others. --abcSquared=Category,value,side1,side2 ~ trig
+parameters Category,value,side1,side2
+
+basicMaths Local,aSquared,~!Local,side1!~,^,2
+basicMaths Local,bSquared,~!Local,side2!~,^,2
+basicMaths Local,cSquared,~!Local,aSquared!~,+,~!Local,bSquared!~
+
+basicMaths ~!Local,Category!~,~!Local,value!~,~!Local,cSquared!~,^,0.5
+
+makeLocalAvailable ~!Local,value!~
