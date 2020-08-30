@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE language SYSTEM "language.dtd">
-<language name="Achel" version="0.1" kateversion="2.4" section="Scripts" extensions="*.achel" casesensitive="1" author="Kevin Sandom" license="GPL">
+<language name="Achel" version="1" kateversion="5" section="Scripts" extensions="*.achel" casesensitive="1" author="Kevin Sandom" license="GPL">
 	<highlighting>
 		<list name="prep">
 			<item> onDefine </item>
