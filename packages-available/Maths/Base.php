@@ -80,7 +80,7 @@ class Base extends Module
 			$part=substr($input, $partNumber*$hexWidth, $hexWidth);
 			
 			$this->core->debug(3, "hexToInts($category, $value, $input, $hexWidth) $partNumber $part $hexWidth");
-			$this->core->setNested($category, $value, array($partNumber, hexdec($part)));
+			$this->core->setNestedViaPath("$category,$value,$partNumber", hexdec($part));
 		}
 	}
 	
