@@ -1,5 +1,5 @@
 <?php
-# Copyright (c) 2012-2018, Kevin Sandom under the GPL License. See LICENSE for full details.
+# Copyright (c) 2012-2023, Kevin Sandom under the GPL License. See LICENSE for full details.
 
 # Adds the ability to put conditions into macros
 
@@ -26,23 +26,23 @@ class FaucetEnvironment
 {
 	# The environment for containing everything.
 	private static $environment=null;
-	
+
 	# For tracking nested faucets
 	public $currentFaucet=null;
 	public $rootFaucet=null;
 	public $core=null;
-	
+
 	function __construct()
 	{
 		$this->core=core::assert();
 	}
-	
+
 	public static function &assert()
 	{
 		if (!isset(self::$environment)) self::$environment=new FaucetEnvironment();
 		return self::$environment;
 	}
-	
+
 	function createEvironment($createEnvironment=true)
 	{
 		if ($createEnvironment)
@@ -61,20 +61,20 @@ class FaucetEnvironment
 
 class Faucets extends Module
 {
-	
+
 	function __construct($className=__CLASS__)
 	{
 		parent::__construct($className);
-		
+
 		$core=core::assert();
 		$this->setCore($core);
-		
+
 		$this->environment=FaucetEnvironment::assert();
-		
+
 		$amIFaucets=($className==__CLASS__);
 		$this->environment->createEvironment($amIFaucets);
 	}
-	
+
 	function event($event)
 	{
 		switch ($event)
@@ -82,17 +82,17 @@ class Faucets extends Module
 			case 'init':
 				$this->core->registerFeature($this, array('getFaucets'), 'getFaucets', "List all faucets (including objects).", array());
 				$this->core->registerFeature($this, array('getFaucetsDetails', 'ls'), 'getFaucetsDetails', "List all faucets with stats.", array());
-				
-				
+
+
 				$this->core->registerFeature($this, array('createThroughFaucet'), 'createThroughFaucet', "This faucet is a 1:1 faucet for any channel. Effectively it is useful for connecting stuff in a standardized abstract way. --createThroughFaucet=faucetName", array());
 				$this->core->registerFeature($this, array('create2WayThroughFaucet'), 'create2WayThroughFaucet', "This faucet is a 1:1+1:1 pipe. Effectively it is useful for connecting stuff in a standardized abstract way. The difference from --createThroughFaucet is that a single instance of this Faucet can carry both input and output on the default channel, therefore allowing a single instance to be the complete interface for a complicated set of faucets so they can be interfaced in a simple way. However no other channels can be used. The \"default\" channel is used on the external side, and the \"inside\" channel is used on the internal side. --create2WayThroughFaucet=faucetName", array());
-				
+
 				$this->registerFaucetCatalogEntry('NullFaucet', 'A black hole for data.', 'achel', 'createNullFaucet,%faucetName%');
 				$this->core->registerFeature($this, array('createNullFaucet'), 'createNullFaucet', "Many Faucet actions will only get performed when there is at least one pipe connected to the exit of the faucet. But sometimes we want to create a fully funtioning faucet without connecting it to anything. The NullFaucet gives you something to connect it to without causing data to build up anywhere. --createNullFaucet=faucetName", array());
-				
+
 				$this->core->registerFeature($this, array('createRawMetaFaucet', 'mkdir'), 'createRawMetaFaucet', "Create a MetaFaucet that can contain other Faucets. You can use --cf to get inside it and create other faucets etc. --createRawMetaFaucet=faucetName. Normally you will want --createMetaFaucet instead, which allows you to do the nested programming style, which is generally much easier to read.", array());
-				
-				
+
+
 				$this->core->registerFeature($this, array('changeFaucet', 'cf', 'cd'), 'changeFaucet', "Used pretty much like cd on the linux command line. Note that you can only --changeFaucet into meta faucets. --changeFaucet=pathToFaucet e.g. --changeFaucet=/faucetName/anotherFaucetName/andAnotherFaucetName . IMPORTANT: When using this within macros, please use changeFaucet or cf. Not cd as that is slang to make the tui more intuitive.", array('metaFaucet'));
 				$this->core->registerFeature($this, array('currentFaucet', 'pwd'), 'currentFaucet', "Display the current faucet name to debug. Note that this does not currently show the full path. --currentFaucet", array('metaFaucet'));
 				$this->core->registerFeature($this, array('setFaucetConfigItem'), 'setFaucetConfigItem', "Set faucet specific config. --setFaucetConfigItem=faucetName,configName,[configSubcategory],value", array('metaFaucet'));
@@ -101,21 +101,21 @@ class Faucets extends Module
 				$this->core->registerFeature($this, array('removeFaucetConfigItemEntry'), 'removeFaucetConfigItemEntry', "If the faucet config item is an array, you can remove an entry from it. --removeFaucetConfigItemEntry=faucetName,configName,[configSubcategory],entryName,value", array('metaFaucet'));
 				$this->core->registerFeature($this, array('bindFaucetConfigItem'), 'bindFaucetConfigItem', "Within the current metaFaucet, make a reference to one of the faucets it contains. This allows you to manipulate the config of sub-faucets directly from the metaFaucet that contains them. --bindFaucetConfigItem=faucetName,configName,[configSubcategory],metaFaucetConfigName,[metaFaucetConfigSubcategory]", array('metaFaucet'));
 				$this->core->registerFeature($this, array('generateFaucetCatalogEntry'), 'generateFaucetCatalogEntry', "Generate the details needed to recreate a named metaFaucet. --generateFaucetCatalogEntry[=name] . If name is omitted the current meta faucet is assumed.", array('metaFaucet'));
-				
-				
+
+
 				$this->core->registerFeature($this, array('deleteFaucet'), 'deleteFaucet', "Delete a faucet to/from a terminal.", array());
-				
+
 				$this->core->registerFeature($this, array('setFaucetAs'), 'setFaucetAs', "Use core->setRef to set a named faucet. The purpose I'm currently intending to use this for is setting sending output from mass macros through achel pipes. You could do that in this form --setFaucetAs=faucetName,Category,valueName like this --setFaucetAs=terminal,General,echoObject", array());
 				$this->core->registerFeature($this, array('getFaucetAliases'), 'getFaucetAliases', "List all faucet aliases.", array());
 				$this->core->registerFeature($this, array('createFaucetAlias'), 'createFaucetAlias', "Alias a faucet to give it a standard name. --aliasFaucet=aliasName,originalName", array());
 				$this->core->registerFeature($this, array('replaceFaucetAlias'), 'replaceFaucetAlias', "Alias a faucet (whether it exists already or not) to give it a standard name. --replaceFaucetAlias=aliasName,originalName", array());
 				$this->core->registerFeature($this, array('deleteFaucetAlias'), 'deleteFaucetAlias', "Delete a faucet alias. --deleteFaucetAlias=aliasName", array());
-				
+
 				$this->core->registerFeature($this, array('getPipes'), 'getPipes', "List all pipes.", array());
 				$this->core->registerFeature($this, array('createPipe'), 'createPipe', "Create a one way pipe between two faucets. --createPipe=fromFaucet,toFaucet[,fromChannel,toChannel,parm1,parm2] . parm1 and 2 are specific to the destination faucet and help it know what to do with the data in the context of this pipe. fromChannel and toChannel are used by some faucets that need to send and/or recieve input from multiple sources.", array());
 				$this->core->registerFeature($this, array('deletePipe'), 'deletePipe', "Delete a one way pipe between two faucets. --deletePipe=fromFaucet,toFaucet", array());
 				$this->core->registerFeature($this, array('tracePipes'), 'tracePipes', "List out all the possible combinations for getting from one faucet,channel to another. --tracePipes=fromFaucet,toFaucet[,fromChannel[,toChannel[,depthLimit]]]", array());
-				
+
 				$this->core->registerFeature($this, array('deliver'), 'deliver', "Deliver text directly to a faucet. --deliver=faucetName,channel,textToSend", array());
 				$this->core->registerFeature($this, array('deliverAll'), 'deliverAll', "Invoke every pipe to check for contents from it's fromFaucet and deliver any contents to it's toFaucet. This will become very inefficient as the number of faucets grows. --deliverAll[=maximumRevolutions] . maximumRevolutions defaults to 10.", array());
 				$this->core->registerFeature($this, array('deliverUnitTests'), 'deliverUnitTests', "Deliver until all unit tests have returned something. TODO Add timeout.", array());
@@ -150,8 +150,8 @@ class Faucets extends Module
 				$metaFaucet->setStructure($this->environment->rootFaucet, $this->environment->currentFaucet);
 				$this->environment->currentFaucet->createFaucet($parms[0], 'meta', $metaFaucet);
 				break;
-			
-			
+
+
 			case 'changeFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1, 0);
 				$this->changeFaucet($parms[0]);
@@ -208,15 +208,15 @@ class Faucets extends Module
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1);
 				return $this->environment->currentFaucet->generateFaucetCatalogEntry($parms[0]);
 				break;
-			
-			
-			
+
+
+
 			case 'deleteFaucet':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 1);
 				$this->environment->currentFaucet->deleteFaucet($parms[0]);
 				break;
-			
-			
+
+
 			case 'setFaucetAs':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2);
 				$this->setFaucetAs($parms[0], $parms[1], $parms[2]);
@@ -251,7 +251,7 @@ class Faucets extends Module
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 5, 2);
 				return $this->environment->currentFaucet->tracePipes($parms[0], $parms[2], $parms[1], $parms[3], $parms[4]);
 				break;
-				
+
 			case 'deliver':
 				$parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true);
 				$this->environment->currentFaucet->deliver($parms[0], $parms[1], $parms[2]);
@@ -267,8 +267,8 @@ class Faucets extends Module
 				break;
 		}
 	}
-	
-	
+
+
 	function setFaucetAs($faucetName, $category, $valueName)
 	{
 		if ($faucet=&$this->environment->currentFaucet->getFaucet($faucetName))
@@ -281,13 +281,13 @@ class Faucets extends Module
 			$this->core->debug(2, "setFaucetAs: Could not find a faucet named \"$faucetName\".");
 		}
 	}
-	
+
 	function getCurrentFaucet($parameters)
 	{
-		# TODO Refactor this to 
+		# TODO Refactor this to
 		# * take arguments,and set the result in the specified location in ncessary.
 		# * find the whole path.
-		
+
 		if (isset($parameters[1]) && $parameters[1])
 		{
 			$this->core->set($parameters[0], $parameters[1], $this->environment->currentFaucet->getFullPath());
@@ -297,25 +297,25 @@ class Faucets extends Module
 			$this->core->debug(0, __CLASS__.'->'.__FUNCTION__.': '.$this->environment->currentFaucet->getFullPath());
 		}
 	}
-	
+
 	function changeFaucet($faucetPath)
 	{
 		$debugLevel=2;
-		
+
 		if ($faucetPath=='/') $faucetPath=''; // A simple way to make sure that / gets processed only once.
-		
+
 		$pathParts=explode('/', $faucetPath);
-		
+
 		foreach ($pathParts as $partKey=>$part)
 		{
 			$origin=$this->environment->currentFaucet->getName();
-			
+
 			switch ($part)
 			{
 				case '':
 					/*
 						This represents root (/) but matches '' as / is our delimiter. Therefore if the path begins with a / or if there is a double / (ie //), then it will go to root from that point on.
-						
+
 						This is intended behavior. If later it is desired to ignore double slashes, then this test will help ($partKey==0)
 					*/
 					$this->environment->currentFaucet=&$this->environment->rootFaucet;
@@ -351,12 +351,12 @@ class Faucets extends Module
 					}
 					break;
 			}
-			
+
 			$destination=$this->environment->currentFaucet->getName();
 			$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": $origin->$destination ($part)");
 		}
 	}
-	
+
 	function registerFaucetCatalogEntry($faucetName, $description, $package, $source)
 	{
 		if ($imposter=$this->core->get('FaucetCatalog', $faucetName))
@@ -364,11 +364,11 @@ class Faucets extends Module
 			$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": $faucetName already exists with description \"{$imposter['description']}\", source is \"$source\" and it's from package \"{$imposter['package']}\". This is certainly a bug between the package \"$package\" and \"{$imposter['package']}\"");
 			return false;
 		}
-		
+
 		$entry=$this->environment->currentFaucet->getFaucetCatalogTemplate($faucetName, $source, 'macro');
 		$entry['config']['description']=$description;
 		$entry['config']['package']=$package;
-		
+
 		$this->core->set('FaucetCatalog', $faucetName, $entry);
 	}
 }
@@ -385,7 +385,7 @@ class Faucet
 	protected $configRegistry=null;
 	protected $faucetInstanceName='unknown';
 	protected $parent=null;
-	
+
 	function __construct($objectType)
 	{
 		$this->objectType=$objectType;
@@ -394,27 +394,27 @@ class Faucet
 		$this->config=array();
 		$this->configRegistry=array();
 	}
-	
+
 	function getObjectType()
 	{
 		return $this->objectType;
 	}
-	
+
 	function setParent(&$parent)
 	{
 		$this->parent=&$parent;
 	}
-	
+
 	public function setInstanceName($instanceName)
 	{
 		$this->faucetInstanceName=$instanceName;
 	}
-	
+
 	public function getInstanceName()
 	{
 		return $this->faucetInstanceName;
 	}
-	
+
 	private function mergeOutFillData($outChannel, $data)
 	{
 		if (!isset($this->outChannels[$outChannel]))
@@ -422,7 +422,7 @@ class Faucet
 			$this->core->debug(4, "outFill: Created channel $outChannel");
 			$this->outChannels[$outChannel]=array();
 		}
-		
+
 		if (count($this->outChannels[$outChannel]))
 		{ // We need to carefully integrate the new data with the existing data
 			if (is_array($data))
@@ -444,7 +444,7 @@ class Faucet
 								$this->outChannels[$outChannel][$key]=$value;
 							}
 						}
-						else 
+						else
 						{
 							$this->core->debug(4, "outFill: Directly saved fresh data as key $key in channel $outChannel. Objecttype {$this->objectType}");
 							$this->outChannels[$outChannel][$key]=$value;
@@ -470,11 +470,11 @@ class Faucet
 			$this->outChannels[$outChannel]=$data;
 		}
 	}
-	
+
 	function outFill($data, $channel=false)
 	{ // Send output to a particular channel
 		if (!$data) return false;
-		
+
 		if ($channel=='*')
 		{ // We have been given all of the channels at once. This needs to be done a little differently.
 			if (count($this->outChannels))
@@ -496,27 +496,27 @@ class Faucet
 		}
 		return true;
 	}
-	
+
 	function &getOutQues()
 	{
 		return $this->outChannels;
 	}
-	
+
 	function get($channel=false)
 	{
 		$channelChoice=($channel!==false)?$channel:'default';
-		
+
 		if (!isset($this->outChannels[$channelChoice]))
 		{
 			$this->core->debug(4, __CLASS__."->get: Channel $channelChoice does not exist. It may be that data has not been written to it yet. Objecttype {$this->objectType}");
 			return false;
 		}
-		
+
 		$output=$this->outChannels[$channelChoice];
 		$this->outChannels[$channelChoice]=array();
 		return $output;
 	}
-	
+
 	function processInputBuffer()
 	{
 		// Process any complete input. NOTE that this mentality will not work for binary data.
@@ -524,12 +524,12 @@ class Faucet
 		if ($EOLPos !== false)
 		{
 			$this->core->debug(4, "processInputBuffer: New line found");
-			
+
 			$lines=explode(inputLineSeparator, $this->inputBuffer);
-			
+
 			$last=count($lines)-1;
 			$this->inputBuffer=$lines[$last];
-			
+
 			unset($lines[$last]);
 			return $lines;
 		}
@@ -538,11 +538,11 @@ class Faucet
 			return false;
 		}
 	}
-	
+
 	function registerConfigItem($settingName, $subcategory, $description, $type='array')
 	{
 		$chosenSubcategory=($subcategory)?$subcategory:'default';
-		
+
 		# TODO Should config actually be configRegistry
 		if (isset($this->config[$settingName][$chosenSubcategory]))
 		{
@@ -552,16 +552,16 @@ class Faucet
 		{
 			if (!$type) $type=false;
 			$this->configRegistry[$settingName]=array($chosenSubcategory=>array(
-				'description'=>$description, 
+				'description'=>$description,
 				'type'=>$type));
 			$this->config[$settingName]=array($chosenSubcategory=>array());
 		}
 	}
-	
+
 	function getRegisteredConfigItem($settingName, $subcategory)
 	{
 		$chosenSubcategory=($subcategory)?$subcategory:'default';
-		
+
 		# TODO Should config actually be configRegistry
 		if (isset($this->config[$settingName][$chosenSubcategory]))
 		{
@@ -573,11 +573,11 @@ class Faucet
 			return false;
 		}
 	}
-	
+
 	function setConfigItem($settingName, $subcategory, $value)
 	{
 		$chosenSubcategory=($subcategory)?$subcategory:'default';
-		
+
 		if (isset($this->config[$settingName][$chosenSubcategory]))
 		{
 			$this->config[$settingName][$chosenSubcategory]=$value;
@@ -587,17 +587,17 @@ class Faucet
 			$this->core->debug(1, "setConfigItem: Setting $settingName/$chosenSubcategory has not been registered for {$this->objectType}.");
 		}
 	}
-	
+
 	protected function setConfigItemReference($settingName, $subcategory, &$value)
 	{
 		/*
 			The purpose of this is to expose config items of particular Faucets so that MetaFaucets' configItems can manipulate config items of the Faucets it contains.
-			
+
 			Please don't use it for anything else.
 		*/
-		
+
 		$chosenSubcategory=($subcategory)?$subcategory:'default';
-		
+
 		if (isset($this->config[$settingName][$chosenSubcategory]))
 		{
 			# TODO Check this. It may be better to use &= (if that's syntactically correct).
@@ -608,11 +608,11 @@ class Faucet
 			$this->core->debug(1, "setConfigItemReference: Setting $settingName/$chosenSubcategory has not been registered for {$this->objectType}.");
 		}
 	}
-	
+
 	function addConfigItemEntry($settingName, $subcategory, $entryName, $entryValue)
 	{
 		$chosenSubcategory=($subcategory)?$subcategory:'default';
-		
+
 		if (isset($this->config[$settingName][$chosenSubcategory]))
 		{
 			if ($this->configRegistry[$settingName][$chosenSubcategory]['type']=='array')
@@ -621,7 +621,7 @@ class Faucet
 				{
 					$this->config[$settingName][$chosenSubcategory]=array();
 				}
-				
+
 				$this->config[$settingName][$chosenSubcategory][$entryName]=$entryValue;
 			}
 			else
@@ -634,7 +634,7 @@ class Faucet
 			$this->core->debug(1, "addConfigItemEntry: Setting $settingName/$chosenSubcategory has not been registered for {$this->objectType}.");
 		}
 	}
-	
+
 	function removeConfigItemEntry($settingName, $subcategory, $entryName)
 	{
 		$chosenSubcategory=($subcategory)?$subcategory:'default';
@@ -650,16 +650,16 @@ class Faucet
 			}
 		}
 	}
-	
+
 	function getConfigItem($settingName, $subcategory=false)
 	{
 		return $this->getConfigItemByReferece($settingName, $subcategory);
 	}
-	
+
 	function &getConfigItemByReferece($settingName, $subcategory=false)
 	{
 		$chosenSubcategory=($subcategory)?$subcategory:'default';
-		
+
 		if (isset($this->config[$settingName][$chosenSubcategory]))
 		{
 			return $this->config[$settingName][$chosenSubcategory];
@@ -672,12 +672,12 @@ class Faucet
 		}
 	}
 
-	
+
 	function getConfig()
 	{
 		return $this->config;
 	}
-	
+
 	function callControl($lines)
 	{
 		foreach ($lines as $line)
@@ -687,7 +687,7 @@ class Faucet
 			$this->control($part[0], $value);
 		}
 	}
-	
+
 	function &getReplacementConfig($address)
 	{
 		# NOTE I've just removed the reference. If quirky behavior appears, this is a good place to look.
@@ -700,7 +700,7 @@ class Faucet
 			return $result;
 		}
 	}
-	
+
 	function control($feature, $value)
 	{
 		switch ($feature)
@@ -725,18 +725,18 @@ class Faucet
 class ThroughBasedFaucet extends Faucet
 {
 	protected $input=null;
-	
+
 	function __construct($objectType)
 	{
 		parent::__construct($objectType);
-		
+
 		$this->input=array();
 	}
-	
+
 	function deconstruct()
 	{
 	}
-	
+
 	private function mergeInChannelData($channel, $data)
 	{
 		if (!isset($this->input[$channel]))
@@ -764,7 +764,7 @@ class ThroughBasedFaucet extends Faucet
 			}
 		}
 	}
-	
+
 	function storeData($data, $channel)
 	{
 		if ($channel=='*')
@@ -786,7 +786,7 @@ class ThroughBasedFaucet extends Faucet
 			$this->mergeInChannelData($channel, $data);
 		}
 	}
-	
+
 	function clearInput($channel=false)
 	{
 		if ($channel)
@@ -798,12 +798,12 @@ class ThroughBasedFaucet extends Faucet
 			$this->input=array();
 		}
 	}
-	
+
 	function put($data, $channel)
 	{
 		$this->storeData($data, $channel);
 	}
-	
+
 	function &getInQues()
 	{
 		return $this->input;
@@ -816,7 +816,7 @@ class StreamBasedFaucet extends Faucet
 	{
 		parent::__construct($objectType);
 	}
-	
+
 	function deconstruct()
 	{
 		if ($this->resource) fclose($this->resource);
@@ -833,17 +833,17 @@ class StreamBasedFaucet extends Faucet
 class ThroughFaucet extends ThroughBasedFaucet
 {
 	private $isTwoWay=false;
-	
+
 	function __construct($isTwoWay=false)
 	{
 		$this->isTwoWay=$isTwoWay;
 		parent::__construct(__CLASS__);
 	}
-	
+
 	function preGet()
 	{
 		$gotSomething=false;
-		
+
 		if ($this->isTwoWay)
 		{
 			if (isset($this->input['default']))
@@ -852,14 +852,14 @@ class ThroughFaucet extends ThroughBasedFaucet
 				$this->clearInput('default');
 				$gotSomething=true;
 			}
-			
+
 			if (isset($this->input['inside']))
 			{
 				$this->outFill($this->input['inside'], 'default');
 				$this->clearInput('inside');
 				$gotSomething=true;
 			}
-			
+
 			foreach (array_keys($this->input) as $channel)
 			{
 				if (count($this->input[$channel])>0)
@@ -878,7 +878,7 @@ class ThroughFaucet extends ThroughBasedFaucet
 				$gotSomething=true;
 			}
 		}
-		
+
 		return $gotSomething;
 	}
 }
@@ -889,20 +889,20 @@ class ThroughFaucet extends ThroughBasedFaucet
 class NullFaucet extends ThroughBasedFaucet
 {
 	/*
-		Many Faucet actions will only get performed when there is at least one pipe connected to the exit of the faucet. But sometimes we want to create a fully funtioning faucet without connecting it to anything. 
-		
+		Many Faucet actions will only get performed when there is at least one pipe connected to the exit of the faucet. But sometimes we want to create a fully funtioning faucet without connecting it to anything.
+
 		The NullFaucet gives you something to connect it to without causing data to build up anywhere.
 	*/
-	
+
 	function __construct()
 	{
 		parent::__construct(__CLASS__);
 	}
-	
+
 	function deconstruct()
 	{
 	}
-	
+
 	function preGet()
 	{
 		foreach ($this->input as $channel=>$data)
@@ -912,7 +912,7 @@ class NullFaucet extends ThroughBasedFaucet
 				$this->clearInput($channel);
 			}
 		}
-		
+
 		return false;
 	}
 }
@@ -923,47 +923,52 @@ class MetaFaucet extends ThroughBasedFaucet
 	private $parentFaucet=null;
 	private $myName='';
 	private $fullPath='';
-	
+
 	# Stuff that connects to each other
 	private $pipes=null;
 	private $faucets=null;
 	private $aliases=null;
-	
+
 	private $bindings=null;
-	
+
 	private $debugID=0;
-	
+
+	private $environment=null;
+
+
 	function __construct($name)
 	{
 		$this->debugID=rand(1, 100000);
-		
+
 		parent::__construct(__CLASS__);
-		
+
+		$this->environment=FaucetEnvironment::assert();
+
 		$this->myName=$name;
 		$this->bindings=array();
-		
+
 		$this->registerConfigItem('description', '', 'Describe what the metaFaucet does.', 'string');
 		$this->setConfigItem('description', '', 'unknown');
-		
+
 		$this->registerConfigItem('package', '', 'Which package does the metaFaucet live in.', 'string');
 		$this->setConfigItem('package', '', 'unknown');
-		
+
 		$this->registerConfigItem('source', '', 'What generated the metaFaucet. filePath|macroName|userBuilt', 'string');
 		$this->setConfigItem('source', '', 'userBuilt');
-		
+
 		$this->registerConfigItem('sourceType', '', 'What type of source is it? file|macro|generated.', 'string');
 		$this->setConfigItem('sourceType', '', 'generated');
-		
-		
+
+
 		$this->fromColour=$this->core->get('Color', 'cyan');
 		$this->toColour=$this->core->get('Color', 'brightPurple');
 		$this->keyColour=$this->core->get('Color', 'brightBlack');
 		$this->dataColour=$this->core->get('Color', 'brightBlue');
 		$this->contentColour=$this->core->get('Color', 'green');
 		$this->pathColour=$this->core->get('Color', 'yellow');
-		
+
 		$this->defaultColour=$this->core->get('Color', 'default');
-		
+
 		$this->pipeDebugLevel=$this->core->get('General', 'pipeDebugLevel');
 		if ($this->pipeDebugLevel=='')
 		{
@@ -971,31 +976,31 @@ class MetaFaucet extends ThroughBasedFaucet
 			$this->core->set('General', 'pipeDebugLevel', $this->pipeDebugLevel);
 		}
 	}
-	
+
 	function deconstruct()
 	{
 	}
-	
+
 	function setStructure(&$rootFaucet, &$parentFaucet)
 	{
 		$this->environment->rootFaucet=&$rootFaucet;
 		$this->parentFaucet=&$parentFaucet;
 	}
-	
+
 	function &getRootFaucet()
 	{
 		return $this->parentFaucet;
 	}
-	
+
 	function &getParentFaucet()
 	{
 		return $this->parentFaucet;
 	}
-	
+
 	function preGet()
 	{
 		return $this->deliverAll();
-		
+
 		/*foreach ($this->input as $channel=>$data)
 		{
 			if ($data)
@@ -1004,22 +1009,22 @@ class MetaFaucet extends ThroughBasedFaucet
 			}
 		}*/
 	}
-	
-	
-	
-	
+
+
+
+
 	function getName()
 	{
 		return $this->myName;
 	}
-	
+
 	function getFullPath()
 	{
 		if ($this->fullPath)
 		{
 			return $this->fullPath;
 		}
-		
+
 		if ($this->myName == 'root')
 		{
 			$this->fullPath='';
@@ -1028,10 +1033,10 @@ class MetaFaucet extends ThroughBasedFaucet
 		{
 			$this->fullPath=$this->parentFaucet->getFullPath().'/'.$this->myName;
 		}
-		
+
 		return $this->fullPath;
 	}
-	
+
 	function createFaucet($faucetName, $type, &$faucetObject)
 	{
 		if (!$faucetName)
@@ -1039,10 +1044,10 @@ class MetaFaucet extends ThroughBasedFaucet
 			$this->core->debug(1, "createFaucet: No faucetName given. $type faucet will not be created.");
 			return false;
 		}
-		
+
 		$faucetObject->setInstanceName($faucetName);
 		$faucetObject->setParent($this);
-		
+
 		$this->core->debug(2, "createFaucet ({$this->debugID}): Created faucet $faucetName.");
 		$this->faucets[$faucetName]=array(
 			'name'=>$faucetName,
@@ -1050,7 +1055,7 @@ class MetaFaucet extends ThroughBasedFaucet
 			'instance'=>'# TODO generate this',
 			'object'=>&$faucetObject);
 	}
-	
+
 	function deleteFaucet($faucetName)
 	{
 		if (isset($this->faucets[$faucetName]))
@@ -1061,37 +1066,37 @@ class MetaFaucet extends ThroughBasedFaucet
 				unset($this->faucets[$faucetName]);
 			}
 			else $this->core->debug(2, "deleteFaucet: Faucet $faucetName was not an array.");
-			
+
 		}
 		else
 		{
 			$this->core->debug(2, "deleteFaucet: Faucet $faucetName does not exist.");
 		}
 	}
-	
+
 	function &getFaucet($faucetName, $event='unknown')
 	{
 		if (!$faucetName) return $this;
-		
+
 		$actualFaucetName=$this->findRealFaucetName($faucetName);
 		if ($actualFaucetName and isset($this->faucets[$actualFaucetName])) return $this->faucets[$actualFaucetName];
-		else 
+		else
 		{
 			$this->core->debug(2, "getFaucet ($event): Faucet $faucetName does not exist.");
 			$result=false;
 			return $result;
 		}
 	}
-	
+
 	function getFaucets()
 	{
 		return $this->faucets;
 	}
-	
+
 	function getFaucetsDetails()
 	{
 		$faucets=array();
-		
+
 		foreach ($this->faucets as $faucet)
 		{
 			$outFaucet=array(
@@ -1100,35 +1105,35 @@ class MetaFaucet extends ThroughBasedFaucet
 				'in'=>array(),
 				'out'=>array()
 			);
-			
+
 			if (method_exists($faucet['object'], 'getOutQues'))
 			{
 				$outFaucet['out']=$this->quesToStats($faucet['object']->getOutQues());
 			}
-			
+
 			if (method_exists($faucet['object'], 'getInQues'))
 			{
 				$outFaucet['in']=$this->quesToStats($faucet['object']->getInQues());
 			}
-			
+
 			$faucets[]=$outFaucet;
 		}
-		
+
 		return $faucets;
 	}
-	
+
 	function quesToStats($ques)
 	{
 		$stats=array();
-		
+
 		foreach ($ques as $key=>$que)
 		{
 			$stats[$key]=count($que);
 		}
-		
+
 		return $stats;
 	}
-	
+
 	function findRealFaucetName($faucetName)
 	{
 		if (isset($this->faucets[$faucetName])) return $faucetName;
@@ -1140,18 +1145,18 @@ class MetaFaucet extends ThroughBasedFaucet
 			return false;
 		}
 	}
-	
-	
-	
+
+
+
 	function createAlias($aliasName, $originalName, $replace=false)
 	{
 		if (!isset($this->faucets[$originalName]))
 		{
 			$this->core->debug(1, "createAlias: Faucet $originalName does not exist.");
-			# TODO re-evaluate whether we should really abort now. 
+			# TODO re-evaluate whether we should really abort now.
 			return false;
 		}
-		
+
 		if (!isset($this->aliases[$aliasName]))
 		{
 			$this->core->debug(2, "createAlias: Creating alias $aliasName pointing to $originalName");
@@ -1167,7 +1172,7 @@ class MetaFaucet extends ThroughBasedFaucet
 			$this->core->debug(2, "createAlias: Alias $aliasName is already pointing to {$this->aliases[$aliasName]}");
 		}
 	}
-	
+
 	function deleteAlias($aliasName)
 	{
 		if (!isset($this->aliases[$aliasName]))
@@ -1180,11 +1185,11 @@ class MetaFaucet extends ThroughBasedFaucet
 			unset ($this->aliases[$this->aliasName]);
 		}
 	}
-	
+
 	function createPipe($key)
 	{
 		$this->path=$this->pathColour.$this->getFullPath().$this->defaultColour;
-		
+
 		$parms=$this->core->interpretParms($key, 6, 2);
 		$newRecord=array(
 			'fromFaucet'=>$this->findRealFaucetName($parms[fromFaucet]),
@@ -1192,24 +1197,24 @@ class MetaFaucet extends ThroughBasedFaucet
 			'toFaucet'=>$this->findRealFaucetName($parms[toFaucet]),
 			'toChannel'=>$parms[toChannel],
 			'context'=>$parms[context]);
-			
+
 		$this->core->debug($this->pipeDebugLevel,"createPipe ".$this->path.':'.implode(", ", $newRecord));
-		
+
 		if (!isset($this->faucets[$newRecord['fromFaucet']]) and $newRecord['fromFaucet']!='.')
 		{
 			$this->core->debug(1, "createPipe: fromFaucet {$newRecord['fromFaucet']}(aliased from {$parms[fromFaucet]}) does not exist in $key.");
 			return false;
 		}
-		
+
 		if (!isset($this->faucets[$newRecord['toFaucet']]) and $newRecord['toFaucet']!='.')
 		{
 			$this->core->debug(1, "createPipe: toFaucet {$newRecord['toFaucet']}(aliased from {$parms[toFaucet]}) does not exist in $key.");
 			return false;
 		}
-		
+
 		if ($newRecord['fromChannel']=='') $newRecord['fromChannel']='default';
 		if ($newRecord['toChannel']=='') $newRecord['toChannel']='default';
-		
+
 		if (!isset($this->pipes[$newRecord['fromFaucet']])) $this->pipes[$parms[fromFaucet]]=array();
 		if (!isset($this->pipes[$newRecord['fromFaucet']][$newRecord['fromChannel']])) $this->pipes[$newRecord['fromFaucet']][$newRecord['fromChannel']]=array();
 
@@ -1218,10 +1223,10 @@ class MetaFaucet extends ThroughBasedFaucet
 			# TODO This looks a lot like 2 lines just above. Do these need to be here?
 			if ($newRecord['fromChannel']=='') $newRecord['fromChannel']='default';
 			if ($newRecord['toChannel']=='') $newRecord['toChannel']='default';
-			
+
 			$this->pipes[$newRecord['fromFaucet']][$newRecord['fromChannel']][$key]=$newRecord;
-			
-			
+
+
 			$this->core->debug(2, "createPipe: Created pipe from {$newRecord['fromFaucet']} to {$newRecord['toFaucet']} using key $key.");
 		}
 		else
@@ -1229,7 +1234,7 @@ class MetaFaucet extends ThroughBasedFaucet
 			$this->core->debug(2, "createPipe: Pipe $key already exists.");
 		}
 	}
-	
+
 	function deletePipe($key)
 	{
 		$parms=$this->core->interpretParms($key, 5, 2);
@@ -1239,18 +1244,18 @@ class MetaFaucet extends ThroughBasedFaucet
 			'toFaucet'=>$this->findRealFaucetName($parms[toFaucet]),
 			'toChannel'=>$parms[toChannel],
 			'context'=>$parms[context]);
-		
+
 		if (!$oldRecord['fromChannel']) $oldRecord['fromChannel']='default';
 		if (!$oldRecord['toChannel']) $oldRecord['toChannel']='default';
-		
+
 		if (!isset($this->pipes[$oldRecord['fromFaucet']]))
 		{
 			$this->core->debug(1, "deletePipe: There are no pipes from {$oldRecord['fromFaucet']}");
 			return false;
 		}
-		
+
 		# TODO This needs to be updated for the new structure
-		
+
 		if (!isset($this->pipes[$oldRecord['fromFaucet']][$oldRecord['fromChannel']][$key]))
 		{
 			$this->core->debug(1, "deletePipe: Pipe $key does not exist.");
@@ -1270,12 +1275,12 @@ class MetaFaucet extends ThroughBasedFaucet
 			}
 		}
 	}
-	
+
 	function getPipes()
 	{
 		return $this->pipes;
 	}
-	
+
 	function deliver($dstFaucet, $dstChannel, $input)
 	{
 		if ($dstFaucet!='.')
@@ -1284,17 +1289,17 @@ class MetaFaucet extends ThroughBasedFaucet
 			if (!is_array($input)) $input=array($input);
 		}
 		else $actuallyToFaucet=null;
-		
-		
+
+
 		$this->core->debug(4, "deliver: Delivering ".gettype($input)." to $actuallyToFaucet,$dstChannel.");
-		
+
 		if ($dstFaucet=='.') $this->outFill(array($input), $dstChannel);
 		elseif ($actuallyToFaucet)
 		{
 			$this->faucets[$actuallyToFaucet]['object']->put($input, $dstChannel);
 		}
 	}
-	
+
 	function deliverAll($maximumRevolutions=3)
 	{
 		if (!$maximumRevolutions) $maximumRevolutions=10;
@@ -1302,17 +1307,17 @@ class MetaFaucet extends ThroughBasedFaucet
 		$this->core->debug(4, "deliverAll: About to deliver anything that needs to be delivered..");
 		$returnValue=false;
 		$resultValue=true;
-		
+
 		if (!$this->pipes)
 		{
 			$this->core->debug(1, "deliverAll: No pipes???");
 			return false;
 		}
-		
+
 		for ($revolution=0; $revolution<$maximumRevolutions; $revolution++)
 		{
 			$resultValue=$this->processPipes();
-			
+
 			if ($resultValue)
 			{
 				$returnValue=true;
@@ -1322,21 +1327,21 @@ class MetaFaucet extends ThroughBasedFaucet
 				return $this->core->getResultSet();
 			}
 		}
-		
+
 		return $this->core->getResultSet();
 	}
-	
+
 	function deliverUnitTests($timeoutSeconds)
 	{
 		$startTime=time();
 		$currentTime=$startTime;
 		$registeredTests=$this->core->getCategoryModule('FaucetTestRegistrations');
 		$count=count($registeredTests);
-		
+
 		while ($count>0 and $currentTime-$startTime<$timeoutSeconds)
 		{
 			$resultValue=$this->processPipes();
-			
+
 			$registeredTests=$this->core->getCategoryModule('FaucetTestRegistrations');
 			$count=count($registeredTests);
 			$currentTime=time();
@@ -1362,20 +1367,20 @@ class MetaFaucet extends ThroughBasedFaucet
 			return $series;
 		}
 	}
-	
+
 	private function bendInput($input, $preBentInput=false)
 	{
 		if ($preBentInput) return $preBentInput;
-		
+
 		$bentInput=array();
 		foreach ($input as $key=>$value)
 		{
 			$bentInput[$key]=$this->last($value);
 		}
-		
+
 		return array($bentInput);
 	}
-	
+
 	private function cycleAllSubFaucets()
 	{
 		if (!is_array($this->faucets)) return false;
@@ -1384,12 +1389,12 @@ class MetaFaucet extends ThroughBasedFaucet
 			$faucet['object']->preGet();
 		}
 	}
-	
+
 	private function processPipes()
 	{
 		$this->path=$this->pathColour.$this->getFullPath().$this->defaultColour;
 		# $this->cycleAllSubFaucets();
-		
+
 		$resultValue=true;
 		foreach ($this->pipes as $fromFaucet=>$fromFaucetPipes)
 		{
@@ -1409,11 +1414,11 @@ class MetaFaucet extends ThroughBasedFaucet
 				# TODO move this to cycleAllSubFaucets.
 				if (!$this->faucets[$fromFaucet]['object']->preGet()) continue; // Skip if the faucet has no new data
 			}
-			
+
 			foreach ($fromFaucetPipes as $fromChannel=>$channelPipes)
 			{
 				$bentData=false;
-				
+
 				# Figure out as much of the input now as we can
 				if ($fromFaucet=='.')
 				{
@@ -1465,7 +1470,7 @@ class MetaFaucet extends ThroughBasedFaucet
 					}
 					elseif ($fromChannel=='~*')
 					{
-						
+
 						$input=$this->faucets[$fromFaucetName]['object']->getOutQues();
 						if (count($input))
 						{
@@ -1480,17 +1485,17 @@ class MetaFaucet extends ThroughBasedFaucet
 					{
 						$input=$this->faucets[$fromFaucetName]['object']->get($fromChannel);
 					}
-					
+
 					$this->clearInput();
 				}
-				
-				
+
+
 				if (is_array($input))
 				{
 					if (count($input) and $input!==false)
 					{
 						$isVerboseEnough=$this->core->isVerboseEnough($this->pipeDebugLevel);
-						
+
 						$resultValue=true;
 						foreach ($channelPipes as $key=>$pipe)
 						{
@@ -1500,14 +1505,14 @@ class MetaFaucet extends ThroughBasedFaucet
 								$this->deletePipe($key);
 								continue;
 							}
-							
+
 							if ($isVerboseEnough)
 							{
 								$debugData=json_encode($input);
 								$numberOfItems=count($input);
 								$this->core->debug($this->pipeDebugLevel, "deliverAll $this->path: {$this->contentColour}".gettype($input)."*$numberOfItems {$this->fromColour}$fromFaucetName,$fromChannel {$this->keyColour}--> {$this->toColour}$toFaucetName,{$pipe['toChannel']} {$this->keyColour}context={$this->defaultColour}{$pipe['context']} {$this->keyColour}key={$this->defaultColour}$key. {$this->keyColour}Data={$this->dataColour}$debugData");
 							}
-							
+
 							if ($toFaucetName=='.') $this->outFill($input, $pipe['toChannel']);
 							else $this->faucets[$toFaucetName]['object']->put($input, $pipe['toChannel']);
 						}
@@ -1515,35 +1520,35 @@ class MetaFaucet extends ThroughBasedFaucet
 				}
 			}
 		}
-		
+
 		return $resultValue;
 	}
-	
+
 	function tracePipes($fromFaucet, $fromChannel, $toFaucet, $toChannel, $depthLimit=10)
 	{
 		$output=array();
-		
+
 		$actuallyFrom=$this->findRealFaucetName($fromFaucet);
 		$actuallyTo=$this->findRealFaucetName($toFaucet);
-		
+
 		if (!$toChannel) $toChannel='default';
 		if (!$fromChannel) $fromChannel='default';
 		if (!$depthLimit) $depthLimit=10;
-		
+
 		$this->core->debug(2, "tracePipes: Tracing pipes from $fromFaucet,$fromChannel to $toFaucet,$toChannel");
-		
+
 		$this->doTraceFaucets($output, array(), $actuallyFrom, $fromChannel, $actuallyTo, $toChannel, 'begin point', $depthLimit-1);
-		
+
 		return $output;
 	}
-	
+
 	function doTraceFaucets(&$output, $progress, $fromFaucet, $fromChannel, $toFaucet, $toChannel, $key, $depthLimit)
 	{
 		// This is a recursive function intended to be used by traceFaucets
-		
+
 		$actuallyFrom=$this->findRealFaucetName($fromFaucet);
 		$actuallyTo=$this->findRealFaucetName($toFaucet);
-		
+
 		if ($depthLimit < 1)
 		{
 			$this->core->debug(2, "doTraceFaucets: depthLimit($depthLimit) has fallen below 1. Trace will go no further.");
@@ -1553,13 +1558,13 @@ class MetaFaucet extends ThroughBasedFaucet
 		{
 			$this->core->debug(2, "doTraceFaucets: depthLimit($depthLimit) is still not below 1. Trace will continue.");
 		}
-		
+
 		if (!isset($this->pipes[$actuallyFrom])) //[$fromChannel]
 		{
 			$this->core->debug(2, "doTraceFaucets: No more pipes for this route ($actuallyFrom,$fromChannel to $actuallyTo,$toChannel). Ended at $actuallyFrom,$fromChannel of \"$key\"");
 			return false;
 		}
-		
+
 		foreach ($this->pipes[$actuallyFrom] as $fromChannel=>$channelPipes)
 		{
 			foreach ($this->pipes[$actuallyFrom][$fromChannel] as $newKey=>$pipe)
@@ -1570,7 +1575,7 @@ class MetaFaucet extends ThroughBasedFaucet
 					$this->core->debug(2, "doTraceFaucets: found pipe $newKey");
 					$progressContinued=$progress;
 					$progressContinued[]=$pipe;
-					
+
 					$output[]=$progressContinued;
 				}
 				else
@@ -1583,7 +1588,7 @@ class MetaFaucet extends ThroughBasedFaucet
 			}
 		}
 	}
-	
+
 	function bindConfigItem($faucetName, $settingName, $subcategory, $asSettingName, $asSubcategory)
 	{
 		if ($faucet=$this->getFaucet($faucetName))
@@ -1602,7 +1607,7 @@ class MetaFaucet extends ThroughBasedFaucet
 					'asSubcategory'=>$asSubcategory,
 					'description'=>$configDetails['description'],
 					'type'=>$configDetails['type']);
-				
+
 				$this->registerConfigItem($settingName, $subcategory, $configDetails['description'], $configDetails['type']);
 				$this->setConfigItemReference($settingName, $subcategory, $faucet['object']->getConfigItemByReferece($settingName, $subcategory));
 			}
@@ -1616,15 +1621,15 @@ class MetaFaucet extends ThroughBasedFaucet
 			$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": faucet $faucetName does not exist.");
 		}
 	}
-	
+
 	/*
 	# TODO Write this
 	function unBindConfigItem($asSettingName, $asSubcategory)
 	{
 	}
 	*/
-	
-	
+
+
 	function getFaucetCatalogTemplate($faucetName, $source, $type)
 	{
 		$entry=array(
@@ -1636,17 +1641,17 @@ class MetaFaucet extends ThroughBasedFaucet
 			'configBindings'=>array(),
 			'config'=>array(),
 		);
-		
+
 		return $entry;
 	}
-	
+
 	function getUniqueConfig($config, $bindings)
 	{
 		$output=array();
 		foreach ($config as $categoryKey=>$category)
 		{
 			if (!is_array($category)) continue;
-			
+
 			foreach ($category as $subcategoryKey=>$subcategory)
 			{
 				if (!isset($bindings["$categoryKey-$subcategoryKey"]))
@@ -1657,10 +1662,10 @@ class MetaFaucet extends ThroughBasedFaucet
 				}
 			}
 		}
-		
+
 		return $output;
 	}
-	
+
 	function generateFaucetCatalogEntry($name)
 	{
 		if (!$name) $obj=&$this;
@@ -1670,24 +1675,24 @@ class MetaFaucet extends ThroughBasedFaucet
 			$this->debug(1, __CLASS__.'->'.__FUNCTION__.": Did not recieve a faucet named $name within metaFaucet \"".$this->myName."\"");
 			return false;
 		}
-		
+
 		$name=$obj->myName;
 		$package=$obj->getConfigItem('package', '');
 		$description=$obj->getConfigItem('description', '');
-		
+
 		$entry=$this->getFaucetCatalogTemplate($name, 'unknown', 'generated');
-		
+
 		$entry['faucets']=$obj->getFaucets();
 		$entry['pipes']=$obj->getPipes();
 		$entry['configBindings']=$this->bindings;
 		#$entry['config']=$this->getUniqueConfig($this->getConfig(), $entry['configBindings']);
 		$entry['config']=$this->getConfig();
-		
+
 		foreach ($entry['faucets'] as &$faucet)
 		{
 			$faucet['config']=$faucet['object']->getConfig();
 		}
-		
+
 		/*
 			#'faucetName'=>$faucetName,
 			#'pacakge'=>$package,
@@ -1699,7 +1704,7 @@ class MetaFaucet extends ThroughBasedFaucet
 			#'configBindings'=>array(),
 			#'config'=>array(),
 		*/
-		
+
 		return $entry;
 	}
 }
@@ -1721,5 +1726,5 @@ function captureBreak()
 $core=core::assert();
 $achelF=new Faucets();
 $core->registerModule($achelF);
- 
+
 ?>
