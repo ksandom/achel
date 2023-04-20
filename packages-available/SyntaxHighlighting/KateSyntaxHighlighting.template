@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE language SYSTEM "language.dtd">
-<language name="Achel" version="1" kateversion="5" section="Scripts" extensions="*.achel" casesensitive="1" author="Kevin Sandom" license="GPL">
+<language name="Achel" version="1" kateversion="5.104.0" section="Scripts" extensions="*.achel" casesensitive="1" author="Kevin Sandom" license="GPL">
 	<highlighting>
 		<list name="prep">
 			<item> onDefine </item>
@@ -16,29 +16,29 @@
 				<Detect2Chars attribute="Decorator" char="~" char1="!" context="Variable"/>
 				<keyword attribute="Builtin Function" String="builtinfuncs" context="#stay"/>
 			</context>
-			
+
 			<context name="Hash comment" lineEndContext="#pop" attribute="Comment">
 				<DetectChar attribute="Operator" char="~" context="Tags"/>
 				<keyword attribute="Preprocessor" String="prep" context="#pop" />
 				<keyword attribute="Builtin Function" String="builtinfuncs" context="#stay" />
 			</context>
-			
+
 			<context name="Hash command" lineEndContext="#pop" attribute="Builtin Function">
 				<keyword attribute="Builtin Function" String="builtinfuncs" context="#stay" />
 				<LineContinue context="#pop#pop" />
 			</context>
-			
+
 			<context name="Valid comment" attribute="Comment" lineEndContext="#pop">
 				<DetectChar attribute="Tags" char="~" context="#stay" />
 			</context>
-			
+
 			<context name="Variable" attribute="String" lineEndContext="#pop">
 				<Detect2Chars attribute="Decorator" char="!" char1="~" context="#pop" />
 				<Detect2Chars attribute="Decorator" char="~" char1="!" context="Variable" />
 				<DetectChar attribute="Operator" char="," />
 				<LineContinue context="#pop" />
 			</context>
-			
+
 			<context name="Tags" attribute="Tag" lineEndContext="#pop">
 				<LineContinue attribute="Tag" context="#stay" />
 				<DetectChar attribute="Operator" char="," />
