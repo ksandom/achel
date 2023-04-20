@@ -3,5 +3,5 @@
 set Local,indented,
     passTest Got to space indented code.
 
-~Local,indented~
+callFeatureNoReturn ~Local,indented~
 
