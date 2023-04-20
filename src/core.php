@@ -40,7 +40,7 @@ define ('noConfigIsFatal', false); // Refuse to work if the config directory is 
 		1 Important
 		2 Warning
 		3 Good to know
-		4 
+		4
 		5 Mother in law
 */
 
@@ -52,32 +52,32 @@ class core extends Module
 	private $verbosity=0;
 	private $initMap=array();
 	private $lastMessage=array('value'=>'', 'count'=>0);
-	
+
 	function __construct($verbosity=0)
 	{
 		$this->store=array();
 		$this->module=array();
-		
+
 		$this->setRef('Core', 'modules', $this->module);
-		
+
 		$this->verbosity=$verbosity;
 		$this->set('Verbosity', 'level', $verbosity);
-		
+
 		# This is for setting default default result set so that functions definitely get the data type they are expecting.
 		#$defaultResultSet=array();
 		#$this->setResultSet($defaultResultSet, 'start up');
-		
+
 		parent::__construct('Core');
 		$this->set('Core', 'serial', intval(rand()));
 		$this->set('Core', 'categoryMarker', categoryMarker);
 		$this->registerModule($this);
 	}
-	
+
 	public function dumpState()
 	{
 		return array('Store'=>$this->store, 'Module'=>$this->module);
 	}
-	
+
 	function event($event)
 	{
 		switch ($event)
@@ -106,17 +106,17 @@ class core extends Module
 				$this->registerFeature($this, array('stashResults'), 'stashResults', 'Put the current result set into a memory slot. --stashResults=category'.valueSeparator.'variableName');
 				$this->registerFeature($this, array('retrieveResults'), 'retrieveResults', 'Retrieve a result set that has been stored. This will replace the current result set with the retrieved one --retrieveResults=category'.valueSeparator.'variableName');
 				$this->registerFeature($this, array('getPID'), 'getPID', 'Save the process ID to a variable. --getPID=category'.valueSeparator.'variableName');
-				
+
 				$this->registerFeature($this, array('setJson'), 'setJson', 'Take a json encoded array from jsonValue and store the arrary in category'.valueSeparator.'variableName. --setJson=category'.valueSeparator.'variableName'.valueSeparator.'jsonValue');
 				$this->registerFeature($this, array('outNow'), 'outNow', 'Execute the output now.', array('dev'));
-				
+
 				$this->registerFeature($this, array('callFeature', 'callFeatureReturn'), 'callFeatureReturn', "Call a feature. This essentially allows you to execute what ever is in a variable. Take a lot of care to make sure your variables contain what you think they do as you could introduce a lot of pain here. --callFeature=feature[,parm1[,parm2..etc]]", array('dangerous'));
 				$this->registerFeature($this, array('callFeatureNoReturn', 'isolate'), 'callFeatureNoReturn', "Call a feature but don't return the results. There's two main uses for this. 1) Call something that would normally interfere with the result set. 2) Execute what ever is in a variable without affecting what is in the resultSet. Take a lot of care to make sure your variables contain what you think they do as you could introduce a lot of pain here. This can also be used to isolate a feature so that it doesn't affect the following feature calls. --callFeatureNoReturn=feature[,parm1[,parm2..etc]]", array('dangerous'));
-				
-				
+
+
 				$this->registerFeature($this, array('getFileList'), 'getFileList', "Get a simple list of items in a given directory. --getFileList=fullDirectoryPath .", array('filesystem'));
 				$this->registerFeature($this, array('getFileTree'), 'getFileTree', "Get a direcotry tree of items in a given directory. --getFileTree=fullDirectoryPath,[withAttributes] . withAttributes can be true or false (default).", array('filesystem'));
-				
+
 				$this->registerFeature($this, array('dump'), 'dump', 'Dump internal state.', array('debug', 'dev'));
 				$this->registerFeature($this, array('debug'), 'debug', 'Send parameters to stdout. --debug=debugLevel,outputText eg --debug=0,StuffToWriteOut . DebugLevel is not implemented yet, but 0 will be "always", and above that will only show as the verbosity level is incremented with -v or --verbose.', array('debug', 'dev'));
 				$this->registerFeature($this, array('verbose', 'v', 'verbosity'), 'verbose', 'Increment/set the verbosity. --verbose[=verbosityLevel] where verbosityLevel is an integer starting from 0 (default)', array('debug', 'dev'));
@@ -136,7 +136,7 @@ class core extends Module
 			#	$parms=$this->interpretParms($this->get('Global', 'get'));
 			#	return $this->get($parms[0], $parms[1]);
 			#	break;
-			
+
 			# TODO Oops! Somehow I missed this. It should use already existing functionality.
 			#case 'registerTags':
 			#	break;
@@ -295,15 +295,15 @@ class core extends Module
 		if (!self::$singleton) self::$singleton=new core($verbosity);
 		return self::$singleton;
 	}
-	
+
 	function separateStringAppendedToJson($input)
 	{
 		$firstChar=substr($input, 0, 1);
 		$lastChar=substr($input, -1, 1);
-		
+
 		if (($firstChar=='[' or $firstChar=='{') and ($lastChar==']') or $lastChar=='}')
 		{ # There is no extra string. Just return the json as is
-			
+
 			return array('firstPart'=>$input, 'lastPart'=>null);
 		}
 		else
@@ -311,7 +311,7 @@ class core extends Module
 			# Find where the split is
 			if ($firstChar=='[') $searchFor='],';
 			elseIf ($firstChar=='{') $searchFor='},';
-			
+
 			$lastFoundPos=0;
 			$tmpFound=0;
 			while ($tmpFound!==false)
@@ -319,20 +319,20 @@ class core extends Module
 				$tmpFound=strpos($input, $searchFor, $lastFoundPos+1);
 				if ($tmpFound) $lastFoundPos=$tmpFound;
 			}
-			
+
 			# Split it
 			$lastFoundPos++;
 			$firstPart=substr($input, 0, $lastFoundPos);
 			$lastPart=substr($input, $lastFoundPos+1, strlen($input)-strlen($lastFoundPos)-1);
-			
+
 			return array('firstPart'=>$firstPart, 'lastPart'=>$lastPart);
 		}
 	}
-	
+
 	function interpretParms($parms, $limit=0, $require=null, $reassemble=true)
 	{
 		if (is_array($parms)) return $parms;
-		
+
 		if (strlen($parms)<1)
 		{ // No parms$require
 			# TODO Potentially some detection could happen here to allow atomic failure.
@@ -341,21 +341,28 @@ class core extends Module
 		}
 		else
 		{
-			
-			
+
+
 			$firstChar=substr($parms, 0, 1);
 			if ($firstChar=='[' or $firstChar=='{')
 			{ // Json
 				$mixedParts=$this->separateStringAppendedToJson($parms);
 				$parts=json_decode($mixedParts['firstPart'], 1);
-				if (!count($parts))
+				if (is_null($parts))
 				{
-					$this->debug(0, "interpretParms: Got 0 parts back from json \"${mixedParts['firstPart']}\" originalInput=$parms which usually means invalid json.");
-					
+					$this->debug(0, "interpretParms: Got null back from json \"${mixedParts['firstPart']}\" originalInput=$parms which usually means invalid json.");
+
 					# TODO Do we want to do some other clean up here.
 					$parts=array(); // Prevent stuff from breaking since they always expect an array.
 				}
-				
+				if (!count($parts))
+				{
+					$this->debug(0, "interpretParms: Got 0 parts back from json \"${mixedParts['firstPart']}\" originalInput=$parms which usually means invalid json.");
+
+					# TODO Do we want to do some other clean up here.
+					$parts=array(); // Prevent stuff from breaking since they always expect an array.
+				}
+
 				if ($mixedParts['lastPart']!='') $parts[]=$mixedParts['lastPart'];
 			}
 			else
@@ -363,22 +370,22 @@ class core extends Module
 				$parts=explode(valueSeparator, $parms);
 			}
 		}
-		
+
 		#if ($require===null) $require=$limit;
-		
+
 		$partsCount=count($parts);
-		
+
 		if ($partsCount<$limit)
 		{
 			if ($partsCount<$require) $this->debug(0, "Expected $require parameters, but got $partsCount. Bad things could happen if execution had been allowed to continue. Parms=$parms");
-			
+
 			$output=$parts;
 			while (count($output)< $limit) $output[]='';
 			return $output;
 		}
-		
+
 		for ($i=$partsCount;$i<$limit;$i++) $parts[$i]=false;
-		
+
 		if ($limit)
 		{
 			# Return the split array, but once we reach the limit, dump any remaining parms into one remaining parm
@@ -392,54 +399,54 @@ class core extends Module
 				}
 				else break;
 			}
-			
+
 			$outputParts=array();
 			$stop=count($parts);
-			
+
 			for ($j=$i;$j<$stop;$j++)
 			{
 				if (is_array($parts[$j])) $outputParts[]=json_encode($parts[$j]);
 				else $outputParts[]=$parts[$j];
 				# $this->core->debug(2, "interpretParms: Added remaining part $j => {$parts[$j]}");
 			}
-			
+
 			# Reassemble=true sets a string. False sets an array.
 			if ($reassemble) $output[]=implode(valueSeparator, $outputParts);
 			else $output[]=$outputParts;
-			
+
 			while (count($output)< $limit)
 			{
 				$this->debug(0, "add one");
 				$output[]='';
 			}
-			
+
 			return $output;
 		}
 		else return $parts;
 	}
-	
+
 	function loadCache($path)
 	{
 		$fileList=$this->getFileList($path);
-		
+
 		foreach ($fileList as $fileName=>$filePath)
 		{
 			$nameParts=explode('.', $fileName);
 			$categoryName=$nameParts[0];
 			$cacheContents=json_decode(file_get_contents($filePath), 1);
 			$this->setCategoryModule($categoryName, $cacheContents);
-			
+
 			$cacheSize=count($cacheContents);
 			$this->setRef('CacheStats', $categoryName, $cacheSize);
 			$this->debug(4,"Loaded cache \"$categoryName\" ($cacheSize)");
-			
+
 			if ("$fileName" == 'Features.cache.json')
 			{
 				$this->set('General', 'complainAboutDuplicateMacros', false);
 			}
 		}
 	}
-	
+
 	function getFileList($path)
 	{
 		$index=md5($path);
@@ -448,7 +455,7 @@ class core extends Module
 		{
 			$contents=array();
 		}
-		
+
 		if (count($contents)<1)
 		{
 			$listCache=array_keys($this->getCategoryModule('FileListCache'));
@@ -462,10 +469,10 @@ class core extends Module
 		{
 			$this->set('CacheStats', 'FileListHits', $this->get('CacheStats', 'FileListHitsHits')+1);
 		}
-		
+
 		return $contents;
 	}
-	
+
 	function doGetFileList($path)
 	{
 		# TODO This can be done much better internally in PHP
@@ -491,13 +498,13 @@ class core extends Module
 		}
 		return $output;
 	}
-	
+
 	function getFileList2($path, $withAttributes=false)
 	{
 		@$result=scandir($path, SCANDIR_SORT_ASCENDING);
-		
+
 		$prePendPath=($path=='/')?'/':$path.'/';
-		
+
 		if ($result)
 		{
 			$output=array();
@@ -508,17 +515,17 @@ class core extends Module
 					$output[$file]=$prePendPath.$file;
 				}
 			}
-			
+
 			return $output;
 		}
 		else return array();
 	}
-	
+
 	function getFileTree($path, $withAttributes=false)
 	{
 		$entries=$this->getFileList($path);
 		if (!$entries) return false;
-		
+
 		foreach ($entries as $filename=>&$entry)
 		{
 			if (!is_file($entry))
@@ -548,20 +555,20 @@ class core extends Module
 				}
 			}
 		}
-		
+
 		return $entries;
 	}
-	
+
 	function getModules($path)
 	{ // get all the module paths from a path
 		return $this->getFileList($path);
 	}
-	
+
 	function setResultSetNoRef($value, $src='unknown')
 	{
 		$this->setResultSet($value, 'setResultSetNoRef: '.$src);
 	}
-	
+
 	function setResultSet(&$value, $src='unknown')
 	{
 		$valueText=(is_string($value))?$value:'Type='.gettype($value);
@@ -579,13 +586,13 @@ class core extends Module
 					# return false;
 				}
 			}
-			
+
 			$nesting=$this->get('Core', 'nesting');
 			if ($this->isVerboseEnough(5))
 			{
 				$arrayString=($numberOfEntries==1)?json_encode($value):'NA';
 				$this->debug(5, "setResultSet(value=$valueText($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET json=$arrayString");
-				if ($this->isVerboseEnough(6)) 
+				if ($this->isVerboseEnough(6))
 				{
 					print_r($value);
 					$this->debug(6, "setResultSet(value=$value($numberOfEntries), src=$src)/$nesting - exiting from var dump.");
@@ -594,12 +601,12 @@ class core extends Module
 			}
 			#$this->setNestedViaPath(array('Core', 'resultSet', $nesting), $value);
 			$this->set('Core', 'shared'.$nesting, $value);
-			
+
 			return true;
 		}
 		else return false;
 	}
-	
+
 	function &getResultSet()
 	{
 		$nesting=$this->get('Core', 'nesting');
@@ -614,7 +621,7 @@ class core extends Module
 		# return $resultSet;
 		return $this->get('Core', 'shared'.$nesting);
 	}
-	
+
 	function &getParentResultSet()
 	{
 		$nesting=$this->get('Core', 'nesting');
@@ -622,7 +629,7 @@ class core extends Module
 		if ($nestingSrc<1 or !is_numeric($nestingSrc)) $nestingSrc = 1; # TODO check this
 		#$resultSet=$this->getNested(array('Core', 'resultSet', $nesting));
 		$resultSet=&$this->get('Core', 'shared'.$nestingSrc);
-		
+
 		if ($this->isVerboseEnough(5))
 		{
 			$serial=$this->get('Core', 'serial');
@@ -631,29 +638,29 @@ class core extends Module
 		}
 		return $resultSet;
 	}
-	
+
 	function makeParentShareMemoryCurrent()
 	{
 		$this->debug(5, "makeParentShareMemoryCurrent/");
 		$this->setResultSet($this->getParentResultSet());
 	}
-	
+
 	function callFeatureWithDataset($argument, $value, $dataset)
 	{
 		// Increment nesting
 		$this->incrementNesting();
-		
+
 		// set resultSet to dataset
 		$this->setResultSet($dataset);
-		
+
 		// call feature
 		$output=$this->callFeature($argument, $value);
-		
+
 		// Decrement nesting (WITHOUT pulling the resultSet)
 		$this->decrementNesting();
 		return $output;
 	}
-	
+
 	private function setStackEntry($nesting, $argument, $value)
 	{
 		$this->setNestedViaPath(array("Core", "stack", $nesting), array(
@@ -662,44 +669,44 @@ class core extends Module
 			'nesting'=>$nesting
 			));
 	}
-	
+
 	private function unsetStackEntry($nesting)
 	{
 		$this->doUnset(array("Core", "stack", $nesting));
 	}
-	
+
 	function callFeature($argument, $value='')
 	{
 		$nesting=$this->get('Core', 'nesting');
-		
+
 		if (is_string($argument) and $argument and $argument != '#' and $argument != '//')
 		{ // Only process non-white space
 			$obj=&$this->core->get('Features', $argument);
-			
+
 			if (!is_array($obj))
 			{
 				if (!$this->assertAvailableMacro($argument, 'callFeature')) return false;
 				$obj=&$this->core->get('Features', $argument);
 			}
-			
+
 			# NOTE This has been done this way for performance. However it may be worth abstracting it out into setNestedViaPath.
 			$this->store[isolatedNestedPrivateVarsName][$nesting]['featureName']=$argument;
-			
+
 			$indentation=str_repeat('  ', $nesting);
 			$valueIn=$this->processValue($value);
-			
+
 			$this->debug(4, "INVOKE-Enter {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn");
-			
+
 			$this->setStackEntry($nesting, $argument, $valueIn);
-			
+
 			if ($this->isVerboseEnough(5))
 			{
 				$this->debugResultSet($obj['name']);
 			}
-			
+
 			$numberOfArgs=$this->makeArgsAvailableToTheScript($obj['name'], $valueIn);
 			$result=$this->module[$obj['provider']]->event($obj['name']);
-			
+
 			if (isset($obj['featureType']))
 			{
 				$this->core->debug(4, "callFeature: ".$obj['featureType']);
@@ -718,14 +725,14 @@ class core extends Module
 				}
 				else $this->core->debug(4, "callFeature: Could not find featureType ".$obj['featureType']);
 			}
-			
+
 			if (cleanupArgs)
 			{
 				$this->removeArgs($obj['name'], $numberOfArgs);
 			}
-			
+
 			$this->unsetStackEntry($nesting);
-			
+
 			if ($this->isVerboseEnough(4))
 			{
 				$resultCount=count($result);
@@ -739,7 +746,7 @@ class core extends Module
 		else $this->debug(3,"Core->callFeature: Non executable code \"$argument\" sent. We shouldn't have got this.");
 		return false;
 	}
-	
+
 	function parameters($args)
 	{
 		if ($this->isVerboseEnough(4))
@@ -752,7 +759,7 @@ class core extends Module
 		$categoryForKnowledge=isolatedNestedPrivateVarsName;
 		if ($categoryForParameters=='Local') $scopeKey=$this->getScopeForCategory($categoryForParameters);
 		else $scopeKey=$this->getScopeForCategory($categoryForParameters, 1);
-		
+
 		$nesting=$this->get('Core', 'nesting');
 		if (isset($this->store[$categoryForKnowledge][$nesting-1]['featureName']))
 		{
@@ -764,14 +771,14 @@ class core extends Module
 			$this->debug(1, "parameters: Could not find lastMacro. This likely happened because the parameters command was called nested in some code. It should be called just under the comments section of the macro.");
 			return false;
 		}
-		
+
 		$argsToUse=(is_array($args))?$args:array($args);
 		if (!isset($this->store[$categoryForParameters][$scopeKey])) $this->store[$categoryForParameters][$scopeKey]=array();
 		if (!is_array($this->store[$categoryForParameters][$scopeKey])) $this->store[$categoryForParameters][$scopeKey]=array();
-		
+
 		if (!isset($this->store[$categoryForFeedBack][$scopeKey])) $this->store[$categoryForFeedBack][$scopeKey]=array();
 		if (!is_array($this->store[$categoryForFeedBack][$scopeKey])) $this->store[$categoryForFeedBack][$scopeKey]=array();
-		
+
 		$this->store[$categoryForFeedBack][$scopeKey]['pass']=achelTrue;
 		$argKeys=array_keys($args);
 		foreach ($argKeys as $position => $details)
@@ -788,11 +795,11 @@ class core extends Module
 					$key=$details;
 					$value=$this->core->get('Global',"$lastMacro-$position");
 				}
-				
+
 				$variableResult=$this->processVariableDefinition($details, $value, $args[$details]);
 				$this->store[$categoryForParameters][$scopeKey][$key]=$variableResult['value'];
 				if (!$variableResult['pass']) $this->store[$categoryForFeedBack][$scopeKey]['pass']=achelFalse;
-				
+
 				if ($variableResult['pass'])
 				{
 					$this->core->debug(3, "parameters: Parameter \"$key\" set to \"{$variableResult['value']}\"");
@@ -811,7 +818,7 @@ class core extends Module
 					# TODO This was false. Double check this change hasn't broken any assumptions.
 					$default=$value;
 					$this->debug(4,"parameters: Simple numeric. [$categoryForParameters][$scopeKey][$key] value=$value    key=$key nesting=$nesting globalKey=$lastMacro-$details");
-					
+
 					# print_r($this->core->getCategoryModule('Global'));
 				}
 				else
@@ -826,12 +833,12 @@ class core extends Module
 			}
 		}
 	}
-	
+
 	function processVariableDefinition($key, $value, $args)
 	{
 		$pass=true;
 		$message='';
-		
+
 		if (!isset($args['type'])) $args['type']='string';
 		switch ($args['type'])
 		{
@@ -844,20 +851,20 @@ class core extends Module
 					$pass=false;
 					$message="Length ($length) greater than allowed ($maxLengthAllowed).";
 				}
-				
+
 				$minLengthAllowed=(isset($args['minLengthAllowed']))?$args['minLengthAllowed']:false;
 				if ($minLengthAllowed and $length<$minLengthAllowed)
 				{
 					$pass=false;
 					$message="Length ($length) less than allowed ($minLengthAllowed).";
 				}
-				
+
 				if (!$length and isset($args['default'])) $value=$args['default'];
-				
+
 				// Manipulations
 				$maxLength=(isset($args['maxLength']))?$args['maxLength']:false;
 				if ($maxLength and $length>$maxLength) $value=substr($value, 0, $maxLength);
-				
+
 				$minLength=(isset($args['minLength']))?$args['minLength']:false;
 				if ($minLength and $length<$minLength)
 				{
@@ -876,18 +883,18 @@ class core extends Module
 						$pass=false;
 						$message="Value ($value) greater than allowed ($maxAllowed).";
 					}
-					
+
 					$minAllowed=(isset($args['minAllowed']))?$args['minAllowed']:false;
 					if ($minAllowed and $value<$minAllowed)
 					{
 						$pass=false;
 						$message="Value ($value) less than allowed ($minAllowed).";
 					}
-					
+
 					// Manipulations
 					$max=(isset($args['max']))?$args['max']:false;
 					if (($max !== false) and $value>$max) $value=$max;
-					
+
 					$min=(isset($args['min']))?$args['min']:false;
 					if (($min !== false) and $value<$min) $value=$min;
 				}
@@ -907,15 +914,15 @@ class core extends Module
 				$this->debug(1,"processVariableDefinition: Unknown type \"{$args['type']}\" in definition for \"$key\".");
 				break;
 		}
-		
+
 		return array('value'=>$value, 'pass'=>$pass, 'message'=>$message);
 	}
-	
+
 	function durableGet($key, $array)
 	{
 		return (isset($array[$key]))?$array[$key]:false;
 	}
-	
+
 	function makeArgsAvailableToTheScript($featureName, $args)
 	{
 		$this->set('Global', $featureName, $args);
@@ -924,10 +931,10 @@ class core extends Module
 		{
 			$this->set('Global', "$featureName-$key", $arg);
 		}
-		
+
 		return count($argParts);
 	}
-	
+
 	function removeArgs($featureName, $numberOfArgs)
 	{
 		for ($key=0; $key<$numberOfArgs; $key++)
@@ -935,33 +942,33 @@ class core extends Module
 			$this->doUnset(array('Global', "$featureName-$key"));
 		}
 	}
-	
+
 	function splitOnceOn($needle, $haystack)
 	{
 		if ($pos=strpos($haystack, $needle))
 		{
 			$first=substr($haystack, 0, $pos);
 			$remaining=substr($haystack, $pos+strlen($needle));
-			
+
 			return array($first, $remaining);
 		}
 		else return array($haystack, '');
 
 	}
-	
+
 	private function findAndProcessVariables($input, &$iterations=0)
 	{
 		$debugLevel=5;
 		$output=$input;
-		
+
 		$this->core->debug($debugLevel, "findAndProcessVariables: Enter \"$output\"");
-		
+
 		while (strpos($output, storeValueBegin)!==false and $iterations<100)
 		{
 			$startPos=strpos($output, storeValueBegin)+2;
 			$nextStartPos=strpos($output, storeValueBegin, $startPos)+2;
 			$endPos=strpos($output, storeValueEnd, $startPos);
-			
+
 			if ($startPos>$endPos)
 			{
 				$oldStartPos=$startPos;
@@ -977,17 +984,17 @@ class core extends Module
 					$this->core->debug($debugLevel, "findAndProcessVariables: start=$startPos next=$nextStartPos end=$endPos Exended endPos (A)");
 				}
 			}
-			
+
 			$this->core->debug($debugLevel, "findAndProcessVariables: start=$startPos next=$nextStartPos end=$endPos Initial find from $output. ".storeValueBegin.' -> '.storeValueEnd);
-			
-			
+
+
 			# This allows us to have nested variables.
 			while ($nextStartPos<$endPos and $nextStartPos>$startPos)
 			{
 				$lastStart=$startPos;
 				$startPos=strpos($output, storeValueBegin, $startPos)+2;
 				$nextStartPos=strpos($output, storeValueBegin, $startPos)+2;
-				
+
 				# if ($startPos>$endPos) $startPos=$lastStart;
 				if ($startPos>$endPos)
 				{
@@ -997,13 +1004,13 @@ class core extends Module
 				# $this->core->debug(0, "Progressing $startPos $nextStartPos $endPos $output");
 				$this->core->debug($debugLevel, "findAndProcessVariables: start=$startPos next=$nextStartPos end=$endPos Progressing using $output");
 			}
-			
+
 			$length=$endPos-$startPos;
-			
+
 			$varDef=substr($output, $startPos, $length);
 			$varParts=explode(',', $varDef);
 			$this->core->debug($debugLevel, "findAndProcessVariables: start=$startPos next=$nextStartPos end=$endPos Trying to lookup $varDef from $output");
-			
+
 			if (isset($varParts[1]))
 			{
 				if (count($varParts)==2)
@@ -1014,7 +1021,7 @@ class core extends Module
 					$varValue=$this->get($varParts[0], $varParts[1], false, 0);
 				}
 				else $varValue=$this->getNested($varParts);
-				
+
 				if (is_array($varValue))
 				{
 					$this->core->debug($debugLevel, "findAndProcessVariables: start=$startPos next=$nextStartPos end=$endPos Got array");
@@ -1023,9 +1030,9 @@ class core extends Module
 				{
 					$this->core->debug($debugLevel, "findAndProcessVariables: start=$startPos next=$nextStartPos end=$endPos Got $varValue");
 				}
-				
+
 				if (!is_array($varValue)) $output=implode($varValue, explode(storeValueBegin.$varDef.storeValueEnd, $output));
-				else 
+				else
 				{
 					if (count($varValue))
 					{
@@ -1039,45 +1046,45 @@ class core extends Module
 			{
 				$this->core->debug(0, "findAndProcessVariables: Probable syntax error in ".storeValueBegin."$varDef".storeValueEnd." . It should have had an extra value. Perhaps like this: ".storeValueBegin."Thing,{$varParts[0]}".storeValueEnd."");
 			}
-			
+
 			$iterations++;
 		}
-		
+
 		if ($iterations==100)
 		{
 			$this->debug(1, "Still finding \"".storeValueBegin."\" in \"".$output."\"");
 		}
-		
+
 		$this->core->debug($debugLevel, "findAndProcessVariables: Return \"$output\"");
-		
+
 		return $output;
 	}
-	
+
 	function processValue($value)
 	{ // Substitute in an variables
 		$output=$value;
-		
+
 		$iterations=0;
-		
+
 		$output=$this->findAndProcessVariables($output, $iterations);
-		
+
 		# This is the first go at escaping
 		foreach (array(
-			'~\!'=>'~!', 
-			'!\~'=>'!~', 
-			'~\%'=>'~%', 
+			'~\!'=>'~!',
+			'!\~'=>'!~',
+			'~\%'=>'~%',
 			'%\~'=>'%~') as $from=>$to)
 		{
 			$output=implode($to, explode($from, $output));
 		}
-		
+
 		$output=$this->findAndProcessVariables($output, $iterations);
-		
+
 		if ($iterations>20) $this->debug(0, "processValue: $iterations reached while processing variables in \"$value\". The result achieved is \"$output\". This is probably a big."); # NOTE 10 is very strict, yet unlikely to be reached in any legitimate situation I can think of at the moment. The warning limit may need to be reconsidered in the future.
-		
+
 		return $output;
 	}
-	
+
 	function assertAvailableMacro($macroName, $context, $lineNumber=false)
 	{
 		if ($macroPath=$this->get('MacroListCache', $macroName))
@@ -1100,46 +1107,46 @@ class core extends Module
 		{
 			$macroDetails=($lineNumber)?"$macroName:$lineNumber":"$macroName";
 			$this->complain(null, "Could not find a module to match '$macroName' in $macroDetails", $context.'/assertAvailableMacro');
-			
+
 			return false;
 		}
 	}
-	
+
 	function addAction($argument, $value=null, $macroName='default', $lineNumber=false)
 	{
 		$this->debug(4, "addAction: Adding $argument,$value to $macroName");
-		
+
 		if (!$argument) return false;
-		
+
 		if (!isset($this->store['Macros'])) $this->store['Macros']=array();
 		if (!isset($this->store['Macros'][$macroName])) $this->store['Macros'][$macroName]=array();
-		
+
 		$obj=&$this->core->get('Features', $argument);
 		if (!is_array($obj))
 		{
 			if (!$this->assertAvailableMacro($argument, 'addAction', $lineNumber)) return false;
 			$obj=&$this->core->get('Features', $argument);
-			
+
 			if (!is_array($obj))
 			{
 				$this->complain($this, "Failed to assert macro $argument.", 'addAction');
 				return false;
 			}
 		}
-		
+
 		// Add the the action to the macro.
 		$this->store['Macros'][$macroName][]=array(
-			'obj'=>&$obj, 
-			'name'=>$obj['name'], 
-			'value'=>$value, 
+			'obj'=>&$obj,
+			'name'=>$obj['name'],
+			'value'=>$value,
 			'lineNumber'=>$lineNumber);
-		
+
 		// Stats.
 		if (!isset($this->store['Features'][$argument]['referenced'])) $this->store['Features'][$argument]['referenced']=0;
 		$this->store['Features'][$argument]['referenced']++;
 
 	}
-	
+
 	function getRealFeatureName($featureName)
 	{
 		$feature=$this->core->get('Features', $featureName);
@@ -1148,10 +1155,10 @@ class core extends Module
 			$this->assertAvailableMacro($featureName, 'getRealFeatureName');
 			$feature=$this->core->get('Features', $featureName);
 		}
-		
+
 		return $feature['name'];
 	}
-	
+
 	function debugResultSet($label='undefined')
 	{
 		if ($this->isVerboseEnough(4))
@@ -1165,7 +1172,7 @@ class core extends Module
 			}
 		}
 	}
-	
+
 	function debug($verbosityLevel, $output)
 	{
 		if ($this->isVerboseEnough($verbosityLevel))
@@ -1176,13 +1183,13 @@ class core extends Module
 			$default=$this->get('Codes', 'default', false);
 			$dim=$this->get('Codes', 'dim', false);
 			$eol=$this->get('General', 'EOL', false); # TODO This can be improved
-			
+
 			$scopeName=$this->get('General', 'scopeName');
 			if ($this->verbosity> 0)
 			{
 				$output="$dim$scopeName:$default ".$output;
 			}
-			
+
 			if ($output!=$this->lastMessage['value'])
 			{
 				if ($this->lastMessage['count']>0) $this->debugOutput("$eol");
@@ -1203,17 +1210,17 @@ class core extends Module
 			# return false;
 		}
 	}
-	
+
 	private function debugOutput($message)
 	{
 		fwrite(STDERR, $message);
 	}
-	
+
 	function isVerboseEnough($verbosityLevel=0)
 	{
 		return ($this->verbosity >= $verbosityLevel);
 	}
-	
+
 	function verbosity($level=0, $announce=true)
 	{
 		if (is_numeric($level))
@@ -1234,14 +1241,14 @@ class core extends Module
 			$verbosityName=$this->get('VerbosityLevels', $this->verbosity, false);
 			if ($announce) $this->core->debug($this->verbosity, "verbosity: Incremented verbosity to \"$verbosityName\" ({$this->verbosity})");
 		}
-		
+
 		$this->set('Verbosity', 'level', $this->verbosity); // NOTE that changes to this variable will not affect the practicle verbosity. setRef coiuld be used, in which case changes would affect it. However we would then lack safety controls and events.
-		
+
 		if ($this->get('Features', 'triggerEvent')) $this->callFeature('triggerEvent', 'Verbosity,changed');
 		else $this->debug(0, __CLASS__.'.'.__FUNCTION__.": triggerEvent is not defined. Perhaps an event handeler is not installed. It could be that it hasn't loaded yet.");
 	}
-	
-	
+
+
 	function incrementNesting()
 	{
 		# TODO Check: There may need to be some cleaning done here!
@@ -1252,15 +1259,15 @@ class core extends Module
 		$this->makeParentShareMemoryCurrent();
 		return $nesting;
 	}
-	
+
 	function decrementNesting()
 	{
 		$srcNesting=$this->get('Core', 'nesting');
-		
+
 		$nesting=(is_numeric($srcNesting))?$srcNesting-1:1;
-		
+
 		$this->returnMeVariables($srcNesting, $nesting);
-		
+
 		$this->delete(nestedPrivateVarsName, $srcNesting);
 		$this->delete(isolatedNestedPrivateVarsName, $srcNesting);
 		if ($nesting<1) $nesting=1;
@@ -1268,28 +1275,28 @@ class core extends Module
 		$this->debug(5, "Decremented nesting to $nesting count=*disabled for performance*"); //.$this->getResultSetCount());
 		return $nesting;
 	}
-	
+
 	function getResultSetCount()
 	{
 		return count($this->getResultSet());
 	}
-	
+
 	function &go($macroName='default')
 	{
 		$emptyResult=null;
-		
+
 		if (!isset($this->store['Macros'][$macroName]))
 		{
 			$this->assertAvailableMacro($macroName, 'go');
 		}
-		
+
 		if (isset($this->store['Macros'][$macroName]))
 		{
 			if (count($this->store['Macros'][$macroName]))
 			{
 				# Set our shared memory location (this allows us to run macros within macros) and manage the scope
 				$nesting=$this->incrementNesting();
-				
+
 				if (isset($this->store['Features'][$macroName]['source']))
 				{
 					if ($this->store['Features'][$macroName]['source']!='nesting')
@@ -1307,26 +1314,26 @@ class core extends Module
 					$oldScope=false;
 					$scopeName=$this->get('General', 'scopeName');
 				}
-				
+
 				# Iterate through the actions to be taken
 				foreach ($this->store['Macros'][$macroName] as $actionItem)
 				{
 					$entryNesting=$this->get('Core', 'nesting');
-					
+
 					$returnedValue1=$this->callFeature($actionItem['name'], $actionItem['value']);
 					if (is_array($returnedValue1)) $returnedValue=$returnedValue1;
-					
+
 					$exitNesting=$this->get('Core', 'nesting');
 					$this->setResultSet($returnedValue);
 					if ($entryNesting!=$nesting) $this->debug(0, "go: WARNING entryNesting($entryNesting) != exitNesting($exitNesting) for macro $macroName/{$actionItem['name']}. This is certainly a bug! $macroName began with $nesting.");
 				}
 				$resultSet=$this->getResultSet();
-				
+
 				$this->unsetStackEntry($nesting);
-				
+
 				# Set the shared memory and scope back to the previous nesting level
 				$this->decrementNesting();
-				
+
 				if ($oldScope)
 				{
 					# TODO a more long term soltion needs to be found to this. The correct way breaks because it is double handeling the special scope case.
@@ -1336,7 +1343,7 @@ class core extends Module
 					$this->set('General', 'previousScopeName', $oldOldScope);
 					$this->debug(4, "go: Scope exit $scopeName -> $oldScope,  $oldScope -> $oldOldScope");
 				}
-				
+
 				# If this is the default macro, we need to run the cleanup stuff
 				if ($macroName=='default')
 				{
@@ -1344,7 +1351,7 @@ class core extends Module
 					$this->callFeature('triggerEvent', 'Achel,finishGeneral');
 					$this->callFeature('triggerEvent', 'Achel,finishLate');
 				}
-				
+
 				return $resultSet;
 			}
 			else
@@ -1366,11 +1373,11 @@ class core extends Module
 		else
 		{
 			$obj=&$this->getFeature('helpDefault', 'go');
-			
+
 			if ($obj)
 			{
 				$this->complain($this, "Could not find macro '$macroName'. This can happen if you haven't asked me to do anything.");
-				
+
 				$this->module[$obj['provider']]->event('helpDefault');
 			}
 			else
@@ -1380,7 +1387,7 @@ class core extends Module
 			return $emptyResult;
 		}
 	}
-	
+
 	function &getFeature($featureName, $context='na/getFeature')
 	{
 		# To be used in more generic situations than assertAvailableMacro which is only for macros.
@@ -1400,7 +1407,7 @@ class core extends Module
 			}
 		}
 	}
-	
+
 	function &getCategoryModule($category)
 	{
 		if (isset($this->store[$category])) return $this->store[$category];
@@ -1410,18 +1417,18 @@ class core extends Module
 			return $output;
 		}
 	}
-	
+
 	function setCategoryModule($category, $contents)
 	{
 		$this->store[$category]=$contents;
 		$this->markCategory($category);
 	}
-	
+
 	function unsetCategoryModule($category)
 	{
 		unset($this->store[$category]);
 	}
-	
+
 	function &get($category, $valueName, $debug=true, $nestingOffset=0)
 	{
 		if ($debug) $this->debug(5,"get($category, $valueName, false)");
@@ -1435,7 +1442,7 @@ class core extends Module
 				{
 					# TODO Is this really still needed?
 					$nesting=$this->get('Core', 'nesting')+$nestingOffset;
-					if (isset($this->store[$category])) 
+					if (isset($this->store[$category]))
 					{
 						for ($i=$nesting;$i>0;$i--)
 						{
@@ -1472,7 +1479,7 @@ class core extends Module
 					$result=null;
 				}
 			}
-			
+
 			if ($this->isVerboseEnough(5))
 			{
 				$this->core->debug(5,"get: [$category][$key][$valueName] ".json_encode($result));
@@ -1482,15 +1489,15 @@ class core extends Module
 		{
 			$result=null;
 		}
-		
+
 		return $result;
 	}
-	
+
 	function getMeVariableLevel($variableName, $startLevel)
 	{
 		// Returns the nesting level that the variable was found at and the value associated with it.
 		// Returns false on failure.
-		
+
 		for ($i=$startLevel;$i>0;$i--)
 		{
 			if (isset($this->store[nestedPrivateVarsName][$i][$variableName]))
@@ -1498,31 +1505,31 @@ class core extends Module
 				return array('level'=>$i, 'value'=>$this->store[nestedPrivateVarsName][$i][$variableName]);
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	function returnMeVariables($srcNestingLevel, $dstNestingLevel)
 	{
 		/*
 			$srcNestingLevel will typically be larger than $dstNestingLevel. There might be a useful exception to this, but I haven't thought of it yet.
 		*/
-		
+
 		$haveSrc=false;
 		$haveDst=false;
-		
+
 		// What do we have to work with?
 		if (isset($this->store[nestedPrivateVarsName][$srcNestingLevel]))
 		{
 			$haveSrc=is_array($this->store[nestedPrivateVarsName][$srcNestingLevel]);
 		}
-		
+
 		if (isset($this->store[nestedPrivateVarsName][$dstNestingLevel]))
 		{
 			$haveDst=is_array($this->store[nestedPrivateVarsName][$dstNestingLevel]);
 		}
-		
-		
+
+
 		if ($haveSrc)
 		{
 			# Loop through each variable at current nesting.
@@ -1540,14 +1547,14 @@ class core extends Module
 				}
 			}
 		}
-		
+
 		return true;
-		
-		
+
+
 		// Let's do something with it.
 		if ($haveSrc and $haveDst)
 		{ // Need to merge.
-			
+
 		}
 		elseif ($haveSrc and !$haveDst)
 		{ // Need to replace.
@@ -1557,16 +1564,16 @@ class core extends Module
 		{ // Can ignore.
 		}
 	}
-	
+
 	function markCategory($category)
 	{
 		if ($category!=categoryMarker) $this->set(categoryMarker, $category, 'true');
 	}
-	
+
 	function setIfNotSet($category, $valueName, $value, $orNothing=false)
 	{
 		$existingValue=$this->get($category, $valueName);
-		
+
 		if (
 			(!$existingValue and $orNothing == true) or # setIfNothing
 			(!$existingValue and $orNothing == false and $existingValue===null) # setIfNotSet
@@ -1577,18 +1584,18 @@ class core extends Module
 		}
 		else return false;
 	}
-	
+
 	function makeMeAvailable($variableName)
 	{
 		$nesting=$this->get('Core', 'nesting')-1;
 		$variableDetials=$this->getMeVariableLevel($variableName,$nesting);
-		
+
 		if (!is_array($variableDetials))
 		{ // It's not in scope, we need to make it so.
 			$this->store[nestedPrivateVarsName][$nesting][$variableName]=false;
 		}
 	}
-	
+
 	function makeLocalAvailable($variableName)
 	{
 		$value=$this->get(localScopeVarName, $variableName);
@@ -1600,7 +1607,7 @@ class core extends Module
 			$this->core->debug(4,"makeLocalAvailable: name=$variableName key/scope=$key");
 		}
 	}
-	
+
 	function getScopeForCategory($category, $nestingOffset=0)
 	{
 		if ($category==nestedPrivateVarsName or $category==isolatedNestedPrivateVarsName or $category==localScopeVarName)
@@ -1614,7 +1621,7 @@ class core extends Module
 		}
 		else return false;
 	}
-	
+
 	function set($category, $valueName, $args, $nestingOffset=0)
 	{ // set a variable for a module
 		if ($this->isVerboseEnough(5))
@@ -1622,9 +1629,9 @@ class core extends Module
 			$argsDisplay=(is_numeric($args) or is_string($args))?$args:gettype($args);
 			$this->debug(5,"set($category, $valueName, $argsDisplay)");
 		}
-		
+
 		if (!isset($this->store[$category])) $this->store[$category]=array();
-		
+
 		if ($key=$this->getScopeForCategory($category, $nestingOffset))
 		{
 			$this->core->debug(5,"set: [$category][$key][$valueName]");
@@ -1635,7 +1642,7 @@ class core extends Module
 		{
 			$this->store[$category][$valueName]=$args;
 		}
-		
+
 		$this->markCategory($category);
 	}
 
@@ -1644,7 +1651,7 @@ class core extends Module
 		$argString=(is_string($args))?$args:'[non-string]';
 		$this->debug(5,"setRef($category, $valueName, $argString)");
 		if (!isset($this->store[$category])) $this->store[$category]=array();
-		
+
 		if ($key=$this->getScopeForCategory($category, $nestingOffset))
 		{
 			if (!isset($this->store[$category][$key])) $this->store[$category][$key]=array();
@@ -1655,15 +1662,15 @@ class core extends Module
 		{
 			$this->store[$category][$valueName]=&$args;
 		}
-		
+
 		$this->markCategory($category);
 	}
-	
+
 	function doUnSet($deleteList)
 	{
 		return $this->doUnsetNested($this->store, $deleteList);
 	}
-	
+
 	function doUnsetNested(&$currentScope, $deleteList, $position=0)
 	{
 		// Handel Local, Me and Isolated.
@@ -1672,31 +1679,31 @@ class core extends Module
 		{
 			$category=$deleteList[$listKeys[0]];
 			$deleteList[$listKeys[0]]=$key;
-			
+
 			return $this->doUnsetNested($this->store[$category], $deleteList);
 		}
-		
+
 		// Handel everything else.
 		if (is_string($deleteList))
 		{
 			$this->debug(0, "doUnsetNested: WARNING! Converted string to array. The string was \"$deleteList\", which was expected to be an absolute path in the form of an array. You can do this in PHP like so: array('CategoryName', 'subCategory', 'variable'). Ideally execution should stop here, but it is being allowed incase there is still some old code relying on this behavior (PHP would have complained bitterly). This decision will be reversed very soon, so please fix the bug if it is yours. If you think the bug is in Achel, please get in contact via github.");
 			$deleteList=explode(',', $deleteList);
 		}
-		
+
 		if (!isset($currentScope[$deleteList[$position]]))
 		{
 			$fullChain=implode(',', $deleteList);
 			$failedChain='';
-			
+
 			foreach ($deleteList as $item)
 			{
 				$failedChain=($failedChain)?"$failedChain,$item":$item;
 			}
-			
+
 			$this->debug(3, "doUnsetNested: Could not find \"{$deleteList[$position]}\" in $fullChain. Successfully got to \"$failedChain\". This is unlikely to be a problem, but it worth considering when debugging.");
 			return false;
 		}
-		
+
 		$fullChain=implode(',', $deleteList);
 		$newPosition=$position+1;
 		if (count($deleteList)>$newPosition)
@@ -1710,11 +1717,11 @@ class core extends Module
 			return true;
 		}
 	}
-	
+
 	function getNested($values)
 	{
 		$output=$this->store;
-		
+
 		// Handel variables with special scope.
 		$valueKeys=array_keys($values);
 		$category=$values[$valueKeys[0]];
@@ -1725,7 +1732,7 @@ class core extends Module
 				$this->core->debug(3,"getNested: $category,$key,".implode(',', $values));
 			}
 			if (isset($output[$category][$key])) $output=$output[$category][$key];
-			
+
 			# TODO There must be a better way to remove a key. unset() didn't work because it left the empty key and the index started at 1 instead of 0. Possibly the second part is actually what mattered.
 			$oldValues=$values;
 			$numberOfPathParts=count($values);
@@ -1735,7 +1742,7 @@ class core extends Module
 				$values[]=$oldValues[$i];
 			}
 		}
-		
+
 		// Do the normal nested lookup.
 		foreach ($values as $value)
 		{
@@ -1750,18 +1757,18 @@ class core extends Module
 				return $output;
 			}
 		}
-		
+
 		return $output;
 	}
-	
-	
-	
-	
+
+
+
+
 	/*
 		setNested traditionaly has quite a messey input structure as it was a transition from the two level addressing to the multi-layer addressing.
-		
+
 		Therefore, there needs to be a little mess to tidy everything up.
-		
+
 		Short term
 			setNestedViaPath
 				The new, future-proof way of doing it. Any new code should use this, and old code should be ported to this.
@@ -1773,7 +1780,7 @@ class core extends Module
 				This is potentially short term and should not be relied on. It's intended for taking input directly from the interpreter.
 			setNestedOldWay - DEPRECATED
 				This takes input using the old way and converts it to input for the new way. It is _HEAVY_. Please consider this a very short term fix to get rid of the debug0. You should port to setNestedViaPath.
-		
+
 		Long term
 			setNestedViaPath
 				As above.
@@ -1781,39 +1788,39 @@ class core extends Module
 				Will point to setNestedViaPath.
 			setNestedFromInterpreter
 				May still be in use.
-		
+
 	*/
-	
-	
+
+
 	function setNested($store, $category, $values)
 	{
 		# TODO This currently points to the old way of doing it, which is deprecated. Once the old way is removed it will point to setNestedViaPath.
 		$this->debug(0, "DEPRECATED: This code is using a deprecated version of setNested() which will soon be removed. Please update the code to point to setNestedViaPath() (which will point to setNested once the old version is removed.)");
 		$this->setNestedOldWay($store, $category, $values);
 	}
-	
+
 	function setNestedJFDI($path, $value=null) # DEPRECATED
 	{
 		# TODO port this to the new setNested.
-		
-		/* 
+
+		/*
 		setNested has a funny input structure which it has inherited from the historical strictly 2 layer Store/variable structure. Eventually this will be removed. In the mean time setNestedJFDI removes that complication.
-		
+
 		If $value is absent, it will be assumed to be part of $path. If there are fewer than 2 total parameters between $path and $value, interpretParms will complain.
 		*/
-		
+
 		$fullInput=($value!==null)?"$path,$value":$path;
-		
+
 		$parms=$this->interpretParms($fullInput, 2, 3, false);
 		$this->setNested($parms[0], $parms[1], $parms[2]);
 	}
-	
-	
+
+
 	function setNestedViaPath($path, $value)
 	{
 		$this->setNestedStart($path, $value);
 	}
-	
+
 	private function setNestedFromInterpreter($allValues)
 	{
 		$parts=$this->interpretParms($allValues);
@@ -1830,13 +1837,13 @@ class core extends Module
 				$this->debug(1, "setNestedFromInterpreter: Could not interpret the path provied (\"$allValues\") at all. This is likely a syntax error in the address.");
 				return false;
 			}
-			
+
 			if (isset($path[$lastPosition]))
 			{
 				$value=$path[$lastPosition];
 				unset($path[$lastPosition]);
-				
-				
+
+
 				$this->setNestedStart($path, $value);
 				return true;
 			}
@@ -1847,44 +1854,44 @@ class core extends Module
 			}
 		}
 	}
-	
+
 	function setNestedOldWay($store, $category, $values) # DEPRECATED
 	{
 		$this->debug(1, "DEPRECATED: This code is using a deprecated version of setNested() which will soon be removed. Please update the code to point to setNestedViaPath() (which will point to setNested once the old version is removed.)");
-		
+
 		$traditionalAddress=array($store, $category);
 		$remainingStuff=(is_array($values))?$values:explode(',', $values);
-		
+
 		$lastPosition=count($remainingStuff)-1;
 		$value=$remainingStuff[$lastPosition];
-		
+
 		unset($remainingStuff[$lastPosition]);
-		
+
 		$fullAddress=array_merge($traditionalAddress, $remainingStuff);
-		
+
 		$this->setNestedViaPath($fullAddress, $value);
 		$this->markCategory($store);
 	}
-	
+
 	private function setNestedStart($path, $value)
 	{
 		/*
 		path can be either a string like Example,folder1,folder2 or an array like ('Example', 'folder1', 'folder2')
 		value is what ever you want to set at the end.
 		*/
-		
+
 		$pathParts=(is_array($path))?$path:explode(',', $path);
-		
+
 		# $this->core->debug(0, implode(',', $pathParts));
 		# TODO Add shortcuts
-		
+
 		// Handel variables with special scope.
 		$pathKeys=array_keys($pathParts);
 		$category=$pathParts[$pathKeys[0]];
 		if ($key=$this->getScopeForCategory($category))
 		{
 			if (!isset($this->store[$category][$key])) $this->store[$category][$key]=array();
-			
+
 			# TODO There must be a better way to remove a key. unset() didn't work because it left the empty key and the index started at 1 instead of 0. Possibly the second part is actually what mattered.
 			$oldPathPaths=$pathParts;
 			$numberOfPathParts=count($pathParts);
@@ -1893,7 +1900,7 @@ class core extends Module
 			{
 				$pathParts[]=$oldPathPaths[$i];
 			}
-			
+
 			if ($this->isVerboseEnough(4))
 			{
 				$this->core->debug(4,"setNestedStart: Used $category,$key,".implode(',', $pathParts)).' '.json_encode($pathParts);
@@ -1903,16 +1910,16 @@ class core extends Module
 		else $output=&$this->store;
 
 		$this->setNestedWorker($output, $pathParts, $value, count($pathParts));
-		
+
 		$this->markCategory($pathParts[0]);
 	}
-	
+
 	private function setNestedWorker(&$initialValue, $path, &$value, $count=0, $position=0)
 	{
 		if ($position<$count-1)
 		{
 			$this->debug(5, "setNestedWorker: processing $position/$count {$path[$position]}");
-			
+
 			# Make sure we have a sane place to continue
 			$lastkey=$path[$position];
 			if (!isset($initialValue[$path[$position]]))
@@ -1935,7 +1942,7 @@ class core extends Module
 				}
 				else $initialValue[$path[$position]]=array();
 			}
-			
+
 			$this->setNestedWorker($initialValue[$lastkey], $path, $value, $count, $position+1);
 		}
 		else
@@ -1943,42 +1950,42 @@ class core extends Module
 			# set the value
 			if ($path[$position]==='') $initialValue[]=$value;
 			else $initialValue[$path[$position]]=$value;
-			
+
 			#print_r($value);
-			
+
 			# TODO looks like some optimisation can be done here.
 			/*
 			$tmpValue=$this->getNested($path);
 			$vcount=count($value);
 			$tcount=count($tmpValue);
-			
+
 			$destination=implode(',', $path);
-			
-			
+
+
 			$this->debug(4, "setNestedWorker: Setting value $position/$count {$path[$position]}. vcount=$vcount tcount=$tcount destination=$destination");
 			*/
 		}
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 	function addItemsToAnArray($category, $valueName, $items)
 	{
 		$currentList=$this->get($category, $valueName);
 		if (is_array($currentList)) $output=array_merge($currentList, $items);
 		else $output=$items;
-		
+
 		$this->set($category, $valueName, $output);
 		return $output;
 	}
-	
+
 	function delete($category, $valueName)
 	{
 		if (isset($this->store[$category]))
 		{
-			if (isset($this->store[$category][$valueName])) 
+			if (isset($this->store[$category][$valueName]))
 			{
 				unset($this->store[$category][$valueName]);
 				$this->debug(4,"delete($category, $valueName) - deleted");
@@ -1987,13 +1994,13 @@ class core extends Module
 		}
 		else $this->debug(5,"delete($category, $valueName) - category not found");
 	}
-	
+
 	function getStore()
 	{ # Note that this returns a COPY of the store. It is not intended as a way of modifying the store.
 		$this->debug(5,"getStore()");
 		return $this->store;
 	}
-	
+
 	function registerModule(&$obj)
 	{
 		$name=$obj->getName();
@@ -2002,34 +2009,34 @@ class core extends Module
 			echo "Module $name is already loaded.\n";
 			return false;
 		}
-		
+
 		$this->module[$name]=&$obj;
 		$this->module[$name]->setCore($this);
 		$this->setNestedViaPath("Modules,$name,path", $this->get('Modules', 'currentModulePath'));
 		return true;
 	}
-	
+
 	function registerSubModule(&$obj)
 	{
 		$obj->setCore($this);
-		
+
 		$subModule=array(
 			'name'=>$obj->getName(),
 			'description'=>$obj->getDescription(),
 			'category'=>$obj->getCategory(),
 			'obj'=>&$obj,
 			);
-		
+
 		$this->debug(4, "registerSubModule: name={$subModule['name']} category={$subModule['category']}");
 		$this->setRef($subModule['category'], $subModule['name'], $subModule);
 	}
-	
-	
+
+
 	public function featureExists($flag)
 	{
 		return(isset($this->store['Features'][$flag]));
 	}
-	
+
 	function registerFeature(&$obj, $flags, $name, $description, $tags=false,$isMacro=false, $source='unknown')
 	{
 		$this->core->debug(4, "registerFeature name=$name");
@@ -2043,10 +2050,10 @@ class core extends Module
 		$arrayTags[]=$obj->getName();
 		$this->registerTags($name, $arrayTags);
 		$tagString=implode(',', $arrayTags);
-		
+
 		# TODO Remove the tag string from descriptoin once we have proper integration with help
 		$entry=array('flags'=>$flags, 'name'=>$name, 'description'=>$description, 'tagString'=>$tagString, 'provider'=>$obj->getName(), 'isMacro'=>$isMacro, 'source'=>$source, 'referenced'=>0);
-		
+
 		foreach ($flags as $flag)
 		{
 			if (!isset($this->store['Features'][$flag]))
@@ -2064,12 +2071,12 @@ class core extends Module
 			}
 		}
 	}
-	
+
 	function aliasFeature($feature, $flags)
 	{
 		$entry=&$this->get('Features', $feature);
 		$macroCacheEntry=$this->get('MacroListCache', $feature);
-		
+
 		foreach ($flags as $flag)
 		{
 			if (!isset($this->store['Features'][$flag]))
@@ -2089,20 +2096,20 @@ class core extends Module
 					$this->complain($this, "Feature $flag has already been registered by {$existing['provider']}({$existing['source']})");
 				}
 			}
-			
+
 			if ($macroCacheEntry)
 			{
 				$this->set('MacroListCache', $flag, $macroCacheEntry);
 			}
 		}
 	}
-	
+
 	function setFeatureAttribute($featureName, $attributeName, $attributeValue)
 	{
 		$entry=&$this->get('Features', $featureName);
 		$entry[$attributeName]=$attributeValue;
 	}
-	
+
 	function registerTags($name, $tags)
 	{
 		$arrayTags=(is_array($tags))?$tags:explode(',', $tags);
@@ -2112,16 +2119,16 @@ class core extends Module
 			{
 				$names=$this->get('Tags', $tag);
 				if (!is_array($names)) $names=array();
-				
+
 				$names[]=$name;
 				$this->set('Tags', $tag, $names);
 			}
 		}
 	}
-	
+
 	function callInits($event='init')
 	{
-		# TODO The initMap is not working. Symptom: the Packages module (and potentially others) get inited twice. I've worked around this by putting in a condition around the $callInits variable in the loadModules function. This situation arises when calling loadModules from the packages.php module. 
+		# TODO The initMap is not working. Symptom: the Packages module (and potentially others) get inited twice. I've worked around this by putting in a condition around the $callInits variable in the loadModules function. This situation arises when calling loadModules from the packages.php module.
 		if (!isset($this->initMap[$event])) $this->initMap[$event]=array();
 		foreach ($this->module as $name=>&$obj)
 		{
@@ -2132,34 +2139,34 @@ class core extends Module
 			}
 		}
 	}
-	
+
 	function complain($obj, $message, $specific='', $fatal=false)
 	{
 		$output=($specific)?"$specific: $message":"$message.";
 		if ($obj) $output=$obj->getName().': '.$output;
-		
+
 		if ($fatal) die("$output\n");
 		else $this->debug(0, "$output");
 	}
-	
+
 	function requireNumParms($obj, $numberRequried, $event, $originalParms, $interpretedParms=false)
 	{
 		$parmsToCheck=($interpretedParms)?$interpretedParms:$this->interpretParms($originalParms);
 		$actualParms=count($parmsToCheck);
-		
-		if ($numberRequried>$actualParms) 
+
+		if ($numberRequried>$actualParms)
 		{
 			$this->complain($obj, "Required $numberRequried parameters but got $actualParms. Original parms were \"$originalParms\" for", $event, true);
 			return false;
 		}
 		else return true;
 	}
-	
+
 	function getRequireNumParmsOrComplain($obj, $featureName, $numberRequried)
 	{
 		$originalParms=$this->get('Global', $featureName);
 		$interpretedParms=$this->interpretParms($originalParms);
-		
+
 		if ($this->requireNumParms($obj, $numberRequried, $featureName, $originalParms, $interpretedParms))
 		{
 			return $interpretedParms;
@@ -2169,7 +2176,7 @@ class core extends Module
 			return false;
 		}
 	}
-	
+
 	function out($output)
 	{
 		if (isset($this->store['General']['outputObject']))
@@ -2186,7 +2193,7 @@ class core extends Module
 			}
 		}
 	}
-	
+
 	function echoOut($output)
 	{
 		if (isset($this->store['General']['echoObject']))
@@ -2203,22 +2210,22 @@ class core extends Module
 			}
 		}
 	}
-	
+
 	function now()
 	{
 		return 'I need to implement this!';
 	}
-	
+
 	function getPID($parms)
 	{
 		$this->set($parms[0], $parms[1], strval(getmypid()));
 	}
-	
+
 	function objectToArray($data)
 	{
 		if (!is_array($data) and !is_object($data)) return $data;
 		$result = array();
-		
+
 		$data = (array) $data;
 		foreach ($data as $key => $value)
 		{
@@ -2226,10 +2233,10 @@ class core extends Module
 			if (is_object($value) or is_array($value)) $result[$newKey] = $this->objectToArray($value);
 			else $result[$newKey] = $value;
 		}
-		
+
 		return $result;
 	}
-	
+
 	function cleanKey($key)
 	{
 		$result=str_replace("\0", '', $key);
@@ -2241,7 +2248,7 @@ class core extends Module
 function loadModules(&$core, $sourcePath, $callInits=true)
 {
 	$loadStartTime=microtime(true);
-	
+
 	foreach ($core->getModules($sourcePath) as $path)
 	{
 		$path=$path;
@@ -2251,7 +2258,7 @@ function loadModules(&$core, $sourcePath, $callInits=true)
 			$filenameParts=explode('.', $path);
 			$numParts=count($filenameParts);
 			$lastPos=($numParts>1)?$numParts-1:0;
-			
+
 			if ($filenameParts[$lastPos]=='php'or $filenameParts[$lastPos]=='module')
 			{
 				$core->set('Modules', 'currentModulePath', $path);
@@ -2264,22 +2271,22 @@ function loadModules(&$core, $sourcePath, $callInits=true)
 			echo "Didn't find $path\n";
 		}
 	}
-	
+
 	$initStartTime=microtime(true);
-	
+
 	if ($callInits)
 	{
 		$core->callInits(); // Basic init only
 		$core->callInits('followup'); // Any action that needs to be taken once all modules are loaded.
 		$core->callInits('last'); // Any action that needs to be taken once all modules are loaded.
 	}
-	
+
 	$finishTime=microtime(true);
-	
+
 	$loadTime=$initStartTime-$loadStartTime;
 	$initTime=$finishTime-$initStartTime;
 	$total=$finishTime-$loadTime;
-	
+
 	$core->debug(4, "Loaded modules in $loadTime. Initalised modules in $initTime. Total=$total.");
 }
 
@@ -2288,28 +2295,28 @@ function loadModules(&$core, $sourcePath, $callInits=true)
 
 class Module
 {
-	private $category=''; 
+	private $category='';
 	protected $core=null;
-	
+
 	/*
 		A note about name vs category
 			For a module it makes sense that these are the same thing, because a module's memory space is reporesented by the name of that module. Therefore the variables are mapped like this
-			
+
 				getName		$this->category
 	*/
-	
+
 	# TODO consider refactoring the name/category relationship in Module. This is likely to have a lot of stuff refering to it, and probably isn't worth while.
-	
+
 	function __construct($name)
 	{
 		$this->category=$name;
 	}
-	
+
 	function getName()
 	{
 		return $this->category;
 	}
-	
+
 	function setCore(&$core)
 	{
 		$this->core=&$core;
@@ -2321,43 +2328,43 @@ class SubModule extends Module
 	protected $name='unknown';
 	protected $description='Who am I?';
 	protected $category='Unknown';
-	
+
 	/*
 		A note about name vs category
 			For a module it makes sense that these are the same thing, because a module's memory space is reporesented by the name of that module.
-			
+
 			For a submodule this doesn't make sense anymore because it doesn't currently have its own designated memory space and name is needed as well as category. Therefore the variables are mapped like this
-			
+
 				getName		$this->name
 				getDescription	$this->description
 				getCategory	$this->category
 	*/
-	
+
 	function __construct($category)
 	{
 		$this->category=$category;
 	}
-	
+
 	function getName()
 	{
 		return $this->name;
 	}
-	
+
 	function getDescription()
 	{
 		return $this->description;
 	}
-	
+
 	function getCategory()
 	{
 		return $this->category;
 	}
-	
+
 	function setIdentity($name, $description)
 	{
 		$this->name=$name;
 		$this->description=$description;
 	}
 }
- 
+
 ?>
