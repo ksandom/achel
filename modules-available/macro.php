@@ -192,8 +192,7 @@ class Macro extends Module
 			{
 				if (!is_null($lastRootKey))
 				{ // We have indentation. Remove 1 layer of indentation, and nest the argument.
-					// TODO change back to level 4
-					$this->core->debug(0, "compileFromArray($macroName:${action['lineNumber']}): Nested feature inside $macroName:{$outputArray[$lastRootKey]['lineNumber']}:{$outputArray[$lastRootKey]['argument']}: \"${action['argument']} ${action['value']}\"");
+					$this->core->debug(4, "compileFromArray($macroName:${action['lineNumber']}): Nested feature inside $macroName:{$outputArray[$lastRootKey]['lineNumber']}:{$outputArray[$lastRootKey]['argument']}: \"${action['argument']} ${action['value']}\"");
 					$action['argument']=$nesting->removeOneIndent($action['argument']);
 					$outputArray[$lastRootKey]['nesting'][]=$action;
 				}
@@ -235,18 +234,16 @@ class Macro extends Module
 					return false;
 				}
 
-				$this->core->debug(0, "Macro/compileFromArray/$macroName/$key: addAction {$action['argument']}$subName");
 				$this->core->addAction(trim($action['argument']), $action['value'].$subName, $macroName, $action['lineNumber']);
 			}
 			else
 			{
 				# TODO follow through to automatically load the macro if it doesn't exist.
-				$this->core->debug(0, "Macro/compileFromArray/$macroName/$key: addAction {$action['argument']} (no nesting)");
 				$this->core->addAction(trim($action['argument']), $action['value'], $macroName, $action['lineNumber']);
 			}
 		}
 
-		$this->core->debug(0, "Macro/compileFromArray/$macroName: Ready to return the macro.");
+		$this->core->debug(4, "Macro/compileFromArray/$macroName: Ready to return the macro.");
 		return $outputArray;
 	}
 
@@ -607,7 +604,7 @@ class Nesting
 				$this->character=substr($indentationCharacters, 0, 1);
 				$this->configured=true;
 
-				$this->core->debug(0, "Macro/Nesting/{$this->macroName}: Character=\"{$this->character}\" Size=\"{$this->size}\"");
+				$this->core->debug(4, "Macro/Nesting/{$this->macroName}: Character=\"{$this->character}\" Size=\"{$this->size}\"");
 
 				if (!$this->onlyHasAllowedCharacters($indentationCharacters))
 				{
