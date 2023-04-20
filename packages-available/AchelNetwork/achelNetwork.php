@@ -233,6 +233,12 @@ class SocketServerFaucet extends ThroughBasedFaucet
 
 	function checkForConnections()
 	{
+		if ($this->socket===null)
+		{
+			$this->core->debug(1, "SocketServerFaucet->checkForConnections: Not connected.");
+			return false;
+		}
+
 		if ($client=@socket_accept($this->socket))
 		{
 			socket_set_nonblock($client);
