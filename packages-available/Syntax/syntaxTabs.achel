@@ -1,0 +1,6 @@
+# Run tabbed execution for unit test. ~ hidden
+
+set Local,indented,
+	passTest Got to tab indented code.
+
+~Local,indented~

@@ -12,9 +12,9 @@ templateOut help
 getCategory Features
 
 if ~!Global,help-0!~,!=,,
-	requireEach ~!Global,help!~
+    requireEach ~!Global,help!~
 else
-	requireEach ~!Help,default!~
+    requireEach ~!Help,default!~
 
 excludeItem tagString,hidden
 
@@ -22,9 +22,8 @@ excludeItem tagString,hidden
 keyOn name
 
 loop
-	isolate
-		retrieveResults Result,flags
-		getSingleStringUsingSeparatorNoNL , --
-		stashResults Result,combinedFlags
-	set Result,commandLineFlags,--~!Result,combinedFlags,0!~
-	
+    isolate
+        retrieveResults Result,flags
+        getSingleStringUsingSeparatorNoNL , --
+        stashResults Result,combinedFlags
+    set Result,commandLineFlags,--~!Result,combinedFlags,0!~

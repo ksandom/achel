@@ -121,10 +121,11 @@ class Macro extends Module
 
 			if (!trim($line)) continue;
 
-			$endOfArgument=strPos($line, ' ');
+			$lineWithoutIndentation=ltrim($line);
+			$offset=strlen($line) - strlen($lineWithoutIndentation) + 1;
+			$endOfArgument=strPos($line, ' ', $offset);
 			if ($endOfArgument)
 			{
-				# TODO The rtrim should be removed once I get past the current problem.
 				$argument=substr($line, 0, $endOfArgument);
 				$value=trim(substr($line, $endOfArgument+1));
 			}
@@ -604,7 +605,7 @@ class Nesting
 				$this->character=substr($indentationCharacters, 0, 1);
 				$this->configured=true;
 
-				$this->core->debug(4, "Macro/Nesting/{$this->macroName}: Character=\"{$this->character}\" Size=\"{$this->size}\"");
+				$this->core->debug(0, "Macro/Nesting/{$this->macroName}: Character=\"{$this->character}\" Size=\"{$this->size}\"");
 
 				if (!$this->onlyHasAllowedCharacters($indentationCharacters))
 				{
