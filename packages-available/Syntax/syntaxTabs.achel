@@ -1,4 +1,4 @@
-# Run tabbed execution for unit test. ~ hidden
+# Run tabbed execution for unit test. ~ Syntax,hidden
 
 set Local,indented,
 	passTest Got to tab indented code.

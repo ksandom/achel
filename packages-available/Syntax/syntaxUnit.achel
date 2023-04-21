@@ -1,4 +1,4 @@
-# Unit tests for syntax ~ unitTest,hidden
+# Unit tests for syntax ~ Syntax,unitTest,hidden
 
 defineTest Syntax - tab indentation,
 	failTest Failed to run a macro with tab indentaion.
