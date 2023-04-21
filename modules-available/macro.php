@@ -605,7 +605,7 @@ class Nesting
 				$this->character=substr($indentationCharacters, 0, 1);
 				$this->configured=true;
 
-				$this->core->debug(0, "Macro/Nesting/{$this->macroName}: Character=\"{$this->character}\" Size=\"{$this->size}\"");
+				$this->core->debug(4, "Macro/Nesting/{$this->macroName}: Character=\"{$this->character}\" Size=\"{$this->size}\"");
 
 				if (!$this->onlyHasAllowedCharacters($indentationCharacters))
 				{
