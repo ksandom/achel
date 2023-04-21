@@ -26,6 +26,10 @@ set Local,wrongNumberMessage,Wrong number of results. Use -v  (eg achel -v --uni
 if ~!Local,regex!~,!=,,
 	refine ~!Local,regex!~
 
+take name
+unique
+
+
 loop
 	displayProgress
 	callOutOfScope ~!Result,line!~

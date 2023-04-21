@@ -1,6 +1,7 @@
 # Display this help ~ user
 #onDefine aliasFeature help,h
 #onLoaded setFeatureType help,help
+parameters search,showHidden
 
 # debug 0,help: loadAllMacros begin
 loadAllMacros
@@ -11,12 +12,17 @@ templateOut help
 
 getCategory Features
 
-if ~!Global,help-0!~,!=,,
-    requireEach ~!Global,help!~
+if ~!Local,search!~,!=,,
+    debug 1,Refining results to "~!Local,search!~".
+    requireEach ~!Local,search!~
 else
+    debug 1,No parameters given. Showing default help entries.
     requireEach ~!Help,default!~
 
-excludeItem tagString,hidden
+if ~!Local,showHidden!~,==,,
+    excludeItem tagString,hidden
+else
+    debug 1,Allowing hidden entries.
 
 # Now we have a small dataset, make ready for general usage.
 keyOn name
