@@ -21,4 +21,4 @@ if ~!Local,showHidden!~,==,,
 else
 	debug 1,Allowing hidden entries.
 
-registerOnceForEvent Achel,finishLate,finishHelp
+registerOnceForEvent Achel,finishEarly,finishHelp

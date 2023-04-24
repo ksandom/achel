@@ -1,6 +1,8 @@
-# The help to display if a "" ~ default
+# The help to display if the user doesn't request any action. ~ default,hidden
 
+debug 0,Displaying the default help.
 help ["~!Help,default!~"]
+finishHelp
 outNow
 
 clear
