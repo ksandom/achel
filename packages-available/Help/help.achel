@@ -13,15 +13,15 @@ templateOut help
 getCategory Features
 
 if ["~!Local,search!~","!=",""],
-    debug 1,Refining results to "~!Local,search!~".
-    requireEach ~!Local,search!~
+	debug 1,Refining results to "~!Local,search!~".
+	requireEach ~!Local,search!~
 else
-    debug 1,No parameters given. Showing default help entries.
-    requireEach ~!Help,default!~
+	debug 1,No parameters given. Showing default help entries.
+	requireEach ~!Help,default!~
 
 if ~!Local,showHidden!~,==,,
-    excludeItem tagString,hidden
+	excludeItem tagString,hidden
 else
-    debug 1,Allowing hidden entries.
+	debug 1,Allowing hidden entries.
 
 registerOnceForEvent Achel,finishEarly,finishHelp
