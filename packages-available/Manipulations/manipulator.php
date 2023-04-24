@@ -5,12 +5,12 @@
 class Manipulator extends Module
 {
 	private $dataDir=null;
-	
+
 	function __construct()
 	{
 		parent::__construct('Manipulator');
 	}
-	
+
 	function event($event)
 	{
 		switch ($event)
@@ -50,8 +50,8 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('pos'), 'pos', 'Insert the position of each result to that result. This can be used simply to track results as they get processed in other ways, or for creating an inprovised unique number for each result (NOTE that that number will not necessarily stay with the same result on subsequent runs if the input result set has changed). --pos[=resultVariableName[,offset]] . resultVariableName defaults to "pos" and offset defaults to "0"', array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('chooseBasedOn'), 'chooseBasedOn', 'For each item in the result set, choose the value of an array based on the modulous of a named value in the result set and the number of items in the array. This would naturally work well with --pos. --chooseBasedOn=inputValueName,outputValueName,inputCategory[,inputValueName,[subInputValueName,[etc,[etc]]]]', array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('escape'), 'escape', "Escape a string to be used is something like manually created json. --escape=Category,variable,value . Note that this currently doesn't handle a comma (,) very well.", array('Manipulations'));
-				
-				
+
+
 				$this->core->registerFeature($this, array('firstResult', 'firstResults', 'first'), 'firstResult', "Take the first x results, where x is one if not specified. --firstResult[=x]", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('lastResult', 'lastResults', 'last'), 'lastResult', "Take the last x results, where x is one if not specified. --lastResult=x", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('offsetResult', 'offsetResults'), 'offsetResult', "After x results, take the first y results. --offsetResult=x,y . If y is negative, The results will be taken from the end rather than the beginning. In this case x therefore is an offset from the end, not the beginning.", array('result', 'Manipulations'));
@@ -62,15 +62,15 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('lessThan'), 'lessThan', "Restrict the resultset to items where a named result value is less than a specified value. --lessThan=valueName,valueToTest", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('greaterThan'), 'greaterThan', "Restrict the resultset to items where a named result value is greater than a specified value. --greaterThan=valueName,valueToTest", array('result', 'Manipulations'));
 				$this->core->registerFeature($this, array('between'), 'between', "Restrict the resultset to items where a named result value is between two specified values. --between=valueName,smallValue,largeValue", array('result', 'Manipulations'));
-				
+
 				$this->core->registerFeature($this, array('sortOnKey'), 'sortOnKey', "Sort items by the key of each result in the result set. This is not to be confused with --sortOnItemKey which is slower, but probably what you want.", array('result', 'sort', 'Manipulations'));
 				$this->core->registerFeature($this, array('sortOnValue'), 'sortOnValue', "Sort items by the value of each result in the result set. This will not work with resultSets containing arrays as the results. For that use --sortOnItemKey . --sortOnValue may not perform well with larger resultSets.", array('result', 'sort', 'Manipulations'));
 				$this->core->registerFeature($this, array('sortOnItemKey'), 'sortOnItemKey', "Sort items by a named item. You can sort on multiple fields. --sortOnItemKey=itemKey1[,itemKey2[,itemKey3[,...]]]", array('result', 'sort', 'Manipulations'));
-				
+
 				#$this->core->registerFeature($this, array('cleanUnresolvedStoreVars'), 'cleanUnresolvedStoreVars', 'Clean out any store variables that have not been resolved. This is important when a default should be blank.', array('array', 'escaping', 'result'));
-				
+
 				$this->core->registerFeature($this, array('createOneResult'), 'createOneResult', 'Replaces the resultSet with a single entry that can then be manipulated using features like --resultSet.', array('array', 'result', 'Manipulations'));
-				
+
 				$this->core->registerFeature($this, array('getKeysNumericallyIndexed'), 'getKeysNumericallyIndexed', 'Replaces the resultSet numerically indexed set of keys from the previous resultSet. This is the faster cousin of --getKeys .', array('array', 'result', 'Manipulations'));
 				break;
 			case 'followup':
@@ -196,12 +196,12 @@ class Manipulator extends Module
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 2, 3, true);
 				return $this->chooseBasedOn($this->core->getResultSet(), $parms[0], $parms[1], $parms[2]);;
 				break;
-			
+
 			case 'escape':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3, true);
 				$this->core->set($parms[0], $parms[1], $this->escape($parms[2]));
 				break;
-			
+
 			case 'firstResult':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 1, 0);
 				return $this->offsetResult($this->core->getResultSet(), 0, $parms[0]);
@@ -256,20 +256,20 @@ class Manipulator extends Module
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3);
 				return $this->between($this->core->getResultSet(), $parms[0], $parms[1], $parms[2]);
 				break;
-			
+
 			case 'getKeysNumericallyIndexed':
 				return array_keys($this->core->getResultSet());
-			
+
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
 				break;
 		}
 	}
-	
+
 	function countResultSet()
 	{
 		$resultSet=$this->core->getResultSet();
-		
+
 		if (is_null($resultSet))
 		{
 			return 0;
@@ -279,7 +279,7 @@ class Manipulator extends Module
 			return count($resultSet);
 		}
 	}
-	
+
 	function splitItems($resultSet, $stringToSplitOn="\n")
 	{
 		if ($stringToSplitOn==='') $stringToSplitOn="\n";
@@ -289,7 +289,7 @@ class Manipulator extends Module
 			$this->core->debug(3, __CLASS__.'.'.__FUNCTION__.": resultSet is not an array. I can not do anything with this.");
 			return $resultSet;
 		}
-		
+
 		foreach ($resultSet as $key=>$resultItem)
 		{
 			if (is_string($resultItem))
@@ -302,10 +302,10 @@ class Manipulator extends Module
 				$output[$key]=$resultItem;
 			}
 		}
-		
+
 		return $output;
 	}
-	
+
 	function replace($input, $search, $replace)
 	{
 		if (is_object($search) or is_object($replace)) return $input;
@@ -313,11 +313,11 @@ class Manipulator extends Module
 		$this->core->debug(4, "replace: Search=$search Replace=$replace Input=\"$input\" Output=\"$output\"");
 		return $output;
 	}
-	
+
 	function toString($input, $template)
 	{
 		$output=array();
-		
+
 		if (!is_array($input))
 		{
 			$this->core->debug(3, "Manipulator->toString: Input was not an array. Quite possibly there was no input. Try using --nested to find out what data you are getting at this point.");
@@ -336,22 +336,22 @@ class Manipulator extends Module
 				$output[]=$this->replace($this->core->processValue($template), resultVarBegin.'value'.resultVarEnd, $line);
 			}
 		}
-		
+
 		return $output;
 	}
-	
+
 	function escape($value)
 	{
 		return addslashes($value);
 	}
-	
+
 	function processResultVarsInString($input, $string)
 	{
 		# TODO I just re-read this code. This is an incredibly slow way to do it. Instead, do look through the demplate and resolve the variables. Note that this will require a bit more care to code to handle nested variables.It may be possible to reuse the code the parses normal variables.
 		# TODO This really needs to recursively go through the result set since it can be nested.
 		$outputLine=$string;;
-		
-		
+
+
 		$iterations=50;
 		$previousValue='';
 		while (strpos($outputLine, '~%')!==false and $iterations>0 and $previousValue!=$outputLine)
@@ -364,10 +364,10 @@ class Manipulator extends Module
 				else $this->core->debug(4, "processResultVarsInString: value for key $key is an array, so the replace has not been attempted.");
 			}
 		}
-		
+
 		return $outputLine;
 	}
-	
+
 	function cleanUnresolvedVars($input, $begin, $end)
 	{
 		if (is_array($input))
@@ -380,10 +380,10 @@ class Manipulator extends Module
 		{
 			return $this->cleanUnresolvedVarsFromString($input, $begin, $end);
 		}
-		
-		
+
+
 	}
-	
+
 	function cleanUnresolvedVarsFromString($input, $begin, $end)
 	{
 		$start=strpos($input, $begin);
@@ -391,15 +391,15 @@ class Manipulator extends Module
 		$finish=strpos($input, $end)+strlen($end);
 		$termite=substr($input, $start, $finish-$start);
 		$output=$this->replace($input, $termite, '');
-		
+
 		if (strpos($output, $begin)!==false) return $this->cleanUnresolvedVarsFromString($output, $begin, $end);
 		else return $output;
 	}
-	
+
 	function flatten($input, $limit, $nesting=0)
 	{
 		if (!is_array($input)) return $input;
-		
+
 		$output=array();
 		$clashes=array();
 		if (is_numeric($limit) and $limit<0)
@@ -411,14 +411,14 @@ class Manipulator extends Module
 			}
 		}
 		else $this->getArrayNodes($output, $input, $clashes, $limit, $nesting);
-		
+
 		return $output;
 	}
-	
+
 	function finalFlatten($dataIn)
 	{
 		$output=array();
-		
+
 		foreach ($dataIn as $line)
 		{
 			if (is_array($line))
@@ -430,23 +430,23 @@ class Manipulator extends Module
 			}
 			else $output[]=$line;
 		}
-		
+
 		return $output;
 	}
-	
+
 	function replaceUsingRegex($dataIn, $search, $replace)
 	{
 		$searchArray=array("/$search/");
 		$replaceArray=array($replace);
 		$output=array();
-		
+
 		if (is_array($dataIn))
 		{
 			foreach ($dataIn as $line)
 			{
 				$output[]=preg_replace($searchArray, $replaceArray, $line);
 			}
-			
+
 			return $output;
 		}
 		else
@@ -454,11 +454,11 @@ class Manipulator extends Module
 			return preg_replace($searchArray, $replaceArray, $dataIn);
 		}
 	}
-	
+
 	function unique($dataIn)
 	{
 		$output=array();
-		
+
 		foreach ($dataIn as $line)
 		{
 			if (is_string($line))
@@ -467,10 +467,10 @@ class Manipulator extends Module
 			}
 			else $output[]=$line;
 		}
-		
+
 		return $output;
 	}
-	
+
 	private function getArrayNodes(&$output, $input, &$clashes, $limit, $nesting)
 	{
 		foreach ($input as $key=>$value)
@@ -492,33 +492,33 @@ class Manipulator extends Module
 						$newKey="$key{$clashes[$key]}";
 						$output[$newKey]=$value;
 					}
-					
+
 				}
 			}
 		}
 	}
-	
+
 	private function mixResults($matching, $notMatching, $feature)
 	{
 		$featureParts=$this->core->splitOnceOn(' ', $feature);
 		$processed=$this->core->callFeatureWithDataset($featureParts[0], $featureParts[1], $matching);
-		
+
 		return array_merge($processed, $notMatching);
 	}
-	
+
 	private function requireEach($input, $search, $feature=false, $shouldMatch=true, $shouldRecurse=false)
 	{
 		//print_r($input);
 		$outputMatch=array();
 		$outputNoMatch=array();
-		
+
 		# This could techinically be done with return array();, but would be prone to bugs if the default value of one of these arrays changes in the future.
 		if (!is_array($input)) return ($shouldMatch)?$outputMatch:$outputNoMatch;
-		
+
 		foreach ($input as $key=>$line)
 		{
 			$processed=false;
-			
+
 			if (is_string($line))
 			{
 				if (preg_match('/'.$search.'/', $line))
@@ -562,7 +562,7 @@ class Manipulator extends Module
 			}
 			else $outputNoMatch[$key]=$line;
 		}
-		
+
 		if ($feature)
 		{
 			if ($this->core->isVerboseEnough(3))
@@ -577,14 +577,14 @@ class Manipulator extends Module
 			else return $outputNoMatch;
 		}
 	}
-	
+
 	private function requireEntry($input, $neededKey, $neededRegex, $feature=false, $shouldMatch=true)
 	{
 		$outputMatch=array();
 		$outputNoMatch=array();
-		
+
 		if (!is_array($input)) return false; # TODO double check what this should be.
-		
+
 		foreach ($input as $key=>$line)
 		{
 			if ($neededKey)
@@ -610,7 +610,7 @@ class Manipulator extends Module
 				else $outputNoMatch[$key]=$line;
 			}
 		}
-		
+
 		if ($feature)
 		{
 			$this->core->debug(3, 'requireEntry: Matched '.count($outputMatch).". Didn't match ".count($outputNoMatch).". For search $neededKey=$neededRegex"); # TODO Optimise this so that the counts are not done if the debugging isn't going to be seen
@@ -622,15 +622,15 @@ class Manipulator extends Module
 			else return $outputNoMatch;
 		}
 	}
-	
+
 	function chooseFirst($input, $parms)
 	{
 		# Choose the first non-empty value and put it into the destination variable. --chooseFirst=dstVarName,srcVarName1,srcVarName2[,srcVarName3[,...]]
-		
+
 		$dstVarName=$parms[0];
 		$totalParms=count($parms);
 		$output=array();
-		
+
 		foreach ($input as $line)
 		{
 			//$line[$dstVarName]='unset'; # Do we want this?
@@ -643,13 +643,13 @@ class Manipulator extends Module
 					break;
 				}
 			}
-			
+
 			$output[]=$line;
 		}
-		
+
 		return $output;
 	}
-	
+
 	function chooseFirstSet($dataIn, $parms, $overwrite=true)
 	{
 		# TODO write this
@@ -659,15 +659,15 @@ class Manipulator extends Module
 				assign results
 			return result
 		*/
-		
+
 		$stop=count($parms);
 		$width=$parms[0];
 		$sets=array(0=>array());
 		$setID=-1;
 		$output=array();
 		$destination=0;
-		
-		
+
+
 		for ($inputKey=1;$inputKey<$stop;$inputKey++)
 		{
 			if ($inputKey%$width==1)
@@ -675,10 +675,10 @@ class Manipulator extends Module
 				$setID++;
 				$sets[$setID]=array();
 			}
-			
+
 			$sets[$setID][]=$parms[$inputKey];
 		}
-		
+
 		foreach ($dataIn as $line)
 		{
 			if ($overwrite or !isset($line[$sets[0][0]]))
@@ -699,10 +699,10 @@ class Manipulator extends Module
 			}
 			$output[]=$line;
 		}
-		
+
 		return $output;
 	}
-	
+
 	function resultSet($input, $key, $value, $overwrite=true)
 	{
 		$output=$input;
@@ -710,10 +710,10 @@ class Manipulator extends Module
 		{
 			if ($overwrite or !isset($line[$key])) $line[$key]=$this->processResultVarsInString($line, $value);
 		}
-		
+
 		return $output;
 	}
-	
+
 	function resultUnset($input, $keys)
 	{
 		$output=$input;
@@ -724,10 +724,10 @@ class Manipulator extends Module
 				if (isset($line[$key])) unset($line[$key]);
 			}
 		}
-		
+
 		return $output;
 	}
-	
+
 	function addResultSlashes($input, $src, $dst)
 	{
 		$output=$input;
@@ -735,14 +735,14 @@ class Manipulator extends Module
 		{
 			$line[$dst]=addslashes($line[$src]);
 		}
-		
+
 		return $output;
 	}
-	
+
 	function take($key, $resultSet)
 	{
 		$output=array();
-		
+
 		foreach ($resultSet as $line)
 		{
 			if (isset($line[$key]))
@@ -757,22 +757,22 @@ class Manipulator extends Module
 				else $output[]=$line[$key];
 			}
 		}
-		
+
 		return $output;
 	}
-	
+
 	function takeSubResult($key, $resultSet)
 	{
 		if (isset($resultSet[$key])) return $resultSet[$key];
 		else return array(); # Failure should empty the resultSet
 	}
-	
+
 	function duplicate($input, $numberOfTimesToDuplicate=1)
 	{
 		$output=array();
-		
+
 		$actualNumberOfTimesToDuplicate=($numberOfTimesToDuplicate)?$numberOfTimesToDuplicate:1;
-		
+
 		for($duplication=0;$duplication<=$actualNumberOfTimesToDuplicate;$duplication++)
 		{
 			foreach ($input as $line)
@@ -780,25 +780,25 @@ class Manipulator extends Module
 				$output[]=$line;
 			}
 		}
-		
+
 		return $output;
 	}
-	
+
 	function assignPos($resultSet, $resultVariableName='pos', $offset=0)
 	{
 		if (!$resultVariableName) $resultVariableName='pos';
 		if (!$offset) $offset=0;
-		
+
 		$pos=$offset;
 		foreach ($resultSet as $key=>&$result)
 		{
 			$result[$resultVariableName]=$pos;
 			$pos++;
 		}
-		
+
 		return $resultSet;
 	}
-	
+
 	function chooseBasedOn($resultSet, $inputValueName, $outputValueName, $inputArrayName)
 	{
 		if ($inputArray=$this->core->getNested($this->core->interpretParms($inputArrayName)))
@@ -807,20 +807,20 @@ class Manipulator extends Module
 			{
 				$index=array_keys($inputArray);
 				$count=count($inputArray);
-				
+
 				foreach ($resultSet as $key=>&$item)
 				{
 					if (!isset($item[$inputValueName])) continue; # TODO Do we need debugging on this? Probably yes.
 					if (!is_numeric($item[$inputValueName])) continue; # TODO Do we need debugging on this? Probably yes.
-					
+
 					# TODO test/finish this
 					$arrayPos=$item[$inputValueName]%$count;
 					#$item[$outputValueName]=$inputArray[$index[$arrayPos]];
 					$item[$outputValueName]=$index[$arrayPos];
 				}
-				
-				
-				
+
+
+
 				return $resultSet;
 			}
 			else
@@ -829,61 +829,61 @@ class Manipulator extends Module
 				return false;
 			}
 		}
-		else 
+		else
 		{
 			$this->core->debug(3, "Manipulator->chooseBasedOn: $inputArrayName did not exist.");
 			return false;
 		}
 	}
-	
+
 	function offsetResult($resultSet, $offset, $max)
 	{
 		if (!$max) $max=1;
-		
+
 		$output=array();
 		$keys=array_keys($resultSet);
 		$keyCount=count($keys);
 		$absMax=abs($max);
 		$totalRequested=$offset+$absMax;
-		
+
 		if ($totalRequested > $keyCount) $stop=$keyCount;
 		else $stop=$totalRequested;
-		
+
 		if ($max<0)
 		{
 			$oldOffset=$offset;
 			$offset=$keyCount-$stop;
 			$stop=$keyCount-$oldOffset;
 		}
-		
+
 		for ($i=$offset; $i<$stop; $i++)
 		{
 			$key=$keys[$i];
 			$output[$key]=$resultSet[$key];
 		}
-		
+
 		return $output;
 	}
-	
+
 	function resetKeys($data)
 	{
 		$output=array();
 		$newKey=0;
-		
+
 		foreach ($data as $value)
 		{
 			$output[$newKey]=$value;
 			$newKey++;
 		}
-		
+
 		return $output;
 	}
-	
+
 	function keyOn($resultSet, $keysToKeyOn, $unique=true)
 	{
 		$output=array();
 		$separator='_';
-		
+
 		foreach ($resultSet as $oldKey=>$item)
 		{
 			if ($unique)
@@ -909,10 +909,10 @@ class Manipulator extends Module
 			}
 			$output[$key]=$item;
 		}
-		
+
 		return $output;
 	}
-	
+
 	function keyValueOn($resultSet, $valueName, $subValueName)
 	{
 		foreach ($resultSet as $oldKey=>&$item)
@@ -922,32 +922,32 @@ class Manipulator extends Module
 				$item[$valueName]=$this->keyOn($item[$valueName], $subValueName);
 			}
 		}
-		
+
 		return $resultSet;
 	}
-	
+
 	function sortOnItemKey($resultSet, $keysToKeyOn)
 	{
 		# Key on keys
 		$output=$this->keyOn($resultSet, $keysToKeyOn);
-		
+
 		# Sort
 		ksort($output);
 		return $output;
 	}
-	
+
 	function findPoint($resultSet, $method, $valueName, $value)
 	{ // Divide and conquer to find an approximate value.
-		
+
 		if (!is_array($resultSet)) return $resultSet;
-		
+
 		$keys=array_keys($resultSet);
 		$min=0;
 		$total=count($keys);
 		$max=$total-1;
 		$interations=0;
 		$half=intval(($max-$min)/2);
-		
+
 		while ($interations<$total)
 		{
 			if (!isset($resultSet[$keys[$half]][$valueName]))
@@ -961,12 +961,12 @@ class Manipulator extends Module
 				}
 				continue;
 			}
-			
+
 			$iterationValue=$resultSet[$keys[$half]][$valueName];
 			$maxValue=$resultSet[$keys[$max]][$valueName];
 			$minValue=$resultSet[$keys[$min]][$valueName];
 			$this->core->debug(3, "findPoint: Iteration $interations min=$min half=$half max=$max");
-			
+
 			if ($iterationValue == $value and $method == '==') return $half;
 			elseif ($max==$min or $max==$half) # TODO potentially we don't need $max==$min
 			{
@@ -1027,7 +1027,7 @@ class Manipulator extends Module
 				$this->core->debug(3, "findPoint: (else) Set min to $half");
 				$min=$half;
 			}
-			
+
 			$difference=$max-$min;
 			if ($difference>1) $half=intval($difference/2)+$min;
 			else $half=$max;
@@ -1036,7 +1036,7 @@ class Manipulator extends Module
 		$this->core->debug(2, "findPoint: Finished having done $interations iterations.");
 		return $half;
 	}
-	
+
 	function getRange($resultSet, $start, $stop)
 	{
 		if ($start===null or $stop===null)
@@ -1055,17 +1055,17 @@ class Manipulator extends Module
 			return array();
 		}
 		if (!is_array($resultSet)) return $resultSet;
-		
+
 		if ($stop=='' and !is_numeric($stop))
 		{
 			$stop=count($resultSet)-1;
 			$this->core->debug(3, "getRange: Guessed absent stop value to be $stop.");
 		}
-		
+
 		$keys=array_keys($resultSet);
 		$output=array();
 		$this->core->debug(3, "getRange(---, $start, $stop)");
-		
+
 		if (count($resultSet))
 		{
 			for ($i=$start;$i<=$stop;$i++)
@@ -1073,10 +1073,10 @@ class Manipulator extends Module
 				$output[$keys[$i]]=$resultSet[$keys[$i]];
 			}
 		}
-		
+
 		return $output;
 	}
-	
+
 	function lessThan($resultSet, $valueName, $value)
 	{
 		$this->core->debug(3, "lessThan(---, $valueName, $value)");
@@ -1084,7 +1084,7 @@ class Manipulator extends Module
 		$range=$this->getRange($resultSet, 0, $point);
 		return $range;
 	}
-	
+
 	function greaterThan($resultSet, $valueName, $value)
 	{
 		$this->core->debug(3, "greaterThan(---, $valueName, $value)");
@@ -1092,7 +1092,7 @@ class Manipulator extends Module
 		$range=$this->getRange($resultSet, $point, false);
 		return $range;
 	}
-	
+
 	function between($resultSet, $valueName, $smallValue, $largeValue)
 	{
 		$this->core->debug(3, "between(---, $valueName, $smallValue, $largeValue)");

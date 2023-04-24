@@ -1,6 +1,6 @@
 # The help to display if a "" ~ default
 
-help ~!Help,default!~
+help ["~!Help,default!~"]
 outNow
 
 clear

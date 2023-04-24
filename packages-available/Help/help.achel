@@ -12,7 +12,7 @@ templateOut help
 
 getCategory Features
 
-if ~!Local,search!~,!=,,
+if ["~!Local,search!~","!=",""],
     debug 1,Refining results to "~!Local,search!~".
     requireEach ~!Local,search!~
 else
