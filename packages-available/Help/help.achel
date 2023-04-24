@@ -3,12 +3,9 @@
 #onLoaded setFeatureType help,help
 parameters search,showHidden
 
-# debug 0,help: loadAllMacros begin
 loadAllMacros
-# debug 0,help: loadAllMacros end
 
 templateOut help
-# searchHelp all
 
 getCategory Features
 
@@ -24,4 +21,4 @@ if ~!Local,showHidden!~,==,,
 else
 	debug 1,Allowing hidden entries.
 
-registerOnceForEvent Achel,finishEarly,finishHelp
+registerOnceForEvent Achel,finishLate,finishHelp
