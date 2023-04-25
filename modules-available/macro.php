@@ -460,7 +460,14 @@ class Macro extends Module
 		# Get original macroName
 		$nameParts=explode('.', $fileName);
 		$originalName=$nameParts[0];
-		$extention=$nameParts[1];
+		if (isset($nameParts[1]))
+		{
+			$extention=$nameParts[1];
+		}
+		else
+		{
+			$extention="achel";
+		}
 
 		return array(
 			'fileName' => $fileName,
