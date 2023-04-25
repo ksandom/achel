@@ -1,0 +1,20 @@
+#!/bin/bash
+# Description
+#   Remove a system-wide (/usr/bin) symlink created with localBinToGlobal.
+#
+# Syntax:
+#   $0 localExecutableName
+#
+# Examples:
+#   Remove doneit from being available system-wide.
+#     $0 doneit
+
+requiredParms="$1"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/systemWide.sh
+
+localExecutableName="$1"
+
+dstPath="/usr/bin/$localExecutableName"
+
+unMakeSystemWide "$dstPath"
