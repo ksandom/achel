@@ -31,6 +31,7 @@ class Macro extends Module
 				$this->core->registerFeature($this, array('getProgressKey'), 'getProgressKey', "Progress information is now stored in a unique location for each level nesting so that nested loops in the same macro can operate without interfereing with each others' progress information.", array('loop', 'iterate', 'resultset'));
 				$this->core->registerFeature($this, array('loadMacro'), 'loadMacro', "Load a macro from disk. This is not currenly for general use.", array('hidden'));
 				$this->core->registerFeature($this, array('loadAllMacros'), 'loadAllMacros', "Load all macros from disk. This is not currenly for general use.", array('hidden'));
+				$this->core->registerFeature($this, array('loadMacroFromFile'), 'loadMacroFromFile', "Load a acros from a file. --loadMacroFromFile=pathToFile . This is not currenly for general use.", array('hidden'));
 				break;
 			case 'singleLineMacro':
 				$this->defineMacro($this->core->get('Global', $event), true);
@@ -74,6 +75,9 @@ class Macro extends Module
 			case 'loadAllMacros':
 				$this->loadSavedMacros(true);
 				break;
+			case 'loadMacroFromFile':
+				$this->loadMacroFromFile($this->core->get('Global', $event));
+				break;
 			case 'last':
 				break;
 			default:
@@ -108,7 +112,7 @@ class Macro extends Module
 		}
 		else
 		{
-			# Split into lines usong \n
+			# Split into lines using \n
 			$lines=$actualMacro;
 		}
 
@@ -163,6 +167,11 @@ class Macro extends Module
 						);
 					break;
 			}
+		}
+
+		if ($this->core->get("Macro", "lazyLoaded")==$macroName)
+		{
+			$this->core->registerFeature($this, array($macroName), $macroName, "Macro loaded at runtime for external scripts.", array('dontCacheThis'));
 		}
 
 		if (!$this->compileFromArray($macroName, $preCompile))
@@ -477,6 +486,23 @@ class Macro extends Module
 		$this->defineMacro($contentsParts, false, $macroName);
 	}
 
+	function loadMacroFromFile($fileName, $macroName='')
+	{
+		if (!$macroName)
+		{
+			$macroName=md5($fileName);
+		}
+
+		$this->core->set("MacroListCache", $macroName, $fileName);
+		$this->loadMacro($macroName);
+		$this->core->debug(0, "$fileName -> $macroName");
+	}
+
+	function lazyLoadMacroFromFile($fileName)
+	{
+		$this->core->set("Macro", "lazyLoad", "$fileName");
+	}
+
 	function loadMacroRegisterFeature($fileName, $fullPath, $macroName, $quiet=false)
 	{
 		# This case happens when we load all macros in a cached environment.
@@ -485,9 +511,13 @@ class Macro extends Module
 		$contents=file_get_contents($fullPath);
 		$contentsParts=explode("\n", $contents);
 		$this->core->set("MacroRawContents", $macroName, $contentsParts);
-		if (substr($contentsParts[0], 0, 2)=='# ')
+		$firstNativeLine=0;
+
+		if (substr($contentsParts[0], 0, 2)=='#!') $firstNativeLine=1;
+
+		if (substr($contentsParts[$firstNativeLine], 0, 2)=='# ')
 		{
-			$firstLine=substr($contentsParts[0], 2);
+			$firstLine=substr($contentsParts[$firstNativeLine], 2);
 			$firstLineParts=explode('~', $firstLine);
 			#$description=$firstLine;
 			$description=$firstLineParts[0];
@@ -555,12 +585,29 @@ class Macro extends Module
 				$this->core->debug(0, "Something went very wrong trying to load macro $macroName.");
 			}
 		}
+
+		$this->doLazyLoad();
+
 		$this->core->callFeature('triggerEvent', 'Macro,allLoaded');
 		$loadFinish=microtime(true);
 		$loadTime=$loadFinish-$loadStart;
 		$this->core->debug(4, "Loaded macros in $loadTime seconds. start=$loadStart fimish=$loadFinish");
 
 		$this->complainAboutDuplicates(false);
+	}
+
+	function doLazyLoad()
+	{
+		$lazyLoad=$this->core->get("LazyLoad", "file");
+		if ($lazyLoad)
+		{
+			$this->core->debug(1, "LazyLoad: $lazyLoad");
+			$this->loadMacroFromFile($lazyLoad, $this->core->get("LazyLoad", "macro"));
+		}
+		else
+		{
+			$this->core->debug(1, "LazyLoad: _nothing_");
+		}
 	}
 }
 

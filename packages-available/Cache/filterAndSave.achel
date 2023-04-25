@@ -1,0 +1,15 @@
+# Filter out unwanted data, and save a particular store. --filterAndSave=Store ~ cache,system
+parameters store
+
+if ~!Macro,lazyLoaded!~,!=,,
+    isolate
+        escape Cache,fileNameToExclude,~!MacroListCache,~!Macro,lazyLoaded!~!~
+        escapeForRegex Cache,fileNameToExclude,~!Cache,fileNameToExclude!~
+
+        getCategory ~!Local,store!~
+        excludeEach ~!Macro,lazyLoaded!~
+        excludeEach ~!Cache,fileNameToExclude!~
+        setCategory ~!Local,store!~
+        clearResultset
+
+saveStoreToCache ~!Local,store!~

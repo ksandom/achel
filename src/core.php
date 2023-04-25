@@ -1129,7 +1129,7 @@ class core extends Module
 
 			if (!is_array($obj))
 			{
-				$this->complain($this, "Failed to assert macro $argument.", 'addAction');
+				$this->complain($this, "Failed to assert macro $macroName/$argument.", 'addAction');
 				return false;
 			}
 		}

@@ -10,12 +10,12 @@ class CommandLine extends Module
 	private $track=null;
 	private $store=null;
 	private $codes=false;
-	
+
 	function __construct()
 	{
 		parent::__construct('CommandLine');
 	}
-	
+
 	function event($event)
 	{
 		switch ($event)
@@ -25,7 +25,7 @@ class CommandLine extends Module
 				$this->core->registerFeature($this, array('nested'), 'nested', 'Print output using a simple nested format. Particularly useful for debugging.', array('debug', 'dev', 'output'));
 				$this->core->registerFeature($this, array('setCliOutput'), 'setCliOutput', 'Reset the output to the natural state of the current interface.', array('debug', 'dev', 'output', 'hidden'));
 				$this->core->registerFeature($this, array('processArgs'), 'processArgs', 'Process command line arguments.', array('startup', 'hidden'));
-				
+
 				$this->core->setRef('General', 'outputObject', $this);
 				$this->core->setRef('General', 'echoObject', $this);
 				break;
@@ -65,14 +65,36 @@ class CommandLine extends Module
 				break;
 		}
 	}
-	
+
+	function lazyLoad($fileName)
+	{
+		$newParm=md5($fileName);
+
+		$this->core->set("MacroListCache", $newParm, $fileName);
+		$this->core->set("MacroRawContents", $newParm, file_get_contents($fileName));
+		$this->core->set("Macro", "lazyLoaded", $newParm);
+
+		$this->core->debug(1, "Will lazyLoad: $fileName as --$newParm");
+
+		return $newParm;
+	}
+
 	function processArgs()
 	{
 		$arg=&$this->core->get('CommandLine', 'arguments');
 		$max=count($arg);
 		$possibleFlagsRemaining=true;
 		$stray=array();
-		
+
+		if (isset($arg[1]))
+		{
+			$firstParm=$arg[1];
+			if (file_exists($firstParm) and (substr($firstParm, 1) != '-'))
+			{
+				$arg[1]='--'.$this->lazyLoad($firstParm);
+			}
+		}
+
 		for ($i=1;$i<$max;$i++) # NOTE Chosen for instead of foreach so we can nicely grab/skip the next item while maintaining position
 		{
 			$length=strlen($arg[$i]);
@@ -102,7 +124,7 @@ class CommandLine extends Module
 						$argument=substr($arg[$i], 2);
 						$this->core->addAction($argument);
 					}
-					
+
 					# take action on argument
 					//$this->setAction($argument);
 				}
@@ -124,10 +146,10 @@ class CommandLine extends Module
 				$stray[]=$arg[$i];
 			}
 		}
-		
+
 		$this->core->set('Global', 'stray', implode(' ', $stray));
 	}
-	
+
 	function setAction($argument)
 	{
 		$obj=&$this->core->get('Features', $argument);
@@ -137,13 +159,13 @@ class CommandLine extends Module
 			$this->core->debug(0,"Could not find a module to match '$argument'");
 		}
 	}
-	
+
 	function assertCodes()
 	{
 		if (!$this->codes)
 		{
 			$this->codes=$this->core->getCategoryModule('Color');
-			
+
 			# If we still don't have the colour codes, create some empty values for things that we use or are likely to use.
 			if (!isset($this->codes['default']))
 			{
@@ -159,9 +181,9 @@ class CommandLine extends Module
 				);
 			}
 		}
-		
+
 	}
-	
+
 	function getNextIndentation($previoiusIndentation, $indentationAmount)
 	{
 		$possibleColours=array(
@@ -174,18 +196,18 @@ class CommandLine extends Module
 					'cyan'=>'',
 					'brightBlack'=>''
 		);
-		
+
 		$keyNumber=$indentationAmount%count($possibleColours);
 		$keys=array_keys($possibleColours);
 		$colour=$this->codes[$keys[$keyNumber]];
-		
+
 		return "${previoiusIndentation}${colour}".nestedIndentationValue;
 	}
-	
+
 	function out($output, $indent='', $indentationAmount=0, $prefix=false)
 	{
 		if ($indent=='') print_r($this->codes);
-		
+
 		if ($this->core->get('General', 'outputStyle')=='printr')
 		{
 			print_r($output);
@@ -193,9 +215,9 @@ class CommandLine extends Module
 		else
 		{
 			$this->assertCodes();
-			
+
 			$derivedPrefix=($prefix or is_numeric($prefix))?"$prefix{$this->codes['default']}: ":'';
-			if (is_string($output)) 
+			if (is_string($output))
 			{
 				$this->core->echoOut("$indent{$this->codes['green']}$derivedPrefix$output{$this->codes['default']}");
 			}
@@ -235,7 +257,7 @@ class CommandLine extends Module
 			}
 		}
 	}
-	
+
 	function put($output)
 	{
 		foreach ($output as $line) echo "$line\n";
@@ -245,5 +267,5 @@ class CommandLine extends Module
 $core=core::assert();
 $amcl=new CommandLine();
 $core->registerModule($amcl);
- 
+
 ?>
