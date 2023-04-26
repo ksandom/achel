@@ -947,6 +947,8 @@ class MetaFaucet extends ThroughBasedFaucet
 		$this->myName=$name;
 		$this->bindings=array();
 
+		$this->faucets=array();
+
 		$this->registerConfigItem('description', '', 'Describe what the metaFaucet does.', 'string');
 		$this->setConfigItem('description', '', 'unknown');
 
