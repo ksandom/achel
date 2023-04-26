@@ -818,8 +818,6 @@ class core extends Module
 					# TODO This was false. Double check this change hasn't broken any assumptions.
 					$default=$value;
 					$this->debug(4,"parameters: Simple numeric. [$categoryForParameters][$scopeKey][$key] value=$value    key=$key nesting=$nesting globalKey=$lastMacro-$details");
-
-					# print_r($this->core->getCategoryModule('Global'));
 				}
 				else
 				{ // Basic name assignment
@@ -1950,8 +1948,6 @@ class core extends Module
 			# set the value
 			if ($path[$position]==='') $initialValue[]=$value;
 			else $initialValue[$path[$position]]=$value;
-
-			#print_r($value);
 
 			# TODO looks like some optimisation can be done here.
 			/*

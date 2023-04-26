@@ -508,7 +508,6 @@ class Manipulator extends Module
 
 	private function requireEach($input, $search, $feature=false, $shouldMatch=true, $shouldRecurse=false)
 	{
-		//print_r($input);
 		$outputMatch=array();
 		$outputNoMatch=array();
 
@@ -546,10 +545,6 @@ class Manipulator extends Module
 					elseif ($shouldRecurse and is_array($subline))
 					{
 						$subResult=$this->requireEach($subline, $search, $feature, true, true);
-						#echo "$search\n";
-						#print_r($subline);
-						#print_r($subResult);
-						#die();
 						if (count($subResult))
 						{
 							$outputMatch[$key]=$line;
