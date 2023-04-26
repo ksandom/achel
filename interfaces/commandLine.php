@@ -206,8 +206,6 @@ class CommandLine extends Module
 
 	function out($output, $indent='', $indentationAmount=0, $prefix=false)
 	{
-		if ($indent=='') print_r($this->codes);
-
 		if ($this->core->get('General', 'outputStyle')=='printr')
 		{
 			print_r($output);

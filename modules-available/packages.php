@@ -7,17 +7,17 @@
 Set to 0 to show debugging.
 Set to 4 normally.
 */
-define('packageVerbosity', 4); 
+define('packageVerbosity', 4);
 
 class Packages extends Module
 {
 	private $loadedPackages=array();
-	
+
 	function __construct()
 	{
 		parent::__construct('Packages');
 	}
-	
+
 	function event($event)
 	{
 		switch ($event)
@@ -34,14 +34,14 @@ class Packages extends Module
 				break;
 		}
 	}
-	
+
 	function loadEnabledPackages()
 	{
 		$profile=$this->core->get('General', 'profile');
 		$packageEnabledDir=$this->core->get('General', 'configDir')."/profiles/$profile/packages";
 		$list=$this->core->getFileList($packageEnabledDir);
 		asort($list);
-		
+
 		foreach ($list as $filename)
 		{
 			# TODO The paths need to be taken into account so that enabled/avaiable will be able to co-exist without duplicates
@@ -49,7 +49,7 @@ class Packages extends Module
 			$this->loadPackage($filename);
 		}
 	}
-	
+
 	function loadPackage($packageName)
 	{
 		if (!isset($this->loadedPackages[$packageName]))
@@ -59,10 +59,10 @@ class Packages extends Module
 			if ($packageParts)
 			{
 				asort($packageParts);
-				
+
 				foreach ($packageParts as $filename=>$fullPath)
 				{
-					$this->loadComponent($filename, $fullPath);
+					$this->loadComponent($filename, $fullPath, $packageName);
 				}
 			}
 			else
@@ -75,8 +75,8 @@ class Packages extends Module
 			$this->core->debug(packageVerbosity, "loadPackage: $packageName is already loaded.");
 		}
 	}
-	
-	function loadComponent($filename, $fullPath)
+
+	function loadComponent($filename, $fullPath, $packageName='unknown')
 	{
 		if (is_file($fullPath))
 		{
@@ -84,7 +84,7 @@ class Packages extends Module
 			$filenameParts=explode('.', $filename);
 			$numParts=count($filenameParts);
 			$lastPos=($numParts>1)?$numParts-1:0;
-			
+
 			switch ($filenameParts[$lastPos])
 			{
 				case 'md':
@@ -96,29 +96,38 @@ class Packages extends Module
 					loadModules($this->core, $fullPath, false);
 					break;
 				case 'achel':
-					$this->core->addItemsToAnArray('Core', 'macrosToLoad', array($filename=>$fullPath));
 				case 'macro':
 					#$this->core->debug(0, "loadPackage: $filename Macro.");
 					$this->core->addItemsToAnArray('Core', 'macrosToLoad', array($filename=>$fullPath));
+					$this->core->addItemsToAnArray('Core', 'macroPackages', array($filenameParts[0]=>$this->getProfileName($packageName)));
 					break;
 				case 'template':
 					#$this->core->debug(0, "loadPackage: $filename Template.");
 					$this->core->addItemsToAnArray('Core', 'templatesToLoad', array($filename=>$fullPath));
 					break;
 			}
-			
+
 			# $this->core->debug(packageVerbosity, "loadEnabledPackages:   File $filename");
 		}
 		else
 		{
 			$this->core->debug(packageVerbosity, "loadEnabledPackages:   Not doing anything with directories yet $filename");
 		}
-		
+
+	}
+
+	function getProfileName($packageName)
+	{
+		$pathParts=explode('/', $packageName);
+		$lastPart=$pathParts[count($pathParts)-1];
+
+		$packageNameParts=explode('-', $lastPart);
+		return $packageNameParts[0];
 	}
 }
 
 $core=core::assert();
 $packages=new Packages();
 $core->registerModule($packages);
- 
+
 ?>

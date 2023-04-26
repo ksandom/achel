@@ -23,6 +23,11 @@ listUnitTestCollections
 
 set Local,wrongNumberMessage,Wrong number of results. Use -v  (eg achel -v --unitTests) to see what went wrong and -vv to see the actual results that came back. Look for
 
+# if ~!General,programName!~,==,achel,
+if ~!General,programName!~,!=,achel,
+	debug 0,Excluding achel-specific unit tests.
+	excludeAchelTests
+
 if ~!Local,regex!~,!=,,
 	refine ~!Local,regex!~
 

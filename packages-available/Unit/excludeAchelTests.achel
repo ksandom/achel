@@ -1,0 +1,8 @@
+# Exclude all tests that are for achel. ~ hidden,filter,exclude
+
+loop
+    if ~!Core,macroPackages,~!Result,name!~!~,==,achel,
+        debug 1,blasdflaksjdasldjk discard ~!Result,name!~ _~!Core,macroPackages,~!Result,name!~!~_
+        unsetCategory Result
+    else
+        debug 1,blasdflaksjdasldjk keep ~!Result,name!~
