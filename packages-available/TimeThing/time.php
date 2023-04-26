@@ -16,12 +16,12 @@ class TimeThing extends Module
 	private $codes=false;
 	private $throttle=0;
 	private $throttlePace=0;
-	
+
 	function __construct()
 	{
 		parent::__construct('TimeThing');
 	}
-	
+
 	function event($event)
 	{
 		switch ($event)
@@ -35,7 +35,7 @@ class TimeThing extends Module
 				$this->core->registerFeature($this, array('strToTime'), 'strToTime', "Uses PHP's strtotime() function to get a timestamp that is useable by the other functions. --strToTime=Category,variableName,string[,baseTime]. string is something like \"yesterday\" or \"-1 day\".", array('help'));
 				$this->core->registerFeature($this, array('throttle'), 'throttle', "Will only run a feature if it hasn't been run in the last x milliseconds --throttle=x, . This is useful for periodically running something in a loop such as showing the progress to a user, without slowing down the process too much. Note that the comma at the end is important.", array('help','time'));
 				$this->core->registerFeature($this, array('throttleBetween'), 'throttleBetween', "Will only run a feature if it hasn't been run in the last x milliseconds --throttleBetween=x1,x2,increment, . This is basically the same as --throttle, except the trottling changes with each increment. The intention of this is scale the throttling gracefully so that long running tasks can become more efficient.", array('help','time'));
-				
+
 				# TODO This is probably better in config. Then we could do some funky things with configuring fuzzy timestamps.
 				$this->core->set('Time', 'fuzzyTimeThreshold', fuzzyTimeThreshold);
 				break;
@@ -82,27 +82,34 @@ class TimeThing extends Module
 				break;
 		}
 	}
-	
+
 	function now($microTime=false)
 	{
 		if ($microTime) return microtime(true);
 		else return time();
 	}
-	
+
 	function timeDiff($inputTime1, $inputTime2)
 	{
+		if ($inputTime1=='' or $inputTime2=='') {
+			$this->core->complain($this, "At least one of inputTime1($inputTime1) or inputTime2($inputTime2) is empty.", "timeDiff");
+
+			if ($inputTime1=='') return "inputTime1 not set/empty.";
+			if ($inputTime2=='') return "inputTime2 not set/empty.";
+		}
+
 		return $inputTime2-$inputTime1;
 	}
-	
+
 	function fuzzyTime($inputTime, $maxUnit='')
 	{
 		$accuracy=1;
-		
+
 		if ($inputTime>fuzzyTimeThreshold)
 		{
 			return $this->fullTimeStamp($inputTime);
 		}
-		
+
 		if ($inputTime<minutes or $maxUnit=='seconds')
 		{
 			$unit='second';
@@ -153,33 +160,40 @@ class TimeThing extends Module
 				}
 			}
 		}
-		
+
 		$output="$value $unit";
 		if (intval($value)!=1) $output.='s';
 		return $output;
 	}
-	
+
 	function fullTimeStamp($inputTime, $format='Y-m-d--G:i:s')
 	{
 		$time=($inputTime)?$inputTime:$this->now();
+		if (!is_numeric($inputTime))
+		{
+			$error="inputTime($inputTime) does not appear to be a number.";
+			$this->core->complain($this, $error, "fullTimeStamp");
+			return $error;
+		}
+
 		return date($this->core->get('Settings','timestampFormat'), $time);
 	}
-	
+
 	function throttle($milliseconds, $feature)
 	{
 		$now=microtime(true);
-		
+
 		if ($now-$this->throttle > $milliseconds/1000)
 		{
 			$this->core->callFeature($feature, '');
 			$this->throttle=$now;
 		}
 	}
-	
+
 	function throttleBetween($millisecondsFrom, $millisecondsTo, $increment, $feature)
 	{
 		$now=microtime(true);
-		
+
 		# Derive orientation and related stuff
 		if ($millisecondsFrom<$millisecondsTo)
 		{ # Forwards
@@ -193,9 +207,9 @@ class TimeThing extends Module
 			if ($this->throttlePace>$millisecondsFrom) $this->throttlePace=$millisecondsFrom;
 			if ($this->throttlePace<$millisecondsTo) $this->throttlePace=$millisecondsTo;
 		}
-		
+
 		$now=microtime(true);
-		
+
 		if ($now-$this->throttle > $this->throttlePace/1000)
 		{
 			$this->core->callFeature($feature, '');
