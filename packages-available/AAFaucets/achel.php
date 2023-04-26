@@ -32,6 +32,9 @@ class FaucetEnvironment
 	public $rootFaucet=null;
 	public $core=null;
 
+	private $scopeTracker=array();
+	private $scopeNumber=0;
+
 	function __construct()
 	{
 		$this->core=core::assert();
@@ -54,6 +57,30 @@ class FaucetEnvironment
 		else
 		{
 			$this->currentFaucet=&$this->core->get('Achel','currentFaucet');
+		}
+	}
+
+	function beginScopedEvent(&$faucet)
+	{
+		$this->core->debug(0, "Environment/beginScopedEvent");
+		$this->scopeTracker[$this->scopeNumber]=$this->currentFaucet;
+		$this->currentFaucet=&$faucet->getParent();
+		$this->core->setRef('Achel','currentFaucet', $this->currentFaucet);
+		$this->scopeNumber++;
+	}
+
+	function endScopedEvent()
+	{
+		if ($this->scopeNumber > 0)
+		{
+			$this->core->debug(0, "Environment/endScopedEvent");
+			$this->scopeNumber--;
+			$this->currentFaucet=&$this->scopeTracker[$this->scopeNumber];
+			$this->core->setRef('Achel','currentFaucet', $this->currentFaucet);
+		}
+		else
+		{
+			$this->core->debug(0, "Environment/endScopedEvent - No more scope nestings.");
 		}
 	}
 }
@@ -405,6 +432,11 @@ class Faucet
 		$this->parent=&$parent;
 	}
 
+	public function getParent()
+	{
+		return $this->parent;
+	}
+
 	public function setInstanceName($instanceName)
 	{
 		$this->faucetInstanceName=$instanceName;
@@ -413,6 +445,18 @@ class Faucet
 	public function getInstanceName()
 	{
 		return $this->faucetInstanceName;
+	}
+
+	public function beginScopedEvent(&$faucet)
+	{
+		$environment=FaucetEnvironment::assert();
+		$environment->beginScopedEvent($faucet);
+	}
+
+	public function endScopedEvent()
+	{
+		$environment=FaucetEnvironment::assert();
+		$environment->endScopedEvent();
 	}
 
 	private function mergeOutFillData($outChannel, $data)

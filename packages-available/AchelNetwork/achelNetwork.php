@@ -273,6 +273,8 @@ class SocketServerFaucet extends ThroughBasedFaucet
 
 	function triggerNetworkEvent($eventName, $key, $context)
 	{
+		$this->beginScopedEvent($this);
+
 		if ($this->core->featureExists($eventName))
 		{
 			$this->core->debug(1,"$context event key via feature: SocketServerFaucet,{$eventName},$key");
@@ -283,6 +285,8 @@ class SocketServerFaucet extends ThroughBasedFaucet
 			$this->core->debug(1,"$context event key via event: SocketServerFaucet,{$eventName},$key");
 			$this->callInFaucet('triggerEvent', "SocketServerFaucet,{$eventName},$key");
 		}
+
+		$this->endScopedEvent();
 	}
 
 	function callInFaucet($command, $parameters)

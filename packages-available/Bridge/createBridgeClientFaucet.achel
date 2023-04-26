@@ -14,6 +14,10 @@ createMetaFaucet ~!Local,faucetName!~,
 	createJsonToChannelsFaucet out
 	
 	createPipe .,in,*,*
+
+	# Stuff to be handled on connect/disconnect.
 	createPipe in,tcp
 	createPipe tcp,out
+	# End of stuff to be handled on connect/disconnect.
+
 	createPipe out,.,*,*
