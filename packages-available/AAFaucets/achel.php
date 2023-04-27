@@ -62,21 +62,22 @@ class FaucetEnvironment
 
 	function beginScopedEvent(&$faucet)
 	{
-		$this->core->debug(0, "Environment/beginScopedEvent");
 		$this->scopeTracker[$this->scopeNumber]=$this->currentFaucet;
-		$this->currentFaucet=&$faucet->getParent();
+		$this->currentFaucet=$faucet->getParent();
 		$this->core->setRef('Achel','currentFaucet', $this->currentFaucet);
 		$this->scopeNumber++;
+
+		$this->core->debug(0, "Environment/beginScopedEvent: ".$this->currentFaucet->getFullPath());
 	}
 
 	function endScopedEvent()
 	{
 		if ($this->scopeNumber > 0)
 		{
-			$this->core->debug(0, "Environment/endScopedEvent");
 			$this->scopeNumber--;
 			$this->currentFaucet=&$this->scopeTracker[$this->scopeNumber];
 			$this->core->setRef('Achel','currentFaucet', $this->currentFaucet);
+			$this->core->debug(0, "Environment/endScopedEvent: ".$this->currentFaucet->getFullPath());
 		}
 		else
 		{
