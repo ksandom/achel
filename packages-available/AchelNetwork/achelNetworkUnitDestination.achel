@@ -1,3 +1,4 @@
 # Send a value somewhere ~ destination,hidden
+parameters destination
 
-set UnitNetwork,destination,~!Global,achelNetworkUnitDestination!~
+set UnitNetwork,destination,~!Local,destination!~

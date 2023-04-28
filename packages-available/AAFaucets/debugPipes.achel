@@ -1,4 +1,7 @@
 # Show the flows of data through the pipes. --debugPipes=debugLevel where debugLevel is the debug level (eg --debug=1) to display th output on. ~ debug,pipes,achel
 parameters debugLevel
 
-set General,pipeDebugLevel,~!Local,debugLevel!~
+if ~!Local,debugLevel!~,!=,,
+    set General,pipeDebugLevel,~!Local,debugLevel!~
+else
+    debug 0,pipeDebugLevel: ~!General,pipeDebugLevel!~

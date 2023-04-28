@@ -1,8 +1,10 @@
 <?php
 # Copyright (c) 2014-2018, Kevin Sandom under the GPL License. See LICENSE for full details.
-
 # Provides the ability to call Achel features from Faucets.
 
+include 'lib/call/CallFaucet.php';
+include 'lib/call/MappedCallFaucet.php';
+include 'lib/call/InlineCallFaucet.php';
 
 class CallFaucets extends Faucets
 {
@@ -10,7 +12,7 @@ class CallFaucets extends Faucets
 	{
 		parent::__construct(__CLASS__);
 	}
-	
+
 	function event($event)
 	{
 		switch ($event)
@@ -19,9 +21,9 @@ class CallFaucets extends Faucets
 				$this->core->registerFeature($this, array('create1-1CallFaucet', 'createCallFaucet'), 'create1-1CallFaucet', "Create a faucet to/from a call to a feature. Each channel is processed individually, which gives an explicit 1-1 relatinship between the input and output channels. --createCallFaucet=faucetName,feature,argument", array());
 				$this->core->registerFeature($this, array('createMappedCallFaucet'), 'createMappedCallFaucet', "Create a faucet to/from a call to a feature. All channels are processed as one blob of data keyed by channel name. --createCallFaucet=faucetName,feature,argument", array());
 				$this->core->registerFeature($this, array('createSemiInlineCallFaucet'), 'createSemiInlineCallFaucet', "Create a faucet to/from a call to a feature, but using a variable as the/an extra parameter.. --createSemiInlineCallFaucet=faucetName,feature,[argument]", array());
-				
+
 				$this->core->registerFeature($this, array('createInlineCallFaucet'), 'createInlineCallFaucet', "Create a faucet that will call what ever feature is passed to it. The result will be it's output . --createInlineCallFaucet=faucetName", array());
-				
+
 				break;
 			case 'followup':
 				break;
@@ -47,190 +49,13 @@ class CallFaucets extends Faucets
 				$inlineCallFaucet=new InlineCallFaucet();
 				$this->environment->currentFaucet->createFaucet($parms[0], 'inlineCall', $inlineCallFaucet);
 				break;
-			
+
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
 				break;
 		}
 	}
 }
-
-class CallFaucet extends ThroughBasedFaucet
-{
-	private $feature='';
-	private $argument='';
-	private $semiInline=false;
-	
-	function __construct($feature, $argument, $semiInline=false)
-	{
-		parent::__construct(__CLASS__);
-		$this->feature=$feature;
-		$this->argument=$argument;
-		$this->semiInline=$semiInline;
-	}
-	
-	function preGet()
-	{
-		$gotSomething=false;
-		foreach ($this->input as $channel=>$data)
-		{
-			if ($data)
-			{
-				if ($this->semiInline)
-				{
-					foreach ($data as $line)
-					{
-						if (!is_object($line) and !is_array($line))
-						{
-							$parameter=($this->argument)?"{$this->argument},$line":$line;
-							
-							$this->core->debug(3, "CallFaucet->preGet: Calling semiInline feature={$this->feature} parameter=$parameter");
-							$this->core->callFeature($this->feature, $parameter);
-						}
-					}
-					$this->clearInput($channel);
-					$gotSomething=true;
-				}
-				else
-				{
-					$this->core->debug(3, "CallFaucet->preGet: Calling feature={$this->feature} parameter={$this->argument}");
-					$outData=$this->core->callFeatureWithDataset($this->feature, $this->argument, $data);
-					$this->outFill($outData, $channel);
-					$this->clearInput($channel);
-					$gotSomething=true;
-				}
-			}
-		}
-		
-		return $gotSomething;
-	}
-}
-
-class MappedCallFaucet extends ThroughBasedFaucet
-{
-	private $feature='';
-	private $argument='';
-	private $semiInline=false;
-	
-	function __construct($feature, $argument, $semiInline=false)
-	{
-		parent::__construct(__CLASS__);
-		$this->feature=$feature;
-		$this->argument=$argument;
-		$this->semiInline=$semiInline;
-	}
-	
-	
-	function last($series)
-	{
-		if (is_array($series))
-		{
-			$keys=array_keys($series);
-			return $series[$keys[count($keys)-1]];
-		}
-		else
-		{
-			return $series;
-		}
-	}
-	
-	function buildInput($input)
-	{
-		$builtInput=array();
-		foreach ($input as $key=>$value)
-		{
-			$builtInput[$key]=$this->last($value);
-		}
-		
-		# TODO remove this
-		# $this->core->debug(0,"MAPPED: adfasdfwed");
-		# print_r($builtInput);
-		return $builtInput;
-	}
-	
-	function preGet()
-	{
-		$gotSomething=false;
-		if ($numberOfChannels=count($this->input))
-		{
-			if ($numberOfChannels==1 and isset($this->input['default']))
-			{
-				if (!$this->input['default']) return false;
-			}
-			
-			$gotSomething=true;
-			
-			
-			
-			$this->core->debug(4, "MappedCallFaucet->preGet: Calling feature={$this->feature} parameter={$this->argument}");
-			$builtInput=$this->buildInput($this->input);
-			$returnedData=$this->core->callFeatureWithDataset($this->feature, $this->argument, $builtInput);
-			foreach ($returnedData as $channel=>$outData)
-			{
-				$this->outFill(array($outData), $channel);
-			}
-			$this->clearInput();
-			$gotSomething=true;
-		}
-		
-		return $gotSomething;
-	}
-}
-
-class InlineCallFaucet extends ThroughBasedFaucet
-{
-	/*
-		IMPORTANT: Do not expect output from this faucet. Output will come from another source which I will document here soon. Note that you still need to have this Faucet feeding something so that the preGet() call will be made. 
-		# TODO document source.
-	*/
-	
-	private $feature='';
-	private $argument='';
-	
-	function __construct()
-	{
-		parent::__construct(__CLASS__);
-	}
-	
-	function preGet()
-	{
-		# $this->core->debug(0, "got here 2");
-		$gotSomething=false;
-		foreach ($this->input as $channel=>$data)
-		{
-			# $this->core->debug(0, "got here - $channel");
-			if (is_array($data))
-			{
-				foreach ($data as $line)
-				{
-					if (is_string($line))
-					{
-						$parts=$this->core->splitOnceOn(' ', $line);
-						$returnedResult=$this->core->callFeature($parts[0], $parts[1]);
-						$tmpReturnedResult=$returnedResult;
-						#print_r($tmpReturnedResult);
-						if (is_array($returnedResult)) $this->core->setResultSetNoRef($tmpReturnedResult, __CLASS__." Command={$parts[0]} $parts[1]}");
-						# unset($tmpReturnedResult); // This is needed since setResultSet takes a reference. Therefore the next iteration within the current preGet call overwrites result set regardless of whether we want it to or not.
-						# $this->core->debug(0, "Result type=".gettype($returnedResult)." count=".count($returnedResult));
-						$this->clearInput($channel);
-						$gotSomething=true;
-					}
-					else
-					{
-						$this->core->debug(0, "InlineCallFaucet($objectType)->preGet: Was expecting a string, but got ".gettype($line).". Will ignore this entry. This error is likely to repeat as the whole dataset is probably in thie format.");
-					}
-				}
-			}
-		}
-		
-		return $gotSomething;
-	}
-}
-
-
-
-
-
 
 $core=core::assert();
 $callFaucets=new CallFaucets();

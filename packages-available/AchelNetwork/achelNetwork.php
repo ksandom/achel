@@ -227,7 +227,6 @@ class SocketServerFaucet extends ThroughBasedFaucet
 		socket_close($this->clients[$clientID]);
 		unset($this->clients[$clientID]);
 
-		# TODO trigger a programmable event. Note that this doesn't need to be done before closing the connection since the connection is already gone anyway.
 		$this->triggerNetworkEvent($this->closeEvent, $key, 'close');
 	}
 
@@ -278,45 +277,45 @@ class SocketServerFaucet extends ThroughBasedFaucet
 		if ($this->core->featureExists($eventName))
 		{
 			$this->core->debug(1,"$context event key via feature: SocketServerFaucet,{$eventName},$key");
-			$this->callInFaucet($eventName, $key);
+			$this->core->callFeature($eventName, $key);
 		}
 		else
 		{
 			$this->core->debug(1,"$context event key via event: SocketServerFaucet,{$eventName},$key");
-			$this->callInFaucet('triggerEvent', "SocketServerFaucet,{$eventName},$key");
+			$this->core->callFeature('triggerEvent', "SocketServerFaucet,{$eventName},$key");
 		}
 
 		$this->endScopedEvent();
 	}
 
-	function callInFaucet($command, $parameters)
-	{
-		# Get the current path.
-		#$origin=$this->core->callFeature("pwd", '');
-		$env=&FaucetEnvironment::assert();
-		//$origin=$env->currentFaucet->getFullPath();
-		$origin=&$env->currentFaucet;
-
-		# get the parent path.
-		$parentPath=$this->parent->getFullPath();
-
-		if ($origin!=$parentPath)
-		{
-			$this->core->debug(1,"Changing to $parentPath to run $command $parameters.");
-			# set the current path to the parent path.
-			$this->core->callFeature("changeFaucet", $parentPath);
-
-			$this->core->callFeature($command, $parameters);
-
-			$this->core->debug(1,"callInFaucet: Changing back to the origin.");
-			$env->currentFaucet=&$origin;
-		}
-		else
-		{
-			$this->core->debug(1,"callInFaucet: Alread in $origin. No need to change to run $command $parameters.");
-			$this->core->callFeature($command, $parameters);
-		}
-	}
+	// function callInFaucet($command, $parameters)
+	// {
+	// 	# Get the current path.
+	// 	#$origin=$this->core->callFeature("pwd", '');
+	// 	$env=&FaucetEnvironment::assert();
+	// 	//$origin=$env->currentFaucet->getFullPath();
+	// 	$origin=&$env->currentFaucet;
+ //
+	// 	# get the parent path.
+	// 	$parentPath=$this->parent->getFullPath();
+ //
+	// 	if ($origin!=$parentPath)
+	// 	{
+	// 		$this->core->debug(1,"Changing to $parentPath to run $command $parameters.");
+	// 		# set the current path to the parent path.
+	// 		$this->core->callFeature("changeFaucet", $parentPath);
+ //
+	// 		$this->core->callFeature($command, $parameters);
+ //
+	// 		$this->core->debug(1,"callInFaucet: Changing back to the origin.");
+	// 		$env->currentFaucet=&$origin;
+	// 	}
+	// 	else
+	// 	{
+	// 		$this->core->debug(1,"callInFaucet: Alread in $origin. No need to change to run $command $parameters.");
+	// 		$this->core->callFeature($command, $parameters);
+	// 	}
+	// }
 
 	function getResource($channel)
 	{
@@ -331,7 +330,7 @@ class SocketServerFaucet extends ThroughBasedFaucet
 
 		if ($recieved===0) $this->clientHasClosed($channel);
 
-		//$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": Got input \"{$this->inputBuffer[$channel]}\"");
+		$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": Got input \"{$this->inputBuffer[$channel]}\"");
 
 		$result=explode($this->inEOL, $this->inputBuffer[$channel]);
 		$this->inputBuffer[$channel]='';
@@ -371,7 +370,7 @@ class SocketServerFaucet extends ThroughBasedFaucet
 
 		foreach ($this->clients as $channel=>$value)
 		{
-			// $this->core->debug(0, "network->preGet($channel) (".$this->getInstanceName().")");
+			# $this->core->debug(0, "network->preGet($channel) (".$this->getInstanceName().")");
 			if ($output=$this->getResource($channel))
 			{
 				$this->core->debug(3, __CLASS__.'->'.__FUNCTION__.": Got input for channel \"$channel\" \"$output[0]\"");
@@ -388,6 +387,7 @@ class SocketServerFaucet extends ThroughBasedFaucet
 	{ /* Send data out
 		Expects an array of strings.
 		*/
+
 		if (is_array($data))
 		{
 			switch ($channel)
@@ -400,7 +400,6 @@ class SocketServerFaucet extends ThroughBasedFaucet
 					}
 					break;
 				default:
-					$this->core->debug(3,"network put: $channel - a");
 					if (!isset($this->clients[$channel]))
 					{
 						$this->core->debug(1, "SocketServerFaucet->put: Channel $channel doesn't exist.");

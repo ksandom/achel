@@ -735,7 +735,15 @@ class core extends Module
 
 			if ($this->isVerboseEnough(4))
 			{
-				$resultCount=count($result);
+				if ($result!==null)
+				{
+					$resultCount=count($result);
+				}
+				else
+				{
+					$resultCount=0;
+				}
+
 				$nesting=$this->get('Core', 'nesting');
 				$isArray=is_array($result)?'True':'False';;
 				$this->debug(4, "INVOKE-Exit  {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn resultCount=$resultCount is_array=$isArray smCount=".$this->getResultSetCount());
@@ -1276,7 +1284,10 @@ class core extends Module
 
 	function getResultSetCount()
 	{
-		return count($this->getResultSet());
+		$resultSet=$this->getResultSet();
+
+		if ($resultSet!==null) return count($this->getResultSet());
+		else return 0;
 	}
 
 	function &go($macroName='default')
