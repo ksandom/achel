@@ -23,10 +23,10 @@ class FileFaucet extends FileBasedFaucet
 			foreach ($data as $line)
 			{
 				if (is_string($line)) fputs($this->outResource, "$line\n");
-				else $this->core->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but struck ".gettype($line)." in the array.");
+				else $this->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but struck ".gettype($line)." in the array.");
 			}
 		}
-		else $this->core->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but got ".gettype($data));
+		else $this->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but got ".gettype($data));
 	}
 }
 

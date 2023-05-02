@@ -372,7 +372,15 @@ class MetaFaucet extends ThroughBasedFaucet
 		else $actuallyToFaucet=null;
 
 
-		$this->debug($this->pipeDebugLevel, "deliver: Delivering ".gettype($input)."(".count($input).") to $actuallyToFaucet,$dstChannel.");
+		$type=gettype($input);
+		if ($type=='array')
+		{
+			$this->debug($this->pipeDebugLevel, "deliver: Delivering ".gettype($input)."(".count($input).") to $actuallyToFaucet,$dstChannel.");
+		}
+		else
+		{
+			$this->debug($this->pipeDebugLevel, "deliver: Delivering ".gettype($input)."(~) to $actuallyToFaucet,$dstChannel.");
+		}
 
 		if ($dstFaucet=='.') $this->outFill(array($input), $dstChannel);
 		elseif ($actuallyToFaucet)
@@ -506,6 +514,7 @@ class MetaFaucet extends ThroughBasedFaucet
 			}
 
 
+			$bentData=array(); // TODO Check that this is correct.
 			foreach ($fromFaucetPipes as $fromChannel=>$channelPipes)
 			{
 				# Figure out as much of the input now as we can

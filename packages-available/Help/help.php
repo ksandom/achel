@@ -80,7 +80,7 @@ class Help extends Module
 					}
 					else
 					{
-						$this->core->debug(0, "searchHelp: Could not find a feature with the name \"$name\". This can happen if the primary flag for a feature is not in the list of flags for that feature.");
+						$this->debug(0, "searchHelp: Could not find a feature with the name \"$name\". This can happen if the primary flag for a feature is not in the list of flags for that feature.");
 					}
 				}
 			}

@@ -31,7 +31,7 @@ class CallFaucet extends ThroughBasedFaucet
 						{
 							$parameter=($this->argument)?"{$this->argument},$line":$line;
 
-							$this->core->debug(3, "CallFaucet->preGet: Calling semiInline feature={$this->feature} parameter=$parameter");
+							$this->debug(3, "CallFaucet->preGet: Calling semiInline feature={$this->feature} parameter=$parameter");
 							$this->core->callFeature($this->feature, $parameter);
 						}
 					}
@@ -40,7 +40,7 @@ class CallFaucet extends ThroughBasedFaucet
 				}
 				else
 				{
-					$this->core->debug(3, "CallFaucet->preGet: Calling feature={$this->feature} parameter={$this->argument}");
+					$this->debug(3, "CallFaucet->preGet: Calling feature={$this->feature} parameter={$this->argument}");
 					$outData=$this->core->callFeatureWithDataset($this->feature, $this->argument, $data);
 					$this->outFill($outData, $channel);
 					$this->clearInput($channel);

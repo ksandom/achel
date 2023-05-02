@@ -71,7 +71,7 @@ class EventFaucet extends ThroughBasedFaucet
 						$value=$channel;
 						break;
 					default:
-						$this->core->debug(1,__CLASS__.'->'.__FUNCTION__.": Unknown valueSource \"{$this->valueSource}\" on ".__CLASS__.". Recieved on channel \"$channel\".");
+						$this->debug(1,__CLASS__.'->'.__FUNCTION__.": Unknown valueSource \"{$this->valueSource}\" on ".__CLASS__.". Recieved on channel \"$channel\".");
 						$value='unknown';
 						break;
 				}

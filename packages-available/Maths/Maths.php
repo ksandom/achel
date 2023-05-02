@@ -58,7 +58,7 @@ class Maths extends Module
 				if ( $this->sanitise($value2)!=0) return $this->sanitise($value1)/$this->sanitise($value2);
 				else
 				{
-					$this->core->debug(1, "Divide by zero in $value1,$operator,$value2 . Returning false.");
+					$this->debug(1, "Divide by zero in $value1,$operator,$value2 . Returning false.");
 					return false;
 				}
 				break;
@@ -66,7 +66,7 @@ class Maths extends Module
 				if ( $this->sanitise($value2)!=0) return $this->sanitise($value1)/$this->sanitise($value2);
 				else
 				{
-					$this->core->debug(3, "Divide by zero in $value1,$operator,$value2 . Returning false since /! was specified.");
+					$this->debug(3, "Divide by zero in $value1,$operator,$value2 . Returning false since /! was specified.");
 					return false;
 				}
 				break;
@@ -74,7 +74,7 @@ class Maths extends Module
 				if ( $this->sanitise($value2)!=0) return $this->sanitise($value1)/$this->sanitise($value2);
 				else
 				{
-					$this->core->debug(3, "Divide by zero in $value1,$operator,$value2 . Assuming value2($value2) since the operator was />.");
+					$this->debug(3, "Divide by zero in $value1,$operator,$value2 . Assuming value2($value2) since the operator was />.");
 					return $this->sanitise($value2);
 				}
 				break;
@@ -82,7 +82,7 @@ class Maths extends Module
 				if ($value2!=0) return $this->sanitise($value1)/$this->sanitise($value2);
 				else
 				{
-					$this->core->debug(3, "Divide by zero in $value1,$operator,$value2 . Assuming value1($value1) since the operator was /<.");
+					$this->debug(3, "Divide by zero in $value1,$operator,$value2 . Assuming value1($value1) since the operator was /<.");
 					return $this->sanitise($value1);
 				}
 				break;

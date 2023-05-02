@@ -84,13 +84,13 @@ class BalanceFrustration extends BalanceVectorAlgorithm
 		{ // We will overshoot
 			if ($rule['input']['live']['vector']['distanceRemaining']>0)
 			{ // not overshot
-				$this->core->debug(2, "v  pan {$rule['input']['live']['vector']['distanceRemaining']} -- {$rule['output']['live']['value']} will overshoot ({$rule['input']['overshootTime']}>{$rule['input']['live']['vector']['timeRemaining']}) and {$rule['input']['live']['vector']['distanceRemaining']}>0");
+				$this->debug(2, "v  pan {$rule['input']['live']['vector']['distanceRemaining']} -- {$rule['output']['live']['value']} will overshoot ({$rule['input']['overshootTime']}>{$rule['input']['live']['vector']['timeRemaining']}) and {$rule['input']['live']['vector']['distanceRemaining']}>0");
 				#$this->decelerate($rule);
 				$this->panicDecelerate($rule);
 			}
 			else
 			{ // overshot
-				$this->core->debug(2, " ^ res {$rule['input']['live']['vector']['distanceRemaining']} -- {$rule['output']['live']['value']} have overshot ({$rule['input']['overshootTime']}>{$rule['input']['live']['vector']['timeRemaining']}) and {$rule['input']['live']['vector']['distanceRemaining']}!>0");
+				$this->debug(2, " ^ res {$rule['input']['live']['vector']['distanceRemaining']} -- {$rule['output']['live']['value']} have overshot ({$rule['input']['overshootTime']}>{$rule['input']['live']['vector']['timeRemaining']}) and {$rule['input']['live']['vector']['distanceRemaining']}!>0");
 				
 				//$this->resetState($rule);
 				$this->setRequestVector($rule, $currentPosition, $destination);
@@ -104,12 +104,12 @@ class BalanceFrustration extends BalanceVectorAlgorithm
 		{
 			if ($rule['input']['live']['vector']['speed']<$rule['input']['maxChangePerSecond'])
 			{ // We are below max speed
-				$this->core->debug(2, " > acc {$rule['input']['live']['vector']['distanceRemaining']} -- {$rule['output']['live']['value']} speed ({$rule['input']['live']['vector']['speed']}<{$rule['input']['maxChangePerSecond']})");
+				$this->debug(2, " > acc {$rule['input']['live']['vector']['distanceRemaining']} -- {$rule['output']['live']['value']} speed ({$rule['input']['live']['vector']['speed']}<{$rule['input']['maxChangePerSecond']})");
 				$this->accelerate($rule);
 			}
 			else
 			{ // We have crossed max speed
-				$this->core->debug(2, "<  dec {$rule['input']['live']['vector']['distanceRemaining']} -- {$rule['output']['live']['value']} speed ({$rule['input']['live']['vector']['speed']}!<{$rule['input']['maxChangePerSecond']})");
+				$this->debug(2, "<  dec {$rule['input']['live']['vector']['distanceRemaining']} -- {$rule['output']['live']['value']} speed ({$rule['input']['live']['vector']['speed']}!<{$rule['input']['maxChangePerSecond']})");
 				$this->decelerate($rule);
 			}
 		}
@@ -129,7 +129,7 @@ class BalanceFrustration extends BalanceVectorAlgorithm
 		
 		# $rule['output']['live']['value']=$rule['output']['live']['value']+$rule['output']['seedPercent']*$rule['output']['accelerateMultiplier']*$rule['input']['live']['vector']['direction'];
 		
-		# $this->core->debug(1, "acc value={$rule['output']['live']['value']} {$rule['output']['accelerateMultiplier']}");
+		# $this->debug(1, "acc value={$rule['output']['live']['value']} {$rule['output']['accelerateMultiplier']}");
 	}
 	
 	public function panicDecelerate(&$rule)
@@ -147,7 +147,7 @@ class BalanceFrustration extends BalanceVectorAlgorithm
 		
 		#$rule['output']['live']['value']=$rule['output']['live']['value']-$rule['output']['seedPercent']*$rule['output']['decelerateMultiplier']*$rule['input']['live']['vector']['direction'];
 		
-		# $this->core->debug(1, "dec value={$rule['output']['live']['value']} {$rule['output']['decelerateMultiplier']}");
+		# $this->debug(1, "dec value={$rule['output']['live']['value']} {$rule['output']['decelerateMultiplier']}");
 		
 		$this->roundOutput($rule);
 	}

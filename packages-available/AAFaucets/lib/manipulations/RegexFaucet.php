@@ -40,7 +40,7 @@ class RegexFaucet extends ThroughBasedFaucet
 				{
 					foreach ($data as $line)
 					{
-						$this->core->debug(3, "RegexFaucet->preGet: Delivering line");
+						$this->debug(3, "RegexFaucet->preGet: Delivering line");
 						$delivered=false;
 						foreach ($rules as $rule)
 						{
@@ -57,7 +57,7 @@ class RegexFaucet extends ThroughBasedFaucet
 				else
 				{
 					$lines=count($data);
-					$this->core->debug(3, "RegexFaucet->preGet: no rules set, so sending $lines lines of ".gettype($data)." output to $defaultOut");
+					$this->debug(3, "RegexFaucet->preGet: no rules set, so sending $lines lines of ".gettype($data)." output to $defaultOut");
 					$this->outFill($data, $defaultOut);
 					$this->clearInput($channel);
 					$gotSomething=true;

@@ -39,7 +39,7 @@ class MappedCallFaucet extends ThroughBasedFaucet
 		}
 
 		# TODO remove this
-		# $this->core->debug(0,"MAPPED: adfasdfwed");
+		# $this->debug(0,"MAPPED: adfasdfwed");
 		# print_r($builtInput);
 		return $builtInput;
 	}
@@ -58,7 +58,7 @@ class MappedCallFaucet extends ThroughBasedFaucet
 
 
 
-			$this->core->debug(4, "MappedCallFaucet->preGet: Calling feature={$this->feature} parameter={$this->argument}");
+			$this->debug(4, "MappedCallFaucet->preGet: Calling feature={$this->feature} parameter={$this->argument}");
 			$builtInput=$this->buildInput($this->input);
 			$returnedData=$this->core->callFeatureWithDataset($this->feature, $this->argument, $builtInput);
 			foreach ($returnedData as $channel=>$outData)

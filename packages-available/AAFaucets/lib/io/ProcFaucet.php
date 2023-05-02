@@ -71,7 +71,7 @@ class ProcFaucet extends Faucet
 				break;
 			case 'code':
 				# TODO put in semantics for this. It should be defined when the object is created.
-				$this->core->debug(2, "Sending control $value to {$this->cmd}");
+				$this->debug(2, "Sending control $value to {$this->cmd}");
 				$code="\033$value";
 				# TODO BUG This is sending ^]$code, not ^$code
 				fwrite($this->procFaucets[procOut], "$code");
@@ -87,8 +87,8 @@ class ProcFaucet extends Faucet
 
 				$status=proc_get_status($this->proc);
 				print_r($status);
-				if (posix_kill($status['pid'], $signal)) $this->core->debug(2, "Success sent signal $signal to {$this->cmd}");
-				else $this->core->debug(2, "Failure sending signal $signal to {$this->cmd}");
+				if (posix_kill($status['pid'], $signal)) $this->debug(2, "Success sent signal $signal to {$this->cmd}");
+				else $this->debug(2, "Failure sending signal $signal to {$this->cmd}");
 				break;
 			default:
 				return parent::control($feature, $value);
@@ -115,13 +115,13 @@ class ProcFaucet extends Faucet
 					foreach ($data as $line)
 					{
 						if (is_string($line)) fwrite($this->procFaucets[procOut], "$line\n");
-						else $this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but struck ".gettype($line)." in the array.");
+						else $this->debug(1, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but struck ".gettype($line)." in the array.");
 					}
 					break;
 			}
 		}
-		elseif(is_string($data)) $this->core->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings but got a string: \"$line\"");
-		else $this->core->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but got ".gettype($data));
+		elseif(is_string($data)) $this->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings but got a string: \"$line\"");
+		else $this->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but got ".gettype($data));
 	}
 }
 

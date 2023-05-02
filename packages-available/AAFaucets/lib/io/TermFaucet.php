@@ -21,10 +21,10 @@ class TermFaucet extends FileBasedFaucet
 			foreach ($data as $line)
 			{
 				if (is_string($line)) echo "$line\n";
-				elseif (!is_bool($line)) $this->core->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but struck ".gettype($line)." in the array.");
+				elseif (!is_bool($line)) $this->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but struck ".gettype($line)." in the array.");
 			}
 		}
-		elseif(!is_bool($data)) $this->core->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but got ".gettype($data));
+		elseif(!is_bool($data)) $this->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but got ".gettype($data));
 	}
 }
 

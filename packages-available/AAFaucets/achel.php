@@ -247,12 +247,12 @@ class Faucets extends Module
 	{
 		if ($faucet=&$this->environment->currentFaucet->getFaucet($faucetName))
 		{
-			$this->core->debug(2, "setFaucetAs: Putting Faucet \"$faucetName\" into $category,$valueName");
+			$this->debug(2, "setFaucetAs: Putting Faucet \"$faucetName\" into $category,$valueName");
 			$this->core->setRef($category, $valueName, $faucet['object']);
 		}
 		else
 		{
-			$this->core->debug(2, "setFaucetAs: Could not find a faucet named \"$faucetName\".");
+			$this->debug(2, "setFaucetAs: Could not find a faucet named \"$faucetName\".");
 		}
 	}
 
@@ -268,7 +268,7 @@ class Faucets extends Module
 		}
 		else
 		{
-			$this->core->debug(0, __CLASS__.'->'.__FUNCTION__.': '.$this->environment->currentFaucet->getFullPath());
+			$this->debug(0, __CLASS__.'->'.__FUNCTION__.': '.$this->environment->currentFaucet->getFullPath());
 		}
 	}
 
@@ -308,26 +308,26 @@ class Faucets extends Module
 					}
 					else
 					{
-						$this->core->debug(1, "Can not .. beyond root.");
+						$this->debug(1, "Can not .. beyond root.");
 					}
 					break;
 				default:
 					$totalFaucet=$this->environment->currentFaucet->getFaucet($part);
 					if ($totalFaucet)
 					{
-						$this->core->debug($debugLevel+1, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Entered \"$part\"");
+						$this->debug($debugLevel+1, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Entered \"$part\"");
 						$this->environment->currentFaucet=&$totalFaucet['object'];
 						unset($totalFaucet);
 					}
 					else
 					{
-						$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Could not find faucet named. \"$part\"");
+						$this->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": \"$faucetPath\" => $partKey=>\"$part\" Could not find faucet named. \"$part\"");
 					}
 					break;
 			}
 
 			$destination=$this->environment->currentFaucet->getName();
-			$this->core->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": $origin->$destination ($part)");
+			$this->debug($debugLevel, __CLASS__.'->'.__FUNCTION__.": $origin->$destination ($part)");
 		}
 	}
 
@@ -335,7 +335,7 @@ class Faucets extends Module
 	{
 		if ($imposter=$this->core->get('FaucetCatalog', $faucetName))
 		{
-			$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": $faucetName already exists with description \"{$imposter['description']}\", source is \"$source\" and it's from package \"{$imposter['package']}\". This is certainly a bug between the package \"$package\" and \"{$imposter['package']}\"");
+			$this->debug(1, __CLASS__.'->'.__FUNCTION__.": $faucetName already exists with description \"{$imposter['description']}\", source is \"$source\" and it's from package \"{$imposter['package']}\". This is certainly a bug between the package \"$package\" and \"{$imposter['package']}\"");
 			return false;
 		}
 

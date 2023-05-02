@@ -288,16 +288,16 @@ class BalanceFaucet extends ThroughBasedFaucet
 				{
 					if (isset($subDefinition['default']))
 					{
-						$this->core->debug(3, "$context: Required field \"$key\" was set to it's default value of {$subDefinition['default']}");
+						$this->debug(3, "$context: Required field \"$key\" was set to it's default value of {$subDefinition['default']}");
 						$config[$key]=$subDefinition['default'];
 					}
 					elseif (isset($subDefinition['optional']))
 					{
-						$this->core->debug(3, "$context: Optional field \"$key\" is not set and not required.");
+						$this->debug(3, "$context: Optional field \"$key\" is not set and not required.");
 					}
 					else
 					{
-						$this->core->debug(1, "$context: Required field \"$key\" is not set and has no default. Therefore validation fails. The field is described as \"{$subDefinition['description']}\"");
+						$this->debug(1, "$context: Required field \"$key\" is not set and has no default. Therefore validation fails. The field is described as \"{$subDefinition['description']}\"");
 						$result=false;
 					}
 				}
@@ -318,7 +318,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 							{
 								if (!$this->validateSpecificConfig($subConfig, $subDefinition, "$context,$configKey"))
 								{
-									$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": Failed sub validation for key \"$key\" in config in a \"lotsOfThese\" section.");
+									$this->debug(1, __CLASS__.'->'.__FUNCTION__.": Failed sub validation for key \"$key\" in config in a \"lotsOfThese\" section.");
 									$result=false;
 								}
 							}
@@ -329,7 +329,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 							{
 								if (!$this->validateSpecificConfig($config[$key], $subDefinition, "$context,$key"))
 								{
-									$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": Failed sub validation for key \"$key\" in config.");
+									$this->debug(1, __CLASS__.'->'.__FUNCTION__.": Failed sub validation for key \"$key\" in config.");
 									$result=false;
 								}
 							}
@@ -339,7 +339,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 								if (!isset($definition[$key]['optional']))
 								{
 									#print_r($definition[$key]);
-									$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": No key \"$key\" in config.");
+									$this->debug(1, __CLASS__.'->'.__FUNCTION__.": No key \"$key\" in config.");
 									$result=false;
 								}
 							}
@@ -356,7 +356,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 	{
 		if (!is_array($rule[$channel]['events']))
 		{
-			$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": Events exists but is not an array.");
+			$this->debug(1, __CLASS__.'->'.__FUNCTION__.": Events exists but is not an array.");
 			return false;
 		}
 		
@@ -390,13 +390,13 @@ class BalanceFaucet extends ThroughBasedFaucet
 					break;
 				default:
 					$triggered=false;
-					$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": Unknown operator \"{$event['operator']}\" in event \"$eventName\" in rule \"$ruleName\"");
+					$this->debug(1, __CLASS__.'->'.__FUNCTION__.": Unknown operator \"{$event['operator']}\" in event \"$eventName\" in rule \"$ruleName\"");
 					break;
 			}
 			
 			if ($triggered and !isset($event['triggered']))
 			{
-				$this->core->debug($event['debugLevel'], __CLASS__.'->'.__FUNCTION__.": Triggered event \"{$event['description']}\" on rule \"$ruleName\" $value{$event['operator']}\"$testValue ({$event['testValue']})\"");
+				$this->debug($event['debugLevel'], __CLASS__.'->'.__FUNCTION__.": Triggered event \"{$event['description']}\" on rule \"$ruleName\" $value{$event['operator']}\"$testValue ({$event['testValue']})\"");
 				$this->core->callFeature('triggerEvent', "{$event['eventName']},{$this->instanceName}");
 				$event['triggered']=true;
 			}
@@ -424,21 +424,21 @@ class BalanceFaucet extends ThroughBasedFaucet
 		{
 			if (isset($this->config[$ruleName]))
 			{
-				$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.' Resetting the state of the rule $ruleName.');
+				$this->debug(1, __CLASS__.'->'.__FUNCTION__.' Resetting the state of the rule $ruleName.');
 				$obj=getAlgorithmObject($ruleName);
 				$obj->resetState($this->config[$ruleName]);
 			}
 			else
 			{
-				$this->core->debug(1, __CLASS__.'->'.__FUNCTION__." $ruleName doesn't exist.");
+				$this->debug(1, __CLASS__.'->'.__FUNCTION__." $ruleName doesn't exist.");
 			}
 		}
 		else
 		{
-			$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.' Resetting the state of all rules.');
+			$this->debug(1, __CLASS__.'->'.__FUNCTION__.' Resetting the state of all rules.');
 			foreach ($this->config as $ruleName=>&$rule)
 			{
-				$this->core->debug(1, "Resetting $ruleName.");
+				$this->debug(1, "Resetting $ruleName.");
 				$obj=$this->getAlgorithmObject($ruleName);
 				$obj->resetState($this->config[$ruleName]);
 			}
@@ -455,13 +455,13 @@ class BalanceFaucet extends ThroughBasedFaucet
 			$algorithmDefinition=$this->core->get('BalanceAlgorithm', 'direct');
 			if (!is_object($algorithmDefinition['obj']))
 			{
-				$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": algorithm \"$algorithm\" not found and fallback algorithm \"direct\" not found. Rule \"$ruleName\" can not be processed.");
+				$this->debug(1, __CLASS__.'->'.__FUNCTION__.": algorithm \"$algorithm\" not found and fallback algorithm \"direct\" not found. Rule \"$ruleName\" can not be processed.");
 				$false=false;
 				return $false;
 			}
 			else
 			{
-				$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": algorithm \"$algorithm\" not found but \"direct\" was found, so using that. This will likely cause unexpected behavior.");
+				$this->debug(1, __CLASS__.'->'.__FUNCTION__.": algorithm \"$algorithm\" not found but \"direct\" was found, so using that. This will likely cause unexpected behavior.");
 			}
 		}
 		
@@ -494,7 +494,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 		
 		if (!is_array($this->config))
 		{
-			$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": No config for {$this->instanceName}!");
+			$this->debug(1, __CLASS__.'->'.__FUNCTION__.": No config for {$this->instanceName}!");
 			return false;
 		}
 		
@@ -506,7 +506,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			if (!$this->validateSpecificConfig($rule, $this->configDefinition['rule'], $ruleName))
 			{
-				$this->core->debug(1, "Rule \"$ruleName\" failed validation.");
+				$this->debug(1, "Rule \"$ruleName\" failed validation.");
 				continue;
 			}
 			
@@ -516,7 +516,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			$input=$this->core->getNested(explode(',', $rule['input']['variable']));
 			if (!$input)
 			{
-				//$this->core->debug(1, "No input for rule \"$ruleName\".");
+				//$this->debug(1, "No input for rule \"$ruleName\".");
 				continue;
 			}
 			
@@ -589,12 +589,12 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			if (!isset($rule['input']['lastInput']))
 			{
-				$this->core->debug(3, __CLASS__.'->'.__FUNCTION__.": Set first time lastInput to \"{$rule['input']['live']['value']}\". This should only happen once per config change. Input: {$rule['input']['variable']}");
+				$this->debug(3, __CLASS__.'->'.__FUNCTION__.": Set first time lastInput to \"{$rule['input']['live']['value']}\". This should only happen once per config change. Input: {$rule['input']['variable']}");
 			}
 			elseif ($rule['input']['lastInput']==$rule['input']['live']['value'])
 			{
 				# TODO This will certainly be a bug for anything that needs to do analysis of changes over time. **Come back to this.**
-				#$this->core->debug(1, "No change for rule \"$ruleName\".");
+				#$this->debug(1, "No change for rule \"$ruleName\".");
 				 continue;
 			}
 			
@@ -616,7 +616,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			
 			// Mangle the input with the goal.
 			# TODO Change inputGoal to error, and adapt all algorithms to use it.
-			# $this->core->debug(0, "wooooort? ={$rule['input']['live']['value']}-{$rule['input']['live']['goal']};");
+			# $this->debug(0, "wooooort? ={$rule['input']['live']['value']}-{$rule['input']['live']['goal']};");
 			if (is_array($rule['input']['live']['goal']))
 			{
 				print_r($rule['input']['live']['goal']);
@@ -705,7 +705,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 					if ($ruleName == 'groundspeed' or $ruleName == 'altitude')
 					{
 						# TODO include this in the debugging output.
-						$this->core->debug(3,"text=$outLine");
+						$this->debug(3,"text=$outLine");
 					}
 					
 					$this->outFill(array($outLine), $rule['destination']['channel']);
@@ -718,7 +718,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			{
 				if ($rule['debug'])
 				{
-					$this->core->debug(0, __CLASS__.'->'.__FUNCTION__.": $ruleName: algorithm={$rule['algorithm']} input={$rule['input']['live']['value']} goal={$rule['input']['live']['goal']} inputGoal={$rule['input']['live']['inputGoal']} output={$rule['output']['live']['multipliedValue']}");
+					$this->debug(0, __CLASS__.'->'.__FUNCTION__.": $ruleName: algorithm={$rule['algorithm']} input={$rule['input']['live']['value']} goal={$rule['input']['live']['goal']} inputGoal={$rule['input']['live']['inputGoal']} output={$rule['output']['live']['multipliedValue']}");
 				}
 			}
 			
@@ -795,10 +795,10 @@ class BalanceAlgorithm extends SubModule
 	
 	public function applyMultiplierAndExpo($value, $multiplier=1, $expo=1, $center=0)
 	{
-			if (!is_numeric($value)) $this->core->debug(0, "value ($value) is not numeric.");
-			if (!is_numeric($center)) $this->core->debug(0, "center ($center) is not numeric.");
-			if (!is_numeric($multiplier)) $this->core->debug(0, "multiplier ($multiplier) is not numeric.");
-			if (!is_numeric($expo)) $this->core->debug(0, "expo ($expo) is not numeric.");
+			if (!is_numeric($value)) $this->debug(0, "value ($value) is not numeric.");
+			if (!is_numeric($center)) $this->debug(0, "center ($center) is not numeric.");
+			if (!is_numeric($multiplier)) $this->debug(0, "multiplier ($multiplier) is not numeric.");
+			if (!is_numeric($expo)) $this->debug(0, "expo ($expo) is not numeric.");
 			
 			$value=$value-$center;
 			$value=$value*$multiplier;
@@ -910,7 +910,7 @@ class BalanceAlgorithm extends SubModule
 			}
 		}
 		
-		$this->core->debug(3, "$path. . (v=$value, in=$inMin, ic=$inCenter, ix=$inMax, on=$outMin=-1, oc=$outCenter=0, ox=$outMax=1) OUT=$out");
+		$this->debug(3, "$path. . (v=$value, in=$inMin, ic=$inCenter, ix=$inMax, on=$outMin=-1, oc=$outCenter=0, ox=$outMax=1) OUT=$out");
 		
 		return $out;
 	}
@@ -940,7 +940,7 @@ class AutoTighten
 		
 		$this->tock();
 		
-		$this->core->debug(1, "Initialised AutoTighten on {$rule['name']}");
+		$this->debug(1, "Initialised AutoTighten on {$rule['name']}");
 	}
 	
 	private function now()
@@ -973,7 +973,7 @@ class AutoTighten
 		$inc=$this->rule['autoTighten']['increment']*$direction;
 		
 		$this->rule['input'][$destinationBoundary]+=$inc;
-		# $this->core->debug(1, "TMP0001: {$this->rule['name']} {$this->rule['input'][$destinationBoundary]}+=$inc destinationBoundary=$destinationBoundary direction=$direction boundaryLimit=$boundaryLimit");
+		# $this->debug(1, "TMP0001: {$this->rule['name']} {$this->rule['input'][$destinationBoundary]}+=$inc destinationBoundary=$destinationBoundary direction=$direction boundaryLimit=$boundaryLimit");
 		
 		if ($direction<0) # Min
 		{
@@ -1000,7 +1000,7 @@ class AutoTighten
 		$minChange=$this->modify('min', 1, $this->rule['autoTighten']['tightenedMin']);
 		$maxChange=$this->modify('max', -1, $this->rule['autoTighten']['tightenedMax']);
 		
-		if ($this->rule['autoTighten']['debug'] and ($minChange or $maxChange)) $this->core->debug(1, "{$this->rule['name']}: Tightened boundaries to {$this->rule['input']['min']}-{$this->rule['input']['max']}.");
+		if ($this->rule['autoTighten']['debug'] and ($minChange or $maxChange)) $this->debug(1, "{$this->rule['name']}: Tightened boundaries to {$this->rule['input']['min']}-{$this->rule['input']['max']}.");
 	}
 	
 	private function loosen()
@@ -1008,7 +1008,7 @@ class AutoTighten
 		$minChange=$this->modify('min', -1, $this->rule['autoTighten']['loosenedMin']);
 		$maxChange=$this->modify('max', 1, $this->rule['autoTighten']['loosenedMax']);
 		
-		if ($this->rule['autoTighten']['debug'] and ($minChange or $maxChange)) $this->core->debug(1, "{$this->rule['name']}: Loosened boundaries to {$this->rule['input']['min']}-{$this->rule['input']['max']}. inc={$this->rule['autoTighten']['increment']}");
+		if ($this->rule['autoTighten']['debug'] and ($minChange or $maxChange)) $this->debug(1, "{$this->rule['name']}: Loosened boundaries to {$this->rule['input']['min']}-{$this->rule['input']['max']}. inc={$this->rule['autoTighten']['increment']}");
 	}
 	
 	private function tock()

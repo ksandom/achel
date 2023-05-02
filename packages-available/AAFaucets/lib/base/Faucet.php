@@ -66,7 +66,7 @@ class Faucet
 			}
 		}
 
-		$this->core->debug($level, $this->myPrefix.$text);
+		$this->debug($level, $this->myPrefix.$text);
 	}
 
 	function getObjectType()

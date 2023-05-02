@@ -2304,6 +2304,7 @@ class Module
 {
 	private $category='';
 	protected $core=null;
+	private $myPrefix='';
 
 	/*
 		A note about name vs category
@@ -2328,6 +2329,25 @@ class Module
 	{
 		$this->core=&$core;
 	}
+
+	function debug($level, $text)
+	{
+		if (!$this->myPrefix)
+		{
+			$classColor=$this->core->get('Color', 'darkPurple');
+			$formattingColor=$this->core->get('Color', 'brightBlack');
+			$categoryColor=$this->core->get('Color', 'darkGreen');
+			$unknownColor=$this->core->get('Color', 'brightYellow');
+			$defaultColor=$this->core->get('Color', 'default');
+
+			$myClass=get_class($this);
+
+			$this->myPrefix="$classColor$myClass$formattingColor(Module)$formattingColor/$categoryColor{$this->category}: $defaultColor";
+		}
+
+		$this->core->debug($level, $this->myPrefix.$text);
+	}
+
 }
 
 class SubModule extends Module
