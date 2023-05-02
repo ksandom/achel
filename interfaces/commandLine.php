@@ -74,7 +74,7 @@ class CommandLine extends Module
 		$this->core->set("MacroRawContents", $newParm, file_get_contents($fileName));
 		$this->core->set("Macro", "lazyLoaded", $newParm);
 
-		$this->core->debug(1, "Will lazyLoad: $fileName as --$newParm");
+		$this->debug(1, "Will lazyLoad: $fileName as --$newParm");
 
 		return $newParm;
 	}
@@ -156,7 +156,7 @@ class CommandLine extends Module
 		if (is_array($obj)) $this->core->setRef('Actions', $argument, $obj);
 		else
 		{
-			$this->core->debug(0,"Could not find a module to match '$argument'");
+			$this->debug(0,"Could not find a module to match '$argument'");
 		}
 	}
 

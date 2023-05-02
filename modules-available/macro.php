@@ -148,12 +148,12 @@ class Macro extends Module
 					break;
 				case '#onDefine':
 					$parts=$this->core->splitOnceOn(' ', $value);
-					$this->core->debug(3, "#onDefine {$parts[0]}={$parts[1]}");
+					$this->debug(3, "#onDefine {$parts[0]}={$parts[1]}");
 					$this->core->callFeature($parts[0], $parts[1]);
 					break;
 				case '#onLoaded':
 					$parts=$this->core->splitOnceOn(' ', $value);
-					$this->core->debug(3, "#onLoaded {$parts[0]}={$parts[1]}");
+					$this->debug(3, "#onLoaded {$parts[0]}={$parts[1]}");
 					$this->core->callFeature("registerForEvent", "Macro,allLoaded,$parts[0],$parts[1]");
 					break;
 				default:
@@ -176,7 +176,7 @@ class Macro extends Module
 
 		if (!$this->compileFromArray($macroName, $preCompile))
 		{
-			$this->core->debug(0, "defineMacro($macroName): Failed to define the macro.");
+			$this->debug(0, "defineMacro($macroName): Failed to define the macro.");
 		}
 	}
 
@@ -192,7 +192,7 @@ class Macro extends Module
 			$nestingLevel=$nesting->getNestingForLine($action['argument']);
 			if ($nesting->isBroken())
 			{
-				$this->core->debug(0, "compileFromArray($macroName:${action['lineNumber']}): Got a nesting error. Not going to try any further with macro $macroName.");
+				$this->debug(0, "compileFromArray($macroName:${action['lineNumber']}): Got a nesting error. Not going to try any further with macro $macroName.");
 
 				return false;
 			}
@@ -202,13 +202,13 @@ class Macro extends Module
 			{
 				if (!is_null($lastRootKey))
 				{ // We have indentation. Remove 1 layer of indentation, and nest the argument.
-					$this->core->debug(4, "compileFromArray($macroName:${action['lineNumber']}): Nested feature inside $macroName:{$outputArray[$lastRootKey]['lineNumber']}:{$outputArray[$lastRootKey]['argument']}: \"${action['argument']} ${action['value']}\"");
+					$this->debug(4, "compileFromArray($macroName:${action['lineNumber']}): Nested feature inside $macroName:{$outputArray[$lastRootKey]['lineNumber']}:{$outputArray[$lastRootKey]['argument']}: \"${action['argument']} ${action['value']}\"");
 					$action['argument']=$nesting->removeOneIndent($action['argument']);
 					$outputArray[$lastRootKey]['nesting'][]=$action;
 				}
 				else
 				{ // We have indentation, but no argument to nest it in. This is fatal.
-					$this->core->debug(0, "compileFromArray($macroName:${action['lineNumber']}): Syntax error: Indentation (level=$nestingLevel) without any features beforehand. The derived line was \"${action['argument']} ${action['value']}\"");
+					$this->debug(0, "compileFromArray($macroName:${action['lineNumber']}): Syntax error: Indentation (level=$nestingLevel) without any features beforehand. The derived line was \"${action['argument']} ${action['value']}\"");
 
 					return false;
 				}
@@ -218,7 +218,7 @@ class Macro extends Module
 			}
 			else
 			{
-				$this->core->debug(4, "compileFromArray($macroName:${action['lineNumber']}): Root feature \"${action['argument']} ${action['value']}\"");
+				$this->debug(4, "compileFromArray($macroName:${action['lineNumber']}): Root feature \"${action['argument']} ${action['value']}\"");
 				$lastRootKey=$key;
 				$outputArray[$lastRootKey]=$action;
 			}
@@ -240,7 +240,7 @@ class Macro extends Module
 				$this->core->registerFeature($this, array($subName), $subName, "Derived macro for $macroName", "$macroName,hidden", true, 'nesting');
 				if (!$outputArray[$key]['nesting']=$this->compileFromArray($subName, $action['nesting']))
 				{
-					$this->core->debug(0, "Macro/compileFromArray/$macroName/$key: Received failure from nested code.");
+					$this->debug(0, "Macro/compileFromArray/$macroName/$key: Received failure from nested code.");
 					return false;
 				}
 
@@ -253,7 +253,7 @@ class Macro extends Module
 			}
 		}
 
-		$this->core->debug(4, "Macro/compileFromArray/$macroName: Ready to return the macro.");
+		$this->debug(4, "Macro/compileFromArray/$macroName: Ready to return the macro.");
 		return $outputArray;
 	}
 
@@ -321,7 +321,7 @@ class Macro extends Module
 			{
 				$in=$input[$key];
 				$this->updateProgress();
-				$this->core->debug(5, "loopMacro iterated for key $key");
+				$this->debug(5, "loopMacro iterated for key $key");
 
 				# Create Result category for referencing the current position in the resultSet.
 				if (is_array($in)) $this->core->setCategoryModule($category, $in);
@@ -356,14 +356,14 @@ class Macro extends Module
 				else
 				{
 					if (count($result)) $output[$key]=$result;
-					else $this->core->debug(4, "loopMacro: Skipped key \"$key\" since it looks like it has been unset.");
+					else $this->debug(4, "loopMacro: Skipped key \"$key\" since it looks like it has been unset.");
 				}
 			}
 			$this->removeProgress();
 
 			# TODO remove Result
 		}
-		else $this->core->debug(5, "loopMacro: No input!");
+		else $this->debug(5, "loopMacro: No input!");
 
 		return $output;
 	}
@@ -478,12 +478,12 @@ class Macro extends Module
 
 	function loadMacro($macroName)
 	{
-		$this->core->debug(4, "Loading macro $macroName.");
+		$this->debug(4, "Loading macro $macroName.");
 
 		$macroPath=$this->core->get('MacroListCache', $macroName);
 		if (!$macroPath)
 		{
-			$this->core->debug(0, "Could not find $macroName in the cache.");
+			$this->debug(0, "Could not find $macroName in the cache.");
 			return false;
 		}
 
@@ -502,7 +502,7 @@ class Macro extends Module
 
 		$this->core->set("MacroListCache", $macroName, $fileName);
 		$this->loadMacro($macroName);
-		$this->core->debug(0, "$fileName -> $macroName");
+		$this->debug(0, "$fileName -> $macroName");
 	}
 
 	function lazyLoadMacroFromFile($fileName)
@@ -539,7 +539,7 @@ class Macro extends Module
 		$cachedMacroList=$this->core->getCategoryModule('MacroListCache');
 		if (!(count($cachedMacroList)>1))
 		{
-			$this->core->debug(4, "Loading macros from scratch.");
+			$this->debug(4, "Loading macros from scratch.");
 			$this->loadSavedMacros();
 		}
 	}
@@ -584,12 +584,12 @@ class Macro extends Module
 				else
 				{
 					$this->core->complain($this, "${details['fullPath']} appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
-					$this->core->debug(0, "${details['fullPath']} appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
+					$this->debug(0, "${details['fullPath']} appears to be a macro, but doesn't have a helpful comment on the first line begining with a # .");
 				}
 			}
 			else
 			{
-				$this->core->debug(0, "Something went very wrong trying to load macro $macroName.");
+				$this->debug(0, "Something went very wrong trying to load macro $macroName.");
 			}
 		}
 
@@ -598,7 +598,7 @@ class Macro extends Module
 		$this->core->callFeature('triggerEvent', 'Macro,allLoaded');
 		$loadFinish=microtime(true);
 		$loadTime=$loadFinish-$loadStart;
-		$this->core->debug(4, "Loaded macros in $loadTime seconds. start=$loadStart fimish=$loadFinish");
+		$this->debug(4, "Loaded macros in $loadTime seconds. start=$loadStart fimish=$loadFinish");
 
 		$this->complainAboutDuplicates(false);
 	}
@@ -608,12 +608,12 @@ class Macro extends Module
 		$lazyLoad=$this->core->get("LazyLoad", "file");
 		if ($lazyLoad)
 		{
-			$this->core->debug(1, "LazyLoad: $lazyLoad");
+			$this->debug(1, "LazyLoad: $lazyLoad");
 			$this->loadMacroFromFile($lazyLoad, $this->core->get("LazyLoad", "macro"));
 		}
 		else
 		{
-			$this->core->debug(1, "LazyLoad: _nothing_");
+			$this->debug(1, "LazyLoad: _nothing_");
 		}
 	}
 }

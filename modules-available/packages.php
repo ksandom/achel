@@ -45,7 +45,7 @@ class Packages extends Module
 		foreach ($list as $filename)
 		{
 			# TODO The paths need to be taken into account so that enabled/avaiable will be able to co-exist without duplicates
-			$this->core->debug(packageVerbosity, "loadEnabledPackages: $filename - loading");
+			$this->debug(packageVerbosity, "loadEnabledPackages: $filename - loading");
 			$this->loadPackage($filename);
 		}
 	}
@@ -67,12 +67,12 @@ class Packages extends Module
 			}
 			else
 			{
-				$this->core->debug(0, "Failed to load package $packageName . This is usually caused by a previously installed package that no longer exists. You can usually just remove the symlink, and everything will be fine.");
+				$this->debug(0, "Failed to load package $packageName . This is usually caused by a previously installed package that no longer exists. You can usually just remove the symlink, and everything will be fine.");
 			}
 		}
 		else
 		{
-			$this->core->debug(packageVerbosity, "loadPackage: $packageName is already loaded.");
+			$this->debug(packageVerbosity, "loadPackage: $packageName is already loaded.");
 		}
 	}
 
@@ -88,30 +88,30 @@ class Packages extends Module
 			switch ($filenameParts[$lastPos])
 			{
 				case 'md':
-					#$this->core->debug(0, "loadPackage: $filename Documentation should be in it's packages /doc folder.");
+					#$this->debug(0, "loadPackage: $filename Documentation should be in it's packages /doc folder.");
 					break;
 				case 'php':
 				case 'module':
-					#$this->core->debug(0, "loadPackage: $filename Module. ($fullPath)");
+					#$this->debug(0, "loadPackage: $filename Module. ($fullPath)");
 					loadModules($this->core, $fullPath, false);
 					break;
 				case 'achel':
 				case 'macro':
-					#$this->core->debug(0, "loadPackage: $filename Macro.");
+					#$this->debug(0, "loadPackage: $filename Macro.");
 					$this->core->addItemsToAnArray('Core', 'macrosToLoad', array($filename=>$fullPath));
 					$this->core->addItemsToAnArray('Core', 'macroPackages', array($filenameParts[0]=>$this->getProfileName($packageName)));
 					break;
 				case 'template':
-					#$this->core->debug(0, "loadPackage: $filename Template.");
+					#$this->debug(0, "loadPackage: $filename Template.");
 					$this->core->addItemsToAnArray('Core', 'templatesToLoad', array($filename=>$fullPath));
 					break;
 			}
 
-			# $this->core->debug(packageVerbosity, "loadEnabledPackages:   File $filename");
+			# $this->debug(packageVerbosity, "loadEnabledPackages:   File $filename");
 		}
 		else
 		{
-			$this->core->debug(packageVerbosity, "loadEnabledPackages:   Not doing anything with directories yet $filename");
+			$this->debug(packageVerbosity, "loadEnabledPackages:   Not doing anything with directories yet $filename");
 		}
 
 	}
