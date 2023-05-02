@@ -52,6 +52,7 @@ class core extends Module
 	private $verbosity=0;
 	private $initMap=array();
 	private $lastMessage=array('value'=>'', 'count'=>0);
+	private $myPrefix='';
 
 	function __construct($verbosity=0)
 	{
@@ -1179,10 +1180,26 @@ class core extends Module
 		}
 	}
 
-	function debug($verbosityLevel, $output)
+	function debug($verbosityLevel, $output, $external=false)
 	{
 		if ($this->isVerboseEnough($verbosityLevel))
 		{
+			$prefix='';
+
+			if (!$external)
+			{
+				if (!$this->myPrefix)
+				{
+					$identityColor=$this->get('Color', 'darkCyan');
+					$formattingColor=$this->get('Color', 'brightBlack');
+					$defaultColor=$this->get('Color', 'default');
+
+					$this->myPrefix="{$identityColor}core$formattingColor $defaultColor";
+				}
+
+				$prefix=$this->myPrefix;
+			}
+
 			$title="debug$verbosityLevel";
 			# TODO These lookups can be optimized!
 			$code=$this->get('Codes', $title, false);
@@ -1193,7 +1210,7 @@ class core extends Module
 			$scopeName=$this->get('General', 'scopeName');
 			if ($this->verbosity> 0)
 			{
-				$output="$dim$scopeName:$default ".$output;
+				$output="$prefix$dim$scopeName:$default ".$output;
 			}
 
 			if ($output!=$this->lastMessage['value'])
@@ -2345,7 +2362,7 @@ class Module
 			$this->myPrefix="$classColor$myClass$formattingColor(Module)$formattingColor/$categoryColor{$this->category}: $defaultColor";
 		}
 
-		$this->core->debug($level, $this->myPrefix.$text);
+		$this->core->debug($level, $this->myPrefix.$text, true);
 	}
 
 }
