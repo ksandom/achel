@@ -13,6 +13,10 @@ class Faucet
 	protected $faucetInstanceName='unknown';
 	protected $parent=null;
 
+	private $myPath='';
+	private $myFullPath='';
+	private $myPrefix='';
+
 	public $pipeDebugLevel=5;
 
 	function __construct($objectType)
@@ -34,6 +38,35 @@ class Faucet
 			$this->pipeDebugLevel=5;
 			$this->core->set('General', 'pipeDebugLevel', $this->pipeDebugLevel);
 		}
+	}
+
+	function debug($level, $text)
+	{
+		if (!$this->myPath)
+		{
+			$pathColor=$this->core->get('Color', 'brightBlack');
+			$instanceNameColor=$this->core->get('Color', 'darkGreen');
+			$classColor=$this->core->get('Color', 'darkPurple');
+			$formattingColor=$this->core->get('Color', 'brightBlack');
+			$unknownColor=$this->core->get('Color', 'brightYellow');
+			$defaultColor=$this->core->get('Color', 'default');
+
+			$myClass=get_class($this);
+			$instanceName=$this->getInstanceName();
+			if ($this->parent)
+			{
+				$this->myPath=$this->parent->getFullPath();
+				$this->myFullPath="{$this->myPath}/$instanceName";
+				$this->myPrefix="$pathColor{$this->myPath}$defaultColor/$instanceNameColor$instanceName $formattingColor($classColor$myClass$formattingColor):   $defaultColor";
+			}
+			else
+			{
+				$this->myFullPath="?/$instanceName";
+				$this->myPrefix="${unknownColor}unknown$defaultColor/$instanceNameColor$instanceName $formattingColor($classColor$myClass$formattingColor):   $defaultColor";
+			}
+		}
+
+		$this->core->debug($level, $this->myPrefix.$text);
 	}
 
 	function getObjectType()
@@ -64,7 +97,7 @@ class Faucet
 	public function beginScopedEvent(&$faucet)
 	{
 		$environment=FaucetEnvironment::assert();
-		$environment->beginScopedEvent($faucet);
+		$environment->beginScopedEvent($faucet, $this->myFullPath);
 	}
 
 	public function endScopedEvent()
@@ -77,7 +110,7 @@ class Faucet
 	{
 		if (!isset($this->outChannels[$outChannel]))
 		{
-			$this->core->debug(4, "outFill: Created channel $outChannel");
+			$this->debug(4, "outFill: Created channel $outChannel");
 			$this->outChannels[$outChannel]=array();
 		}
 
@@ -98,13 +131,13 @@ class Faucet
 							}
 							else
 							{
-								$this->core->debug(4, "outFill: Data collision. This shouldn't happen, but could if a specific key ($key) is used, and the input (".gettype($value).") and the existing value (".gettype($this->outChannels[$outChannel][$key]).") are not both arrays. In this case, the new value is going to replace the old value.");
+								$this->debug(4, "outFill: Data collision. This shouldn't happen, but could if a specific key ($key) is used, and the input (".gettype($value).") and the existing value (".gettype($this->outChannels[$outChannel][$key]).") are not both arrays. In this case, the new value is going to replace the old value.");
 								$this->outChannels[$outChannel][$key]=$value;
 							}
 						}
 						else
 						{
-							$this->core->debug(4, "outFill: Directly saved fresh data as key $key in channel $outChannel. Objecttype {$this->objectType}");
+							$this->debug(4, "outFill: Directly saved fresh data as key $key in channel $outChannel. Objecttype {$this->objectType}");
 							$this->outChannels[$outChannel][$key]=$value;
 						}
 					}
@@ -124,7 +157,7 @@ class Faucet
 		}
 		else
 		{ // We can simply stick our data there
-			$this->core->debug(4, "outFill: Saved fresh data in channel $outChannel. Objecttype {$this->objectType}");
+			$this->debug(4, "outFill: Saved fresh data in channel $outChannel. Objecttype {$this->objectType}");
 			$this->outChannels[$outChannel]=$data;
 		}
 	}
@@ -166,7 +199,7 @@ class Faucet
 
 		if (!isset($this->outChannels[$channelChoice]))
 		{
-			$this->core->debug(4, __CLASS__."->get: Channel $channelChoice does not exist. It may be that data has not been written to it yet. Objecttype {$this->objectType}");
+			$this->debug(4, __CLASS__."->get: Channel $channelChoice does not exist. It may be that data has not been written to it yet. Objecttype {$this->objectType}");
 			return false;
 		}
 
@@ -181,7 +214,7 @@ class Faucet
 		$EOLPos=strpos($this->inputBuffer, inputLineSeparator);
 		if ($EOLPos !== false)
 		{
-			$this->core->debug(4, "processInputBuffer: New line found");
+			$this->debug(4, "processInputBuffer: New line found");
 
 			$lines=explode(inputLineSeparator, $this->inputBuffer);
 
@@ -204,7 +237,7 @@ class Faucet
 		# TODO Should config actually be configRegistry
 		if (isset($this->config[$settingName][$chosenSubcategory]))
 		{
-			$this->core->debug(1, "registeronfigItem: Setting $settingName/$chosenSubcategory has already been registered for {$this->objectType}.");
+			$this->debug(1, "registeronfigItem: Setting $settingName/$chosenSubcategory has already been registered for {$this->objectType}.");
 		}
 		else
 		{
@@ -227,7 +260,7 @@ class Faucet
 		}
 		else
 		{
-			$this->core->debug(1, __CLASS__.'->'.__FUNCTION__.": Setting $settingName/$chosenSubcategory has not been registered on {$this->objectType}.");
+			$this->debug(1, __CLASS__.'->'.__FUNCTION__.": Setting $settingName/$chosenSubcategory has not been registered on {$this->objectType}.");
 			return false;
 		}
 	}
@@ -242,7 +275,7 @@ class Faucet
 		}
 		else
 		{
-			$this->core->debug(1, "setConfigItem: Setting $settingName/$chosenSubcategory has not been registered for {$this->objectType}.");
+			$this->debug(1, "setConfigItem: Setting $settingName/$chosenSubcategory has not been registered for {$this->objectType}.");
 		}
 	}
 
@@ -263,7 +296,7 @@ class Faucet
 		}
 		else
 		{
-			$this->core->debug(1, "setConfigItemReference: Setting $settingName/$chosenSubcategory has not been registered for {$this->objectType}.");
+			$this->debug(1, "setConfigItemReference: Setting $settingName/$chosenSubcategory has not been registered for {$this->objectType}.");
 		}
 	}
 
@@ -284,12 +317,12 @@ class Faucet
 			}
 			else
 			{
-				$this->core->debug(1, "addConfigItemEntry: Setting $settingName/$chosenSubcategory for {$this->objectType} is {$this->configRegistry[$settingName][$chosenSubcategory]['type']} when array is required.");
+				$this->debug(1, "addConfigItemEntry: Setting $settingName/$chosenSubcategory for {$this->objectType} is {$this->configRegistry[$settingName][$chosenSubcategory]['type']} when array is required.");
 			}
 		}
 		else
 		{
-			$this->core->debug(1, "addConfigItemEntry: Setting $settingName/$chosenSubcategory has not been registered for {$this->objectType}.");
+			$this->debug(1, "addConfigItemEntry: Setting $settingName/$chosenSubcategory has not been registered for {$this->objectType}.");
 		}
 	}
 
@@ -302,7 +335,7 @@ class Faucet
 			{
 				if (isset($this->config[$settingName][$chosenSubcategory]))
 				{
-					$this->core->debug(1, "removeConfigItemEntry($settingName, $subcategory, $entryName)");
+					$this->debug(1, "removeConfigItemEntry($settingName, $subcategory, $entryName)");
 					unset($this->config[$settingName][$chosenSubcategory][$entryName]);
 				}
 			}
@@ -324,7 +357,7 @@ class Faucet
 		}
 		else
 		{
-			$this->core->debug(1, "getConfigItem: Setting $settingName/$chosenSubcategory has not been registered for {$this->objectType}.");
+			$this->debug(1, "getConfigItem: Setting $settingName/$chosenSubcategory has not been registered for {$this->objectType}.");
 			$nothing=false;
 			return $nothing;
 		}
@@ -354,7 +387,7 @@ class Faucet
 		else
 		{
 			$result=array();
-			$this->core->debug(1, "Could not find valid config in \"$address\"");
+			$this->debug(1, "Could not find valid config in \"$address\"");
 			return $result;
 		}
 	}
@@ -366,14 +399,14 @@ class Faucet
 			case 'setConfigSrc':
 				# NOTE I've just removed the reference. If quirky behavior appears, this is a good place to look.
 				$this->config=$this->getReplacementConfig($value);
-				$this->core->debug(2,"Faucet->control: Overrode config to \"$value\"");
+				$this->debug(2,"Faucet->control: Overrode config to \"$value\"");
 				break;
 			case 'setConfigSrcCopy':
-				$this->core->debug(2,"Faucet->control: Overrode config to \"$value\"");
+				$this->debug(2,"Faucet->control: Overrode config to \"$value\"");
 				$this->config=$this->getReplacementConfig($value);
 				break;
 			default:
-				$this->core->debug(1, "Control feature $feature not found within ".__CLASS__.". It was called with \"$value\"");
+				$this->debug(1, "Control feature $feature not found within ".__CLASS__.". It was called with \"$value\"");
 				return false;
 				break;
 		}

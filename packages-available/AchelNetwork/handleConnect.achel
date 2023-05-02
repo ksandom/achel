@@ -1,17 +1,13 @@
 # Handel network connections. ~ network,hidden
-parameters ID,connectChannel
+parameters connectChannel
 
-pass
-	getCategory Network
-	nested
-	outNow
+set Local,ID,~!ScopedEvent,topic!~
 
 pwd Network,originFaucet
-# debug 0,%%%% ID=~!Local,ID!~ originFaucet=~!Network,originFaucet!~ channel=~!Local,connectChannel!~
+debug 3,%%%% ID=~!Local,ID!~ originFaucet=~!Network,originFaucet!~ channel=~!Local,connectChannel!~
 
 createPipe .,network,,~!Local,connectChannel!~
 createPipe network,.,~!Local,connectChannel!~,
-
 
 if ~!Network,~!Local,ID!~,eventFeature!~,!=,,
 	changeFaucet ..

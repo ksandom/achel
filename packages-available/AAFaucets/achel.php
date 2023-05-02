@@ -89,6 +89,7 @@ class Faucets extends Module
 				$this->core->registerFeature($this, array('deliver'), 'deliver', "Deliver text directly to a faucet. --deliver=faucetName,channel,textToSend", array());
 				$this->core->registerFeature($this, array('deliverAll'), 'deliverAll', "Invoke every pipe to check for contents from it's fromFaucet and deliver any contents to it's toFaucet. This will become very inefficient as the number of faucets grows. --deliverAll[=maximumRevolutions] . maximumRevolutions defaults to 10.", array());
 				$this->core->registerFeature($this, array('deliverUnitTests'), 'deliverUnitTests', "Deliver until all unit tests have returned something. --deliverUnitTests[=timeOutSeconds].", array());
+				$this->core->registerFeature($this, array('preGet'), 'preGet', "Invoke preGet() on a the specified faucet. This is strictly for unit testing to make sure that something specifically gets polled before something is manually sent. --preGet=faucetName .", array());
 				break;
 			case 'followup':
 				break;
@@ -231,6 +232,9 @@ class Faucets extends Module
 				break;
 			case 'deliverUnitTests':
 				return $this->environment->rootFaucet->deliverUnitTests($this->core->get('Global', $event));
+				break;
+			case 'preGet':
+				return $this->environment->currentFaucet->doPreGet($this->core->get('Global', $event));
 				break;
 			default:
 				$this->core->complain($this, 'Unknown event', $event);

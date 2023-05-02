@@ -2,7 +2,7 @@
 parameters faucetName,listenAddress,port,eventFeature
 
 pwd Tmp,pwd
-set Me,ID,~!Tmp,pwd!~/~!Local,faucetName!~
+set Me,ID,~!Tmp,pwd!~/~!Local,faucetName!~/network
 
 if ~!Local,eventFeature!~,==,,
 	set Local,eventFeature,pass
@@ -13,10 +13,10 @@ setNested Network,~!Me,ID!~,address,~!Local,listenAddress!~
 setNested Network,~!Me,ID!~,port,~!Local,port!~
 setNested Network,~!Me,ID!~,eventFeature,~!Local,eventFeature!~
 
-createMetaFaucet ~!Local,faucetName!~,
-	registerForEvent SocketServerFaucet,ANConnect,handleConnect,~!Me,ID!~
+debug 3,createSimpleNetworkServerFaucet: ~!Me,ID!~
 
-	createSocketServerFaucet network,ANConnect,pass,pass,~!Network,~!Me,ID!~,port!~,~!Network,~!Me,ID!~,address!~
+createMetaFaucet ~!Local,faucetName!~,
+	createSocketServerFaucet network,handleConnect,pass,pass,~!Network,~!Me,ID!~,port!~,~!Network,~!Me,ID!~,address!~
 
 	# TODO work out if this is needed, and see if there is a better way of doing it.
 	deliver network,_control,inEOL n

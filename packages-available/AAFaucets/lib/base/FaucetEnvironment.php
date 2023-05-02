@@ -40,11 +40,13 @@ class FaucetEnvironment
 		}
 	}
 
-	function beginScopedEvent(&$faucet)
+	function beginScopedEvent(&$faucet, $faucetTopicPath)
 	{
-		$this->scopeTracker[$this->scopeNumber]=$this->currentFaucet;
+		$oldTopic=$this->core->get("ScopedEvent", "topic");
+		$this->scopeTracker[$this->scopeNumber]=array('faucet'=>$this->currentFaucet, 'topic'=>$oldTopic);
 		$this->currentFaucet=$faucet->getParent();
 		$this->core->setRef('Achel','currentFaucet', $this->currentFaucet);
+		$this->core->set("ScopedEvent", "topic", $faucetTopicPath);
 		$this->scopeNumber++;
 
 		$this->core->debug(3, "Environment/beginScopedEvent: ".$this->currentFaucet->getFullPath());
@@ -55,8 +57,9 @@ class FaucetEnvironment
 		if ($this->scopeNumber > 0)
 		{
 			$this->scopeNumber--;
-			$this->currentFaucet=&$this->scopeTracker[$this->scopeNumber];
+			$this->currentFaucet=&$this->scopeTracker[$this->scopeNumber]['faucet'];
 			$this->core->setRef('Achel','currentFaucet', $this->currentFaucet);
+			$this->core->set("ScopedEvent", "topic", $this->scopeTracker[$this->scopeNumber]['topic']);
 			$this->core->debug(3, "Environment/endScopedEvent: ".$this->currentFaucet->getFullPath());
 		}
 		else

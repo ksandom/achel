@@ -63,6 +63,5 @@ set FaucetUnit,testHandeler,
 # NOTE 2 to take continual results up to a specified quantity this could be tracked in the test details. In both cases, this should be a separate macro to this one.
 
 # Create faucet for recieving the result and anchor faucet to parent faucet.
-createPipe ~!Local,name!~,.
 create1-1CallFaucet ~!Local,name!~,~!FaucetUnit,testHandeler!~,~!FaucetUnit,currentTest,currentResult,name!~
 createPipe ~!Local,name!~,.

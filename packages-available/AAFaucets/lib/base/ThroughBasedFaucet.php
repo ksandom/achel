@@ -21,6 +21,7 @@ class ThroughBasedFaucet extends Faucet
 	{
 		if ($channel=='') $channel="default";
 
+
 		if (!isset($this->input[$channel]))
 		{
 			$this->input[$channel]=$data;
@@ -38,7 +39,7 @@ class ThroughBasedFaucet extends Faucet
 					}
 					else
 					{
-						$this->core->debug(2, "->storeData: $key already exists in channel $channel and is ".gettype($this->input[$channel][$key])." while the input is ".gettype($line).". Both need to be an array to be merged. Going to replace the existing data. This is very likely not what you want.");
+						$this->debug(2, "->storeData: $key already exists in channel $channel and is ".gettype($this->input[$channel][$key])." while the input is ".gettype($line).". Both need to be an array to be merged. Going to replace the existing data. This is very likely not what you want.");
 						$this->input[$channel][$key]=$line;
 					}
 				}
