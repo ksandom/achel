@@ -226,7 +226,7 @@ class SocketServerFaucet extends ThroughBasedFaucet
 		socket_close($this->clients[$clientID]);
 		unset($this->clients[$clientID]);
 
-		$this->triggerNetworkEvent($this->closeEvent, $key, 'close');
+		$this->triggerNetworkEvent($this->closeEvent, $clientID, 'close');
 	}
 
 	function checkForConnections()
@@ -329,7 +329,7 @@ class SocketServerFaucet extends ThroughBasedFaucet
 
 		if ($recieved===0) $this->clientHasClosed($channel);
 
-		$this->debug(1, __CLASS__.'->'.__FUNCTION__.": Got input \"{$this->inputBuffer[$channel]}\"");
+		$this->debug(3, __CLASS__.'->'.__FUNCTION__.": Got input \"{$this->inputBuffer[$channel]}\"");
 
 		$result=explode($this->inEOL, $this->inputBuffer[$channel]);
 		$this->inputBuffer[$channel]='';
