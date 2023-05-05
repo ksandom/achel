@@ -1,15 +1,15 @@
 <?php
-# Copyright (c) 2013-2018, Kevin Sandom under the GPL License. See LICENSE for full details.
+# Copyright (c) 2013-2023, Kevin Sandom under the GPL License. See LICENSE for full details.
 
 class Maths extends Module
 {
 	private $dataDir=null;
-	
+
 	function __construct()
 	{
 		parent::__construct('Maths');
 	}
-	
+
 	function event($event)
 	{
 		switch ($event)
@@ -34,19 +34,29 @@ class Maths extends Module
 				break;
 			case 'round':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 4, 4);
+				if (!is_numeric($parms[2]))
+				{
+					$this->debug(1, "round: Was expecting a number. Got \"{$parms[2]}\"");
+					break;
+				}
 				$this->core->set($parms[0], $parms[1], round($parms[2], $parms[3]));
 				break;
 			case 'absolute':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3);
+				if (!is_numeric($parms[2]))
+				{
+					$this->debug(1, "absolute: Was expecting a number. Got \"{$parms[2]}\"");
+					break;
+				}
 				$this->core->set($parms[0], $parms[1], abs($parms[2]));
 				break;
-			
+
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
 				break;
 		}
 	}
-	
+
 	function basicMaths($value1, $operator, $value2)
 	{
 		switch ($operator)
@@ -102,7 +112,7 @@ class Maths extends Module
 				break;
 		}
 	}
-	
+
 	function sanitise($value)
 	{
             if (is_numeric($value)) return $value;
