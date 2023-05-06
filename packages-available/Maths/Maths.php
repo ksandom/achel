@@ -103,7 +103,9 @@ class Maths extends Module
 				return $this->sanitise($value1)-$this->sanitise($value2);
 				break;
 			case '%': # Modulus
-				return $this->sanitise($value1)%$this->sanitise($value2);
+				$cleanedValue=$this->sanitise($value1);
+				$decimal=$this->preserveDecimal($cleanedValue);
+				return $cleanedValue%$this->sanitise($value2)+$decimal;
 				break;
 			case '^': # Exponent
 				return pow($this->sanitise($value1), $this->sanitise($value2));
@@ -111,6 +113,11 @@ class Maths extends Module
 				return sqrt($value1);
 				break;
 		}
+	}
+
+	private function preserveDecimal($value)
+	{
+		return $value-round($value, 0);
 	}
 
 	function sanitise($value)
