@@ -2,3 +2,5 @@
 parameters Category,variable,valueInMeters
 
 basicMaths ~!Local,Category!~,~!Local,variable!~,~!Local,valueInMeters!~,/,0.3048
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~
