@@ -8,28 +8,28 @@ basicMaths Local,1.5Pi,~!Local,pi!~,*,1.5
 if ~!Local,destinationX!~,<,0,
 	if ~!Local,destinationY!~,<,0,
 		# lower left
-		
+
 		basicMaths Local,coordOpposite,~!Local,destinationX!~,*,-1
 		basicMaths Local,coordAdjacent,~!Local,destinationY!~,*,-1
-		
+
 		rightTriangleGetOppositeAngle ~!Local,category!~,~!Local,variable!~,~!Local,coordOpposite!~,~!Local,coordAdjacent!~
-		
+
 		basicMaths ~!Local,category!~,~!Local,variable!~,~!~!Local,category!~,~!Local,variable!~!~,+,~!Local,pi!~
-		
+
 	elseIf ~!Local,destinationY!~,==,0,
 		# middle left
 		set ~!Local,category!~,~!Local,variable!~,~!Local,1.5Pi!~
-		
+
 	else
 		# upper left
 		set Local,coordOpposite,~!Local,destinationY!~
 		basicMaths Local,coordAdjacent,~!Local,destinationX!~,*,-1
-		
+
 		rightTriangleGetOppositeAngle ~!Local,category!~,~!Local,variable!~,~!Local,coordOpposite!~,~!Local,coordAdjacent!~
-		
+
 		basicMaths ~!Local,category!~,~!Local,variable!~,~!~!Local,category!~,~!Local,variable!~!~,+,~!Local,1.5Pi!~
-		
-		
+
+
 
 elseIf ~!Local,destinationX!~,==,0,
 	if ~!Local,destinationY!~,<,0,
@@ -47,24 +47,18 @@ else
 		# lower right
 		basicMaths Local,coordOpposite,~!Local,destinationY!~,*,-1
 		set Local,coordAdjacent,~!Local,destinationX!~
-		
+
 		rightTriangleGetOppositeAngle ~!Local,category!~,~!Local,variable!~,~!Local,coordOpposite!~,~!Local,coordAdjacent!~
 		basicMaths ~!Local,category!~,~!Local,variable!~,~!~!Local,category!~,~!Local,variable!~!~,+,~!Local,0.5Pi!~
-		
+
 	elseIf ~!Local,destinationY!~,==,0,
 		# middle right
 		set ~!Local,category!~,~!Local,variable!~,~!Local,0.5Pi!~
-		
+
 	else
 		# upper right
 		set Local,coordOpposite,~!Local,destinationX!~
 		set Local,coordAdjacent,~!Local,destinationY!~
 		rightTriangleGetOppositeAngle ~!Local,category!~,~!Local,variable!~,~!Local,coordOpposite!~,~!Local,coordAdjacent!~
 
-makeLocalAvailable ~!Local,variable!~
-
-# unset Local,pi
-# unset Local,0.5Pi
-# unset Local,1.5Pi
-# unset Local,coordAdjacent
-# unset Local,coordOpposite
+makeAvailable ~!Local,category!~,~!Local,variable!~

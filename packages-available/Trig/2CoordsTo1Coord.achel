@@ -7,4 +7,4 @@ basicMaths Local,coy,~!Local,y2!~,-,~!Local,y1!~
 setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,cox!~
 setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,coy!~
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,category!~,~!Local,variable!~

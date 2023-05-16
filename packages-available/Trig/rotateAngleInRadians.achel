@@ -8,4 +8,4 @@ rotateAngleInDegrees ~!Local,Category!~,~!Local,value!~,~!Local,inAngleDegrees!~
 
 degreesToRadians ~!Local,Category!~,~!Local,value!~,~!~!Local,Category!~,~!Local,value!~!~
 
-makeLocalAvailable ~!Local,value!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

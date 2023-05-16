@@ -4,7 +4,7 @@
 defineTest Load - executes,
 	set Local,addIt,
 		basicMaths Me,load,~!Me,load!~,+,1
-		makeLocalAvailable load
+		makeAvailable Local,load
 	
 	set Me,load,0
 	load ~!Local,addIt!~
@@ -13,7 +13,7 @@ defineTest Load - executes,
 defineTest Load - executes only once,
 	set Local,addIt,
 		basicMaths Me,load,~!Me,load!~,+,1
-		makeLocalAvailable load
+		makeAvailable Local,load
 	
 	set Me,load,0
 	load ~!Local,addIt!~
@@ -24,7 +24,7 @@ defineTest Load - executes only once,
 defineTest Unload - can allow an extra execution,
 	set Local,addIt,
 		basicMaths Me,load,~!Me,load!~,+,1
-		makeLocalAvailable load
+		makeAvailable Local,load
 	
 	set Me,load,0
 	load ~!Local,addIt!~

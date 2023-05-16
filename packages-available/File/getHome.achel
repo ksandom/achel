@@ -16,4 +16,4 @@ else
 		# complain
 		debug 1,Could not get or derive home directory. I'm sure this could be done better. If you know, please take a look at getHome.macro.
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

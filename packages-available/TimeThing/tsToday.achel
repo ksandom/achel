@@ -3,3 +3,5 @@ parameters category,variableName
 
 now Local,timestamp
 strToTime ~!Local,category!~,~!Local,variableName!~,0:00:00,~!Tmp,timestamp!~
+
+makeAvailable ~!Local,category!~,~!Local,variableName!~

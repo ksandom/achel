@@ -4,4 +4,4 @@ parameters Category,variable
 getEnv Local,env
 set ~!Local,Category!~,~!Local,variable!~,~!Local,env,HOME!~
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

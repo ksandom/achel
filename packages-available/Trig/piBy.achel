@@ -4,4 +4,5 @@ parameters category,variable,multiplier
 pi ~!Local,category!~,~!Local,variable!~
 basicMaths ~!Local,category!~,~!Local,variable!~,~!~!Local,category!~,~!Local,variable!~!~,*,~!Local,multiplier!~
 debug 4,piBy: ~!Local,category!~,~!Local,variable!~=~!~!Local,category!~,~!Local,variable!~!~ scope=~!General,scopeName!~ previousScope=~!General,previousScopeName!~
-makeLocalAvailable ~!Local,variable!~
+
+makeAvailable ~!Local,category!~,~!Local,variable!~

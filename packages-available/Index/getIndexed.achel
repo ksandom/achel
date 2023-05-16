@@ -21,4 +21,4 @@ loop
 
 retrieveResults Local,results
 
-makeMeAvailable ~!Local,indexName!~
+makeAvailable Me,~!Local,indexName!~

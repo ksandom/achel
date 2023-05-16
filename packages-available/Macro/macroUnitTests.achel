@@ -6,7 +6,7 @@ set Me,getTestData,
 	setNested Local,testData,c,3
 	setNested Local,testData,d,4
 	setNested Local,testData,e,5
-	makeLocalAvailable testData
+	makeAvailable Local,testData
 
 
 

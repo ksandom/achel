@@ -6,15 +6,15 @@ if ~!ColorCache,~!Local,text!~!~,==,,
 	unset ~!Local,category!~,~!Local,variable!~
 	isolate
 		getCategory Color
-		
+
 		# Work out how many colours we have
 		if ~!Global,numOfColors!~,==,,
 			countToVar Global,numOfColors
-		
+
 		# Create a key position for the text in the color category
 		positiveCRCVar Local,hash,~!Local,text!~
 		basicMaths Local,keyPosition,~!Local,hash!~,%,~!Global,numOfColors!~
-		
+
 		# Convert this key position to a key
 		# TODO These two lines give it some resilience against commas in the text. Once this is handeled better, these lines can become one.
 		keyPositionToKey Local,tmpColor,~!Local,keyPosition!~
@@ -22,4 +22,4 @@ if ~!ColorCache,~!Local,text!~!~,==,,
 
 set ~!Local,category!~,~!Local,variable!~,~!ColorCache,~!Local,text!~!~
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,category!~,~!Local,variable!~

@@ -7,4 +7,5 @@ basicMaths Local,nesting,~!Core,nesting!~,-,~!Local,nestingOffset!~
 basicMaths Local,nesting,~!Local,nesting!~,-,2
 
 setJson ["~!Local,Category!~","~!Local,variable!~",~!Core,stack,~!Local,nesting!~!~]
-makeLocalAvailable ~!Local,variable!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

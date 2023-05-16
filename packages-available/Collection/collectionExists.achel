@@ -2,4 +2,5 @@
 parameters Category,variable,collectionName
 
 dataExists ~!Local,Category!~,~!Local,variable!~,~!Local,collectionName!~
-makeLocalAvailable ~!Local,variable!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

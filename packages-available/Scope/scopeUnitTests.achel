@@ -57,7 +57,7 @@ defineTest Me - return,
 	set Me,test1,aa1
 	isolate
 		set Me,test1,aa2
-	
+
 	if ~!Me,test1!~,==,aa1,
 		failTest Got value from before nested setting.
 	elseIf ~!Me,test1!~,==,aa2,
@@ -95,6 +95,29 @@ defineTest Normal - repeat,
 
 
 # Scope/availability modifications.
+defineTest makeAvailable - Me/not available,
+	isolate
+		set Me,test1,blah
+	expect ,~!Me,test1!~
+
+defineTest makeAvailable - Me/available,
+	isolate
+		makeAvailable Me,test1
+		set Me,test1,blah
+	expect blah,~!Me,test1!~
+
+
+defineTest makeAvailable - Local/not available,
+	isolate
+		testDontMakeLocalAvailable blah
+	expect ,~!Local,test1!~
+
+defineTest makeAvailable - Local/available,
+	isolate
+		testMakeAvailableLocal blah
+	expect blah,~!Local,test1!~
+
+
 defineTest makeMeAvailable - not available,
 	isolate
 		set Me,test1,blah
@@ -120,21 +143,21 @@ defineTest makeLocalAvailable - available,
 defineTest makeLocalAvailable - interference - integrity check 1,
 	writeLocalFromOutOfScope Local,testVariable,2
 	expect 3.14,~!Local,testVariable!~
-	
+
 	unset Tmp,testVariable
 
 defineTest makeLocalAvailable - interference - integrity check 2,
 	writeLocalFromOutOfScope Tmp,testVariable,3
 	writeLocalFromOutOfScope Local,testVariable,2
 	expect 3.14,~!Local,testVariable!~
-	
+
 	unset Tmp,testVariable
 
 defineTest makeLocalAvailable - interference,
 	writeLocalFromOutOfScope Local,testVariable,2
 	writeLocalFromOutOfScope Tmp,testVariable,3
 	expect 3.14,~!Local,testVariable!~
-	
+
 	unset Tmp,testVariable
 
 defineTest is Local clean?,
@@ -299,38 +322,38 @@ defineTest Normal setNested overwrite bug,
 
 defineTest Normal unset - integrity check,
 	set Tmp,unsetTest,aa1
-	
+
 	expect aa1,~!Tmp,unsetTest!~
 	unset Tmp,unsetTest
 
 defineTest Normal unset,
 	set Tmp,unsetTest,aa1
 	unset Tmp,unsetTest
-	
+
 	expect ,~!Tmp,unsetTest!~
 
 defineTest Isolated unset,
 	set Isolated,unsetTest,aa1
 	unset Isolated,unsetTest
-	
+
 	expect ,~!Isolated,unsetTest!~
 
 defineTest Me unset,
 	set Me,unsetTest,aa1
 	unset Me,unsetTest
-	
+
 	expect ,~!Me,unsetTest!~
 
 defineTest Local unset - integrity check,
 	set Local,unsetTest,aa1
-	
+
 	expect aa1,~!Local,unsetTest!~
 	unset Local,unsetTest
 
 defineTest Local unset,
 	set Local,unsetTest,aa1
 	unset Local,unsetTest
-	
+
 	expect ,~!Local,unsetTest!~
 
 

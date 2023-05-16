@@ -92,7 +92,8 @@ class core extends Module
 				$this->registerFeature($this, array('getToResult', 'get'), 'get', 'Get a value and put it in an array so we can do stuff with it. --get=category'.valueSeparator.'variableName', array('storeVars'));
 				$this->registerFeature($this, array('getNested'), 'getNested', 'Get a value and put it in an array so we can do stuff with it. --getNested=category'.valueSeparator.'variableName', array('storeVars'));
 				$this->registerFeature($this, array('set'), 'set', 'set a value. All remaining values after the destination go into a string. --set=category'.valueSeparator.'variableName'.valueSeparator.'value', array('storeVars'));
-				$this->registerFeature($this, array('makeMeAvailable'), 'makeMeAvailable', 'Make a Me variable available to the calling scope. This is useful if you want to send data back via a variable which the calling scope is expecting you to initialise. Eg --makeMeAvailable=variableName would make Me,variableName available to the calling scope. You typically do this at the BEGINING of a macro.', array('storeVars'));
+				$this->registerFeature($this, array('makeAvailable'), 'makeAvailable', 'Make a Me/Local variable available to the calling scope. This is useful if you want to send data back via a variable which the calling scope is expecting you to initialise. Eg --makeAvailable=Local,variableName would make Local,variableName available to the calling scope. You need to do this at the END of a macro.', array('storeVars'));
+				$this->registerFeature($this, array('makeMeAvailable'), 'makeMeAvailable', 'Make a Me variable available to the calling scope. This is useful if you want to send data back via a variable which the calling scope is expecting you to initialise. Eg --makeMeAvailable=variableName would make Me,variableName available to the calling scope.', array('storeVars'));
 				$this->registerFeature($this, array('makeLocalAvailable'), 'makeLocalAvailable', 'Make a Local variable available to the calling scope. This is useful if you want to send data back via a variable which the calling scope is expecting you to initialise. Eg --makeLocalAvailable=variableName would make Local,variableName available to the calling scope. You need to do this at the END of a macro.', array('storeVars'));
 				$this->registerFeature($this, array('setNested'), 'setNested', 'set a value into a nested array, creating all the necessary sub arrays. The last parameter is the value. All the other parameters are the keys for each level. --setNested=StoreName'.valueSeparator.'category'.valueSeparator.'subcategory'.valueSeparator.'subsubcategory'.valueSeparator.'value. In this case an array would be created in StoreName,category that looks like this subcategory=>array(subsubcategory=>value)', array('storeVars'));
 				$this->registerFeature($this, array('setArray'), 'setArray', 'set a value. All remaining values after the destination go into an array. --set=category'.valueSeparator.'variableName'.valueSeparator.'value', array('storeVars'));
@@ -165,6 +166,10 @@ class core extends Module
 			case 'set':
 				$parms=$this->interpretParms($this->get('Global', $event), 2, 2, true);
 				$this->set($parms[0], $parms[1], $parms[2]);
+				break;
+			case 'makeAvailable':
+				$parms=$this->interpretParms($this->get('Global', $event), 1, 1, true);
+				$this->makeAvailable($parms[0], $parms[1]);
 				break;
 			case 'makeMeAvailable':
 				$parms=$this->interpretParms($this->get('Global', $event), 1, 1, true);
@@ -669,6 +674,12 @@ class core extends Module
 			'value'=>$value,
 			'nesting'=>$nesting
 			));
+	}
+
+	public function stackTrace()
+	{
+		$this->callFeature("stackTraceWithValues", "");
+		$this->callFeature("outNow", "");
 	}
 
 	private function unsetStackEntry($nesting)
@@ -1609,6 +1620,22 @@ class core extends Module
 			return true;
 		}
 		else return false;
+	}
+
+	function makeAvailable($category, $variableName)
+	{
+		switch ($category)
+		{
+			case 'Local':
+				$this->makeLocalAvailable($variableName);
+				break;
+			case 'Me':
+				$this->makeMeAvailable($variableName);
+				break;
+			default:
+				$this->core->debug(3, "makeAvailable: \"$category\" is not Local or Me, so not adjusting the scope of $category,$variableName. It is safe to disregard this message.");
+				break;
+		}
 	}
 
 	function makeMeAvailable($variableName)

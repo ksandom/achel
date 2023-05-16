@@ -13,4 +13,4 @@ basicMaths ~!Local,category!~,~!Local,variable!~,~!Isolated,cSquared!~,sr,
 if ~!~!Local,category!~,~!Local,variable!~!~,==,,
 	set ~!Local,category!~,~!Local,variable!~,0
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,category!~,~!Local,variable!~

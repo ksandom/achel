@@ -5,4 +5,4 @@ writeHardCodedPi ~!Local,Category!~,~!Local,variable!~
 
 round ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,~!Local,multiplier!~
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

@@ -2,4 +2,5 @@
 parameters category,variable
 
 acos ~!Local,category!~,~!Local,variable!~,-1
-makeLocalAvailable ~!Local,variable!~
+
+makeAvailable ~!Local,category!~,~!Local,variable!~
