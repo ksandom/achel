@@ -879,6 +879,12 @@ class Manipulator extends Module
 		$output=array();
 		$separator='_';
 
+		if (!is_array($resultSet))
+		{
+			$this->debug(1, "Expected an array, but got ".gettype($resultSet).". Here's a stacktrace:");
+			$this->core->stackTrace();
+		}
+
 		foreach ($resultSet as $oldKey=>$item)
 		{
 			if ($unique)
