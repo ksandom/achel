@@ -126,8 +126,8 @@ class Maths extends Module
             elseIf ($value=='') return 0;
             else
             {
-                $this->core->complain($this, "I don't know how to handle this as a number. Going to see if PHP can figure it out.", $value);
-                return $value;
+                $this->core->complain($this, "I don't know how to handle this as a number. Changing it to 0.", $value);
+                return 0;
             }
 	}
 }
