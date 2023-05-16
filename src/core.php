@@ -219,8 +219,9 @@ class core extends Module
 				# TODO Do this
 				$originalParms=$this->get('Global', $event);
 				$parms=$this->interpretParms($originalParms);
-				$this->debug(4,"copy: get={$parms[1]} set={$parms[0]}");
-				$this->setNestedViaPath($parms[1], $this->getNested(explode(',',$parms[0])));
+				$value=$this->getNested(explode(',',$parms[0]));
+				$this->debug(3,"copy: get={$parms[0]} set={$parms[1]}");
+				$this->setNestedViaPath($parms[1], $value);
 				break;
 			case 'stashResults':
 				$originalParms=$this->get('Global', 'stashResults');
