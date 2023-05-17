@@ -156,7 +156,7 @@ class core extends Module
 				break;
 			case 'get':
 				$parms=$this->interpretParms($this->get('Global', $event));
-				$value=array($this->get($parms[0], $parms[1]));
+				$value=$this->getForResultSet($parms[0], $parms[1]);
 				return $value;
 				break;
 			case 'getNested':
@@ -1465,6 +1465,24 @@ class core extends Module
 	function unsetCategoryModule($category)
 	{
 		unset($this->store[$category]);
+	}
+
+	function &getForResultSet($category, $valueName)
+	{
+		// $value=array($this->get($parms[0], $parms[1]));
+		$result=$this->get($category, $valueName);
+
+		if (!is_null($result))
+		{
+			$output=array($result);
+		}
+		else
+		{
+
+			$output=array();
+		}
+
+		return $output;
 	}
 
 	function &get($category, $valueName, $debug=true, $nestingOffset=0)

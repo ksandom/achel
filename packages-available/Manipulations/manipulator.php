@@ -269,14 +269,21 @@ class Manipulator extends Module
 	function countResultSet()
 	{
 		$resultSet=$this->core->getResultSet();
-
 		if (is_null($resultSet))
 		{
 			return 0;
 		}
 		else
 		{
-			return count($resultSet);
+			if (is_string($resultSet))
+			{
+				if (strlen($resultSet) > 0) return 1;
+				else return 0;
+			}
+			else
+			{
+				return count($resultSet);
+			}
 		}
 	}
 
