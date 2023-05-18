@@ -5,6 +5,8 @@ pi Local,pi
 basicMaths Local,0.5Pi,~!Local,pi!~,*,0.5
 basicMaths Local,1.5Pi,~!Local,pi!~,*,1.5
 
+set ~!Local,category!~,~!Local,variable!~,0
+
 if ~!Local,destinationX!~,<,0,
 	if ~!Local,destinationY!~,<,0,
 		# lower left
