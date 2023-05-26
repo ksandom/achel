@@ -7,9 +7,12 @@ basicMaths Local,1.5Pi,~!Local,pi!~,*,1.5
 
 set ~!Local,category!~,~!Local,variable!~,0
 
+set Local,debugLevel,3
+set Local,branch,unknown
+
 if ~!Local,destinationX!~,<,0,
 	if ~!Local,destinationY!~,<,0,
-		# lower left
+		set Local,branch,lower left
 
 		basicMaths Local,coordOpposite,~!Local,destinationX!~,*,-1
 		basicMaths Local,coordAdjacent,~!Local,destinationY!~,*,-1
@@ -19,11 +22,11 @@ if ~!Local,destinationX!~,<,0,
 		basicMaths ~!Local,category!~,~!Local,variable!~,~!~!Local,category!~,~!Local,variable!~!~,+,~!Local,pi!~
 
 	elseIf ~!Local,destinationY!~,==,0,
-		# middle left
+		set Local,branch,middle left
 		set ~!Local,category!~,~!Local,variable!~,~!Local,1.5Pi!~
 
 	else
-		# upper left
+		set Local,branch,upper left
 		set Local,coordOpposite,~!Local,destinationY!~
 		basicMaths Local,coordAdjacent,~!Local,destinationX!~,*,-1
 
@@ -35,18 +38,18 @@ if ~!Local,destinationX!~,<,0,
 
 elseIf ~!Local,destinationX!~,==,0,
 	if ~!Local,destinationY!~,<,0,
-		# lower middle
+		set Local,branch,lower middle
 		set ~!Local,category!~,~!Local,variable!~,~!Local,pi!~
 	elseIf ~!Local,destinationY!~,==,0,
-		# center
+		set Local,branch,center
 		set ~!Local,category!~,~!Local,variable!~,undefined
 	else
-		# upper middle
+		set Local,branch,upper middle
 		set ~!Local,category!~,~!Local,variable!~,0
 
 else
 	if ~!Local,destinationY!~,<,0,
-		# lower right
+		set Local,branch,lower right
 		basicMaths Local,coordOpposite,~!Local,destinationY!~,*,-1
 		set Local,coordAdjacent,~!Local,destinationX!~
 
@@ -54,13 +57,15 @@ else
 		basicMaths ~!Local,category!~,~!Local,variable!~,~!~!Local,category!~,~!Local,variable!~!~,+,~!Local,0.5Pi!~
 
 	elseIf ~!Local,destinationY!~,==,0,
-		# middle right
+		set Local,branch,middle right
 		set ~!Local,category!~,~!Local,variable!~,~!Local,0.5Pi!~
 
 	else
-		# upper right
+		set Local,branch,upper right
 		set Local,coordOpposite,~!Local,destinationX!~
 		set Local,coordAdjacent,~!Local,destinationY!~
 		rightTriangleGetOppositeAngle ~!Local,category!~,~!Local,variable!~,~!Local,coordOpposite!~,~!Local,coordAdjacent!~
+
+debug ~!Local,debugLevel!~,coordToAngle(~!Local,category!~,~!Local,variable!~): branch=~!Local,branch!~ coord=~!Local,destinationX!~,~!Local,destinationY!~
 
 makeAvailable ~!Local,category!~,~!Local,variable!~
