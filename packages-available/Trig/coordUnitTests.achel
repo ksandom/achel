@@ -4,7 +4,7 @@
 unset Tmp,angle
 defineTest coordToAngle 0 0,
 	coordToAngle Tmp,angle,0,0
-	
+
 	expect undefined,~!Tmp,angle!~
 
 unset Tmp,angle
@@ -12,7 +12,7 @@ defineTest coordToAngle 2 3,
 	coordToAngle Tmp,angle,2,3
 	radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 	round Tmp,radianAngle,~!Tmp,radianAngle!~,2
-	
+
 	expect 33.69,~!Tmp,radianAngle!~
 
 unset Tmp,angle
@@ -20,7 +20,7 @@ defineTest coordToAngle 3 -2,
 	coordToAngle Tmp,angle,3,-2
 	radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 	round Tmp,radianAngle,~!Tmp,radianAngle!~,2
-	
+
 	expect 123.69,~!Tmp,radianAngle!~
 
 unset Tmp,angle
@@ -28,7 +28,7 @@ defineTest coordToAngle -2 -3,
 	coordToAngle Tmp,angle,-2,-3
 	radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 	round Tmp,radianAngle,~!Tmp,radianAngle!~,2
-	
+
 	expect 213.69,~!Tmp,radianAngle!~
 
 unset Tmp,angle
@@ -36,7 +36,7 @@ defineTest coordToAngle -3 2,
 	coordToAngle Tmp,angle,-3,2
 	radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 	round Tmp,radianAngle,~!Tmp,radianAngle!~,2
-	
+
 	expect 303.69,~!Tmp,radianAngle!~
 
 
@@ -46,28 +46,28 @@ unset Tmp,angle
 defineTest coordToAngle 0 3,
 	coordToAngle Tmp,angle,0,3
 	radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
-	
+
 	expect 0,~!Tmp,radianAngle!~
 
 unset Tmp,angle
 defineTest coordToAngle 3 0,
 	coordToAngle Tmp,angle,3,0
 	radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
-	
+
 	expect 90,~!Tmp,radianAngle!~
 
 unset Tmp,angle
 defineTest coordToAngle 0 -3,
 	coordToAngle Tmp,angle,0,-3
 	radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
-	
+
 	expect 180,~!Tmp,radianAngle!~
 
 unset Tmp,angle
 defineTest coordToAngle -3 0,
 	coordToAngle Tmp,angle,-3,0
 	radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
-	
+
 	expect 270,~!Tmp,radianAngle!~
 
 
@@ -86,7 +86,7 @@ retrieveResults Tmp,pointData
 loop
 	set Tmp,xOffset,~!Result,x!~
 	set Tmp,yOffset,~!Result,y!~
-	
+
 	unset Tmp,angle
 	set Tmp,xOrigin,~!Tmp,xOffset!~
 	set Tmp,yOrigin,~!Tmp,yOffset!~
@@ -94,9 +94,9 @@ loop
 	basicMaths Tmp,yDestination,~!Tmp,yOffset!~,+,0
 	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
 		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
-		
+
 		expect undefined,~!Tmp,angle!~
-	
+
 	unset Tmp,angle
 	set Tmp,xOrigin,~!Tmp,xOffset!~
 	set Tmp,yOrigin,~!Tmp,yOffset!~
@@ -106,9 +106,9 @@ loop
 		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		round Tmp,radianAngle,~!Tmp,radianAngle!~,2
-		
+
 		expect 33.69,~!Tmp,radianAngle!~
-	
+
 	unset Tmp,angle
 	set Tmp,xOrigin,~!Tmp,xOffset!~
 	set Tmp,yOrigin,~!Tmp,yOffset!~
@@ -118,9 +118,9 @@ loop
 		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		round Tmp,radianAngle,~!Tmp,radianAngle!~,2
-		
+
 		expect 123.69,~!Tmp,radianAngle!~
-	
+
 	unset Tmp,angle
 	set Tmp,xOrigin,~!Tmp,xOffset!~
 	set Tmp,yOrigin,~!Tmp,yOffset!~
@@ -130,9 +130,9 @@ loop
 		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		round Tmp,radianAngle,~!Tmp,radianAngle!~,2
-		
+
 		expect 213.69,~!Tmp,radianAngle!~
-	
+
 	unset Tmp,angle
 	set Tmp,xOrigin,~!Tmp,xOffset!~
 	set Tmp,yOrigin,~!Tmp,yOffset!~
@@ -142,10 +142,10 @@ loop
 		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
 		round Tmp,radianAngle,~!Tmp,radianAngle!~,2
-		
+
 		expect 303.69,~!Tmp,radianAngle!~
-	
-	
+
+
 	unset Tmp,angle
 	set Tmp,xOrigin,~!Tmp,xOffset!~
 	set Tmp,yOrigin,~!Tmp,yOffset!~
@@ -154,9 +154,9 @@ loop
 	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
 		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
-		
+
 		expect 0,~!Tmp,radianAngle!~
-	
+
 	unset Tmp,angle
 	set Tmp,xOrigin,~!Tmp,xOffset!~
 	set Tmp,yOrigin,~!Tmp,yOffset!~
@@ -165,9 +165,9 @@ loop
 	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
 		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
-		
+
 		expect 90,~!Tmp,radianAngle!~
-	
+
 	unset Tmp,angle
 	set Tmp,xOrigin,~!Tmp,xOffset!~
 	set Tmp,yOrigin,~!Tmp,yOffset!~
@@ -176,9 +176,9 @@ loop
 	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
 		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
-		
+
 		expect 180,~!Tmp,radianAngle!~
-	
+
 	unset Tmp,angle
 	set Tmp,xOrigin,~!Tmp,xOffset!~
 	set Tmp,yOrigin,~!Tmp,yOffset!~
@@ -187,7 +187,7 @@ loop
 	defineTest 2CoordsToAngle ~!Tmp,xOrigin!~ ~!Tmp,yOrigin!~ ~!Tmp,xDestination!~ ~!Tmp,yDestination!~,
 		2CoordsToAngle Tmp,angle,~!Tmp,xOrigin!~,~!Tmp,yOrigin!~,~!Tmp,xDestination!~,~!Tmp,yDestination!~
 		radiansToDegrees Tmp,radianAngle,~!Tmp,angle!~
-		
+
 		expect 270,~!Tmp,radianAngle!~
 
 
@@ -264,15 +264,15 @@ loop LoopMultiplier,
 		basicMaths LoopData,y1,~!LoopData,y1!~,*,~!LoopMultiplier,line!~
 		basicMaths LoopData,x2,~!LoopData,x2!~,*,~!LoopMultiplier,line!~
 		basicMaths LoopData,y2,~!LoopData,y2!~,*,~!LoopMultiplier,line!~
-		
-		
+
+
 		defineTest 2CoordsToDistanceData (derived test) - ~!LoopData,x1!~ ~!LoopData,y1!~ ~!LoopData,x2!~ ~!LoopData,y2!~ (*~!LoopMultiplier,line!~),
 			# The thing to test
 			2CoordsToDistance Tmp,h,~!LoopData,x1!~,~!LoopData,y1!~,~!LoopData,x2!~,~!LoopData,y2!~
-			
+
 			# Invert multiplier on result
 			basicMaths Tmp,h,~!Tmp,h!~,/,~!LoopMultiplier,line!~
-			
+
 			# Round and test it.
 			round Tmp,h,~!Tmp,h!~,~!LoopData,decimalPlaces!~
 			expect ~!LoopData,expectedResult!~,~!Tmp,h!~
@@ -282,12 +282,16 @@ unset Tmp,2CoordsToDistanceData
 unset Tmp,2CoordsToDistanceDataMultipliers
 
 
+defineTest 2CoordsToDistance 0 length,
+	2CoordsToDistance Local,zero,2,2,2,2
+	expect 0,~!Local,zero!~
+
 
 defineTest rightTriangleGetAdjacentFromAngleAndOpposite - 45,
 	degreesToRadians Tmp,rads,45
 	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,testResult,~!Tmp,rads!~,2
 	expect 2,~!Tmp,testResult!~
-	
+
 	unset Tmp,rads
 	unset Tmp,testResult
 
@@ -296,6 +300,6 @@ defineTest rightTriangleGetAdjacentFromAngleAndOpposite - 20,
 	rightTriangleGetAdjacentFromAngleAndOpposite Tmp,testResult,~!Tmp,rads!~,2
 	round Tmp,testResult,~!Tmp,testResult!~,2
 	expect 5.49,~!Tmp,testResult!~
-	
+
 	unset Tmp,rads
 	unset Tmp,testResult
