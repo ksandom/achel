@@ -105,8 +105,8 @@ class core extends Module
 				$this->registerFeature($this, array('unsetCategory'), 'unsetCategory', 'Un set/delete an entire store. --unsetCategory=category', array('storeVars', 'store', 'dev'));
 				$this->registerFeature($this, array('copyCategory'), 'copyCategory', 'Copy an entire store to another store. --copyCategory=fromModuleName,toModuleName', array('storeVars', 'store', 'dev'));
 				$this->registerFeature($this, array('copy'), 'copy', "Copy the contents of any nested variable to any nested location. --copy='[\"Path,to,variable\",\"Path,to,destination,variable\"]' or in a macro: copy [\"Path,to,variable\",\"Path,to,destination,variable\"]", array('storeVars', 'store', 'dev'));
-				$this->registerFeature($this, array('stashResults'), 'stashResults', 'Put the current result set into a memory slot. --stashResults=category'.valueSeparator.'variableName');
-				$this->registerFeature($this, array('retrieveResults'), 'retrieveResults', 'Retrieve a result set that has been stored. This will replace the current result set with the retrieved one --retrieveResults=category'.valueSeparator.'variableName');
+				$this->registerFeature($this, array('stashResults'), 'stashResults', 'Put the current result set into a nested memory slot. --stashResults=category'.valueSeparator.'variableName['.valueSeparator.'nestedName['.valueSeparator.'etc]]');
+				$this->registerFeature($this, array('retrieveResults'), 'retrieveResults', 'Retrieve a result set that has been stored. This will replace the current result set with the retrieved one --retrieveResults=category'.valueSeparator.'variableName['.valueSeparator.'nestedName['.valueSeparator.'etc]]');
 				$this->registerFeature($this, array('getPID'), 'getPID', 'Save the process ID to a variable. --getPID=category'.valueSeparator.'variableName');
 
 				$this->registerFeature($this, array('setJson'), 'setJson', 'Take a json encoded array from jsonValue and store the arrary in category'.valueSeparator.'variableName. --setJson=category'.valueSeparator.'variableName'.valueSeparator.'jsonValue');
