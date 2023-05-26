@@ -28,7 +28,7 @@ class Maths extends Module
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event));
 				if ($this->core->requireNumParms($this, 5, $event, $originalParms, $parms))
 				{
-					$returnValue=$this->basicMaths($parms[2], $parms[3], $parms[4]);
+					$returnValue=$this->basicMaths($parms[2], $parms[3], $parms[4], "{$parms[0]},{$parms[1]}");
 					$this->core->set($parms[0], $parms[1], $returnValue);
 				}
 				break;
@@ -57,15 +57,17 @@ class Maths extends Module
 		}
 	}
 
-	function basicMaths($value1, $operator, $value2)
+	function basicMaths($value1, $operator, $value2, $parentContext='')
 	{
+		$context="basicMaths $parentContext,$value1,$operator,$value2";
+
 		switch ($operator)
 		{
 			case '*': # Multiply
-				return $this->sanitise($value1)*$this->sanitise($value2);
+				return $this->sanitise($value1, $context)*$this->sanitise($value2, $context);
 				break;
 			case '/': # Divide - Complain loudly on divide by 0.
-				if ( $this->sanitise($value2)!=0) return $this->sanitise($value1)/$this->sanitise($value2);
+				if ( $this->sanitise($value2, $context)!=0) return $this->sanitise($value1, $context)/$this->sanitise($value2, $context);
 				else
 				{
 					$this->debug(1, "Divide by zero in $value1,$operator,$value2 . Returning false.");
@@ -73,7 +75,7 @@ class Maths extends Module
 				}
 				break;
 			case '/!': # Divide - Assume false on divide by 0.
-				if ( $this->sanitise($value2)!=0) return $this->sanitise($value1)/$this->sanitise($value2);
+				if ( $this->sanitise($value2, $context)!=0) return $this->sanitise($value1, $context)/$this->sanitise($value2, $context);
 				else
 				{
 					$this->debug(3, "Divide by zero in $value1,$operator,$value2 . Returning false since /! was specified.");
@@ -81,34 +83,34 @@ class Maths extends Module
 				}
 				break;
 			case '/>': # Divide - Assume value2 (0) on divide by 0.
-				if ( $this->sanitise($value2)!=0) return $this->sanitise($value1)/$this->sanitise($value2);
+				if ( $this->sanitise($value2, $context)!=0) return $this->sanitise($value1, $context)/$this->sanitise($value2, $context);
 				else
 				{
 					$this->debug(3, "Divide by zero in $value1,$operator,$value2 . Assuming value2($value2) since the operator was />.");
-					return $this->sanitise($value2);
+					return $this->sanitise($value2, $context);
 				}
 				break;
 			case '/<': # Divide - Assume value1 on divide by 0.
-				if ($value2!=0) return $this->sanitise($value1)/$this->sanitise($value2);
+				if ($value2!=0) return $this->sanitise($value1, $context)/$this->sanitise($value2, $context);
 				else
 				{
 					$this->debug(3, "Divide by zero in $value1,$operator,$value2 . Assuming value1($value1) since the operator was /<.");
-					return $this->sanitise($value1);
+					return $this->sanitise($value1, $context);
 				}
 				break;
 			case '+': # Add
-				return $this->sanitise($value1)+$this->sanitise($value2);
+				return $this->sanitise($value1, $context)+$this->sanitise($value2, $context);
 				break;
 			case '-': # Subtract
-				return $this->sanitise($value1)-$this->sanitise($value2);
+				return $this->sanitise($value1, $context)-$this->sanitise($value2, $context);
 				break;
 			case '%': # Modulus
-				$cleanedValue=$this->sanitise($value1);
+				$cleanedValue=$this->sanitise($value1, $context);
 				$decimal=$this->preserveDecimal($cleanedValue);
-				return $cleanedValue%$this->sanitise($value2)+$decimal;
+				return $cleanedValue%$this->sanitise($value2, $context)+$decimal;
 				break;
 			case '^': # Exponent
-				return pow($this->sanitise($value1), $this->sanitise($value2));
+				return pow($this->sanitise($value1, $context), $this->sanitise($value2, $context));
 			case 'sr': # Square Root
 				return sqrt($value1);
 				break;
@@ -120,13 +122,13 @@ class Maths extends Module
 		return $value-round($value, 0);
 	}
 
-	function sanitise($value)
+	function sanitise($value, $context="")
 	{
             if (is_numeric($value)) return $value;
             elseIf ($value=='') return 0;
             else
             {
-                $this->core->complain($this, "I don't know how to handle this as a number. Changing it to 0.", $value);
+                $this->core->complain($this, "I don't know how to handle this as a number. Changing it to 0. context=$context", $value);
                 return 0;
             }
 	}
