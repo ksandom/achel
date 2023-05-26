@@ -911,7 +911,7 @@ class BalanceAlgorithm extends SubModule
 			}
 		}
 
-		$this->debug(3, "$path. . (v=$value, in=$inMin, ic=$inCenter, ix=$inMax, on=$outMin=-1, oc=$outCenter=0, ox=$outMax=1) OUT=$out");
+		$this->debug(2, "$path. . (v=$value, in=$inMin, ic=$inCenter, ix=$inMax, on=$outMin=-1, oc=$outCenter=0, ox=$outMax=1) OUT=$out");
 
 		return $out;
 	}
