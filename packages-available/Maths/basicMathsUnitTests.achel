@@ -114,6 +114,10 @@ defineTest 5.2%4,
 	basicMaths Tmp,mod,5.2,%,4
 	expect 1.2,~!Tmp,mod!~
 
+defineTest 0%4,
+	basicMaths Tmp,mod,0,%,4
+	expect 0,~!Tmp,mod!~
+
 unset Tmp,mod
 
 

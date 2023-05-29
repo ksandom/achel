@@ -1671,7 +1671,7 @@ class core extends Module
 	function makeLocalAvailable($variableName)
 	{
 		$value=$this->get(localScopeVarName, $variableName);
-		if ($value!=null)
+		if ($value!==null)
 		{
 			$key=$this->getScopeForCategory(localScopeVarName);
 			$this->doUnSet(array(localScopeVarName, $key, $variableName));
