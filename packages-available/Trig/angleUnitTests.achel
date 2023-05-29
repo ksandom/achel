@@ -1,0 +1,110 @@
+# Unit tests for coordinates based features. ~ unitTest,hidden,angle
+
+defineTest angleDiffDegrees 0 0,
+    angleDiffDegrees Local,angleDiff,0,0
+    expect 0,~!Local,angleDiff!~
+
+defineTest angleDiffDegrees 0 10,
+    angleDiffDegrees Local,angleDiff,0,10
+    expect 10,~!Local,angleDiff!~
+
+defineTest angleDiffDegrees 0 -10,
+    angleDiffDegrees Local,angleDiff,0,-10
+    expect -10,~!Local,angleDiff!~
+
+defineTest angleDiffDegrees 10 0,
+    angleDiffDegrees Local,angleDiff,10,0
+    expect -10,~!Local,angleDiff!~
+
+defineTest angleDiffDegrees -10 0,
+    angleDiffDegrees Local,angleDiff,-10,0
+    expect 10,~!Local,angleDiff!~
+
+defineTest angleDiffDegrees -175 175,
+    angleDiffDegrees Local,angleDiff,-170,170
+    expect -20,~!Local,angleDiff!~
+
+
+defineTest cleanAngle0360Degrees 0,
+    cleanAngle0360Degrees Local,cleanAngle,0
+    expect 0,~!Local,cleanAngle!~
+
+defineTest cleanAngle0360Degrees 11,
+    cleanAngle0360Degrees Local,cleanAngle,11
+    expect 11,~!Local,cleanAngle!~
+
+defineTest cleanAngle0360Degrees 300,
+    cleanAngle0360Degrees Local,cleanAngle,300
+    expect 300,~!Local,cleanAngle!~
+
+defineTest cleanAngle0360Degrees 370,
+    cleanAngle0360Degrees Local,cleanAngle,370
+    expect 10,~!Local,cleanAngle!~
+
+defineTest cleanAngle0360Degrees 732,
+    cleanAngle0360Degrees Local,cleanAngle,732
+    expect 12,~!Local,cleanAngle!~
+
+defineTest cleanAngle0360Degrees -10,
+    cleanAngle0360Degrees Local,cleanAngle,-10
+    expect 350,~!Local,cleanAngle!~
+
+defineTest cleanAngle0360Degrees -369,
+    cleanAngle0360Degrees Local,cleanAngle,-369
+    expect 351,~!Local,cleanAngle!~
+
+
+defineTest cleanAngle180180Degrees 0,
+    cleanAngle180180Degrees Local,cleanAngle,0
+    expect 0,~!Local,cleanAngle!~
+
+defineTest cleanAngle180180Degrees 179,
+    cleanAngle180180Degrees Local,cleanAngle,179
+    expect 179,~!Local,cleanAngle!~
+
+defineTest cleanAngle180180Degrees 194,
+    cleanAngle180180Degrees Local,cleanAngle,194
+    expect -166,~!Local,cleanAngle!~
+
+defineTest cleanAngle180180Degrees -195,
+    cleanAngle180180Degrees Local,cleanAngle,-195
+    expect 165,~!Local,cleanAngle!~
+
+
+defineTest angle0360to180180 0,
+    angle0360to180180 Local,180180,0
+    expect -180,~!Local,180180!~
+
+defineTest angle0360to180180 180,
+    angle0360to180180 Local,180180,180
+    expect 0,~!Local,180180!~
+
+defineTest angle0360to180180 360,
+    angle0360to180180 Local,180180,360
+    expect -180,~!Local,180180!~
+
+defineTest angle0360to180180 710,
+    angle0360to180180 Local,180180,710
+    expect 170,~!Local,180180!~
+
+defineTest angle0360to180180 -10,
+    angle0360to180180 Local,180180,-10
+    expect 170,~!Local,180180!~
+
+
+
+defineTest angle180180to0360 0,
+    angle180180to0360 Local,0360,0
+    expect 180,~!Local,0360!~
+
+defineTest angle180180to0360 180,
+    angle180180to0360 Local,0360,180
+    expect 0,~!Local,0360!~
+
+defineTest angle180180to0360 179,
+    angle180180to0360 Local,0360,179
+    expect 359,~!Local,0360!~
+
+defineTest angle180180to0360 -179,
+    angle180180to0360 Local,0360,-179
+    expect 1,~!Local,0360!~

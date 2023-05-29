@@ -1,0 +1,10 @@
+# Convert a 0-360 degree angle to a -180-180 degree angle. --angle0360to180180=Category,variable,angleInDegrees
+
+parameters Category,variable,angleInDegrees
+
+set ~!Local,Category!~,~!Local,variable!~,~!Local,angleInDegrees!~
+
+cleanAngle0360Degrees ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~
+basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,-,180
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

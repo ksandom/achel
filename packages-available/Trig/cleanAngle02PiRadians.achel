@@ -1,0 +1,9 @@
+# Assert that an angle in degrees is within bounds (0-2Pi). --cleanAngle02PiRadians=Category,variable,angleInRadians ~ angle,clean,bounds
+
+parameters Category,variable,angleInRadians
+
+radiansToDegrees Local,angleInDegrees
+cleanAngle0360Degrees Local,cleanedAngleDegrees,~!Local,angleInDegrees!~
+degreesToRadians ~!Local,Category!~,~!Local,variable!~,~!Local,cleanedAngleDegrees!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

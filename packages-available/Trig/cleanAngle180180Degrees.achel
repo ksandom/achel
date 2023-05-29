@@ -1,0 +1,12 @@
+# Assert that an angle in degrees is within bounds -180-180. --cleanAngle0360Degrees=Category,variable,angleInDegrees ~ angle,clean,bounds
+
+parameters Category,variable,angleInDegrees
+
+set ~!Local,Category!~,~!Local,variable!~,~!Local,angleInDegrees!~
+
+if ~!~!Local,Category!~,~!Local,variable!~!~,!=,0,
+    basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,+,180
+    cleanAngle0360Degrees Local,clean360,~!~!Local,Category!~,~!Local,variable!~!~
+    basicMaths ~!Local,Category!~,~!Local,variable!~,~!Local,clean360!~,-,180
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~
