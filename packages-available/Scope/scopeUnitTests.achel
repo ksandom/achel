@@ -153,7 +153,7 @@ defineTest makeLocalAvailable - interference - integrity check 2,
 
 	unset Tmp,testVariable
 
-defineTest makeLocalAvailable - interference,
+defineTest makeLocalAvailable - interference - integrity check 3,
 	writeLocalFromOutOfScope Local,testVariable,2
 	writeLocalFromOutOfScope Tmp,testVariable,3
 	expect 3.14,~!Local,testVariable!~
@@ -355,5 +355,3 @@ defineTest Local unset,
 	unset Local,unsetTest
 
 	expect ,~!Local,unsetTest!~
-
-
