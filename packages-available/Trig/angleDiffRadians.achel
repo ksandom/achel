@@ -1,4 +1,4 @@
-# Get the difference between two -pi-pi angles in  radians. --angleDiffDegrees=Category,variable,angle1,angle2 ~ angles
+# Get the difference between two -pi-pi angles in radians. --angleDiffRadians=Category,variable,angle1,angle2 ~ angles
 
 parameters {"Category":"Local","variable":"angleDiffRadians","angle1":"0","angle2":"0"}
 
@@ -8,3 +8,5 @@ radiansToDegrees Local,angle2Degrees,~!Local,angle2!~
 angleDiffDegrees Local,diff,~!Local,angle1Degrees!~,~!Local,angle2Degrees!~
 
 degreesToRadians ~!Local,Category!~,~!Local,variable!~,~!Local,diff!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

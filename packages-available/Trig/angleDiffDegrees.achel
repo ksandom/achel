@@ -1,4 +1,5 @@
-# Get the difference between two angles 180180 in degrees. --angleDiffDegrees=Category,variable,angle1,angle2 ~ angles
+# Get the difference between two angles 180180 in degrees. --angleDiffDegrees=Category,variable,angle1,angle2 ~ angles,deviance
+#onDefine aliasFeature angleDiffDegrees,angularDevianceDegrees
 
 parameters {"Category":"Local","variable":"angleDiffDegrees","angle1":"0","angle2":"0"}
 

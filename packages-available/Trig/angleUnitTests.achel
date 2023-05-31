@@ -24,6 +24,10 @@ defineTest angleDiffDegrees -175 175,
     angleDiffDegrees Local,angleDiff,-170,170
     expect -20,~!Local,angleDiff!~
 
+defineTest angleDiffDegrees 175 -175,
+    angleDiffDegrees Local,angleDiff,170,-170
+    expect 20,~!Local,angleDiff!~
+
 
 defineTest cleanAngle0360Degrees 0,
     cleanAngle0360Degrees Local,cleanAngle,0
