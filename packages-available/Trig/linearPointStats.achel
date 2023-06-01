@@ -66,7 +66,7 @@ setNested ~!Local,Category!~,~!Local,variable!~,progressDistance,~!Local,progres
 setNested ~!Local,Category!~,~!Local,variable!~,progress,~!Local,progress!~
 
 # Debugging.
-setNested ~!Local,Category!~,~!Local,variable!~,debugging,lineAngle,~!Local,pointIntermediateAngleRadians!~
+setNested ~!Local,Category!~,~!Local,variable!~,debugging,lineAngle,~!Local,lineAngleRadians!~
 setNested ~!Local,Category!~,~!Local,variable!~,debugging,lineCenteredAngle,~!Local,centeredLine!~
 setNested ~!Local,Category!~,~!Local,variable!~,debugging,pointAbsoluteAngle,~!Local,pointDirectionRadians!~
 setNested ~!Local,Category!~,~!Local,variable!~,debugging,pointRelativeAngle,~!Local,pointAngleRadians!~
