@@ -5,7 +5,7 @@ parameters Category,variable,angleInDegrees
 set ~!Local,Category!~,~!Local,variable!~,~!Local,angleInDegrees!~
 
 if ~!~!Local,Category!~,~!Local,variable!~!~,!=,0,
-    # Add basic protection against excessive negatives.
+    # Basic protection against excessive negatives.
     if ~!~!Local,Category!~,~!Local,variable!~!~,<,0,
         basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,+,360
     if ~!~!Local,Category!~,~!Local,variable!~!~,<,0,

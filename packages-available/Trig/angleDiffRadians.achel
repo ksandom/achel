@@ -2,11 +2,15 @@
 
 parameters {"Category":"Local","variable":"angleDiffRadians","angle1":"0","angle2":"0"}
 
-radiansToDegrees Local,angle1Degrees,~!Local,angle1!~
-radiansToDegrees Local,angle2Degrees,~!Local,angle2!~
+cleanAnglePiPiRadians Local,angle1,~!Local,angle1!~
+cleanAnglePiPiRadians Local,angle2,~!Local,angle2!~
 
-angleDiffDegrees Local,diff,~!Local,angle1Degrees!~,~!Local,angle2Degrees!~
+set ~!Local,Category!~,~!Local,variable!~,0
 
-degreesToRadians ~!Local,Category!~,~!Local,variable!~,~!Local,diff!~
+if ~!Local,angle1!~,!=,~!Local,angle2!~,
+    basicMaths Local,diff,~!Local,angle2!~,-,~!Local,angle1!~
+    set ~!Local,Category!~,~!Local,variable!~,~!Local,diff!~
+
+    cleanAnglePiPiRadians ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~
 
 makeAvailable ~!Local,Category!~,~!Local,variable!~

@@ -1,5 +1,9 @@
 # Unit tests for basicMaths features ~ unitTest,hidden,maths
 
+defineTest basicMaths 1.3 - -0.1,
+	basicMaths Local,final,1.3,-,-0.1
+	expect 1.4,~!Local,final!~
+
 defineTest Round 1 - 0,
 	round Tmp,roundTest,1,0
 	if ~!Tmp,roundTest!~,==,1,

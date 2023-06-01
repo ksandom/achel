@@ -2,8 +2,20 @@
 
 parameters Category,variable,angleInRadians
 
-radiansToDegrees Local,angleInDegrees
-cleanAngle0360Degrees Local,cleanedAngleDegrees,~!Local,angleInDegrees!~
-degreesToRadians ~!Local,Category!~,~!Local,variable!~,~!Local,cleanedAngleDegrees!~
+set ~!Local,Category!~,~!Local,variable!~,~!Local,angleInRadians!~
+piBy Local,2Pi,2
+
+if ~!~!Local,Category!~,~!Local,variable!~!~,!=,0,
+    # Basic protection against excessive negatives.
+    if ~!~!Local,Category!~,~!Local,variable!~!~,<,0,
+        basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,+,~!Local,2Pi!~
+    if ~!~!Local,Category!~,~!Local,variable!~!~,<,0,
+        basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,+,~!Local,2Pi!~
+
+    # Basic protection against excessive negatives.
+    if ~!~!Local,Category!~,~!Local,variable!~!~,>,~!Local,2Pi!~,
+        basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,-,~!Local,2Pi!~
+    if ~!~!Local,Category!~,~!Local,variable!~!~,>,~!Local,2Pi!~,
+        basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,-,~!Local,2Pi!~
 
 makeAvailable ~!Local,Category!~,~!Local,variable!~

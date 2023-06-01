@@ -2,8 +2,8 @@
 
 parameters Category,variable,angleInRadians
 
-radiansToDegrees Local,angleInDegrees,~!Local,angleInRadians!~
-angle180180to0360 Local,converted,~!Local,angleInDegrees!~
-degreesToRadians ~!Local,Category!~,~!Local,variable!~,~!Local,converted!~
+pi Local,pi
+cleanAnglePiPiRadians ~!Local,Category!~,~!Local,variable!~,~!Local,angleInRadians!~
+basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,+,~!Local,pi!~
 
 makeAvailable ~!Local,Category!~,~!Local,variable!~
