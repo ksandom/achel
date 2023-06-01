@@ -12,8 +12,8 @@ piBy Local,pi0.5,0.5
 
 
 # Center angles.
-angle02PiToPiPRadians Local,centeredPoint,~!Local,pointDirectionRadians!~
-angle02PiToPiPRadians Local,centeredLine,~!Local,lineAngleRadians!~
+angle02PiToPiPiRadians Local,centeredPoint,~!Local,pointDirectionRadians!~
+angle02PiToPiPiRadians Local,centeredLine,~!Local,lineAngleRadians!~
 
 
 # Figure out the direction.
@@ -28,7 +28,7 @@ if ~!Local,absAngularDeviance!~,>,~!Local,pi0.5!~,
 # Where is the point compared to the line?
 2CoordsToDistance Local,pointHypotenuse,~!Local,lineX1!~,~!Local,lineY1!~,~!Local,pointX!~,~!Local,pointY!~
 2CoordsToAngle Local,pointIntermediateAngleRadians,~!Local,lineX1!~,~!Local,lineY1!~,~!Local,pointX!~,~!Local,pointY!~
-angle02PiToPiPRadians Local,centeredIntermediateAngle,~!Local,pointIntermediateAngleRadians!~
+angle02PiToPiPiRadians Local,centeredIntermediateAngle,~!Local,pointIntermediateAngleRadians!~
 angleDiffRadians Local,pointAngleRadians,~!Local,centeredLine!~,~!Local,centeredIntermediateAngle!~
 rightTriangleGetOppositeFromAngle Local,distance,~!Local,pointAngleRadians!~,~!Local,pointHypotenuse!~
 
@@ -64,6 +64,13 @@ setNested ~!Local,Category!~,~!Local,variable!~,direction,~!Local,direction!~
 setNested ~!Local,Category!~,~!Local,variable!~,facing,~!Local,facing!~
 setNested ~!Local,Category!~,~!Local,variable!~,progressDistance,~!Local,progressDistance!~
 setNested ~!Local,Category!~,~!Local,variable!~,progress,~!Local,progress!~
+
+# Debugging.
+setNested ~!Local,Category!~,~!Local,variable!~,debugging,lineAngle,~!Local,pointIntermediateAngleRadians!~
+setNested ~!Local,Category!~,~!Local,variable!~,debugging,lineCenteredAngle,~!Local,centeredLine!~
+setNested ~!Local,Category!~,~!Local,variable!~,debugging,pointAbsoluteAngle,~!Local,pointDirectionRadians!~
+setNested ~!Local,Category!~,~!Local,variable!~,debugging,pointRelativeAngle,~!Local,pointAngleRadians!~
+setNested ~!Local,Category!~,~!Local,variable!~,debugging,pointCenteredAngle,~!Local,centeredIntermediateAngle!~
 
 # debug 0,~!~!Local,Category!~,~!Local,variable!~!~
 makeAvailable ~!Local,Category!~,~!Local,variable!~

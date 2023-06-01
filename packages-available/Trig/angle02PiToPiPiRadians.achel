@@ -1,4 +1,4 @@
-# Convert a 0-2Pi radian angle to a -Pi-Pi radian angle. --angle02PiToPiPRadians=Category,variable,angleInRadians
+# Convert a 0-2Pi radian angle to a -Pi-Pi radian angle. --angle02PiToPiPiRadians=Category,variable,angleInRadians
 
 parameters Category,variable,angleInRadians
 
