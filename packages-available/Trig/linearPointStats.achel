@@ -58,6 +58,12 @@ if ~!Local,totalDistance!~,!=,0,
     basicMaths Local,progress,~!Local,progressDistance!~,/,~!Local,totalDistance!~
 
 
+# Calculate the ideal position on the line.
+angleAndDistanceToCoord Local,offset,~!Local,lineAngleRadians!~,~!Local,progressDistance!~
+basicMaths Local,idealX,~!Local,lineX1!~,+,~!Local,offset,x!~
+basicMaths Local,idealY,~!Local,lineY1!~,+,~!Local,offset,y!~
+
+
 # Provide the stats.
 setNested ~!Local,Category!~,~!Local,variable!~,distanceFromLine,~!Local,distance!~
 setNested ~!Local,Category!~,~!Local,variable!~,direction,~!Local,direction!~
@@ -65,12 +71,14 @@ setNested ~!Local,Category!~,~!Local,variable!~,facing,~!Local,facing!~
 setNested ~!Local,Category!~,~!Local,variable!~,progressDistance,~!Local,progressDistance!~
 setNested ~!Local,Category!~,~!Local,variable!~,progress,~!Local,progress!~
 
-# Debugging.
-setNested ~!Local,Category!~,~!Local,variable!~,debugging,lineAngle,~!Local,lineAngleRadians!~
-setNested ~!Local,Category!~,~!Local,variable!~,debugging,lineCenteredAngle,~!Local,centeredLine!~
-setNested ~!Local,Category!~,~!Local,variable!~,debugging,pointAbsoluteAngle,~!Local,pointDirectionRadians!~
-setNested ~!Local,Category!~,~!Local,variable!~,debugging,pointRelativeAngle,~!Local,pointAngleRadians!~
-setNested ~!Local,Category!~,~!Local,variable!~,debugging,pointCenteredAngle,~!Local,centeredIntermediateAngle!~
+# Extra points of interest.
+setNested ~!Local,Category!~,~!Local,variable!~,extra,lineAngle,~!Local,lineAngleRadians!~
+setNested ~!Local,Category!~,~!Local,variable!~,extra,lineCenteredAngle,~!Local,centeredLine!~
+setNested ~!Local,Category!~,~!Local,variable!~,extra,pointAbsoluteAngle,~!Local,pointDirectionRadians!~
+setNested ~!Local,Category!~,~!Local,variable!~,extra,pointRelativeAngle,~!Local,pointAngleRadians!~
+setNested ~!Local,Category!~,~!Local,variable!~,extra,pointCenteredAngle,~!Local,centeredIntermediateAngle!~
+setNested ~!Local,Category!~,~!Local,variable!~,extra,idealPosition,x,~!Local,idealX!~
+setNested ~!Local,Category!~,~!Local,variable!~,extra,idealPosition,y,~!Local,idealY!~
 
 # debug 0,~!~!Local,Category!~,~!Local,variable!~!~
 makeAvailable ~!Local,Category!~,~!Local,variable!~
