@@ -19,6 +19,7 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('toString'), 'toString', 'Convert array of arrays into an array of strings. eg --toString="blah file=%hostName% ip=~%externalIP%~"', array('array', 'string', 'Manipulations'));
 				$this->core->registerFeature($this, array('split'), 'split', "Split each string-able thing into it's parts based on a specified string. --split=[stringToSplitOn] . If stringToSplitOn is not specified, \\n is assumed.", array('array', 'string', 'new','line','new line', 'Manipulations'));
 				$this->core->registerFeature($this, array('f', 'flatten'), 'flatten', 'Flatten an array of arrays into a keyed array of values. --flatten[=limit] (default:-1). Note that "limit" specifies how far to go into the nesting before simply returning what ever is below. Choosing a negative number specifies how many levels to go in before beginning to flatten. Choosing 0 sets no limit.', array('array', 'string', 'Manipulations'));
+				$this->core->registerFeature($this, array('flattenSubItems'), 'flattenSubItems', 'Just like --flatten. But will preserve the first layer regardless of the limit that you specify. This is probably the feature that you want.', array('array', 'string', 'Manipulations'));
 				$this->core->registerFeature($this, array('finalFlatten'), 'finalFlatten', 'To be used after a --flatten as gone as far as it can.', array('array', 'string', 'Manipulations'));
 				$this->core->registerFeature($this, array('replace'), 'replace', 'Replace a pattern matching a regular expression and replace it with something defined. --replace=searchRegex,replacement', array('array', 'string', 'Manipulations'));
 				$this->core->registerFeature($this, array('replaceInString'), 'replaceInString', "Replace a string within a string. --replaceInString=Category,variable,search,replace,inputString", array('Manipulations'));
@@ -117,6 +118,13 @@ class Manipulator extends Module
 				elseif ($limitIn==0) $limit=false;
 				else $limit=$limitIn;
 				return $this->flatten($this->core->getResultSet(), $limit);
+				break;
+			case 'flattenSubItems':
+				$limitIn=$this->core->get('Global', $event);
+				if ($limitIn == null) $limit=-1;
+				elseif ($limitIn==0) $limit=false;
+				else $limit=$limitIn;
+				return $this->flattenSubItems($this->core->getResultSet(), $limit);
 				break;
 			case 'finalFlatten':
 				return $this->finalFlatten($this->core->getResultSet());
@@ -418,6 +426,20 @@ class Manipulator extends Module
 			}
 		}
 		else $this->getArrayNodes($output, $input, $clashes, $limit, $nesting);
+
+		return $output;
+	}
+
+	function flattenSubItems($input, $limit, $nesting=0)
+	{
+		if (!is_array($input)) return $input;
+
+		$output=array();
+
+		foreach ($input as $key => $entry)
+		{
+				$output[$key] = $this->flatten($entry, $limit, $nesting);
+		}
 
 		return $output;
 	}
