@@ -411,7 +411,7 @@ class Manipulator extends Module
 		else return $output;
 	}
 
-	function flatten($input, $limit, $nesting=0)
+	function flatten($input, $limit, $nesting=0, $prefix='')
 	{
 		if (!is_array($input)) return $input;
 
@@ -421,8 +421,21 @@ class Manipulator extends Module
 		{
 			foreach ($input as $key=>$line)
 			{
+				if ($prefix)
+				{
+					$effectivePrefix="{$prefix}_{$key}";
+					$effectiveKey="{$effectivePrefix}_{$key}";
+				}
+				else
+				{
+					$effectivePrefix="{$key}";
+					$effectiveKey="$key";
+				}
+
+				$this->debug(0,"p=$prefix k=$key eP=$effectivePrefix eK=$effectiveKey");
+
 				$newLimit=($limit<-1)?$limit+1:false;
-				$output[$key]=$this->flatten($line, $newLimit, $nesting+1);
+				$output[$effectiveKey]=$this->flatten($line, $newLimit, $nesting+1, $effectivePrefix);
 			}
 		}
 		else $this->getArrayNodes($output, $input, $clashes, $limit, $nesting);
@@ -438,7 +451,7 @@ class Manipulator extends Module
 
 		foreach ($input as $key => $entry)
 		{
-				$output[$key] = $this->flatten($entry, $limit, $nesting);
+			$output[$key] = $this->flatten($entry, $limit, $nesting, $key);
 		}
 
 		return $output;
@@ -500,29 +513,28 @@ class Manipulator extends Module
 		return $output;
 	}
 
-	private function getArrayNodes(&$output, $input, &$clashes, $limit, $nesting)
+	private function getArrayNodes(&$output, $input, &$clashes, $limit, $nesting, $prefix='')
 	{
 		foreach ($input as $key=>$value)
 		{
-			if (is_array($value) and !(is_numeric($limit) and (($nesting>=$limit))))
+			if ($prefix)
 			{
-				$this->getArrayNodes($output, $value, $clashes, $limit, $nesting+1);
+				$effectivePrefix="{$prefix}_{$key}";
+				$effectiveKey="{$effectivePrefix}_{$key}";
 			}
 			else
 			{
-				if (is_numeric($key)) $output[]=$value;
-				else
-				{
-					if (!isset($output[$key])) $output[$key]=$value;
-					else
-					{
-						# work out new key based on clashes
-						$clashes[$key]=(isset($clashes[$key]))?$clashes[$key]+1:1;
-						$newKey="$key{$clashes[$key]}";
-						$output[$newKey]=$value;
-					}
+				$effectivePrefix="{$key}";
+				$effectiveKey="$key";
+			}
 
-				}
+			if (is_array($value) and !(is_numeric($limit) and (($nesting>=$limit))))
+			{
+				$this->getArrayNodes($output, $value, $clashes, $limit, $nesting+1, $effectivePrefix);
+			}
+			else
+			{
+				$output[$effectiveKey]=$value;
 			}
 		}
 	}
