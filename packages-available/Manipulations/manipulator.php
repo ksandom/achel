@@ -432,8 +432,6 @@ class Manipulator extends Module
 					$effectiveKey="$key";
 				}
 
-				$this->debug(0,"p=$prefix k=$key eP=$effectivePrefix eK=$effectiveKey");
-
 				$newLimit=($limit<-1)?$limit+1:false;
 				$output[$effectiveKey]=$this->flatten($line, $newLimit, $nesting+1, $effectivePrefix);
 			}
