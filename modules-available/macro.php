@@ -315,12 +315,12 @@ class Macro extends Module
 
 
 			# TODO track previous and next
-			$this->initProgress($input);
+			$shouldUpdateProgress=$this->initProgress($input);
 			$keys=array_keys($input);
 			foreach ($keys as $position=>$key)
 			{
 				$in=$input[$key];
-				$this->updateProgress();
+				if ($shouldUpdateProgress) $this->updateProgress();
 				$this->debug(5, "loopMacro iterated for key $key");
 
 				# Create Result category for referencing the current position in the resultSet.
@@ -359,7 +359,7 @@ class Macro extends Module
 					else $this->debug(4, "loopMacro: Skipped key \"$key\" since it looks like it has been unset.");
 				}
 			}
-			$this->removeProgress();
+			if ($shouldUpdateProgress) $this->removeProgress();
 
 			# TODO remove Result
 		}
@@ -377,24 +377,36 @@ class Macro extends Module
 	{
 		$output=array();
 
-		$this->initProgress($data);
+		$shouldUpdateProgress=$this->initProgress($data);
 		foreach ($data as $line)
 		{
-			$this->updateProgress();
+			if ($shouldUpdateProgress) $this->updateProgress();
 			if ($returnValue=$this->core->callFeatureWithDataset($feature, $value, $line))
 			{
 				$output[]=$returnValue;
 			}
 			else $output[]=$line;
 		}
-		$this->removeProgress();
+		if ($shouldUpdateProgress) $this->removeProgress();
 
 		return $output;
 	}
 
+	function isInitialised($progressKey)
+	{
+		$data=$this->core->get('ProgressData', $progressKey);
+
+		return (is_array($data));
+	}
+
 	function initProgress(&$data)
 	{
-		$this->core->set('ProgressData', $this->getProgressKey(), array('position'=>0, 'total'=>count($data), 'remaining'=>0));
+		if (!$this->isInitialised($this->getProgressKey()))
+		{
+			$this->core->set('ProgressData', $this->getProgressKey(), array('position'=>0, 'total'=>count($data), 'remaining'=>0));
+			return true;
+		}
+		else return false;
 	}
 
 	function updateProgress()
