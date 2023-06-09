@@ -424,7 +424,7 @@ class Manipulator extends Module
 				if ($prefix)
 				{
 					$effectivePrefix="{$prefix}_{$key}";
-					$effectiveKey="{$effectivePrefix}_{$key}";
+					$effectiveKey="{$effectivePrefix}";
 				}
 				else
 				{
@@ -518,7 +518,7 @@ class Manipulator extends Module
 			if ($prefix)
 			{
 				$effectivePrefix="{$prefix}_{$key}";
-				$effectiveKey="{$effectivePrefix}_{$key}";
+				$effectiveKey="{$effectivePrefix}";
 			}
 			else
 			{
