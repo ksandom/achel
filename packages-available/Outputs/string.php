@@ -33,7 +33,7 @@ class AchelString extends Module
 				$this->stringToFile();
 				break;
 			case 'stringToFile':
-				$this->stringToFile($this->core->get('Global', $event));
+				$this->stringToFile(trim($this->core->get('Global', $event)));
 				break;
 			case 'singleStringNow':
 				$output=$this->singleStringNow($this->core->get('Global', $event), $this->core->getResultSet());;
@@ -98,7 +98,10 @@ class AchelString extends Module
 	{
 		$this->debug(4, "String: Writing output to {$this->outputFile}");
 		$result=$this->singleStringNow($this->outputFile, $output);
-		echo $result[0];
+		if (isset($result[0]))
+		{
+			echo $result[0];
+		}
 	}
 }
 
