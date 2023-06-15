@@ -922,6 +922,7 @@ class Manipulator extends Module
 		{
 			$this->debug(1, "Expected an array, but got ".gettype($resultSet).". Here's a stacktrace:");
 			$this->core->stackTrace();
+			return false;
 		}
 
 		foreach ($resultSet as $oldKey=>$item)
