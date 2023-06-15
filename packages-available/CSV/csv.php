@@ -4,18 +4,19 @@
 class CSV extends Module
 {
 	private $dataDir=null;
-	
+
 	function __construct()
 	{
 		parent::__construct(__CLASS__);
 	}
-	
+
 	function event($event)
 	{
 		switch ($event)
 		{
 			case 'init':
-				$this->core->registerFeature($this, array('loadCSV'), 'loadCSV', 'Loads a CSV file into the resultSet. --CSV=filename', array('data','csv'));
+				$this->core->registerFeature($this, array('loadCSV'), 'loadCSV', 'Loads a CSV file into the resultSet. --loadCSV=filename', array('data','csv'));
+				$this->core->registerFeature($this, array('saveCSVHeavyLifting'), 'saveCSVHeavyLifting', 'Does the heavy lifting for saving a CSV.', array('data','csv','hidden'));
 				break;
 			case 'followup':
 				break;
@@ -34,20 +35,23 @@ class CSV extends Module
 					$this->core->complain($this, "Insufficient parameters. Got ".implode(','.$parms), $event);
 				}
 				break;
-			
+			case 'saveCSVHeavyLifting':
+				return $this->saveCSVHeavyLifting();
+				break;
+
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
 				break;
 		}
 	}
-	
+
 	function loadCSV($fileName, $interpretHeader=true)
 	{
 		if (file_exists($fileName))
 		{
 			$input=file($fileName);
 			$output=array();
-			
+
 			// Interpret the header if requested
 			if (isset($input[0]) and $interpretHeader)
 			{
@@ -59,13 +63,13 @@ class CSV extends Module
 				$map=array();
 				$start=0;
 			}
-			
+
 			// Interpret the remainder of the file
 			$totalLines=count($input);
 			for ($lineNumber=$start;$lineNumber<$totalLines;$lineNumber++)
 			{
 				$line=str_getcsv($input[$lineNumber]);
-				
+
 				if ($interpretHeader)
 				{
 					$outputLine=array();
@@ -75,7 +79,7 @@ class CSV extends Module
 						else $destinationKey=$key;
 						$outputLine[$destinationKey]=$value;
 					}
-					
+
 					$output[]=$outputLine;
 				}
 				else
@@ -83,7 +87,7 @@ class CSV extends Module
 					$output[]=$line;
 				}
 			}
-			
+
 			return $output;
 		}
 		else
@@ -91,6 +95,39 @@ class CSV extends Module
 			$this->core->complain($this, 'File not found.', $fileName);
 			return false;
 		}
+	}
+
+	private function saveCSVHeavyLifting()
+	{
+			$headings=$this->core->get('Local','headings');
+			$resultSet=$this->core->getResultSet();
+			$lines=array();
+
+			$lines[]=$this->csvLine($headings, $headings);
+
+			foreach ($resultSet as $key=>$lineData)
+			{
+				$lines[]=$this->csvLine($headings, $lineData);
+			}
+
+			$combined=implode("\n", $lines)."\n";
+
+			return array(0=>$combined);
+	}
+
+	private function csvLine($headings, $lineData)
+	{
+		$output='';
+		foreach ($headings as $key=>$value)
+		{
+			if (isset($lineData[$key]))
+			{
+				$prefix=($output=='')?'"':'","';
+				$output.=$prefix.str_replace('"', '\"', $lineData[$key]);
+			}
+		}
+
+		return $output.'"';
 	}
 }
 

@@ -18,25 +18,11 @@ isolate
     template csvLine
     stashResults Local,csvHeadings
 
-debug 1,Making the data and headings line up for ~!Local,fileName!~
 isolate
-    loop Line,
-        displayProgress ~!Local,progress!~
-        isolate
-            retrieveResults Local,headings
-            loop Heading,
-                escapeForJson Local,data,~!Line,~!Heading,key!~!~
-                setNested ["CleanedCSV","data","~!Line,key!~","~!Heading,key!~","~!Local,data!~"]
-    finishProgress
-
-isolate
-    debug 1,Formatting ~!Local,fileName!~
-    retrieveResults CleanedCSV,data
-
-    forEach template,csvLine
-    flatten 0
-
+    debug 1,Making the data and headings line up for ~!Local,fileName!~
+    saveCSVHeavyLifting
     debug 1,Writing ~!Local,fileName!~
-    templateToFile csv,~!Local,fileName!~
+    stringToFile ~!Local,fileName!~
+    outNow
 
 nested
