@@ -120,11 +120,9 @@ class CSV extends Module
 		$output='';
 		foreach ($headings as $key=>$value)
 		{
-			if (isset($lineData[$key]))
-			{
-				$prefix=($output=='')?'"':'","';
-				$output.=$prefix.str_replace('"', '\"', $lineData[$key]);
-			}
+			$prefix=($output=='')?'"':'","';
+			$cell=(isset($lineData[$key]))?$lineData[$key]:"";
+			$output.=$prefix.str_replace('"', '\"', $cell);
 		}
 
 		return $output.'"';
