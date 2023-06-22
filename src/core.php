@@ -2135,7 +2135,11 @@ class core extends Module
 				if ($this->get('General', 'complainAboutDuplicateMacros'))
 				{
 					$existing=$this->get('Features', $flag);
-					$existingName=$existing['obj']->getName();
+					if (isset($existing['obj']))
+					{
+						$existingName=(is_object($existing['obj']))?$existing['obj']->getName():'unknown';
+					}
+					else $existingName='Unknown (obj not set).';
 					$this->complain($obj, "Feature $flag has already been registered by $existingName");
 				}
 			}
