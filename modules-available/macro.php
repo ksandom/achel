@@ -24,6 +24,7 @@ class Macro extends Module
 				$this->core->registerFeature($this, array('defineMacro'), 'defineMacro', 'Define a macro. --defineMacro=macroName:"command1=blah\ncommand2=wheee"');
 				$this->core->registerFeature($this, array('runMacro'), 'runMacro', 'Run a macro. --runMacro=macroName');
 				$this->core->registerFeature($this, array('listMacros'), 'listMacros', 'List all macros');
+				$this->core->registerFeature($this, array('function'), 'function', 'Create a function. --function=functionName,functionCode . functionCode is normally indented on the next line. See Syntax/readme.md for a full breakdown of how to use it.');
 				$this->core->registerFeature($this, array('loop', 'loopMacro'), 'loop', 'Loop through a resultSet. The current iteration of the resultSet is accessed via STORE variables under the category Result. The key for a given iteration will be stored in Result,key and if the value is a string it will be stored in Result,line. Otherwise all array entries will be directly accessile directly in Result. See loopMacro.md for more information. --loop=[Category,]macroName . Category is where the data for current iteration of the loop will be stored. If omitted, it will be Result. Note that if you specify a Category from a macro, you should have a trailing comma before the indented code block; like this: loop Example,', array('loop', 'iterate', 'resultset')); # TODO This should probably move to a language module
 				$this->core->registerFeature($this, array('loopLite'), 'loopLite', 'Loop through a resultSet without passing the whole source resultSet arround in each iteration. For most use-cases, this will be what you want. The current iteration of the resultSet is accessed via STORE variables under the category Result. See loopMacro.md for more information. --loop=macroName[,parametersForTheMacro]', array('loop', 'iterate', 'resultset'));
 				$this->core->registerFeature($this, array('forEach'), 'forEach', "For each result in the resultSet, run this command. The whole resultSet will temporarily be set to the result in the current iteration, and the resultSet of that iteration will replace the original result in the original resultSet. Basically it's a way to work with nested results and be able to send their results back. --foreEach=feature,value", array('loop', 'iterate', 'resultset')); # TODO This should probably move to a language module
@@ -49,6 +50,8 @@ class Macro extends Module
 				break;
 			case 'runMacro':
 				return $this->runMacro($this->core->get('Global', $event));
+			case 'function':
+				break;
 			case 'listMacros':
 				return $this->listMacros();
 				break;
@@ -237,7 +240,14 @@ class Macro extends Module
 				$macroPath=$this->core->get('MacroListCache', $macroName);
 				$this->core->set('MacroListCache', $subName, $macroPath);
 
-				$this->core->registerFeature($this, array($subName), $subName, "Derived macro for $macroName", "$macroName,hidden", true, 'nesting');
+				$subAliases=array($subName);
+				if ($action['argument']=='function')
+				{
+					$parts=$this->core->splitOnceOn(',', $action['value']);
+					$subAliases[]=$parts[0];
+				}
+
+				$this->core->registerFeature($this, $subAliases, $subName, "Derived macro for $macroName", "$macroName,hidden", true, 'nesting');
 				if (!$outputArray[$key]['nesting']=$this->compileFromArray($subName, $action['nesting']))
 				{
 					$this->debug(0, "Macro/compileFromArray/$macroName/$key: Received failure from nested code.");
