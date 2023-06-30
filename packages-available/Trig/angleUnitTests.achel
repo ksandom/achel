@@ -28,6 +28,43 @@ defineTest angleDiffDegrees 175 -175,
     angleDiffDegrees Local,angleDiff,170,-170
     expect 20,~!Local,angleDiff!~
 
+function testAngleDiffViaSeparationDegrees,
+    parameters start,separation
+    basicMaths Local,finish,~!Local,start!~,+,~!Local,separation!~
+    if ~!Local,finish!~,>,180,
+        basicMaths Local,finish,~!Local,finish!~,-,360
+
+    basicMaths Local,invertedSeparation,~!Local,separation!~,*,-1
+
+    set Me,start,~!Local,start!~
+    set Me,separation,~!Local,separation!~
+    set Me,invertedSeparation,~!Local,invertedSeparation!~
+    set Me,finish,~!Local,finish!~
+
+    defineTest angleDiffDegrees (Generated) ~!Me,start!~ + ~!Me,separation!~ = ~!Me,finish!~,
+        angleDiffDegrees Me,angleDiff,~!Me,start!~,~!Me,finish!~
+        expect ~!Me,separation!~,~!Me,angleDiff!~
+
+    defineTest angleDiffDegrees (Generated) ~!Me,finish!~ + ~!Me,invertedSeparation!~ = ~!Me,start!~,
+        angleDiffDegrees Me,angleDiff,~!Me,start!~,~!Me,finish!~
+        expect ~!Me,separation!~,~!Me,angleDiff!~
+
+testAngleDiffViaSeparationDegrees -10,10
+testAngleDiffViaSeparationDegrees 0,5
+testAngleDiffViaSeparationDegrees 0,10
+testAngleDiffViaSeparationDegrees 10,5
+testAngleDiffViaSeparationDegrees 20,5
+testAngleDiffViaSeparationDegrees 30,5
+testAngleDiffViaSeparationDegrees 40,5
+testAngleDiffViaSeparationDegrees 90,5
+testAngleDiffViaSeparationDegrees 100,5
+testAngleDiffViaSeparationDegrees 110,5
+testAngleDiffViaSeparationDegrees 140,5
+testAngleDiffViaSeparationDegrees 170,5
+testAngleDiffViaSeparationDegrees 176,5
+testAngleDiffViaSeparationDegrees -175,5
+
+
 defineTest angleDiffRadians 0 - 0,
     angleDiffRadians Local,angleDiff,0,0
     expect 0,~!Local,angleDiff!~
@@ -39,6 +76,46 @@ defineTest angleDiffRadians 0 - 1,
 defineTest angleDiffRadians -0.1 - 1.3,
     angleDiffRadians Local,angleDiff,-0.1,1.3
     expect 1.4,~!Local,angleDiff!~
+
+function testAngleDiffViaSeparationRadians,
+    parameters start,separation
+    basicMaths Local,finish,~!Local,start!~,+,~!Local,separation!~
+    pi Local,pi
+    piBy Local,2Pi,2
+
+    if ~!Local,finish!~,>,~!Local,pi!~,
+        basicMaths Local,finish,~!Local,finish!~,-,~!Local,2Pi!~
+
+    basicMaths Local,invertedSeparation,~!Local,separation!~,*,-1
+
+    set Me,start,~!Local,start!~
+    set Me,separation,~!Local,separation!~
+    set Me,invertedSeparation,~!Local,invertedSeparation!~
+    set Me,finish,~!Local,finish!~
+
+    defineTest angleDiffRadians (Generated) ~!Me,start!~ + ~!Me,separation!~ = ~!Me,finish!~,
+        angleDiffRadians Me,angleDiff,~!Me,start!~,~!Me,finish!~
+        expect ~!Me,separation!~,~!Me,angleDiff!~
+
+    defineTest angleDiffRadians (Generated) ~!Me,finish!~ + ~!Me,invertedSeparation!~ = ~!Me,start!~,
+        angleDiffRadians Me,angleDiff,~!Me,start!~,~!Me,finish!~
+        expect ~!Me,separation!~,~!Me,angleDiff!~
+
+testAngleDiffViaSeparationRadians 0,0.1
+testAngleDiffViaSeparationRadians 0,1
+testAngleDiffViaSeparationRadians 0,1.1
+testAngleDiffViaSeparationRadians 1,1.1
+testAngleDiffViaSeparationRadians 1,1.2
+testAngleDiffViaSeparationRadians 1,1.3
+testAngleDiffViaSeparationRadians 1,1.4
+testAngleDiffViaSeparationRadians 1,1.9
+testAngleDiffViaSeparationRadians 1,2.0
+testAngleDiffViaSeparationRadians 1,2.1
+testAngleDiffViaSeparationRadians 1,2.2
+testAngleDiffViaSeparationRadians 1,2.3
+testAngleDiffViaSeparationRadians 1,2.4
+testAngleDiffViaSeparationRadians 1,2.5
+
 
 
 defineTest cleanAngle0360Degrees 0,
