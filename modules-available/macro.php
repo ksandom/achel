@@ -263,6 +263,8 @@ class Macro extends Module
 			}
 		}
 
+
+		if (!count($outputArray)) $this->debug(0, "$macroName appears to be empty. This is likely to fail.");
 		$this->debug(4, "Macro/compileFromArray/$macroName: Ready to return the macro.");
 		return $outputArray;
 	}
