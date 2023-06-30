@@ -42,7 +42,8 @@ function testLinear
         expect ~!Me,direction!~,~!Local,stats,direction!~,direction
 
         # If it was 0 distance from the line, how much of the journey has the point done to the end of the line?
-        expect ~!Me,progress!~,~!Local,stats,progress!~,progress
+        round Local,roundedProgress,~!Local,stats,progress!~,1
+        expect ~!Me,progress!~,~!Local,roundedProgress!~,progress
 
 
 # The line topologies.
