@@ -1,0 +1,41 @@
+# Unit tests for pseudoMovingMean ~ unitTest,hidden,mean,maths
+
+defineTest pseudoMovingMean - data set 0,
+    set Me,mean,
+    pseudoMovingMean Me,mean,8,4
+    expect 8,~!Me,mean!~
+
+    pseudoMovingMean Me,mean,0,4
+    expect 6,~!Me,mean!~
+
+    pseudoMovingMean Me,mean,0,4
+    expect 4.5,~!Me,mean!~
+
+    pseudoMovingMean Me,mean,0,4
+    expect 3.375,~!Me,mean!~
+
+    pseudoMovingMean Me,mean,0,4
+    expect 2.53125,~!Me,mean!~
+
+defineTest pseudoMovingMean - data set 1,
+    set Me,mean,
+    pseudoMovingMean Me,mean,8,2
+    expect 8,~!Me,mean!~
+
+    pseudoMovingMean Me,mean,0,2
+    expect 4,~!Me,mean!~
+
+    pseudoMovingMean Me,mean,0,2
+    expect 2,~!Me,mean!~
+
+    pseudoMovingMean Me,mean,0,2
+    expect 1,~!Me,mean!~
+
+    pseudoMovingMean Me,mean,0,2
+    expect .5,~!Me,mean!~
+
+    pseudoMovingMean Me,mean,0,2
+    expect .25,~!Me,mean!~
+
+    pseudoMovingMean Me,mean,0,2
+    expect .125,~!Me,mean!~

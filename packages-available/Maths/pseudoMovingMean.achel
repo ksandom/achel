@@ -1,0 +1,14 @@
+# Pseudo moving mean. This has similar characteristics to a true moving mean, but importantly differs in how old values expire. Essentially they are averaged out rather than falling out of scope. Use your judgement as to whether this is suitable for your needs. --pseudoMovingMean=Category,variable,dataIn,psuedoMeanLevel ~ maths
+
+parameters Category,variable,dataIn,psuedoMeanLevel
+
+if ~!~!Local,Category!~,~!Local,variable!~!~,==,,
+    set ~!Local,Category!~,~!Local,variable!~,~!Local,dataIn!~
+else
+    basicMaths Local,multiplier,~!Local,psuedoMeanLevel!~,-,1
+    basicMaths Local,simulatedTotal,~!~!Local,Category!~,~!Local,variable!~!~,*,~!Local,multiplier!~
+    basicMaths Local,newTotal,~!Local,simulatedTotal!~,+,~!Local,in!~
+    basicMaths Local,out,~!Local,newTotal!~,/,~!Local,psuedoMeanLevel!~
+    set ~!Local,Category!~,~!Local,variable!~,~!Local,out!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~
