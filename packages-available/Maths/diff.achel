@@ -1,0 +1,7 @@
+# Diff two numbers. --diff=Category,variable,value1,value2 ~ maths
+
+parameters Category,variable,value1,value2
+
+basicMaths ~!Local,Category!~,~!Local,variable!~,~!Local,value2!~,-,~!Local,value1!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~
