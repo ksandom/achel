@@ -183,7 +183,7 @@ class Macro extends Module
 		}
 	}
 
-	function compileFromArray($macroName, $inputArray)
+	function compileFromArray($macroName, $inputArray, $callingAction=false)
 	{
 		$outputArray=array();
 		$nesting=new Nesting($macroName, $this->core);
@@ -248,7 +248,7 @@ class Macro extends Module
 				}
 
 				$this->core->registerFeature($this, $subAliases, $subName, "Derived macro for $macroName", "$macroName,hidden", true, 'nesting');
-				if (!$outputArray[$key]['nesting']=$this->compileFromArray($subName, $action['nesting']))
+				if (!$outputArray[$key]['nesting']=$this->compileFromArray($subName, $action['nesting'], $action))
 				{
 					$this->debug(0, "Macro/compileFromArray/$macroName/$key: Received failure from nested code.");
 					return false;
@@ -264,7 +264,12 @@ class Macro extends Module
 		}
 
 
-		if (!count($outputArray)) $this->debug(0, "$macroName appears to be empty. This is likely to fail.");
+		if (!count($outputArray))
+		{
+
+			$this->debug(0, "$macroName appears to be empty. This is likely to fail. Here's a dump of the pre-interpreted code:");
+			print_r($callingAction);
+		}
 		$this->debug(4, "Macro/compileFromArray/$macroName: Ready to return the macro.");
 		return $outputArray;
 	}

@@ -36,7 +36,7 @@ class Maths extends Module
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 4, 4);
 				if (!is_numeric($parms[2]))
 				{
-					$this->debug(1, "round: Was expecting a number. Got \"{$parms[2]}\"");
+					$this->debug(1, "round ({$parms[0]},{$parms[1]}): Was expecting a number. Got \"{$parms[2]}\"");
 					break;
 				}
 				$this->core->set($parms[0], $parms[1], round($parms[2], $parms[3]));
@@ -45,7 +45,7 @@ class Maths extends Module
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3);
 				if (!is_numeric($parms[2]))
 				{
-					$this->debug(1, "absolute: Was expecting a number. Got \"{$parms[2]}\"");
+					$this->debug(1, "absolute ({$parms[0]},{$parms[1]}): Was expecting a number. Got \"{$parms[2]}\"");
 					break;
 				}
 				$this->core->set($parms[0], $parms[1], abs($parms[2]));
