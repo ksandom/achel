@@ -2,13 +2,16 @@
 
 parameters Category,variable,dataIn,psuedoMeanLevel
 
-if ~!~!Local,Category!~,~!Local,variable!~!~,==,,
-    set ~!Local,Category!~,~!Local,variable!~,~!Local,dataIn!~
+set Local,workingValue,~!~!Local,Category!~,~!Local,variable!~!~
+
+if ~!Local,workingValue!~,==,,
+    set Local,out,~!Local,dataIn!~
 else
     basicMaths Local,multiplier,~!Local,psuedoMeanLevel!~,-,1
-    basicMaths Local,simulatedTotal,~!~!Local,Category!~,~!Local,variable!~!~,*,~!Local,multiplier!~
+    basicMaths Local,simulatedTotal,~!Local,workingValue!~,*,~!Local,multiplier!~
     basicMaths Local,newTotal,~!Local,simulatedTotal!~,+,~!Local,in!~
     basicMaths Local,out,~!Local,newTotal!~,/,~!Local,psuedoMeanLevel!~
-    set ~!Local,Category!~,~!Local,variable!~,~!Local,out!~
+
+set ~!Local,Category!~,~!Local,variable!~,~!Local,out!~
 
 makeAvailable ~!Local,Category!~,~!Local,variable!~
