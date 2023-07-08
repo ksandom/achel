@@ -55,25 +55,25 @@ In the unit tests, I'm starting with a value, and then every subsequent value is
 ```
 defineTest pseudoMovingMean - data set 1,
     set Me,mean,
-    pseudoMovingMean Me,mean,8,2
+    pseudoMovingMean Me,mean,~!Me,mean!~,8,2
     expect 8,~!Me,mean!~
 
-    pseudoMovingMean Me,mean,0,2
+    pseudoMovingMean Me,mean,~!Me,mean!~,0,2
     expect 4,~!Me,mean!~
 
-    pseudoMovingMean Me,mean,0,2
+    pseudoMovingMean Me,mean,~!Me,mean!~,0,2
     expect 2,~!Me,mean!~
 
-    pseudoMovingMean Me,mean,0,2
+    pseudoMovingMean Me,mean,~!Me,mean!~,0,2
     expect 1,~!Me,mean!~
 
-    pseudoMovingMean Me,mean,0,2
+    pseudoMovingMean Me,mean,~!Me,mean!~,0,2
     expect .5,~!Me,mean!~
 
-    pseudoMovingMean Me,mean,0,2
+    pseudoMovingMean Me,mean,~!Me,mean!~,0,2
     expect .25,~!Me,mean!~
 
-    pseudoMovingMean Me,mean,0,2
+    pseudoMovingMean Me,mean,~!Me,mean!~,0,2
     expect .125,~!Me,mean!~
 ```
 
@@ -82,18 +82,18 @@ If this was a real moving mean; it should work like this:
 ```
 defineTest movingMean - data set 1,
     set Me,mean,
-    movingMean Me,mean,8,2
+    movingMean Me,mean,~!Me,mean!~,8,2
     expect 8,~!Me,mean!~
 
-    movingMean Me,mean,0,2
+    movingMean Me,mean,~!Me,mean!~,0,2
     expect 4,~!Me,mean!~
 
-    movingMean Me,mean,0,2
+    movingMean Me,mean,~!Me,mean!~,0,2
     expect 0,~!Me,mean!~
 
-    movingMean Me,mean,0,2
+    movingMean Me,mean,~!Me,mean!~,0,2
     expect 0,~!Me,mean!~
 
-    movingMean Me,mean,0,2
+    movingMean Me,mean,~!Me,mean!~,0,2
     expect 0,~!Me,mean!~
 ```
