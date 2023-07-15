@@ -514,9 +514,9 @@ class BalanceFaucet extends ThroughBasedFaucet
 
 
 			$input=$this->core->getNested(explode(',', $rule['input']['variable']));
-			if (!$input)
+			if (!is_numeric($input))
 			{
-				//$this->debug(1, "No input for rule \"$ruleName\".");
+				# $this->debug(1, "No input for rule \"$ruleName\".");
 				continue;
 			}
 
@@ -595,7 +595,7 @@ class BalanceFaucet extends ThroughBasedFaucet
 			{
 				# TODO This will certainly be a bug for anything that needs to do analysis of changes over time. **Come back to this.**
 				#$this->debug(1, "No change for rule \"$ruleName\".");
-				 continue;
+				continue;
 			}
 
 			$rule['input']['lastInput']=$rule['input']['live']['value'];
@@ -718,7 +718,9 @@ class BalanceFaucet extends ThroughBasedFaucet
 			{
 				if ($rule['debug'])
 				{
-					$this->debug(0, __CLASS__.'->'.__FUNCTION__.": $ruleName: algorithm={$rule['algorithm']} input={$rule['input']['live']['value']} goal={$rule['input']['live']['goal']} inputGoal={$rule['input']['live']['inputGoal']} output={$rule['output']['live']['multipliedValue']}");
+					$shouldUpdateString=($rule['output']['live']['shouldUpdate'])?'true':'false';
+
+					$this->debug(0, __CLASS__.'->'.__FUNCTION__.": $ruleName: algorithm={$rule['algorithm']} input={$rule['input']['live']['value']} goal={$rule['input']['live']['goal']} inputGoal={$rule['input']['live']['inputGoal']} output={$rule['output']['live']['multipliedValue']}  shouldUpdate=$shouldUpdateString");
 				}
 			}
 
