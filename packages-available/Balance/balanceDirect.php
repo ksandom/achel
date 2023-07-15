@@ -16,29 +16,29 @@ class BalanceDirect extends BalanceAlgorithm
 					"The nature of the calculations means that the effort for each direction is not necessarily symmetrical, which could lead to surprising results. Eg it doesn't try as hard as you expect to achieve its goal. Or it tries harder."
 				)
 			));
-		
+
 		parent::__construct();
 	}
-	
+
 	function process($ruleName, &$rule)
 	{
 		$this->economyTests($ruleName, $rule);
 	}
-	
+
 	function economyTests($ruleName, &$rule)
 	{
 		// First some economy tests. If if any of these are true, we don't need to do any calculations.
-		if ($rule['input']['live']['inputGoal']<=$rule['input']['min'])
-		{ // Input is at or below lower boundary.
-			$this->debug(3, __CLASS__.'->'.__FUNCTION__.": $ruleName: branch: lower boundary {$rule['input']['live']['inputGoal']}<={$rule['input']['min']}");
-			$output=$rule['output']['min'];
-			$branch='lower boundary';
-		}
-		elseif ($rule['input']['live']['inputGoal']==$rule['input']['center'])
+		if ($rule['input']['live']['inputGoal']==$rule['input']['center'])
 		{ // Input is at center.
 			$this->debug(3, __CLASS__.'->'.__FUNCTION__.": $ruleName: branch: center {$rule['input']['live']['inputGoal']}=={$rule['input']['center']}");
 			$output=$rule['output']['center'];
 			$branch='center';
+		}
+		elseif ($rule['input']['live']['inputGoal']<=$rule['input']['min'])
+		{ // Input is at or below lower boundary.
+			$this->debug(3, __CLASS__.'->'.__FUNCTION__.": $ruleName: branch: lower boundary {$rule['input']['live']['inputGoal']}<={$rule['input']['min']}");
+			$output=$rule['output']['min'];
+			$branch='lower boundary';
 		}
 		elseif ($rule['input']['live']['inputGoal']>=$rule['input']['max'])
 		{ // Input is at or above upper boundary.
@@ -58,7 +58,7 @@ class BalanceDirect extends BalanceAlgorithm
 			$output=$this->getBetween($rule['input']['live']['inputGoal'], $rule, 'center', 'max');
 			$branch='lower';
 		}
-		
+
 		$rule['output']['live']['value']=$output;
 	}
 }
