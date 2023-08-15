@@ -7,4 +7,4 @@ basicMaths Local,cSquared,~!Local,aSquared!~,+,~!Local,bSquared!~
 
 basicMaths ~!Local,Category!~,~!Local,value!~,~!Local,cSquared!~,^,0.5
 
-makeLocalAvailable ~!Local,value!~
+makeAvailable ~!Local,Category!~,~!Local,value!~

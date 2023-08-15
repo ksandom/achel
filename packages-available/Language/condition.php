@@ -120,11 +120,11 @@ class Condition extends Module
 		*/
 		if ($matched == $match)
 		{
-			$this->core->debug(4, "ifNotEmptyResult: got here D4");
+			$this->debug(4, "ifNotEmptyResult: got here D4");
 			$this->core->incrementNesting();
 			$result=$this->takeAction($parms);
 			$this->core->decrementNesting();
-			$this->core->debug(4, "ifNotEmptyResult: got here D5");
+			$this->debug(4, "ifNotEmptyResult: got here D5");
 		}
 		# TODO device if this should stay or not once the problem is solved.
 		//else $result=$input;
@@ -145,7 +145,7 @@ class Condition extends Module
 		}
 		
 		
-		$this->core->debug(5, "ifNotEmptyResult: Just about to return. Count=".$this->core->getResultSetCount());
+		$this->debug(5, "ifNotEmptyResult: Just about to return. Count=".$this->core->getResultSetCount());
 		return $result;
 	}
 	
@@ -175,7 +175,7 @@ class Condition extends Module
 				$result=($value1<=$value2);
 				break;
 			default:
-				$this->core->debug(0, "Condition: Unknown comparison \"$comparison\" in \"$value1,$comparison,$value2\"");
+				$this->debug(0, "Condition: Unknown comparison \"$comparison\" in \"$value1,$comparison,$value2\"");
 				$result=false;
 				break;
 		}

@@ -1,0 +1,28 @@
+# Like --saveCSV, but doesn't run a --flattenSubItems before doing so. Do this preserve the keys. IMPORTANT: Make sure that you don't have any nesting within the resultSet.  ~ csv
+
+parameters {"fileName":"/tmp/file.csv"}
+
+debug 1,Getting the headings for ~!Local,fileName!~
+isolate
+    lastResult 1
+    set Local,key,
+    loop
+        set Local,key,~!Result,key!~
+    stashResults Local,getHeadings
+
+    retrieveResults Local,getHeadings,~!Local,key!~
+    loop
+        setNested Local,headings,~!Result,key!~,~!Result,key!~
+
+    retrieveResults Local,headings
+    template csvLine
+    stashResults Local,csvHeadings
+
+isolate
+    debug 1,Making the data and headings line up for ~!Local,fileName!~
+    saveCSVHeavyLifting
+    debug 1,Writing ~!Local,fileName!~
+    stringToFile ~!Local,fileName!~
+    outNow
+
+nested

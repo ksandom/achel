@@ -1,23 +1,33 @@
-# Creates a simplified abstraction of the networking. This is the Client part. --createSimpleNetworkClientFaucet=faucetName,listenAddress,port ~ achel,network,simplified
+# Creates a simplified abstraction of the networking. This is the Client part. --createSimpleNetworkClientFaucet=faucetName,listenAddress,port[,event/featureToCallOnconnect] ~ achel,network,simplified
 parameters faucetName,listenAddress,port,eventFeature
 
-set Me,ID,client-~!Local,listenAddress!~:~!Local,port!~
+pwd Tmp,pwd
+set Me,ID,~!Tmp,pwd!~/~!Local,faucetName!~/network
+
+if ~!Local,eventFeature!~,==,,
+	set Local,eventFeature,pass
+
 setNested Network,~!Me,ID!~,ID,~!Me,ID!~
 setNested Network,~!Me,ID!~,type,client
 setNested Network,~!Me,ID!~,address,~!Local,listenAddress!~
 setNested Network,~!Me,ID!~,port,~!Local,port!~
 setNested Network,~!Me,ID!~,eventFeature,~!Local,eventFeature!~
 
+debug 3,createSimpleNetworkClientFaucet: ~!Me,ID!~
+
 createMetaFaucet ~!Local,faucetName!~,
-	pwd Local,eventFaucet
-	setNested Network,~!Me,ID!~,faucet,~!Local,eventFaucet!~
-	
-	registerForEvent SocketServerFaucet,ANConnect,handleConnect,~!Me,ID!~
-	
-	createSocketClientFaucet network,ANConnect,pass,pass,~!Network,~!Me,ID!~,port!~,~!Network,~!Me,ID!~,address!~
-	
+	createSocketClientFaucet network,handleConnect,pass,pass,~!Network,~!Me,ID!~,port!~,~!Network,~!Me,ID!~,address!~
+
 	# TODO work out if this is needed, and see if there is a better way of doing it.
 	deliver network,_control,inEOL n
 	deliver network,_control,outEOL n
-	
+
+	# We don't receive an event on connect for the client. Therefore we need to create the pipework now.
+	createPipe .,network,,
+	createPipe network,.,,
+
 	createPipe network,.
+
+	# Call this because the client won't do it automatically.
+	set ScopedEvent,topic,~!Me,ID!~
+	callFeatureNoReturn handleConnect,default

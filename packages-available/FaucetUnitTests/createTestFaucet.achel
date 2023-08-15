@@ -25,29 +25,32 @@ set UnitResults,didExecute,true
 # Test the result.
 set FaucetUnit,testHandeler,
 	parameters resultName,resultValue
-	
+
 	if ~!UnitResults,result,~!Local,resultName!~,hasResult!~,!=,true,
 		# Get the result into a useable state.
 		retrieveResults Local,resultValue
 		loop
-			set Local,result,~!Result,line!~
-		
+			set Local,returnedResult,~!Result,line!~
+
 		# Figure out if the test passes or fails.
-		if ~!Local,result!~,~!FaucetUnitTests,~!Local,resultName!~,action!~,~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~,
-			set Local,escapedComment,Yay! (~!Local,result!~ ~!FaucetUnitTests,~!Local,resultName!~,action!~ ~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~)
+		escapeForJson Local,escapedReturnedResult,~!Local,returnedResult!~
+		escapeForJson Local,escapedExpectedResult,~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~
+
+		if ~!Local,escapedReturnedResult!~,~!FaucetUnitTests,~!Local,resultName!~,action!~,~!Local,escapedExpectedResult!~,
+			set ["Local","escapedComment","Yay! (~!Local,escapedReturnedResult!~ ~!FaucetUnitTests,~!Local,resultName!~,action!~ ~!Local,escapedExpectedResult!~)"]
 			set Local,result,pass
 		else
-			set Local,escapedComment,Expected[~!FaucetUnit,currentTest,currentResult,name!~] ~!Local,result!~ ~!FaucetUnitTests,~!Local,resultName!~,action!~ ~!FaucetUnitTests,~!Local,resultName!~,expectedResult!~
+			set ["Local","escapedComment","Expected[~!FaucetUnit,currentTest,currentResult,name!~] ~!Local,escapedReturnedResult!~ ~!FaucetUnitTests,~!Local,resultName!~,action!~ ~!Local,escapedExpectedResult!~"]
 			set Local,result,fail
-		
+
 		# Store the result
 		setFaucetTestResult ~!Local,resultName!~,~!Local,result!~,~!Local,escapedComment!~
-		
+
 		# Show live output.
 		if ~!UnitConfig,showTests!~,==,true,
 			set Local,resultColor,~!UnitResults,~!Local,result!~Color!~
 			debug 0,[~!Color,~!Local,resultColor!~!~~!Local,result!~~!Color,default!~]  ~!Color,brightBlack!~v--~!Color,default!~[~!Color,~!UnitResults,faucetColor!~!~faucet~!Color,brightBlack!~]~!Color,default!~ ~!Local,resultName!~: ~!Local,escapedComment!~
-		
+
 		unregisterTest ~!Local,resultName!~
 		setNested ["UnitResults","results","~!Local,resultName!~","hasResult","true"]
 
@@ -60,6 +63,5 @@ set FaucetUnit,testHandeler,
 # NOTE 2 to take continual results up to a specified quantity this could be tracked in the test details. In both cases, this should be a separate macro to this one.
 
 # Create faucet for recieving the result and anchor faucet to parent faucet.
-createPipe ~!Local,name!~,.
 create1-1CallFaucet ~!Local,name!~,~!FaucetUnit,testHandeler!~,~!FaucetUnit,currentTest,currentResult,name!~
 createPipe ~!Local,name!~,.

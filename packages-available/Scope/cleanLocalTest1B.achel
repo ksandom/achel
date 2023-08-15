@@ -2,4 +2,4 @@
 parameters Category,variable
 
 writeHardCodedPi ~!Local,Category!~,~!Local,variable!~
-makeLocalAvailable cleanTest
+makeAvailable Local,cleanTest

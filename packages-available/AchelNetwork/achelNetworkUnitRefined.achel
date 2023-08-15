@@ -1,0 +1,35 @@
+# Refined unit tests for achelNetwork ~ unitTest,network,hidden
+
+pass defineFaucetTestSet
+    defineFaucetTest network - basic can send/receive,
+        # Define the handlers.
+        setNested Unit,network,server,connect,
+            parameters ID
+            debug 0,TCP Server: Got connection ~!Local,ID!~
+            createPipe serverSocket,destination,~!Local,ID!~,default
+
+        setNested Unit,network,server,disconnect,
+            parameters ID
+            debug 0,TCP Server: Got disconnect ~!Local,ID!~
+            deletePipe serverSocket,destination,~!Local,ID!~,default
+
+        setNested Unit,network,client,connect,
+            pass
+
+        setNested Unit,network,client,disconnect,
+            pass
+
+        # Create the network faucets.
+        createSocketServerFaucet server,~!Unit,network,server,connect!~,~!Unit,network,server,disconnect!~,,12345,127.0.0.1
+        createSocketClientFaucet client,~!Unit,network,server,connect!~,~!Unit,network,server,disconnect!~,,12345,127.0.0.1
+        createTestFaucet result1,Should get forward string,expect,forward123
+
+        # Create anchors so that the faucets get polled.
+        # TODO Revise if these are still needed.
+        createPipe server,.
+        createPipe client,.
+
+
+
+        deliver server,in,forward
+

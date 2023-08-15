@@ -1,0 +1,4 @@
+#!/usr/bin/achel
+# A test script outside the scope of the Achel installation. ~ test
+
+debug 0, Got here!

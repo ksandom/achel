@@ -4,25 +4,25 @@ defineFaucetTestSet
 	defineFaucetTest createProcFaucet - simple execution,
 		createBridgeServerFaucet bridgeListener,127.0.0.1,22011
 		createBridgeClientFaucet bridgeConnect,127.0.0.1,22011
-		
-		deliverAll
-		
+
 		createPipe bridgeListener,.
-		
+
 		# This is needed so it gets polled and realises there is data there.
 		createPipe bridgeConnect,.
-		
-		deliver bridgeConnect,a,thing
-		deliver bridgeConnect,b,buzz
-		deliver bridgeConnect,c,side
-		
+
 		createTestFaucet resultA,thing on a,expect,thing
 		createTestFaucet resultB,buzz on b,expect,buzz
 		createTestFaucet resultC,side on c,expect,side
-		
+
 		createPipe bridgeListener,resultA,a
 		createPipe bridgeListener,resultB,b
 		createPipe bridgeListener,resultC,c
+
+		deliver bridgeConnect,a,thing
+		deliver bridgeConnect,b,buzz
+		deliver bridgeConnect,c,side
+
+		deliverAll
 
 defineTest Bridge - end to end - forward,
 	setTestType legacy
@@ -30,17 +30,17 @@ defineTest Bridge - end to end - forward,
 		createNullFaucet null
 		createBridgeServerFaucet bridgeListener,localhost,22001
 		createBridgeClientFaucet bridgeConnect,localhost,22001
-		
+
 		createPipe bridgeListener,.
-		
+
 		# This is needed so it gets polled and realises there is data there.
 		createPipe bridgeConnect,null
 		createPipe null,.
-		
+
 		deliver bridgeConnect,a,thing
 		deliver bridgeConnect,b,buzz
 		deliver bridgeConnect,c,side
-	
+
 	devExpect thing,~!Test,a,0!~
 	devExpect buzz,~!Test,b,0!~
 	devExpect side,~!Test,c,0!~
@@ -51,17 +51,17 @@ defineTest Bridge - end to end - reverse,
 		createNullFaucet null
 		createBridgeServerFaucet bridgeListener,localhost,22002
 		createBridgeClientFaucet bridgeConnect,localhost,22002
-		
+
 		createPipe bridgeConnect,.
-		
+
 		# This is needed so it gets polled and realises there is data there.
 		createPipe bridgeListener,null
 		createPipe null,.
-		
+
 		deliver bridgeListener,a,thing
 		deliver bridgeListener,b,buzz
 		deliver bridgeListener,c,side
-	
+
 	devExpect thing,~!Test,a,0!~
 	devExpect buzz,~!Test,b,0!~
 	devExpect side,~!Test,c,0!~

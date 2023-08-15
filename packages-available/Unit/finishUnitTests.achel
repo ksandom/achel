@@ -1,0 +1,20 @@
+# Perform the unit tests. ~ unit,hidden
+
+loop
+	displayProgress
+	callOutOfScope ~!Result,line!~
+finishProgress
+
+retrieveResults UnitResults,results
+templateOut unitTestResults
+
+unset Local,wrongNumberMessage
+
+if ~!Unit,giveWarnings!~,==,1,
+	if ~!UnitResults,warn!~,>,0,
+		setWarningStatus
+
+if ~!UnitResults,fail!~,>,0,
+	setFailureStatus
+
+excludeItem result,pass

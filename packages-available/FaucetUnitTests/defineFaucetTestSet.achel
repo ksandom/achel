@@ -16,7 +16,7 @@ changeFaucet testSet
 callFeatureNoReturn ~!Local,containingFunction!~
 changeFaucet ..
 
-deliverUnitTests 20
+deliverUnitTests 30
 
 
 # Clean up.

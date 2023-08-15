@@ -1,0 +1,7 @@
+# Run spaceded execution for unit test. ~ Syntax,hidden
+
+set Local,indented,
+    passTest Got to space indented code.
+
+callFeatureNoReturn ~!Local,indented!~
+

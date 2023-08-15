@@ -6,6 +6,7 @@ is a programming langue specilising in robotics and small data sets. I'm buildin
 # Requirements
 
 * PHP
+    * [Sockets](https://www.php.net/manual/en/intro.sockets.php)
 * Bash
 
 # Important updates

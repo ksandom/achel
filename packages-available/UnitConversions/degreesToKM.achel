@@ -1,4 +1,7 @@
 # Convert degrees to km. --degreesToKM=Category,variable,degrees ~ conv,deg,km
+parameters Category,variable,degrees
 
-basicMaths ~!Global,degreesToKM-0!~,~!Global,degreesToKM-1!~,~!Global,degreesToKM-2!~,*,40075.16
-basicMaths ~!Global,degreesToKM-0!~,~!Global,degreesToKM-1!~,~!~!Global,degreesToKM-0!~,~!Global,degreesToKM-1!~!~,/,360
+basicMaths ~!Local,Category!~,~!Local,variable!~,~!Local,degrees!~,*,40075.16
+basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,/,360
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

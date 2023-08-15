@@ -1,0 +1,22 @@
+#!/bin/bash
+# Description
+#   Create a system-wide (/usr/bin) symlink to a local executable (~/bin).
+#   This is useful if you want to use the executable as an interpreter for scripts that will be portable to other installations.
+#
+# Syntax:
+#   $0 localExecutableName
+#
+# Examples:
+#   Make the doneit executable available system wide.
+#     $0 doneit
+
+requiredParms="$1"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/systemWide.sh
+
+localExecutableName="$1"
+
+srcPath="$(which "$localExecutableName")"
+dstPath="/usr/bin/$localExecutableName"
+
+makeSystemWide "$srcPath" "$dstPath"

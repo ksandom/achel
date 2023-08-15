@@ -1,15 +1,18 @@
 # Handel network connections. ~ network,hidden
-parameters ID,connectChannel
+parameters connectChannel
 
-pass
-	getCategory Network
-	nested
-	outNow
+set Local,ID,~!ScopedEvent,topic!~
 
 pwd Network,originFaucet
-# debug 0,%%%% ID=~!Local,ID!~ faucet=~!Network,~!Local,ID!~,faucet!~ originFaucet=~!Network,originFaucet!~ channel=~!Local,connectChannel!~
-changeFaucet ~!Network,~!Local,ID!~,faucet!~
-callFeatureReturn ~!Network,~!Local,ID!~,eventFeature!~,~!Local,ID!~,~!Local,connectChannel!~
-# debug 0,CONNECT callFeatureReturn ~!Network,~!Local,ID!~,eventFeature!~,~!Local,ID!~,~!Local,connectChannel!~ connectChannel=~!Local,connectChannel!~ ID=~!Local,ID!~
-changeFaucet ~!Network,originFaucet!~
+debug 3,%%%% ID=~!Local,ID!~ originFaucet=~!Network,originFaucet!~ channel=~!Local,connectChannel!~
+
+createPipe .,network,,~!Local,connectChannel!~
+createPipe network,.,~!Local,connectChannel!~,
+
+if ~!Network,~!Local,ID!~,eventFeature!~,!=,,
+	changeFaucet ..
+	callFeatureReturn ~!Network,~!Local,ID!~,eventFeature!~,~!Local,ID!~,~!Local,connectChannel!~
+	# debug 0,CONNECT callFeatureReturn ~!Network,~!Local,ID!~,eventFeature!~,~!Local,ID!~,~!Local,connectChannel!~ connectChannel=~!Local,connectChannel!~ ID=~!Local,ID!~
+	changeFaucet ~!Network,originFaucet!~
+
 unset Network,originFaucet

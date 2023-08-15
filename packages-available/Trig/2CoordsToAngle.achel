@@ -1,8 +1,8 @@
 # Take 2 sets of coordinates and derive the angle (radians) from north and the distance to reach the destination. Note that both of these values will be put inside of the destination variable you specify. --2CoordsToAngle=Category,variable,originX,originY,destinationX,destinationY  ~ trig,coord,angle
-parameters category,value,ctaOriginX,ctaOriginY,ctaDestinationX,ctaDestinationY
+parameters category,variable,ctaOriginX,ctaOriginY,ctaDestinationX,ctaDestinationY
 
 2CoordsTo1Coord Local,cta,~!Local,ctaOriginX!~,~!Local,ctaOriginY!~,~!Local,ctaDestinationX!~,~!Local,ctaDestinationY!~
 
-coordToAngle ~!Local,category!~,~!Local,value!~,~!Local,cta,x!~,~!Local,cta,y!~
-# TODO Write a test, and figure out why the scoping isn't working for local variables here.
-makeLocalAvailable ~!Local,value!~
+coordToAngle ~!Local,category!~,~!Local,variable!~,~!Local,cta,x!~,~!Local,cta,y!~
+
+makeAvailable ~!Local,category!~,~!Local,variable!~

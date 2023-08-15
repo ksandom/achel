@@ -8,12 +8,12 @@ class BasicWeb extends Module
 	private $track=null;
 	private $store=null;
 	private $codes=false;
-	
+
 	function __construct()
 	{
 		parent::__construct('BasicWeb');
 	}
-	
+
 	function event($event)
 	{
 		switch ($event)
@@ -31,7 +31,7 @@ class BasicWeb extends Module
 				break;
 		}
 	}
-	
+
 	function processArgs()
 	{
 		$arg=&$this->core->get('BasicWeb', 'arguments');
@@ -41,17 +41,17 @@ class BasicWeb extends Module
 			$this->core->addAction($argument, $value);
 		}
 	}
-	
+
 	function setAction($argument)
 	{
 		$obj=&$this->core->get('Features', $argument);
 		if (is_array($obj)) $this->core->setRef('Actions', $argument, $obj);
 		else
 		{
-			$this->core->debug(0,"Could not find a module to match '$argument'");
+			$this->debug(0,"Could not find a module to match '$argument'");
 		}
 	}
-	
+
 	function out($output, $indent='', $prefix=false)
 	{
 		if ($this->core->get('General', 'outputStyle')=='printr')
@@ -61,9 +61,9 @@ class BasicWeb extends Module
 		else
 		{
 			$this->assertCodes();
-			
+
 			$derivedPrefix=($prefix or is_numeric($prefix))?"$prefix{$this->codes['default']}: ":'';
-			if (is_string($output)) 
+			if (is_string($output))
 			{
 				$this->core->echoOut("$indent{$this->codes['green']}$derivedPrefix$output");
 			}
@@ -95,7 +95,7 @@ class BasicWeb extends Module
 			{
 				$this->core->echoOut("$indent{$this->codes['red']}{$prefix}{$this->codes['default']}: {$this->codes['brightBlack']}I can't display this data type yet. Yo!{$this->codes['default']}");
 			}
-			
+
 			$this->core->echoOut("{$this->codes['default']}");
 		}
 	}
@@ -103,5 +103,5 @@ class BasicWeb extends Module
 
 $core=core::assert();
 $core->registerModule(new BasicWeb());
- 
+
 ?>

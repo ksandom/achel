@@ -3,4 +3,4 @@ parameters category,variable,angle,opposite
 
 tan Local,atan,~!Local,angle!~
 basicMaths ~!Local,category!~,~!Local,variable!~,~!Local,opposite!~,/,~!Local,atan!~
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,category!~,~!Local,variable!~

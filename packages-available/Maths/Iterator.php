@@ -46,19 +46,19 @@ class AchelIterator extends Module
 		// Sanity checks
 		if (!$incrementor)
 		{
-			$this->core->debug(1, "genericIterator: Invalid incrementor \"$incrementor\".");
+			$this->debug(1, "genericIterator: Invalid incrementor \"$incrementor\".");
 			return false;
 		}
 		
 		if (($stop>$start and $incrementor<0) or ($stop<$start and $incrementor>0))
 		{
-			$this->core->debug(1, "genericIterator: Incrementor (\"$incrementor\") is in the opposite direction to start (\"$start\") and stop (\"$stop\").");
+			$this->debug(1, "genericIterator: Incrementor (\"$incrementor\") is in the opposite direction to start (\"$start\") and stop (\"$stop\").");
 			return false;
 		}
 		
 		if ($start=='' or $stop=='')
 		{
-			$this->core->debug(1, "genericIterator: Start (\"$start\") or Stop (\"$stop\") is empty.");
+			$this->debug(1, "genericIterator: Start (\"$start\") or Stop (\"$stop\") is empty.");
 			return false;
 		}
 		

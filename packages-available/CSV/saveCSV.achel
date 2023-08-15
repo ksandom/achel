@@ -1,0 +1,7 @@
+# Dump the resultSet to a CSV. --saveCSV=/path/to/file.csv ~ csv
+
+parameters {"fileName":"/tmp/file.csv"}
+
+isolate
+    flattenSubItems 0
+    saveCSVNoFlatten ~!Local,fileName!~

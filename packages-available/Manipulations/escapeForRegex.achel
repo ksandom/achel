@@ -1,0 +1,7 @@
+# Escape a string to be encoded in a regex string. --escape=Category,variable,inputString
+parameters Category,variable,inputString
+
+escape ~!Local,Category!~,~!Local,variable!~,~!Local,inputString!~
+replaceInString ~!Local,Category!~,~!Local,variable!~,/,\/,~!Local,inputString!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

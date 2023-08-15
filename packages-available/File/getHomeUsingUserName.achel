@@ -5,4 +5,4 @@ getEnv Local,env
 if ~!Local,env,USER!~,!=,,
 	set ~!Local,Category!~,~!Local,variable!~,/home/~!Local,env,USER!~
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

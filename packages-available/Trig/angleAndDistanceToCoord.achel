@@ -5,6 +5,10 @@ pi Local,pi
 piBy Local,0.5Pi,0.5
 piBy Local,1.5Pi,1.5
 
+# Set it to something here so that the variable is available in this scope to makeAvailable later.
+setNested ~!Local,category!~,~!Local,variable!~,x,0
+setNested ~!Local,category!~,~!Local,variable!~,y,0
+
 if ~!Local,distance!~,==,0,
 	setNested ~!Local,category!~,~!Local,variable!~,x,0
 	setNested ~!Local,category!~,~!Local,variable!~,y,0
@@ -16,72 +20,76 @@ else
 		# up
 		setNested ~!Local,category!~,~!Local,variable!~,x,0
 		setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,distance!~
-		
+
 	elseIf ~!Local,angle!~,==,~!Local,0.5Pi!~,
 		# right
 		setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,distance!~
 		setNested ~!Local,category!~,~!Local,variable!~,y,0
-		
+
 	elseIf ~!Local,angle!~,==,~!Local,pi!~,
 		# down
 		basicMaths Local,flipped,~!Local,distance!~,*,-1
 		setNested ~!Local,category!~,~!Local,variable!~,x,0
 		setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,flipped!~
-		
+
 	elseIf ~!Local,angle!~,==,~!Local,1.5Pi!~,
 		# left
 		basicMaths Local,flipped,~!Local,distance!~,*,-1
 		setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,flipped!~
 		setNested ~!Local,category!~,~!Local,variable!~,y,0
-		
+
 	else
 		if ~!Local,angle!~,<,~!Local,0.5Pi!~,
 			# top right
-			
+
 			rightTriangleGetOppositeFromAngle Local,opposite,~!Local,angle!~,~!Local,distance!~
 			# TOOD the problem is in this line
 			rightTriangleGetAdjacentFromAngle Local,adjacent,~!Local,angle!~,~!Local,distance!~
-			
+
 			setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,opposite!~
 			setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,adjacent!~
 			debug 4,branch A
-			
+
 		elseIf ~!Local,angle!~,<,~!Local,pi!~,
 			# bottom right
 			basicMaths Local,angle,~!Local,angle!~,-,~!Local,0.5Pi!~
 			rightTriangleGetOppositeFromAngle Local,opposite,~!Local,angle!~,~!Local,distance!~
 			rightTriangleGetAdjacentFromAngle Local,adjacent,~!Local,angle!~,~!Local,distance!~
-			
+
 			basicMaths Local,opposite,~!Local,opposite!~,*,-1
 			setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,opposite!~
 			setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,adjacent!~
-			
+
 			debug 4,branch B
-			
+
 		elseIf ~!Local,angle!~,<,~!Local,1.5Pi!~,
 			# bottom left
 			basicMaths Local,angle,~!Local,angle!~,-,~!Local,pi!~
 			rightTriangleGetOppositeFromAngle Local,opposite,~!Local,angle!~,~!Local,distance!~
 			rightTriangleGetAdjacentFromAngle Local,adjacent,~!Local,angle!~,~!Local,distance!~
-			
+
 			basicMaths Local,opposite,~!Local,opposite!~,*,-1
 			basicMaths Local,adjacent,~!Local,adjacent!~,*,-1
-			
+
 			setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,opposite!~
 			setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,adjacent!~
-			
+
 			debug 4,branch C
 		else
 			# top left
 			basicMaths Local,angle,~!Local,angle!~,-,~!Local,1.5Pi!~
 			rightTriangleGetOppositeFromAngle Local,opposite,~!Local,angle!~,~!Local,distance!~
 			rightTriangleGetAdjacentFromAngle Local,adjacent,~!Local,angle!~,~!Local,distance!~
-			
+
 			basicMaths Local,adjacent,~!Local,adjacent!~,*,-1
-			
+
 			setNested ~!Local,category!~,~!Local,variable!~,y,~!Local,opposite!~
 			setNested ~!Local,category!~,~!Local,variable!~,x,~!Local,adjacent!~
-			
+
 			debug 4,branch D
 
+
+
 debug 3,angleAndDistanceToCoord: return ~!~!Local,category!~,~!Local,variable!~!~ angle=~!Local,angle!~
+
+makeAvailable ~!Local,category!~,~!Local,variable!~

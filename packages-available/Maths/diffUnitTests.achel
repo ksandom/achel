@@ -1,0 +1,40 @@
+# Unit tests for diff ~ unitTest,hidden,maths
+
+function testDiff,
+    parameters startValue,difference
+
+    set Me,startValue,~!Local,startValue!~
+    set Me,difference,~!Local,difference!~
+
+    basicMaths Me,endValue,~!Me,startValue!~,+,~!Me,difference!~
+
+    defineTest diff ~!Me,startValue!~ (~!Me,difference!~) ~!Me,endValue!~,
+        diff Local,final,~!Me,startValue!~,~!Me,endValue!~
+        expect ~!Me,difference!~,~!Local,final!~
+
+    if ~!Me,difference!~,!=,0,
+        basicMaths Me,invertedDifference,~!Me,difference!~,*,-1
+        defineTest diff ~!Me,endValue!~ (~!Me,invertedDifference!~) ~!Me,startValue!~,
+            diff Local,final,~!Me,endValue!~,~!Me,startValue!~
+            expect ~!Me,invertedDifference!~,~!Local,final!~
+
+function testDiffRanges
+    parameters startValue
+
+    testDiff ~!Local,startValue!~,0
+    testDiff ~!Local,startValue!~,0.5
+    testDiff ~!Local,startValue!~,1
+    testDiff ~!Local,startValue!~,2
+    testDiff ~!Local,startValue!~,3
+    testDiff ~!Local,startValue!~,4
+
+testDiffRanges 1
+testDiffRanges 2
+testDiffRanges 3
+testDiffRanges 4
+testDiffRanges 0
+testDiffRanges -1
+testDiffRanges -2
+testDiffRanges -3
+testDiffRanges -4
+testDiffRanges -8

@@ -5,4 +5,4 @@ parameters Category,variable
 toJsons
 stashResults ~!Local,Category!~,~!Local,variable!~
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

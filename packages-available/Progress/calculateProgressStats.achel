@@ -51,9 +51,9 @@ if ~!Local,done!~,>,0,
 
 
 
-makeLocalAvailable bar
-makeLocalAvailable lastTime
-makeLocalAvailable lastDone
-makeLocalAvailable rate
-makeLocalAvailable timeRemainingSeconds
-makeLocalAvailable timeRemaining
+makeAvailable Local,bar
+makeAvailable Local,lastTime
+makeAvailable Local,lastDone
+makeAvailable Local,rate
+makeAvailable Local,timeRemainingSeconds
+makeAvailable Local,timeRemaining

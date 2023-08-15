@@ -2,7 +2,7 @@
 <?php
 # ~%description%~
 # Copyright (c) 2012-2020, Kevin Sandom under the GPL License. See LICENSE for full details.
- 
+
 define('programName', '~%programName%~');
 define('programVersion', '~%programVersion%~');
 define('programHash', '~%programHash%~');
@@ -85,6 +85,7 @@ $core->setRef('CommandLine', 'arguments', $argv);
 loadModules($core, configDir."/profiles/$profile/modules");
 $core->callFeature("triggerEvent", "Achel,interfaceStartup");
 $core->callFeature("registerForEvent", "Achel,finishLate,outNow");
+$core->callFeature("triggerEvent", "Achel,startEarly");
 
 # Make it happen!
 $core->go();

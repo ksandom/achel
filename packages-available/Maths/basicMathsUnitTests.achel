@@ -1,5 +1,9 @@
 # Unit tests for basicMaths features ~ unitTest,hidden,maths
 
+defineTest basicMaths 1.3 - -0.1,
+	basicMaths Local,final,1.3,-,-0.1
+	expect 1.4,~!Local,final!~
+
 defineTest Round 1 - 0,
 	round Tmp,roundTest,1,0
 	if ~!Tmp,roundTest!~,==,1,
@@ -106,6 +110,19 @@ defineTest square root of 4,
 unset Tmp,square
 
 
+defineTest 5%4,
+	basicMaths Tmp,mod,5,%,4
+	expect 1,~!Tmp,mod!~
+
+defineTest 5.2%4,
+	basicMaths Tmp,mod,5.2,%,4
+	expect 1.2,~!Tmp,mod!~
+
+defineTest 0%4,
+	basicMaths Tmp,mod,0,%,4
+	expect 0,~!Tmp,mod!~
+
+unset Tmp,mod
 
 
 defineTest absolute 2,
@@ -125,7 +142,7 @@ defineTest Iterator 1-10 inclusive - Step 1,
 	iterator 1,1,10
 	countToVar Tmp,iterations
 	expect 10,~!Tmp,iterations!~
-	
+
 	unset Tmp,iterations
 
 defineTest Iterator 0-10 inclusive - Step 0.1,
@@ -133,7 +150,7 @@ defineTest Iterator 0-10 inclusive - Step 0.1,
 	iterator 0,0.1,10
 	countToVar Tmp,iterations
 	expect 101,~!Tmp,iterations!~
-	
+
 	unset Tmp,iterations
 
 defineTest Iterator 1-10 inclusive - Step 2,
@@ -141,7 +158,7 @@ defineTest Iterator 1-10 inclusive - Step 2,
 	iterator 1,2,10
 	countToVar Tmp,iterations
 	expect 5,~!Tmp,iterations!~
-	
+
 	unset Tmp,iterations
 
 defineTest Iterator 10-1 inclusive - Step -1,
@@ -149,7 +166,7 @@ defineTest Iterator 10-1 inclusive - Step -1,
 	iterator 10,-1,1
 	countToVar Tmp,iterations
 	expect 10,~!Tmp,iterations!~
-	
+
 	unset Tmp,iterations
 
 defineTest Iterator 10-0 inclusive - Step -0.1,
@@ -157,7 +174,7 @@ defineTest Iterator 10-0 inclusive - Step -0.1,
 	iterator 10,-0.1,0
 	countToVar Tmp,iterations
 	expect 101,~!Tmp,iterations!~
-	
+
 	unset Tmp,iterations
 
 defineTest Iterator 1-10 inclusive - Step 0 (invalid incrementor),
@@ -165,7 +182,7 @@ defineTest Iterator 1-10 inclusive - Step 0 (invalid incrementor),
 	iterator 1,0,10
 	countToVar Tmp,iterations
 	expect 1,~!Tmp,iterations!~
-	
+
 	unset Tmp,iterations
 
 defineTest Iterator 1-0 inclusive - Step 1 (incrementor is in the wrong direction),
@@ -173,7 +190,7 @@ defineTest Iterator 1-0 inclusive - Step 1 (incrementor is in the wrong directio
 	iterator 1,1,0
 	countToVar Tmp,iterations
 	expect 1,~!Tmp,iterations!~
-	
+
 	unset Tmp,iterations
 
 defineTest Iterator 1- (missing stop) inclusive - Step 1,
@@ -181,7 +198,7 @@ defineTest Iterator 1- (missing stop) inclusive - Step 1,
 	iterator 1,1,
 	countToVar Tmp,iterations
 	expect 1,~!Tmp,iterations!~
-	
+
 	unset Tmp,iterations
 
 defineTest Iterator -10 (missing start) inclusive - Step 1,
@@ -189,7 +206,7 @@ defineTest Iterator -10 (missing start) inclusive - Step 1,
 	iterator ,1,10
 	countToVar Tmp,iterations
 	expect 1,~!Tmp,iterations!~
-	
+
 	unset Tmp,iterations
 
 

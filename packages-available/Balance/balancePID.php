@@ -85,7 +85,7 @@ class BalancePID extends BalanceAlgorithm
 		
 		if ($this->state[$rule['ruleName']]['debug'])
 		{
-			# $this->core->debug(1,"ruleName=$ruleName scaledValue=".$this->state[$ruleName]['value']."(".$rule['input']['live']['value'].") goal=".$this->state[$ruleName]['goal']."(".$rule['input']['live']['goal'].") P=($p*$kP) out=$out");
+			# $this->debug(1,"ruleName=$ruleName scaledValue=".$this->state[$ruleName]['value']."(".$rule['input']['live']['value'].") goal=".$this->state[$ruleName]['goal']."(".$rule['input']['live']['goal'].") P=($p*$kP) out=$out");
 			$r=3;
 			$error=round($this->state[$ruleName]['error'], $r);
 			$errorDirection=$this->state[$ruleName]['errorDirection'];
@@ -101,7 +101,7 @@ class BalancePID extends BalanceAlgorithm
 			$iColour=$this->core->get('Color', 'cyan');
 			$dColour=$this->core->get('Color', 'brightBlue');
 			$default=$this->core->get('Color', 'default');
-			$this->core->debug(1,"ruleName=$ruleName {$errorColour}error=$error $errorDirection$default {$pColour}p=$rp{$default}*$kP*$iP {$wColour}w=$rw{$default}*$kW*$iW {$iColour}i=$ri{$default}*$kI*$iI {$dColour}d=$rd{$default}*$kD*$iD {$default}combinedValue=$rcv out=$ro");
+			$this->debug(1,"ruleName=$ruleName {$errorColour}error=$error $errorDirection$default {$pColour}p=$rp{$default}*$kP*$iP {$wColour}w=$rw{$default}*$kW*$iW {$iColour}i=$ri{$default}*$kI*$iI {$dColour}d=$rd{$default}*$kD*$iD {$default}combinedValue=$rcv out=$ro");
 		}
 	}
 	

@@ -2,4 +2,5 @@
 parameters category,variable,repoName
 
 set ~!Local,category!~,~!Local,variable!~,~!General,configDir!~/repos/~!Local,repoName!~
-makeLocalAvailable ~!Local,variable!~
+
+makeAvailable ~!Local,category!~,~!Local,variable!~

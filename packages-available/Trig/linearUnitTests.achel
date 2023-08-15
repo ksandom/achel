@@ -1,0 +1,157 @@
+# Unit tests for coordinates based features. ~ unitTest,hidden,linear
+
+# Some useful numbers.
+piBy Local,pi0,0
+piBy Local,pi0.25,0.25
+piBy Local,pi0.75,0.75
+piBy Local,pi0.5,0.5
+piBy Local,pi1,1
+piBy Local,pi1.25,1.25
+piBy Local,pi1.5,1.5
+piBy Local,pi1.75,1.75
+
+# Create the unit template unit test.
+function testLinear
+    parameters lineDirection,pointX,pointY,pointDirectionRadians,lineX1,lineY1,lineX2,lineY2,distance,facing,direction,progress,angle
+
+    # Make the variables available inside the test.
+    set Me,pointX,~!Local,pointX!~
+    set Me,pointY,~!Local,pointY!~
+    set Me,pointDirectionRadians,~!Local,pointDirectionRadians!~
+    set Me,lineX1,~!Local,lineX1!~
+    set Me,lineY1,~!Local,lineY1!~
+    set Me,lineX2,~!Local,lineX2!~
+    set Me,lineY2,~!Local,lineY2!~
+    set Me,distance,~!Local,distance!~
+    set Me,facing,~!Local,facing!~
+    set Me,direction,~!Local,direction!~
+    set Me,progress,~!Local,progress!~
+    set Me,angle,~!Local,angle!~
+
+    defineTest testLinear ~!Local,lineDirection!~ - f=~!Local,facing!~ dir=~!Local,direction!~ %=~!Local,progress!~ dis=~!Local,distance!~,
+        linearPointStats Local,stats,~!Me,pointX!~,~!Me,pointY!~,~!Me,pointDirectionRadians!~,~!Me,lineX1!~,~!Me,lineY1!~,~!Me,lineX2!~,~!Me,lineY2!~
+        round Local,distance,~!Local,stats,distanceFromLine!~,2
+        round Local,angularDeviance,~!Local,stats,angularDeviance!~,2
+
+        # How far away from the line the point is.
+        expect ~!Me,distance!~,~!Local,distance!~,distance
+
+        # Is it facing the same direction? (forwards/backwards)
+        expect ~!Me,facing!~,~!Local,stats,facing!~,facing
+
+        # Which side of the line is it on? (left/right)
+        expect ~!Me,direction!~,~!Local,stats,direction!~,direction
+
+        # If it was 0 distance from the line, how much of the journey has the point done to the end of the line?
+        round Local,roundedProgress,~!Local,stats,progress!~,1
+        expect ~!Me,progress!~,~!Local,roundedProgress!~,progress
+
+        # What is the angle of the line?
+        round Local,expectedAngleRounded,~!Me,angle!~,2
+        round Local,calculatedAngleRounded,~!Local,stats,extra,lineAngle!~,2
+        expect ~!Local,expectedAngleRounded!~,~!Local,calculatedAngleRounded!~,line angle
+
+
+# The line topologies.
+#   up-right         down-left           up-left          down-right
+# 2|         2      2|         1      2| 2              2| 1
+#  |       /         |       /         |   \             |   \
+#  |     /           |     /           |     \           |     \
+#  |   /             |   /             |       \         |       \
+# 1| 1              1| 2              1|         1      1|         2
+#   -----------       -----------       -----------       -----------
+#    1       2         1       2         1       2         1       2
+
+# Points facing forwards (Facing the same direction).
+#   up-right         down-left           up-left          down-right
+# 2|         2      2|   /     1      2| 2              2| 1     \
+#  |  7    /         |  V    /         |   \    ^        |   \    V
+#  | /   /           |     /           |     \   \       |     \
+#  |   /             |   /             |       \         |       \
+# 1| 1              1| 2              1|         1      1|         2
+#   -----------       -----------       -----------       -----------
+#    1       2         1       2         1       2         1       2
+# F    pi0.25            pi1.25            pi1.75            pi0.75
+# B    pi1.25            pi0.25            pi0.75            pi1.75
+
+
+
+# Point on the left.
+#   up-right         down-left           up-left          down-right
+# 2| x       2      2|         1      2| 2              2| 1       x
+#  |       /         |       /         |   \             |   \
+#  |     /           |     /           |     \           |     \
+#  |   /             |   /             |       \         |       \
+# 1| 1              1| 2       x      1| x       1      1|         2
+#   -----------       -----------       -----------       -----------
+#    1       2         1       2         1       2         1       2
+
+# Point on the right.
+#   up-right         down-left           up-left          down-right
+# 2|         2      2| x       1      2| 2       x      2| 1
+#  |       /         |       /         |   \             |   \
+#  |     /           |     /           |     \           |     \
+#  |   /             |   /             |       \         |       \
+# 1| 1       x      1| 2              1|         1      1| x       2
+#   -----------       -----------       -----------       -----------
+#    1       2         1       2         1       2         1       2
+
+
+# Calculate angles.
+piBy Local,up-right,0.25
+piBy Local,flat-right,0.5
+piBy Local,down-right,0.75
+piBy Local,down-straight,1
+
+piBy Local,down-left,1.25
+piBy Local,flat-left,1.5
+piBy Local,up-left,1.75
+piBy Local,up-straight,0
+
+
+# Generate diagonal tests.
+testLinear up-right,1,2,~!Local,pi0.25!~,1,1,2,2,-0.71,forwards,left,0.5,~!Local,up-right!~
+testLinear up-right,2,1,~!Local,pi0.25!~,1,1,2,2,0.71,forwards,right,0.5,~!Local,up-right!~
+testLinear up-right,1,2,~!Local,pi1.25!~,1,1,2,2,0.71,backwards,right,0.5,~!Local,up-right!~
+testLinear up-right,2,1,~!Local,pi1.25!~,1,1,2,2,-0.71,backwards,left,0.5,~!Local,up-right!~
+
+testLinear down-left,2,1,~!Local,pi1.25!~,2,2,1,1,-0.71,forwards,left,0.5,~!Local,down-left!~
+testLinear down-left,1,2,~!Local,pi1.25!~,2,2,1,1,0.71,forwards,right,0.5,~!Local,down-left!~
+testLinear down-left,2,1,~!Local,pi0.25!~,2,2,1,1,0.71,backwards,right,0.5,~!Local,down-left!~
+testLinear down-left,1,2,~!Local,pi0.25!~,2,2,1,1,-0.71,backwards,left,0.5,~!Local,down-left!~
+
+testLinear up-left,1,1,~!Local,pi1.75!~,2,1,1,2,-0.71,forwards,left,0.5,~!Local,up-left!~
+testLinear up-left,2,2,~!Local,pi1.75!~,2,1,1,2,0.71,forwards,right,0.5,~!Local,up-left!~
+testLinear up-left,1,1,~!Local,pi0.75!~,2,1,1,2,0.71,backwards,right,0.5,~!Local,up-left!~
+testLinear up-left,2,2,~!Local,pi0.75!~,2,1,1,2,-0.71,backwards,left,0.5,~!Local,up-left!~
+
+testLinear down-right,2,2,~!Local,pi0.75!~,1,2,2,1,-0.71,forwards,left,0.5,~!Local,down-right!~
+testLinear down-right,1,1,~!Local,pi0.75!~,1,2,2,1,0.71,forwards,right,0.5,~!Local,down-right!~
+testLinear down-right,2,2,~!Local,pi1.75!~,1,2,2,1,0.71,backwards,right,0.5,~!Local,down-right!~
+testLinear down-right,1,1,~!Local,pi1.75!~,1,2,2,1,-0.71,backwards,left,0.5,~!Local,down-right!~
+
+# Generate  horizontal and vertial tests.
+testLinear flat-right,2,3,~!Local,pi0.5!~,1,2,3,2,-1,forwards,left,0.5,~!Local,flat-right!~
+testLinear flat-right,2,1,~!Local,pi0.5!~,1,2,3,2,1,forwards,right,0.5,~!Local,flat-right!~
+testLinear flat-right,2,1,~!Local,pi1.5!~,1,2,3,2,-1,backwards,left,0.5,~!Local,flat-right!~
+testLinear flat-right,2,3,~!Local,pi1.5!~,1,2,3,2,1,backwards,right,0.5,~!Local,flat-right!~
+
+testLinear flat-left,2,1,~!Local,pi1.5!~,3,2,1,2,-1,forwards,left,0.5,~!Local,flat-left!~
+testLinear flat-left,2,3,~!Local,pi1.5!~,3,2,1,2,1,forwards,right,0.5,~!Local,flat-left!~
+testLinear flat-left,2,3,~!Local,pi0.5!~,3,2,1,2,-1,backwards,left,0.5,~!Local,flat-left!~
+testLinear flat-left,2,1,~!Local,pi0.5!~,3,2,1,2,1,backwards,right,0.5,~!Local,flat-left!~
+
+testLinear up-straight,1,2,~!Local,pi0!~,2,1,2,3,-1,forwards,left,0.5,~!Local,up-straight!~
+testLinear up-straight,3,2,~!Local,pi0!~,2,1,2,3,1,forwards,right,0.5,~!Local,up-straight!~
+testLinear up-straight,3,2,~!Local,pi1!~,2,1,2,3,-1,backwards,left,0.5,~!Local,up-straight!~
+testLinear up-straight,1,2,~!Local,pi1!~,2,1,2,3,1,backwards,right,0.5,~!Local,up-straight!~
+
+testLinear down-straight,3,2,~!Local,pi1!~,2,3,2,1,-1,forwards,left,0.5,~!Local,down-straight!~
+testLinear down-straight,1,2,~!Local,pi1!~,2,3,2,1,1,forwards,right,0.5,~!Local,down-straight!~
+testLinear down-straight,1,2,~!Local,pi0!~,2,3,2,1,-1,backwards,left,0.5,~!Local,down-straight!~
+testLinear down-straight,3,2,~!Local,pi0!~,2,3,2,1,1,backwards,right,0.5,~!Local,down-straight!~
+
+# Generate progress tests.
+testLinear flat-right,1,3,~!Local,pi0.5!~,1,2,3,2,-1,forwards,left,0,~!Local,flat-right!~
+testLinear flat-right,2,3,~!Local,pi0.5!~,1,2,3,2,-1,forwards,left,0.5,~!Local,flat-right!~
+testLinear flat-right,3,3,~!Local,pi0.5!~,1,2,3,2,-1,forwards,left,1,~!Local,flat-right!~

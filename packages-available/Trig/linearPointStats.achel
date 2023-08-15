@@ -1,0 +1,84 @@
+# Calculate stats like the linear distance of a point from a line. The direction is important to work out which way is positive, and which way is negative. The line direction stands at the line end 1, and faces the line end 2. --linearPointStats=Category,variable,pointX,pointY,pointDirectionRadians,lineX1,lineY1,lineX2,lineY2 ~ trig,distance
+
+parameters Category,variable,pointX,pointY,pointDirectionRadians,lineX1,lineY1,lineX2,lineY2
+
+# piBy Local,pi,1
+piBy Local,pi0.5,0.5
+# piBy Local,pi1.5,1.5
+
+
+# Figure out the angle of the line vs the angle of the point.
+2CoordsToAngle Local,lineAngleRadians,~!Local,lineX1!~,~!Local,lineY1!~,~!Local,lineX2!~,~!Local,lineY2!~
+
+
+# Center angles.
+angle02PiToPiPiRadians Local,centeredPoint,~!Local,pointDirectionRadians!~
+angle02PiToPiPiRadians Local,centeredLine,~!Local,lineAngleRadians!~
+
+
+# Figure out the direction.
+angleDiffRadians Local,angularDeviance,~!Local,centeredLine!~,~!Local,centeredPoint!~
+absolute Local,absAngularDeviance,~!Local,angularDeviance!~
+
+set Local,facing,forwards
+if ~!Local,absAngularDeviance!~,>,~!Local,pi0.5!~,
+    set Local,facing,backwards
+
+
+# Where is the point compared to the line?
+2CoordsToDistance Local,pointHypotenuse,~!Local,lineX1!~,~!Local,lineY1!~,~!Local,pointX!~,~!Local,pointY!~
+2CoordsToAngle Local,pointIntermediateAngleRadians,~!Local,lineX1!~,~!Local,lineY1!~,~!Local,pointX!~,~!Local,pointY!~
+angle02PiToPiPiRadians Local,centeredIntermediateAngle,~!Local,pointIntermediateAngleRadians!~
+angleDiffRadians Local,pointAngleRadians,~!Local,centeredLine!~,~!Local,centeredIntermediateAngle!~
+rightTriangleGetOppositeFromAngle Local,distance,~!Local,pointAngleRadians!~,~!Local,pointHypotenuse!~
+
+
+# Apply direction.
+if ~!Local,facing!~,==,backwards,
+    basicMaths Local,distance,~!Local,distance!~,*,-1
+    basicMaths Local,pointAngleRadians,~!Local,pointAngleRadians!~,*,-1
+
+set Local,direction,center
+if ~!Local,distance!~,>,0,
+    set Local,direction,right
+if ~!Local,distance!~,<,0,
+    set Local,direction,left
+
+
+
+# Calculate progress.
+basicMaths Local,bSquared,~!Local,distance!~,^,2
+basicMaths Local,cSquared,~!Local,pointHypotenuse!~,^,2
+basicMaths Local,aSquared,~!Local,cSquared!~,-,~!Local,bSquared!~
+basicMaths Local,progressDistance,~!Local,aSquared!~,^,0.5
+
+2CoordsToDistance Local,totalDistance,~!Local,lineX1!~,~!Local,lineY1!~,~!Local,lineX2!~,~!Local,lineY2!~
+set Local,progress,0
+if ~!Local,totalDistance!~,!=,0,
+    basicMaths Local,progress,~!Local,progressDistance!~,/,~!Local,totalDistance!~
+
+
+# Calculate the ideal position on the line.
+angleAndDistanceToCoord Local,offset,~!Local,lineAngleRadians!~,~!Local,progressDistance!~
+basicMaths Local,idealX,~!Local,lineX1!~,+,~!Local,offset,x!~
+basicMaths Local,idealY,~!Local,lineY1!~,+,~!Local,offset,y!~
+
+
+# Provide the stats.
+setNested ~!Local,Category!~,~!Local,variable!~,distanceFromLine,~!Local,distance!~
+setNested ~!Local,Category!~,~!Local,variable!~,direction,~!Local,direction!~
+setNested ~!Local,Category!~,~!Local,variable!~,facing,~!Local,facing!~
+setNested ~!Local,Category!~,~!Local,variable!~,progressDistance,~!Local,progressDistance!~
+setNested ~!Local,Category!~,~!Local,variable!~,progress,~!Local,progress!~
+
+# Extra points of interest.
+setNested ~!Local,Category!~,~!Local,variable!~,extra,lineAngle,~!Local,lineAngleRadians!~
+setNested ~!Local,Category!~,~!Local,variable!~,extra,lineCenteredAngle,~!Local,centeredLine!~
+setNested ~!Local,Category!~,~!Local,variable!~,extra,pointAbsoluteAngle,~!Local,pointDirectionRadians!~
+setNested ~!Local,Category!~,~!Local,variable!~,extra,pointRelativeAngle,~!Local,pointAngleRadians!~
+setNested ~!Local,Category!~,~!Local,variable!~,extra,pointCenteredAngle,~!Local,centeredIntermediateAngle!~
+setNested ~!Local,Category!~,~!Local,variable!~,extra,idealPosition,x,~!Local,idealX!~
+setNested ~!Local,Category!~,~!Local,variable!~,extra,idealPosition,y,~!Local,idealY!~
+
+# debug 0,~!~!Local,Category!~,~!Local,variable!~!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

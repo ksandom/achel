@@ -2,4 +2,5 @@
 parameters Category,variable
 
 setNested ~!Local,Category!~,~!Local,variable!~,~!General,configDir!~/repos/achelRealityBridge/experimentation
-makeLocalAvailable ~!Local,variable!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

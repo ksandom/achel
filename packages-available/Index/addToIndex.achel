@@ -7,5 +7,4 @@ loop
 	debug 4,addToIndex: key=~!Result,key!~ ["~!Local,category!~","~!Local,indexName!~","~!Result,key!~","~!Result,key!~"]
 	setNested ["~!Local,category!~","~!Local,indexName!~","~!Result,key!~","~!Result,key!~"]
 
-makeLocalAvailable ~!Local,indexName!~
-makeMeAvailable ~!Local,indexName!~
+makeAvailable ~!Local,category!~,~!Local,indexName!~

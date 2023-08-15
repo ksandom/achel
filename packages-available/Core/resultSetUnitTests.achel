@@ -5,7 +5,7 @@ unsetCategory unitResultSet
 defineTest Expected nesting matches,
 	failTest default fail.
 	set unitResultSet,var1,1
-	
+
 	getCategory unitResultSet
 	if ~!Core,shared~!Core,nesting!~,var1!~,==,1,
 		passTest Got expected value.
@@ -13,7 +13,7 @@ defineTest Expected nesting matches,
 defineTest Inherit earlier nesting,
 	failTest default fail.
 	set unitResultSet,var1,2
-	
+
 	getCategory unitResultSet
 	callFeature
 		callFeature
@@ -21,23 +21,40 @@ defineTest Inherit earlier nesting,
 				if ~!Core,shared~!Core,nesting!~,var1!~,==,2,
 					passTest Inherited expected value.
 				else
-					debug 1,Inherit earlier nesting: nesting=~!Core,nesting!~ 
-					
+					debug 1,Inherit earlier nesting: nesting=~!Core,nesting!~
 
 
 
+
+
+defineTest Pollution from earlier call - clear,
+	failTest default fail.
+	set unitResultSet,var1,3
+	set unitResultSet,var2,4
+
+	getCategory unitResultSet
+
+	clearResultset
+	printr
+	outNow
+
+	countToVar Local,resultSetSize
+	if ~!Local,resultSetSize!~,>,0,
+		failTest Inherited polluted data (~!Local,resultSetSize!~).
+	else
+		passTest Did not inherit polluted data.
 
 defineTest Pollution from earlier higher nesting - clear,
 	failTest default fail.
 	set unitResultSet,var1,3
-	
+
 	callFeature
 		callFeature
 			callFeature
 				getCategory unitResultSet
-	
+
 	clearResultset
-	
+
 	callFeature
 		callFeature
 			callFeature
@@ -49,15 +66,15 @@ defineTest Pollution from earlier higher nesting - clear,
 defineTest Pollution from earlier higher nesting - intermediate results,
 	failTest default fail.
 	set unitResultSet,var1,4
-	
+
 	callFeature
 		callFeature
 			callFeature
 				getCategory unitResultSet
-	
+
 	set unitResultSet,var1,4-intermediate
 	getCategory unitResultSet
-	
+
 	callFeature
 		callFeature
 			callFeature
@@ -71,76 +88,76 @@ defineTest Pollution from earlier higher nesting - intermediate results,
 
 defineTest retrieveResults traditional,
 	clearResultset
-	
+
 	setNested Tmp,a,1,A
 	setNested Tmp,a,2,B
 	setNested Tmp,a,3,C
-	
+
 	retrieveResults Tmp,a
 	countToVar Tmp,b
-	
+
 	expect 3,~!Tmp,b!~
 	unset Tmp,a
 	unset Tmp,b
 
 defineTest retrieveResults nested,
 	clearResultset
-	
+
 	setNested Tmp,a,b,c,1,A
 	setNested Tmp,a,b,c,2,B
 	setNested Tmp,a,b,c,3,C
 	setNested Tmp,a,b,c,4,D
-	
+
 	retrieveResults Tmp,a,b,c
 	countToVar Tmp,b
-	
+
 	expect 4,~!Tmp,b!~
-	
+
 	unset Tmp,a
 	unset Tmp,b
 
 defineTest stashResults traditional,
 	clearResultset
-	
+
 	setNested Tmp,a,b,c,1,A
 	setNested Tmp,a,b,c,2,B
 	setNested Tmp,a,b,c,3,C
 	setNested Tmp,a,b,c,4,D
 	setNested Tmp,a,b,c,5,E
-	
+
 	retrieveResults Tmp,a,b,c
 	first 2
 	stashResults Tmp,c
 	clearResultset
 	retrieveResults Tmp,c
-	
+
 	countToVar Tmp,b
-	
+
 	expect 2,~!Tmp,b!~
-	
+
 	unset Tmp,a
 	unset Tmp,b
 	unset Tmp,c
 
 defineTest stashResults nested,
 	clearResultset
-	
+
 	setNested Tmp,a,b,c,1,A
 	setNested Tmp,a,b,c,2,B
 	setNested Tmp,a,b,c,3,C
 	setNested Tmp,a,b,c,4,D
 	setNested Tmp,a,b,c,5,E
-	
+
 	retrieveResults Tmp,a,b,c
 	first 3
 	stashResults Tmp,c,d
 	clearResultset
 	retrieveResults Tmp,c,d
-	
+
 	countToVar Tmp,b
-	
+
 	expect 3,~!Tmp,b!~
-	
+
 	unset Tmp,a
 	unset Tmp,b
 	unset Tmp,c

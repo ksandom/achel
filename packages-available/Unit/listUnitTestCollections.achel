@@ -2,3 +2,9 @@
 #onLoaded setFeatureType listUnitTestCollections,generateUnitTestCollections
 
 getFeaturesForTag unitTest
+
+loop
+    get Features,~!Result,line!~
+    setCategory Result
+
+take 0

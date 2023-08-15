@@ -1,4 +1,4 @@
 # Test setting a variable without making it available to the previous scope. ~ hidden,test
 parameters value
 
-set Local,test1,~!Me,value!~
+set Local,test1,~!Local,value!~

@@ -1,26 +1,26 @@
-# Creates a simplified abstraction of the networking. This is the Server part. --createSimpleNetworkServerFaucet=faucetName,listenAddress,port ~ achel,network,simplified
+# Creates a simplified abstraction of the networking. This is the Server part. --createSimpleNetworkServerFaucet=faucetName,listenAddress,port[,event/featureToCallOnconnect] ~ achel,network,simplified
 parameters faucetName,listenAddress,port,eventFeature
 
-set Me,ID,server-~!Local,listenAddress!~:~!Local,port!~
+pwd Tmp,pwd
+set Me,ID,~!Tmp,pwd!~/~!Local,faucetName!~/network
+
+if ~!Local,eventFeature!~,==,,
+	set Local,eventFeature,pass
+
 setNested Network,~!Me,ID!~,ID,~!Me,ID!~
 setNested Network,~!Me,ID!~,type,server
 setNested Network,~!Me,ID!~,address,~!Local,listenAddress!~
 setNested Network,~!Me,ID!~,port,~!Local,port!~
 setNested Network,~!Me,ID!~,eventFeature,~!Local,eventFeature!~
 
+debug 3,createSimpleNetworkServerFaucet: ~!Me,ID!~
+
 createMetaFaucet ~!Local,faucetName!~,
-	pwd Local,eventFaucet
-	setNested Network,~!Me,ID!~,faucet,~!Local,eventFaucet!~
-	
-	registerForEvent SocketServerFaucet,ANConnect,handleConnect,~!Me,ID!~
-	
-	createSocketServerFaucet network,ANConnect,pass,pass,~!Network,~!Me,ID!~,port!~,~!Network,~!Me,ID!~,address!~
-	
+	createSocketServerFaucet network,handleConnect,pass,pass,~!Network,~!Me,ID!~,port!~,~!Network,~!Me,ID!~,address!~
+
 	# TODO work out if this is needed, and see if there is a better way of doing it.
 	deliver network,_control,inEOL n
 	deliver network,_control,outEOL n
-	
-	# createPipe network,.,arbitrary,arbitrary
+
 	createPipe network,.
-	# createPipe .,network
 

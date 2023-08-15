@@ -2,4 +2,5 @@
 parameters Category,variable
 
 setNested ~!Local,Category!~,~!Local,variable!~,~!General,configDir!~/repos/achel/packages-available/Servo
-makeLocalAvailable ~!Local,variable!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

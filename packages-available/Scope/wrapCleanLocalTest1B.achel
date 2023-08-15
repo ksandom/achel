@@ -2,4 +2,4 @@
 parameters category,variable
 
 cleanLocalTest1B ~!Local,category!~,~!Local,variable!~
-makeLocalAvailable cleanTest
+makeAvailable Local,cleanTest

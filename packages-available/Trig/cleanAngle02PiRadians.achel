@@ -1,0 +1,21 @@
+# Assert that an angle in degrees is within bounds (0-2Pi). --cleanAngle02PiRadians=Category,variable,angleInRadians ~ angle,clean,bounds
+
+parameters Category,variable,angleInRadians
+
+set ~!Local,Category!~,~!Local,variable!~,~!Local,angleInRadians!~
+piBy Local,2Pi,2
+
+if ~!~!Local,Category!~,~!Local,variable!~!~,!=,0,
+    # Basic protection against excessive negatives.
+    if ~!~!Local,Category!~,~!Local,variable!~!~,<,0,
+        basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,+,~!Local,2Pi!~
+    if ~!~!Local,Category!~,~!Local,variable!~!~,<,0,
+        basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,+,~!Local,2Pi!~
+
+    # Basic protection against excessive negatives.
+    if ~!~!Local,Category!~,~!Local,variable!~!~,>,~!Local,2Pi!~,
+        basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,-,~!Local,2Pi!~
+    if ~!~!Local,Category!~,~!Local,variable!~!~,>,~!Local,2Pi!~,
+        basicMaths ~!Local,Category!~,~!Local,variable!~,~!~!Local,Category!~,~!Local,variable!~!~,-,~!Local,2Pi!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

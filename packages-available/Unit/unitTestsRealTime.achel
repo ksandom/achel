@@ -2,6 +2,10 @@
 #onDefine aliasFeature unitTestsRealTime,unitTests
 parameters regex
 
+# debug 0,unitTestsRealTime: loadAllMacros begin
+loadAllMacros
+# debug 0,unitTestsRealTime: loadAllMacros end
+
 showTests
 noProgress
 unitTestsFull ~!Local,regex!~

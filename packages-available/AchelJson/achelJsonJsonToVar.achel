@@ -7,4 +7,4 @@ lastResult
 flatten 1
 stashResults ~!Local,Category!~,~!Local,variable!~
 
-makeLocalAvailable ~!Local,variable!~
+makeAvailable ~!Local,Category!~,~!Local,variable!~

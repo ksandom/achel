@@ -59,7 +59,7 @@ class Events extends Module
 		if ($onlyOnce) $priorityGroups[$priority][md5("$featureName,$featureValue")]=$newValue;
 		else $priorityGroups[$priority][]=$newValue;
 		
-		$this->core->debug(3, "Registered \"$featureName $featureValue\" to event \"$category, $eventName\" at priority $priority.");
+		$this->debug(3, "Registered \"$featureName $featureValue\" to event \"$category, $eventName\" at priority $priority.");
 		$this->core->set('Events', "$category-$eventName", $priorityGroups);
 	}
 	
@@ -73,7 +73,7 @@ class Events extends Module
 		if (isset($priorityGroups[$priority][$key]))
 		{
 			unset($priorityGroups[$priority][$key]);
-			$this->core->debug(3, "Unregistered \"$featureName $featureValue\" from event \"$category, $eventName\" at priority $priority.");
+			$this->debug(3, "Unregistered \"$featureName $featureValue\" from event \"$category, $eventName\" at priority $priority.");
 		}
 		
 		$this->core->set('Events', "{$category}-{$eventName}", $priorityGroups);
@@ -94,7 +94,7 @@ class Events extends Module
 			'value' => $value
 			));
 		
-		$this->core->debug(4, "triggerEvent: $category,$eventName");
+		$this->debug(4, "triggerEvent: $category,$eventName");
 		$priorityGroups=$this->core->get('Events', "$category-$eventName");
 		if (is_array($priorityGroups) && count($priorityGroups)>0)
 		{
@@ -106,12 +106,12 @@ class Events extends Module
 					
 					foreach ($priorityGroup as $eventee)
 					{
-						$this->core->debug(3, "triggerEvent: $category,$eventName: --{$eventee['featureName']}={$eventee['featureValue']}");
+						$this->debug(3, "triggerEvent: $category,$eventName: --{$eventee['featureName']}={$eventee['featureValue']}");
 						
 						if ($value!='') $valueToSend=($eventee['featureValue'])?$eventee['featureValue'].','.$value:$value;
 						else $valueToSend=$eventee['featureValue'];
 						
-						$this->core->debug(4,"trigger $category, $eventName, v=$valueToSend");
+						$this->debug(4,"trigger $category, $eventName, v=$valueToSend");
 						
 						$result=$this->core->callFeature($eventee['featureName'], $valueToSend);
 						$this->core->setResultSet($result); // This is necessary because the feature being called may rely on it being there.
@@ -123,7 +123,7 @@ class Events extends Module
 				}
 				else
 				{
-					$this->core->debug(3, "Removing priority group $priority from event \"$category,$eventName\" as it has no eventees.");
+					$this->debug(3, "Removing priority group $priority from event \"$category,$eventName\" as it has no eventees.");
 					unset($priorityGroups['priority']);
 					
 					# This is potentially inefficient. But there would have to be a LOT of priority groups for it to matter. If it becomes an issue, set a flag and do it at the end.
@@ -135,11 +135,11 @@ class Events extends Module
 		{
 			if (is_array($priorityGroups))
 			{
-				$this->core->debug(4, "Event \"$category, $eventName\" triggered, but there were no eventee priority groups. This means there are no registered eventees.");
+				$this->debug(4, "Event \"$category, $eventName\" triggered, but there were no eventee priority groups. This means there are no registered eventees.");
 			}
 			else
 			{
-			$this->core->debug(4, "Event \"$category, $eventName\" triggered, but there were no eventee priority groups. This means there are no registered eventees.");
+			$this->debug(4, "Event \"$category, $eventName\" triggered, but there were no eventee priority groups. This means there are no registered eventees.");
 			}
 		}
 		

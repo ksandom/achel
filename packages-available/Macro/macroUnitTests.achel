@@ -6,31 +6,30 @@ set Me,getTestData,
 	setNested Local,testData,c,3
 	setNested Local,testData,d,4
 	setNested Local,testData,e,5
-	# retrieveResults Local,testData
-	makeLocalAvailable testData
+	makeAvailable Local,testData
 
 
 
 defineTest macro - loop does iterations,
 	set Local,iteractionsCount,0
-	
+
 	callFeature ~!Me,getTestData!~
 	retrieveResults Local,testData
-	
+
 	loop
 		basicMaths Local,iteractionsCount,~!Local,iteractionsCount!~,+,1
-	
+
 	expect 5,~!Local,iteractionsCount!~
 
 defineTest macro - loop gets correct data,
 	unset Local,testResult
-	
+
 	callFeature ~!Me,getTestData!~
 	retrieveResults Local,testData
-	
+
 	loop
 		setNested Local,testResult,a~!Result,key!~,~!Result,line!~
-	
+
 	expect 1,~!Local,testResult,aa!~
 	expect 2,~!Local,testResult,ab!~
 	expect 3,~!Local,testResult,ac!~
@@ -39,13 +38,13 @@ defineTest macro - loop gets correct data,
 
 defineTest macro - loop gets correct next data,
 	unset Local,testResult
-	
+
 	callFeature ~!Me,getTestData!~
 	retrieveResults Local,testData
-	
+
 	loop
 		setNested Local,testResult,a~!Result,key!~,~!Result,nextKey!~
-	
+
 	expect b,~!Local,testResult,aa!~
 	expect c,~!Local,testResult,ab!~
 	expect d,~!Local,testResult,ac!~
@@ -54,13 +53,13 @@ defineTest macro - loop gets correct next data,
 
 defineTest macro - loop gets correct previous data,
 	unset Local,testResult
-	
+
 	callFeature ~!Me,getTestData!~
 	retrieveResults Local,testData
-	
+
 	loop
 		setNested Local,testResult,a~!Result,key!~,~!Result,previousKey!~
-	
+
 	expect ,~!Local,testResult,aa!~
 	expect a,~!Local,testResult,ab!~
 	expect b,~!Local,testResult,ac!~
@@ -70,18 +69,18 @@ defineTest macro - loop gets correct previous data,
 
 defineTest getProgressKey,
 	getProgressKey Local,progressKey
-	expect progress-macroUnitTests-7,~!Local,progressKey!~
+	expect progress-macroUnitTests-6,~!Local,progressKey!~
 
 defineTest macro - loop removes next and previous keys,
 	unset Local,testResult
-	
+
 	callFeature ~!Me,getTestData!~
 	retrieveResults Local,testData
-	
+
 	loop
 		setNested Local,testResult,a~!Result,key!~,~!Result,nextKey!~
-	
+
 	stashResults Local,afterLoop
-	
+
 	expect ,~!Local,afterLoop,a,nextKey!~
 	expect ,~!Local,afterLoop,b,previousKey!~

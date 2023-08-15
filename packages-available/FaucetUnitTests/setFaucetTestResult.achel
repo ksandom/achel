@@ -1,6 +1,6 @@
 # Set a result from a faucet unit test. ~ hidden
-parameters resultName,result,escapedComment,preset
-
+parameters resultName,result,comment,preset
+escapeForJson Local,escapedComment,~!Local,comment!~
 
 set Local,resultColor,~!UnitResults,~!Local,result!~Color!~
 

@@ -3,4 +3,5 @@ parameters Category,variable,inputString
 
 replaceInString ~!Local,Category!~,~!Local,variable!~,",\",~!Local,inputString!~
 replaceInString ~!Local,Category!~,~!Local,variable!~,\\,\,~!~!Local,Category!~,~!Local,variable!~!~
-makeLocalAvailable ~!Local,variable!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~

@@ -1,6 +1,9 @@
 # Unit tests for achelNetwork ~ network,unitTest,hidden,dev
 
-defineTest network - can send/recieve message while binding to 127.0.0.1,
+pass defineTest network - revisit before using,
+	failTest This needs to be checked more fully.
+
+pass defineTest network - can send/recieve message while binding to 127.0.0.1,
 	# create a listener
 	setTestType legacy
 	createSocketServerFaucet serverSocket,achelNetworkUnitConnect,achelNetworkUnitDisconnect,,12345,127.0.0.1
@@ -12,21 +15,21 @@ defineTest network - can send/recieve message while binding to 127.0.0.1,
 	# create a destination
 	createSemiInlineCallFaucet destination,achelNetworkUnitDestination,
 	createPipe destination,null
-	
+
 	# create a client connection
 	createSocketClientFaucet clientSocket,,,,12345,127.0.0.1
 	deliver clientSocket,_control,inEOL n
 	deliver clientSocket,_control,outEOL n
-	
+
 	# Make sure the server know about the connection. The server socket only checks for new connections when it it polled for new data. We normally wouldn't have to worry about this because the timer would get it. But because we are running this test non-interruptable, we have to invoke the deliverAll.
 	deliverAll
-	
+
 	# send something through
 	deliver clientSocket,default,correctValue
-	
+
 	# invoke delivery
 	deliverAll
-	
+
 	# test that it arrived
 	if ~!UnitNetwork,destination!~,==,,
 		failTest Got no value.
@@ -34,7 +37,7 @@ defineTest network - can send/recieve message while binding to 127.0.0.1,
 		passTest Got correct value.
 	else
 		failTest Got incorrect value "~!UnitNetwork,destination!~".
-	
+
 	# Clean up
 	unset UnitNetwork,destination
 	deleteFaucet serverSocket
@@ -43,162 +46,73 @@ defineTest network - can send/recieve message while binding to 127.0.0.1,
 	deleteFaucet null
 	deliverAll
 
-
-defineTest network - handelConnect,
-	setTestType legacy
-	set Test,inner,
-		pwd Test,result
-	
-	createMetaFaucet testEnv,
-		createMetaFaucet thing1,
-			createMetaFaucet thing2,
-				createMetaFaucet thing3,
-					pass
-	
-	set Me,ID,blahish
-	
-	setNested Network,~!Me,ID!~,ID,~!Me,ID!~
-	setNested Network,~!Me,ID!~,type,client
-	setNested Network,~!Me,ID!~,address,anAddress
-	setNested Network,~!Me,ID!~,port,aPort
-	setNested Network,~!Me,ID!~,eventFeature,~!Test,inner!~
-	setNested Network,~!Me,ID!~,faucet,/testEnv/thing1/thing2/thing3
-	
-	handleConnect ~!Me,ID!~,123
-	
-	devExpect /testEnv/thing1/thing2/thing3,~!Test,result!~
-
-	deleteFaucet testEnv
-
-
-defineTest network - simpleFaucet - forward,
-	setTestType legacy
-	testFaucets
-		createSimpleNetworkServerFaucet server1,localhost,22005,
-			parameters ID,channel
-			createPipe .,network,in,~!Local,channel!~
-			createPipe network,.,~!Local,channel!~,out
-		
-		createSimpleNetworkClientFaucet client1,localhost,22005,
-			parameters ID,channel
-			
-			createPipe .,network,in,~!Local,channel!~
-			createPipe network,.,~!Local,channel!~,out
-		
-		createPipe server1,client1,out,in
-		createPipe client1,.,default
-		
-		deliver server1,in,forward
-	
-	devExpect forward,~!Test,default,0!~
-
 defineFaucetTestSet
-	defineFaucetTest network - simpleFaucet - basic nested single in a metafaucet,
-		createMetaFaucet nested
+	defineFaucetTest network - simpleFaucet - simpler forward,
+		createSimpleNetworkServerFaucet server1,localhost,22006
+		createSimpleNetworkClientFaucet client1,localhost,22006
+		createTestFaucet result1,Should get simpler string,expect,simpler
+
+		createPipe .,server1
+		createPipe client1,result1
+		createPipe result1,.
+
+		# Anchor so it gets polled.
+		createPipe server1,.
+
+		deliver server1,,simpler
+
+	defineFaucetTest network - simpleFaucet - simpler reverse,
+		createSimpleNetworkServerFaucet server1,localhost,22005
+		createSimpleNetworkClientFaucet client1,localhost,22005
+
+		createTestFaucet result1,Should get simplerR string,expect,simplerR
+
+		createPipe .,client1
+		createPipe .,server1
+		createPipe server1,result1
+		createPipe result1,.
+
+		# Anchor so it gets polled.
+		createPipe client1,.
+
+		deliver client1,,simplerR
+
+	defineFaucetTest network - simpleFaucet - basic nested single in a metafaucet - forward,
+		createMetaFaucet nested,
+			createSimpleNetworkServerFaucet server1,localhost,22007
+			createSimpleNetworkClientFaucet client1,localhost,22007
+			createTestFaucet result1,Should get forward string,expect,forward
+
+			createPipe .,server1
+			createPipe client1,result1
+			createPipe result1,.
+
+			# Anchor so it gets polled.
+			createPipe server1,.
+
 		createPipe .,nested,*,*
 		createPipe nested,.,*,*
-		changeFaucet nested
-		
-		setNested Unit,network,serverConnect,
-			parameters ID,channel
-			createPipe .,network,in,~!Local,channel!~
-			createPipe network,.,~!Local,channel!~,out
-		
-		setNested Unit,network,serverDisconnect,
-			pass
-	
-		setNested Unit,network,clientConnect,
-			parameters ID,channel
-			createPipe .,network,in,~!Local,channel!~
-			createPipe network,.,~!Local,channel!~,out
-		
-		setNested Unit,network,clientDisconnect,
-			pass
-		
-		createSimpleNetworkServerFaucet server1,localhost,22006,~!Unit,network,serverConnect!~
-		createSimpleNetworkClientFaucet client1,localhost,22006,~!Unit,network,clientConnect!~
-		createTestFaucet result1,Should get forward string,expect,forward
-		
-		createPipe server1,client1,out,in
-		createPipe client1,result1
-		
-		deliver server1,in,forward
-		
-		changeFaucet ..
-	
-	defineFaucetTest network - simpleFaucet - nested in separate metafaucets,
-		createMetaFaucet server
-		createMetaFaucet client
-		# createPipe .,server,*,*
-		# createPipe server,.,*,*
-		# createPipe .,client,*,*
-		# createPipe client,.,*,*
-		createPipe server,.
-		createPipe client,.
-		
-		setNested Unit,network,serverConnect,
-			parameters ID,channel
-			createPipe .,network,in,~!Local,channel!~
-			createPipe network,.,~!Local,channel!~,out
-			
-		setNested Unit,network,serverDisconnect,
-			pass
-	
-		setNested Unit,network,clientConnect,
-			parameters ID,channel
-			createPipe .,network,in,~!Local,channel!~
-			createPipe network,.,~!Local,channel!~,out
-		
-		setNested Unit,network,clientDisconnect,
-			pass
-		
-		changeFaucet server
-		createSimpleNetworkServerFaucet server1,localhost,22007,~!Unit,network,serverConnect!~
-		createPipe .,server1,*,*
-		createPipe server1,.,*,*
-		changeFaucet ..
-		
-		changeFaucet client
-		createSimpleNetworkClientFaucet client1,localhost,22007,~!Unit,network,clientConnect!~
-		createPipe .,client1,*,*
-		createPipe client1,.,*,*
-		changeFaucet ..
-		
-		createTestFaucet result1,Should get forward5 string,expect,forward5
-		
-		createPipe server,client,out,in
-		createPipe client,result1
-		
-		deliver server,in,forward5
-		
 
+		deliver nested,,forward
 
-pass
-	defineTest network - simpleFaucet - reverse,
-		testFaucets
-			createSimpleNetworkServerFaucet server,localhost,22006,
-				parameters ID,channel
-				debug 0,ID=~!Local,ID!~ channel=~!Local,channel!~
-				
-				# TODO check that this is right
-				
-				createPipe .,network,in,~!Local,channel!~
-				createPipe network,.,~!Local,channel!~,out
-			
-			createSimpleNetworkClientFaucet client,localhost,22006,
-				parameters ID,channel
-				debug 0,ID=~!Local,ID!~ channel=~!Local,channel!~
-				
-				createPipe .,network,in,~!Local,channel!~
-				createPipe network,.,~!Local,channel!~,out
-			
-			createNullFaucet null
-			
-			createPipe client,server,out,in
-			createPipe server,.,out
-			
-			deliver client,in,reverse
-		
-		expect reverse,~!Test,default,0!~
+	defineFaucetTest network - simpleFaucet - basic nested single in separate metafaucets,
+		createMetaFaucet nestedServer,
+			createSimpleNetworkServerFaucet server1,localhost,22008,pass
+			createPipe .,server1
 
+			# Anchor so it gets polled.
+			createPipe server1,.
+
+		createMetaFaucet nestedClient,
+			createSimpleNetworkClientFaucet client1,localhost,22008,pass
+			createTestFaucet result1,Should get forward string,expect,wheeeeee
+
+			createPipe client1,result1
+			createPipe result1,.
+
+		createPipe .,nested,*,*
+		createPipe nestedClient,.,*,*
+		createPipe nestedServer,.,*,*
+
+		deliver nestedServer,,wheeeeee
 

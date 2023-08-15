@@ -10,28 +10,28 @@ if ~!Progress,noProgress!~,!=,true,
 		outNow
 	set Local,update,
 		# Get the data
-		
+
 		# Calculate stuff
 		basicMaths Local,progressPercent,~!ProgressData,~!Local,progressKey!~,position!~,/,~!ProgressData,~!Local,progressKey!~,total!~
 		basicMaths Local,progressPercent,~!Local,progressPercent!~,*,100
 		round Local,progressPercent,~!Local,progressPercent!~,0
-		
+
 		# TODO choose a more intellegent width
 		calculateProgressStats ~!ProgressData,~!Local,progressKey!~,position!~,~!ProgressData,~!Local,progressKey!~,total!~,30
-		
+
 		# Bindings for output
 		set Local,position,~!ProgressData,~!Local,progressKey!~,position!~
 		set Local,total,~!ProgressData,~!Local,progressKey!~,total!~
 		set Local,remaining,~!ProgressData,~!Local,progressKey!~,remaining!~
-		
+
 		# Output
 		templateOutNoNewLine progress
 		outNow
 		triggerEvent Int,resetOutput
-	
+
 	if ~!Progress,all!~,!=,true,
 		throttleBetween 100,2000,50,~!Local,update!~
 	else
 		callFeature ~!Local,update!~
 	if ~!ProgressData,~!Local,progressKey!~,position!~,==,~!ProgressData,~!Local,progressKey!~,total!~,~!Local,update!~
-	
+

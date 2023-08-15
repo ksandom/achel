@@ -15,10 +15,10 @@ setNested BalanceM2N,current,outMax,~!Local,outMax!~
 # First, let's take care of the quick things.
 if ~!Local,inValue!~,<=,~!BalanceM2N,current,inMin!~,
 	set ~!Local,outCategory!~,~!Local,outVariable!~,~!BalanceM2N,current,outMin!~
-	
+
 elseIf ~!Local,inValue!~,==,~!BalanceM2N,current,inCenter!~,
 	set ~!Local,outCategory!~,~!Local,outVariable!~,~!BalanceM2N,current,outCenter!~
-	
+
 elseIf ~!Local,inValue!~,>=,~!BalanceM2N,current,inMax!~,
 	set ~!Local,outCategory!~,~!Local,outVariable!~,~!BalanceM2N,current,outMax!~
 
@@ -26,41 +26,41 @@ elseIf ~!Local,inValue!~,>=,~!BalanceM2N,current,inMax!~,
 # Now the more complex bit. This could be refactored for better code reuse.
 elseIf ~!Local,inValue!~,<,~!BalanceM2N,current,inCenter!~,
 	# Lower range
-	
+
 	# Remove inCenter
 	basicMaths Local,workingValue,~!Local,inValue!~,-,~!BalanceM2N,current,inCenter!~
-	
+
 	# Divide by difference between inMin and inCenter
 	basicMaths Local,difference,~!BalanceM2N,current,inCenter!~,-,~!BalanceM2N,current,inMin!~
 	basicMaths Local,workingValue,~!Local,workingValue!~,/,~!Local,difference!~
-	
+
 	# Multiply by difference between outMin and outCenter
 	basicMaths Local,difference,~!BalanceM2N,current,outCenter!~,-,~!BalanceM2N,current,outMin!~
 	basicMaths Local,workingValue,~!Local,workingValue!~,*,~!Local,difference!~
-	
+
 	# Add outCenter
 	basicMaths Local,workingValue,~!Local,workingValue!~,+,~!BalanceM2N,current,outCenter!~
 	set ~!Local,outCategory!~,~!Local,outVariable!~,~!Local,workingValue!~
 
 elseIf ~!Local,inValue!~,>,~!BalanceM2N,current,inCenter!~,
 	# Upper range
-	
+
 	# Remove inCenter
 	basicMaths Local,workingValue,~!Local,inValue!~,-,~!BalanceM2N,current,inCenter!~
-	
+
 	# Divide by difference between inCenter and inMax
 	basicMaths Local,difference,~!BalanceM2N,current,inMax!~,-,~!BalanceM2N,current,inCenter!~
 	basicMaths Local,workingValue,~!Local,workingValue!~,/,~!Local,difference!~
-	
+
 	# Multiply by difference between outCenter and outMax
 	basicMaths Local,difference,~!BalanceM2N,current,outMax!~,-,~!BalanceM2N,current,outCenter!~
 	basicMaths Local,workingValue,~!Local,workingValue!~,*,~!Local,difference!~
-	
+
 	# Add outCenter
 	basicMaths Local,workingValue,~!Local,workingValue!~,+,~!BalanceM2N,current,outCenter!~
 	set ~!Local,outCategory!~,~!Local,outVariable!~,~!Local,workingValue!~
-	
+
 else
 	debug 1,rangeConvert: Unhandeled range. This shouldn't happen. The value was ~!Local,inValue!~
 
-makeLocalAvailable ~!Local,outVariable!~
+makeAvailable ~!Local,outCategory!~,~!Local,outVariable!~

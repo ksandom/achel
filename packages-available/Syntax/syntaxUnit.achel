@@ -1,0 +1,24 @@
+# Unit tests for syntax ~ Syntax,unitTest,hidden
+
+defineTest Syntax - tab indentation,
+	failTest Failed to run a macro with tab indentaion.
+	syntaxTabs
+
+defineTest Syntax - space indentation,
+	failTest Failed to run a macro with space indentaion.
+	syntaxSpaces
+
+defineTest Function - basic setup,
+	function exampleFunction,
+		parameters parm1,parm2
+		set FunctionTest,blah1,~!Local,parm1!~
+		set FunctionTest,blah2,~!Local,parm2!~
+
+	expect ,~!FunctionTest,blah1!~
+	expect ,~!FunctionTest,blah2!~
+	exampleFunction a,b
+	expect a,~!FunctionTest,blah1!~
+	expect b,~!FunctionTest,blah2!~
+	exampleFunction c,d
+	expect c,~!FunctionTest,blah1!~
+	expect d,~!FunctionTest,blah2!~
