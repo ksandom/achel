@@ -11,7 +11,7 @@
 
 ~>		</list>
 		<contexts>
-			<context name="normal" attribute="Normal text" lineEndContext="#stay">
+			<context name="normal-context" attribute="Normal Text" lineEndContext="#stay">
 				<DetectChar char="#" context="Hash comment"/>
 				<Detect2Chars attribute="Decorator" char="~" char1="!" context="Variable"/>
 				<keyword attribute="Builtin Function" String="builtinfuncs" context="#stay"/>
@@ -29,7 +29,7 @@
 			</context>
 
 			<context name="Valid comment" attribute="Comment" lineEndContext="#pop">
-				<DetectChar attribute="Tags" char="~" context="#stay" />
+				<DetectChar attribute="Tag" char="~" context="#stay" />
 			</context>
 
 			<context name="Variable" attribute="String" lineEndContext="#pop">
