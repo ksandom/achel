@@ -3,6 +3,8 @@
 function highlightingInstall
 {
 	legacy=0
+	quiet=0
+	install=1
 
 	if [ "$1" == 'legacy' ]; then
 		legacy=1
@@ -15,6 +17,21 @@ function highlightingInstall
 	fi
 }
 
+function highlightingUninstall
+{
+	legacy=0
+	quiet=1
+	install=0
+
+	uid="$(id -u)"
+
+	if which kate > /dev/null; then
+		highlightingInstallKate
+
+		legacy=1
+		highlightingInstallKate
+	fi
+}
 
 function highlightingInstallKate # Kate (KDE Advanced Text Editor)
 {
@@ -39,7 +56,7 @@ function highlightingInstallKate # Kate (KDE Advanced Text Editor)
 			kdeConfigDirectories="${homeDir}/.kde ${homeDir}/.kde4 ${homeDir}/.local"
 		fi
 
-		theRest="/share/apps/katepart /share/katepart5 /share/apps/katepart5 /share/katepart5"
+		theRest="/share/apps/katepart/syntax /share/katepart5/syntax /share/apps/katepart5/syntax /share/katepart5/syntax"
 	fi
 
 	version=`kate --version | cut -d\  -f2`
@@ -80,16 +97,21 @@ function installTemplates
 		$binExec/achel --combineFeatureSets --templateOut="$templateName" > "$templateOut"
 		uid=`id -u`
 
+		indent=""
+		if [ "$quiet" == '0' ]; then
+			indent="      "
+		fi
+
 		for homeFolder in $primarySearchPath; do
-			echo "  primarySearch: $homeFolder"
+			[ "$quiet" == '0' ] && echo "  primarySearch: $homeFolder"
 			for pathPrefix in $secondarySearchPath; do
-				echo "    secondarySearch: $pathPrefix"
-				echo "      lastDir: $lastDir"
-				echo "      file: $outputFile"
+				[ "$quiet" == '0' ] && echo "    secondarySearch: $pathPrefix"
+				[ "$quiet" == '0' ] && echo "      lastDir: $lastDir"
+				[ "$quiet" == '0' ] && echo "      file: $outputFile"
 				# Some of the directories are not created if they are not being used. Even if they are the right ones to use. Therefore I am currently creating all  possible combinations. This is messey!
 
 				if [ ! -f "$templateOut" ]; then
-					echo "      Could not find \""$templateOut"\"." >&2
+					[ "$quiet" == '0' ] && echo "      Could not find \""$templateOut"\"." >&2
 				fi
 
 				destinationDir="${homeFolder}/${pathPrefix}/$lastDir"
@@ -99,17 +121,36 @@ function installTemplates
 				mkdir -p "$destinationDir"
 
 				if [ ! -e "$destinationDir" ]; then
-					echo "      Could not find \""$destinationDir"\"." >&2
+					[ "$quiet" == '0' ] && echo "      Could not find \""$destinationDir"\"." >&2
 				fi
 
 				fullPath="$destinationDir/${outputFile}"
-				echo "      assembled: $fullPath"
-				cp -v "$templateOut" "$fullPath" | indent "      "
+				[ "$quiet" == '0' ] && echo "      assembled: $fullPath"
+				if [ "$install" == '1' ]; then
+					cp -v "$templateOut" "$fullPath" | indent "$indent"
+				else
+					if [ -e "$fullPath" ]; then
+						rm -v $fullPath
+						echo "Cleanup: $fullPath" | indent "$indent"
+						gentlyRemoveParent "$fullPath" | indent "$indent  "
+					fi
+				fi
 			done
 		done
 
 		rm "$templateOut"
 	done
+}
+
+function gentlyRemoveParent
+{
+	parent="$(dirname "$1")"
+
+	if [ "$parent" != '/' ]; then
+		if rmdir -v "$parent" 2>&1; then
+			gentlyRemoveParent "$parent"
+		fi
+	fi
 }
 
 
