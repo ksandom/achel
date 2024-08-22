@@ -10,7 +10,7 @@
 #     $0
 #
 #   Install/Update all legacy syntax highlighting that we know how to do so far.
-#     $0
+#     $0 legacy
 
 requiredParms="$0"
 . `dirname $0`/libs/includeLibs.sh

@@ -85,9 +85,21 @@ function installTemplates
 	secondarySearchPath="$3" # The rest of the path excluding what's in the templates variable.
 	# eg /share/apps/katepart, /share/katepart5
 
+	action='Installing'
+	subAction="to"
+	scope="current"
+
+	if [ "$install" == '0' ]; then
+		action='Uninstalling'
+		subAction='from'
+	fi
+	[ "$legacy" == '1' ] && scope='legacy'
+
+	echo "$action syntax highlight $subAction $scope locations."
+
 
 	for template in $templates; do
-		echo "Syntax template: $template"
+		[ "$quiet" == '0' ] && echo "  Syntax template: $template"
 		# TODO find a better way of splitting the string in bash. It's not working for me right now
 		templateName=`echo "$template" | cut -d: -f 1`
 		outputFile=`echo "$template" | cut -d: -f 2`
@@ -99,19 +111,19 @@ function installTemplates
 
 		indent=""
 		if [ "$quiet" == '0' ]; then
-			indent="      "
+			indent="        "
 		fi
 
 		for homeFolder in $primarySearchPath; do
-			[ "$quiet" == '0' ] && echo "  primarySearch: $homeFolder"
+			[ "$quiet" == '0' ] && echo "    primarySearch: $homeFolder"
 			for pathPrefix in $secondarySearchPath; do
-				[ "$quiet" == '0' ] && echo "    secondarySearch: $pathPrefix"
-				[ "$quiet" == '0' ] && echo "      lastDir: $lastDir"
-				[ "$quiet" == '0' ] && echo "      file: $outputFile"
+				[ "$quiet" == '0' ] && echo "      secondarySearch: $pathPrefix"
+				# [ "$quiet" == '0' ] && echo "        lastDir: $lastDir"
+				# [ "$quiet" == '0' ] && echo "        file: $outputFile"
 				# Some of the directories are not created if they are not being used. Even if they are the right ones to use. Therefore I am currently creating all  possible combinations. This is messey!
 
 				if [ ! -f "$templateOut" ]; then
-					[ "$quiet" == '0' ] && echo "      Could not find \""$templateOut"\"." >&2
+					[ "$quiet" == '0' ] && echo "        Could not find \""$templateOut"\"." >&2
 				fi
 
 				destinationDir="${homeFolder}/${pathPrefix}/$lastDir"
@@ -121,17 +133,17 @@ function installTemplates
 				mkdir -p "$destinationDir"
 
 				if [ ! -e "$destinationDir" ]; then
-					[ "$quiet" == '0' ] && echo "      Could not find \""$destinationDir"\"." >&2
+					[ "$quiet" == '0' ] && echo "        Could not find \""$destinationDir"\"." >&2
 				fi
 
 				fullPath="$destinationDir/${outputFile}"
-				[ "$quiet" == '0' ] && echo "      assembled: $fullPath"
+				[ "$quiet" == '0' ] && echo "        Destination: $fullPath"
 				if [ "$install" == '1' ]; then
-					cp -v "$templateOut" "$fullPath" | indent "$indent"
+					cp "$templateOut" "$fullPath" | indent "$indent"
 				else
 					if [ -e "$fullPath" ]; then
-						rm -v $fullPath
-						echo "Cleanup: $fullPath" | indent "$indent"
+						rm -v $fullPath | indent "$indent  "
+						[ "$quiet" == '0' ] && echo "Cleanup: $fullPath" | indent "$indent"
 						gentlyRemoveParent "$fullPath" | indent "$indent  "
 					fi
 				fi
@@ -147,7 +159,8 @@ function gentlyRemoveParent
 	parent="$(dirname "$1")"
 
 	if [ "$parent" != '/' ]; then
-		if rmdir -v "$parent" 2>&1; then
+		if rmdir "$parent" 2>/dev/null; then
+			echo "Removed obsolete $parent."
 			gentlyRemoveParent "$parent"
 		fi
 	fi
