@@ -2,7 +2,7 @@
 # Description
 #   Reinstalls all repos
 #
-#   Note if you only do this on some repos, there is a chance that interdependancies will be missed. To be sure, do a reinstall of all 
+#   Note if you only do this on some repos, there is a chance that interdependancies will be missed. To be sure, do a reinstall of all
 #
 # Syntax:
 #   $0 [repoRegex|--thorough]
@@ -46,4 +46,5 @@ fi
 
 echo "$repos"| reInstallRepos
 
+highlightingUninstall
 highlightingInstall

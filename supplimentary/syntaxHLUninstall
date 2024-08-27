@@ -1,0 +1,17 @@
+#!/bin/bash
+# Description
+#   Uninstall all syntax highlighting that we know how to do so far.
+#
+# Syntax:
+#   $0
+#
+# Examples:
+#   Uninstall all current syntax highlighting that we know how to do so far.
+#     $0
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+. "$libDir"/display.sh
+. "$libDir"/syntaxHighlighting.sh
+
+highlightingUninstall
