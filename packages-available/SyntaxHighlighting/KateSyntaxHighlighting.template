@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE language SYSTEM "language.dtd">
-<language name="Achel" version="1" kateversion="5.104.0" section="Scripts" extensions="*.achel" casesensitive="1" author="Kevin Sandom" license="GPL">
+<language name="Achel" version="1" kateversion="5.104.0" section="Scripts" extensions="*.achel;*.template" casesensitive="1" author="Kevin Sandom" license="GPL">
 	<highlighting>
 		<list name="prep">
 			<item> onDefine </item>
@@ -14,6 +14,7 @@
 			<context name="normal-context" attribute="Normal Text" lineEndContext="#stay">
 				<DetectChar char="#" context="Hash comment"/>
 				<Detect2Chars attribute="Decorator" char="~" char1="!" context="Variable"/>
+				<Detect2Chars attribute="Decorator" char="~" char1="%" context="Template variable"/>
 				<keyword attribute="Builtin Function" String="builtinfuncs" context="#stay"/>
 			</context>
 
@@ -39,6 +40,13 @@
 				<LineContinue context="#pop" />
 			</context>
 
+			<context name="Template variable" attribute="Template string" lineEndContext="#pop">
+				<Detect2Chars attribute="Decorator" char="%" char1="~" context="#pop" />
+				<Detect2Chars attribute="Decorator" char="~" char1="%" context="Template variable" />
+				<DetectChar attribute="Operator" char="," />
+				<LineContinue context="#pop" />
+			</context>
+
 			<context name="Tags" attribute="Tag" lineEndContext="#pop">
 				<LineContinue attribute="Tag" context="#stay" />
 				<DetectChar attribute="Operator" char="," />
@@ -55,6 +63,7 @@
 			<itemData name="Preprocessor" defStyleNum="dsChar" spellChecking="false"/>
 			<itemData name="Comment" defStyleNum="dsComment"/>
 			<itemData name="String" defStyleNum="dsString"/>
+			<itemData name="Template string" defStyleNum="dsString" color="#8fff90"/>
 			<itemData name="Decorator" defStyleNum="dsOthers" color="#8f6b32" selColor="#8f6b32" italic="0" spellChecking="false"/>
 		</itemDatas>
 	</highlighting>
