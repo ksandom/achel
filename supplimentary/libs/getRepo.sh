@@ -5,9 +5,9 @@ function addRepo
 {
 	repoSrc="$1"
 	dstName="$2"
-	
+
 	echo "addRepo: \"$repoSrc\" -> \"$dstName\""
-	
+
 	if [ "`echo $repoSrc | grep '\(@\|://\)'`" != '' ]; then
 		getRepo "$dstName" "$repoSrc"
 	else
@@ -21,7 +21,7 @@ function getRepo
 	repoSrc="$2" # Where to get it from. This is likely to be a git URL.
 	reposDir="$configDir/repos"
 	repoDir="$reposDir/$repoName"
-	
+
 	if [ -d "$repoDir"  ]; then
 		cd "$repoDir"
 		git pull
@@ -33,12 +33,12 @@ function getRepo
 
 function addPretendRepo
 {
-	# This is specifically for the rare situation where you need to link in an 
+	# This is specifically for the rare situation where you need to link in an
 	# existing folder structure as if it was a cloned repo.
-	# 
+	#
 	# The only situation I can think of where it is valid to use this is if you
 	# are developing that repo.
-	
+
 	# Sort out what we are working with.
 	fullSrcPath="$1"
 	name=`echo "$fullSrcPath" | sed 's#/$##;
@@ -57,7 +57,7 @@ function addPretendRepo
 	ln -s "$fullSrcPath" .
 	if [ "$name" != "$dstName" ]; then
 		mv "$name" "$dstName"
-	fi 
+	fi
 
 	# Pre clean
 	cd "$configDir"/repos
@@ -81,9 +81,9 @@ function removeRepo
 {
 	repoName="$1"
 	repoDir="$configDir/repos/$repoName"
-	
+
 	documentationRemoveRepo "$repoName"
-	
+
 	if [ ! -e "$repoDir" ]; then
 		echo "Could not find repo \"$repoName\". You can list them using repoList."
 		exit 1
@@ -99,7 +99,9 @@ function removeRepo
 function repoExists
 {
 	name="$1"
-	if [ -e "$configDir/repos/$name" ]; then
+	if [ "$name" == '' ]; then
+		return 1
+	elif [ -e "$configDir/repos/$name" ]; then
 		return 0
 	else
 		return 1
@@ -110,24 +112,24 @@ function renameRepo
 {
 	fromName="$1"
 	toName="$2"
-	
+
 	if [ ! -e "$configDir/repos/$fromName" ]; then
 		echo "renameRepo: source repo \"$fromName\" does not exist." >&2
 		return 1
 	fi
-	
+
 	if [ -e "$configDir/repos/$toName" ]; then
 		echo "renameRepo: destination repo \"$toName\" already exists." >&2
 		return 1
 	fi
-	
+
 	mv "$configDir/repos/$fromName" "$configDir/repos/$toName"
 }
 
 function findRepo
 {
 	repoSearchTerm="$1"
-	
+
 	if repoExists "$repoSearchTerm"; then
 		echo "$repoSearchTerm"
 		return 0

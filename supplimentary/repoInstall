@@ -30,6 +30,7 @@ requiredParms="$1"
 . $libDir/installLibs.sh
 . $libDir/documentation.sh
 . "$libDir"/syntaxHighlighting.sh
+. "$libDir"/tabCompletion.sh
 
 repoAddress="$1"
 overRideRepoName="$2"
