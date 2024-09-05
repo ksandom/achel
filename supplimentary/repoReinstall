@@ -31,6 +31,7 @@ requiredParms="$0"
 . $libDir/installLibs.sh
 . $libDir/documentation.sh
 . "$libDir"/syntaxHighlighting.sh
+. "$libDir"/tabCompletion.sh
 
 regex="$1"
 

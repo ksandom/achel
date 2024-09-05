@@ -15,18 +15,20 @@ fileThings='macros modules templates'
 directoryThings='packages'
 things="$fileThings $directoryThings"
 installTypeComments=''
+libDir="supplimentary/libs"
 
 cd `dirname $0`
-. supplimentary/libs/installLibs.sh
-. supplimentary/libs/binCompatibility.sh
-. supplimentary/libs/documentation.sh
-. supplimentary/libs/filesystem.sh
-. supplimentary/libs/packages.sh
-. supplimentary/libs/display.sh
-. supplimentary/libs/repoInstall.sh
-. supplimentary/libs/repoParms.sh
-. supplimentary/libs/syntaxHighlighting.sh
-. supplimentary/libs/cache.sh
+. "$libDir"/installLibs.sh
+. "$libDir"/binCompatibility.sh
+. "$libDir"/documentation.sh
+. "$libDir"/filesystem.sh
+. "$libDir"/packages.sh
+. "$libDir"/display.sh
+. "$libDir"/repoInstall.sh
+. "$libDir"/repoParms.sh
+. "$libDir"/syntaxHighlighting.sh
+. "$libDir"/tabCompletion.sh
+. "$libDir"/cache.sh
 
 
 

@@ -1,0 +1,26 @@
+#!/bin/bash
+# Description
+#   List all available achelctl scripts.
+#
+# Syntax:
+#   $0 [-W]
+#
+# Examples:
+#   List all available achelctl scripts.
+#     $0
+#
+#   List all available achelctl scripts as words rather than lines.
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+. $libDir/theLibOfLibs.sh
+
+
+case "$1" in
+    "-W")
+        echo $(getJustTheSupplimentaryScripts)
+    ;;
+    "")
+        getJustTheSupplimentaryScripts
+    ;;
+esac

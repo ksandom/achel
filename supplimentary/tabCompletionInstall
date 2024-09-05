@@ -1,0 +1,22 @@
+#!/bin/bash
+# Description
+#   Install/Update tab completion.
+#
+# Syntax:
+#   $0 [appName]
+#
+# Examples:
+#   Install/Update all tab completion for doneIt.
+#     $0 doneIt
+
+requiredParms="$0"
+. `dirname $0`/libs/includeLibs.sh
+. "$libDir"/display.sh
+. "$libDir"/tabCompletion.sh
+. $libDir/repoInstall.sh
+
+if [ "$1" != '' ]; then
+    tabCompletionInstall "$1"
+else
+    listRepos
+fi

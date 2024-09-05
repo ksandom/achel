@@ -1,0 +1,14 @@
+# Generates the tab competion configuration for an Achel app. --generateTCConf=appName ~ tabCompetion
+
+parameters appName
+set TabCompletion,appName,~!Local,appName!~
+lower TabCompletion,lowerAppName,~!Local,appName!~
+
+# listFeatures
+collectionLoad SyntaxHighlightingFeatures
+retrieveResults SyntaxHighlightingFeatures,~!Local,appName!~
+
+getKeys
+requireEach ..
+
+templateOut tabCompletionConf

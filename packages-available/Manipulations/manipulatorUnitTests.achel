@@ -12,7 +12,7 @@ set Tmp,createDataSet,
 	setNested Tmp,dataSet,a,A,1
 	setNested Tmp,dataSet,a,B,2
 	setNested Tmp,dataSet,a,C,3
-	
+
 	retrieveResults Tmp,dataSet
 
 set Tmp,destoryDataSet,
@@ -21,36 +21,52 @@ set Tmp,destoryDataSet,
 defineTest copyResultVar,
 	failTest no results.
 	callFeature ~!Tmp,createDataSet!~
-	
+
 	copyResultVar A,D
 	first
 	loop
 		expect 1,~!Result,D!~,,true
-	
-	
+
+
 	callFeature ~!Tmp,destroyDataSet!~
 
 defineTest moveResultVar - destination,
 	failTest no results.
 	callFeature ~!Tmp,createDataSet!~
-	
+
 	moveResultVar B,E
 	loop
 		expect 2,~!Result,E!~,,true
-	
-	
+
+
 	callFeature ~!Tmp,destroyDataSet!~
 
 defineTest moveResultVar - source,
 	callFeature ~!Tmp,createDataSet!~
-	
+
 	failTest no results.
 	moveResultVar B,E
 	loop
 		expect ,~!Result,B!~,,true
-	
-	
+
+
 	callFeature ~!Tmp,destroyDataSet!~
+
+defineTest lower - Abc,
+	lower Local,testValue,Abc
+	expect abc,~!Local,testValue!~
+
+defineTest lower - Abc dEF,
+	lower Local,testValue,Abc def
+	expect abc def,~!Local,testValue!~
+
+defineTest upper - Abc,
+	upper Local,testValue,Abc
+	expect ABC,~!Local,testValue!~
+
+defineTest upper - Abc dEF,
+	upper Local,testValue,Abc def
+	expect ABC DEF,~!Local,testValue!~
 
 unset Tmp,createDataSet
 unset Tmp,destroyDataSet
