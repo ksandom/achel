@@ -67,6 +67,8 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('sortOnKey'), 'sortOnKey', "Sort items by the key of each result in the result set. This is not to be confused with --sortOnItemKey which is slower, but probably what you want.", array('result', 'sort', 'Manipulations'));
 				$this->core->registerFeature($this, array('sortOnValue'), 'sortOnValue', "Sort items by the value of each result in the result set. This will not work with resultSets containing arrays as the results. For that use --sortOnItemKey . --sortOnValue may not perform well with larger resultSets.", array('result', 'sort', 'Manipulations'));
 				$this->core->registerFeature($this, array('sortOnItemKey'), 'sortOnItemKey', "Sort items by a named item. You can sort on multiple fields. --sortOnItemKey=itemKey1[,itemKey2[,itemKey3[,...]]]", array('result', 'sort', 'Manipulations'));
+				$this->core->registerFeature($this, array('lower'), 'lower', "Return the lower case representation of a provided string. --lower=Category,var,inputString", array('result', 'string', 'Manipulations'));
+				$this->core->registerFeature($this, array('upper'), 'upper', "Return the upper case representation of a provided string. --upper=Category,var,inputString", array('result', 'string', 'Manipulations'));
 
 				#$this->core->registerFeature($this, array('cleanUnresolvedStoreVars'), 'cleanUnresolvedStoreVars', 'Clean out any store variables that have not been resolved. This is important when a default should be blank.', array('array', 'escaping', 'result'));
 
@@ -263,6 +265,14 @@ class Manipulator extends Module
 			case 'between':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3);
 				return $this->between($this->core->getResultSet(), $parms[0], $parms[1], $parms[2]);
+				break;
+			case 'lower':
+				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3);
+				$this->core->set($parms[0], $parms[1], strtolower($parms[2]));
+				break;
+			case 'upper':
+				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3);
+				$this->core->set($parms[0], $parms[1], strtoupper($parms[2]));
 				break;
 
 			case 'getKeysNumericallyIndexed':
