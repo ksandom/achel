@@ -1,0 +1,12 @@
+
+_~!TabCompletion,appName!~_module()
+{
+	local cur prev OPTS
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+	COMPREPLY=( $(compgen -W "$(achelctl listSupplimentary -W)" -- $cur) )
+	return 0
+}
+complete -F _~!TabCompletion,appName!~_module ~!TabCompletion,lowerAppName!~

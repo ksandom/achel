@@ -5,6 +5,7 @@ function tabCompletionInstall
     local appName="$1"
     uid="$(id -u)"
     home=~
+    tcInstallPath="$(getDestinationDir)"
 
     local installFile="$(setupFoundations  "$appName")"
 
@@ -12,23 +13,26 @@ function tabCompletionInstall
     achel --generateTCConf="$appName" > "$installFile"
 
     setupBashRC
+    setupTCAchelctl
 }
 
 function setupFoundations
 {
-    local tcInstallPath=""
     local appName="$1"
-
-    if [ "$uid" == 0 ]; then
-        #tcInstallPath="/usr/share/bash-completion/completions"
-        tcInstallPath="/etc/bash_completion.d"
-    else
-        tcInstallPath="$home/.achel/bash_completion.d"
-    fi
 
     mkdir -p "$tcInstallPath"
 
     echo "$tcInstallPath/$appName"
+}
+
+function getDestinationDir
+{
+    if [ "$uid" == 0 ]; then
+        #tcInstallPath="/usr/share/bash-completion/completions"
+        echo "/etc/bash_completion.d"
+    else
+        echo "$home/.achel/bash_completion.d"
+    fi
 }
 
 function setupBashRC
@@ -50,4 +54,9 @@ function setupBashRC
     echo "" >> "$destinationFile"
     echo "# Load bash tab completion for Achel apps." >> "$destinationFile"
     echo ". $line" >> "$destinationFile"
+}
+
+function setupTCAchelctl
+{
+    cp -v ~/.achel/supplimentary/resources/bash/achelctl "$tcInstallPath"
 }
