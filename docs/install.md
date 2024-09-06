@@ -2,7 +2,7 @@
 
 First off, thanks for installing Achel. I hope you like it.
 
-For most uses, the easy way will be sufficient. This document will be of particur interest to
+For most uses, the easy way will be sufficient. This document will be of particular interest to
 
 * Systems administrators who want to make the installation available to all users.
 * Developers that want to
@@ -52,13 +52,13 @@ Exactly the same as the "Docker" section above, but gives you a chance to sanity
 
 ## Other install variations
 
-There's a fair bit that you can customise with the install. The best way for you to find out how to do this is to follow the traditional way, and when you get to the `./install.sh` step, run `./install.sh --help` instead and you will recieve full documentation.
+There's a fair bit that you can customise with the install. The best way for you to find out how to do this is to follow the traditional way, and when you get to the `./install.sh` step, run `./install.sh --help` instead and you will receive full documentation.
 
-Note: Running the install as root *will allow you to install Achel system wide so that more than just the current user can use it*. This is likely what you want in many situations.
+Note: Running the install as root *will allow you to install Achel system wide so that more than just the current user can use it*.
 
 ## Installing Achel applications
 
-### Easy way 1
+### Easy way 1 - Without installing Achel first
 
     export extraSrc="git@github.com:ksandom/doneIt.git"; curl https://raw.github.com/ksandom/achel/master/supplimentary/misc/webInstall | bash
 
@@ -66,7 +66,7 @@ In this example we are installing [doneIt](https://github.com/ksandom/doneIt). S
 
 The advantage of this way is that if Achel isn't installed, it will get installed and everything will be set up cleanly.
 
-### Easy way 2
+### Easy way 2 - Using existing Achel install
 
 * Use `achelctl repoInstall` to install the app directly from the git url.
 

@@ -2,7 +2,11 @@
 
 countOfStuff=`ls /usr/achelData | wc -l`
 
-if [ $countOfStuff -eq 0 ]; then
+if [ -e /usr/externalData/.achel ]; then
+  cd /etc/achel
+  echo "### Dev mode. Using host config. ###"
+  ln -sfv /usr/externalData/.achel/{data,config} .
+elif [ $countOfStuff -eq 0 ]; then
   # Unpack the backup for first time use.
   cd /usr/achelData
   tar -xjf /usr/backups/achelData.tar.bz2

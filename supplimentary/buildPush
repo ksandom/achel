@@ -21,10 +21,6 @@ tag=`getTag`
 
 mustFindRepoRoot
 
-# Push to git.
-gitTag
-gitPush
-
 # Push to docker.
 dockerPush
 
