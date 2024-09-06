@@ -17,26 +17,38 @@ function setState
   echo "# Tag settings
   lastWhen='$1'
   lastHash='$2'
-  point=$3" > $tagFile
+  point=$3" > "$tagFile"
+}
+
+function wrongDirectory
+{
+  echo "No .tag file. Potentially you are in the wrong directory." >&2
 }
 
 function getTag
 {
-  . $tagFile
+  if [ ! -e "$tagFile" ]; then
+    wrongDirectory
+    return 1
+  fi
+
+  . "$tagFile"
   echo "$lastWhen"."$point"
 }
 
 function generateTag
 {
   # If we don't have a saved state, let's fix that.
-  if [ ! -e $tagFile ]; then
+  if [ ! -e "$tagFile" ]; then
+    wrongDirectory
     setState `getNow` `getHash` 0
+    return 1
   fi
 
   # Get current and previous state.
   currentHash=`getHash`
   currentWhen=`getNow`
-  . $tagFile
+  . "$tagFile"
 
   # Figure out if we need to change anything.
   if [ "$currentHash" != "$lastHash" ] || [ "$requestNew" == 'true' ] ; then
@@ -51,7 +63,7 @@ function generateTag
       # It's the same day. Increment the point.
       let point=$point+1
     fi
-    
+
     setState "$currentWhen" "$currentHash" $point
     # If omit the point if .0.
     echo "$currentWhen"."$point"

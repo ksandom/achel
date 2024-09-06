@@ -1,12 +1,12 @@
 #!/bin/bash
 # Description
-#   Brings together all build related tasks into one command.
+#   Create a release. Ready to be pushed.
 #
 # Syntax:
 #   $0
 #
 # Examples:
-#   Brings together all build related tasks into one command.
+#   Create a release. Ready to be pushed.
 #     $0
 
 requiredParms="none"
@@ -21,10 +21,5 @@ tag=`generateTag`
 
 mustFindRepoRoot
 
-# Push to git.
+# Create the release.
 gitTag
-gitPush
-
-# Build docker.
-tag=`getTag`
-dockerBuild
