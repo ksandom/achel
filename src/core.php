@@ -463,7 +463,14 @@ class core extends Module
 			$contents=array();
 		}
 
-		if (count($contents)<1)
+		$isAHit = false;
+		if (is_countable($contents))
+		{
+			$isAHit = (count($contents)>=1);
+		}
+		else $isAHit = false;
+
+		if (!$isAHit)
 		{
 			$listCache=array_keys($this->getCategoryModule('FileListCache'));
 			$contents = $this->doGetFileList($path);

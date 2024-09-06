@@ -3,7 +3,7 @@ MAINTAINER Kevin Sandom
 
 # Install the bare minimum to function.
 ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y php7.2-cli php7.2-curl curl git wget apt-utils
+RUN apt-get update && apt-get install -y php-cli php-curl curl git wget apt-utils bzip2
 # TODO finish timezone config
 
 ENV FORCE_UPDATE=1

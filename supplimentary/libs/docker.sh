@@ -51,5 +51,5 @@ function dockerPush
 function dockerShell
 {
   requireAppName
-  docker run -it  --env COMMAND=bash  --volume `pwd`:/current $dockerTag /usr/installs/achel/automation/dockerInternal/internalWrapper "$@"
+  docker run -it  --env COMMAND=bash  --volume `pwd`:/current --volume ~:/usr/externalData $dockerTag /usr/installs/achel/automation/dockerInternal/internalWrapper "$@"
 }
