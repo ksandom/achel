@@ -1,5 +1,5 @@
 
-_~!TabCompletion,appName!~_module()
+_achelctl_module()
 {
 	local cur prev OPTS
 	COMPREPLY=()
@@ -9,4 +9,4 @@ _~!TabCompletion,appName!~_module()
 	COMPREPLY=( $(compgen -W "$(achelctl listSupplimentary -W)" -- $cur) )
 	return 0
 }
-complete -F _~!TabCompletion,appName!~_module ~!TabCompletion,lowerAppName!~
+complete -F _achelctl_module achelctl
