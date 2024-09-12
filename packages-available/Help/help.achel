@@ -21,4 +21,6 @@ if ~!Local,showHidden!~,==,,
 else
 	debug 1,Allowing hidden entries.
 
+keyOnPreserve name
+
 registerOnceForEvent Achel,finishEarly,finishHelp
