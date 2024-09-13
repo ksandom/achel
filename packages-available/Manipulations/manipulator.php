@@ -942,8 +942,10 @@ class Manipulator extends Module
 				$key='';
 				foreach ($keysToKeyOn as $keyPart)
 				{
-					$key.=(isset($item[$keyPart]))?$separator.$item[$keyPart]:$separator.$oldKey;
+					$sep=($key=='')?'':$separator;
+					$key.=(isset($item[$keyPart]))?$sep.$item[$keyPart]:$sep.$oldKey;
 				}
+
 				$this->debug(3, "keyOn: Derived key $key");
 			}
 			else
