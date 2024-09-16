@@ -884,6 +884,8 @@ class Manipulator extends Module
 	{
 		if (!$max) $max=1;
 
+		if (is_null($resultSet)) return $resultSet;
+
 		$output=array();
 		$keys=array_keys($resultSet);
 		$keyCount=count($keys);
