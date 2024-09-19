@@ -161,8 +161,15 @@ class TimeThing extends Module
 			}
 		}
 
+		// Almost done.
 		$output="$value $unit";
-		if (intval($value)!=1) $output.='s';
+
+		// Cater to plurals.
+		if (intval($value)!=1 or strpos($value, '.'))
+		{
+			$output.='s';
+		}
+
 		return $output;
 	}
 
