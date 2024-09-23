@@ -11,12 +11,12 @@ define ('templateMacroTransition', '~~');
 class Template extends Module
 {
 	private $templateOut=false;
-	
+
 	function __construct()
 	{
 		parent::__construct('Template');
 	}
-	
+
 	function event($event)
 	{
 		switch ($event)
@@ -31,7 +31,8 @@ class Template extends Module
 				$this->core->registerFeature($this, array('templateOutIfNotSet'), 'templateOutIfNotSet', "Same as --templateOut, but will only be set if it hasn't been already.");
 				$this->core->registerFeature($this, array('nestTemplates'), 'nestTemplates', "Nest templates. --nestTemplates=rootTemplate,[inputField],[outputField],firstNestedTemplate,[inputField],[outputField][,secondNestedTemplate,[inputField],[outputField][,thirdNestedTemplate,[inputField],[outputField][,etc[,etc]]]] . The syntax works in sets of 3. The first field is the template to use. The second is the field to pass as the input to the next template. If the input is omitted, the whole level will be passed to the next template. The third is the field to put the result from the next template into. If ommitted the whole level will be replaced by a string that can be accessed via ~%line%~ .");
 				$this->core->registerFeature($this, array('nestTemplatesOut'), 'nestTemplatesOut', "Same as nestTemplates, but will use the output object instead.");
-				
+				$this->core->registerFeature($this, array('templateToVar'), 'templateToVar', "Process the resultSet using the specified template, and stick it into the specified variable. --templateToVar=Category,variable,templateName");
+
 				$this->loadEnabledTenmplates();
 				break;
 			case 'followup':
@@ -90,12 +91,17 @@ class Template extends Module
 				$this->core->setRef('General', 'outputObject', $this);
 				$this->templateOut=$this->core->get('Global', $event);
 				break;
+			case 'templateToVar':
+				if ($parms=$this->core->interpretParms($this->core->get('Global', $event), 3, 3, true))
+
+				$this->core->set($parms[0], $parms[1], $this->processTemplateByName($parms[2], $this->core->getResultSet()));
+				break;
 			default:
 				$this->core->complain($this, 'Unknown event', $event);
 				break;
 		}
 	}
-	
+
 	function loadEnabledTenmplates()
 	{
 		$profile=$this->core->get('General', 'profile');
@@ -110,10 +116,10 @@ class Template extends Module
 		$list=$this->core->get('Core', 'templatesToLoad');
 		if (isset($list[$derivedTemplateName])) $templateFile=$list[$derivedTemplateName];
 		else $templateFile=(file_exists($derivedTemplateName))?$derivedTemplateName:$name;
-		
+
 		return $this->processTemplate($templateFile, $input);
 	}
-	
+
 	function processTemplate($fileName, $input=false)
 	{
 		if ($fileName)
@@ -121,12 +127,12 @@ class Template extends Module
 			if (file_exists($fileName))
 			{
 				$contents=file_get_contents($fileName);
-				
+
 				while (strpos($contents, templateMacroBegin)!==false)
 				{
 					$contents=$this->findAndRunMacro($contents, $input);
 				}
-				
+
 				return $this->core->processValue($contents);
 			}
 			else $this->core->complain($this, "Could not find file $fileName");
@@ -136,53 +142,53 @@ class Template extends Module
 			$this->debug(1, "processTemplate: fileName was empty. This is probably intentinoal. If not, check that the variable has been resolved as expected.");
 		}
 	}
-	
+
 	function findAndRunMacro($contents, $input=false)
 	{
 		$begin=strpos($contents, templateMacroBegin);
 		$beginTemplateOnly=strpos($contents, templateOnlyBegin);
 		$end=strpos($contents, templateMacroEnd);
 		$transition=strpos($contents, templateMacroTransition);
-		
+
 		$before=substr($contents, 0, $begin);
 		$after=substr($contents, $end+strlen(templateMacroEnd));
-		
+
 		$macroLength=$end-$begin-strlen(templateMacroBegin)-strlen(templateMacroEnd);
 		$macro=substr($contents, $begin+strlen(templateMacroBegin)+1, $macroLength);
-		
+
 		if ($begin==$beginTemplateOnly)
 		{ // Just take input from the resultset
 			$macroCode='';
 			$outputTemplate=substr($macro, 1);
-			
+
 			$result=$input;
 		}
 		else
 		{ // Traditional embedded macro
 			$parts=explode(templateMacroTransition, $macro);
-			
+
 			$macroCode=$parts[0];
 			$outputTemplate=$parts[1];
-			
+
 			$argumentTerminatorPos=strpos($macroCode, ' ');
 			$argument=substr($macroCode, 0, $argumentTerminatorPos);
 			$value=$this->core->processValue(substr($macroCode, $argumentTerminatorPos+1));
-			
+
 			$result=$this->core->callFeature($argument, $value);
 		}
-		
+
 		$finalResult=$this->insertResultIntoTemplate($result, $outputTemplate);
-		
+
 		$contents=$before.$finalResult.$after;
-		
+
 		return $contents;
 	}
-	
+
 	function isInsertable($value)
 	{
 		return (is_string($value) or is_numeric($value));
 	}
-	
+
 	function insertResultIntoTemplate($input, $template)
 	{
 		$output='';
@@ -220,10 +226,10 @@ class Template extends Module
 			}
 		}
 		else $output=$input;
-		
+
 		return $output;
 	}
-	
+
 	function indent($dataIn, $indentCharacter='	')
 	{
 		if (is_array($dataIn))
@@ -243,7 +249,7 @@ class Template extends Module
 			return $output;
 		}
 	}
-	
+
 	function nestTemplates($dataIn, $templateName, $input, $output, $remainder, $autoIndent=true)
 	{
 		$dataOut=$dataIn;
@@ -271,7 +277,7 @@ class Template extends Module
 					$this->debug(2, "nestTemplates: Taking the whole array for $remainder");
 					$outputLine=$this->core->callFeatureWithDataset('nestTemplates', $remainder, $line);
 				}
-				
+
 				if ($outputLine!==false)
 				{
 					$outputLine=$this->indent($outputLine);
@@ -281,23 +287,23 @@ class Template extends Module
 			}
 			$this->debug(2, "nestTemplates: Finished remainder $remainder");
 		}
-		
+
 		return $this->processTemplateByName($templateName, $dataOut);
 	}
-	
+
 	private function templateToFile($fileName)
 	{
 		$output=$this->doWork($this->core->getResultSet());
-		
+
 		# TODO put some sane error handling into this.
 		file_put_contents($fileName, $output);
 	}
-	
+
 	private function doWork($output)
 	{
 			$modifiedOutput=$this->core->callFeatureWithDataset('triggerEvent', 'Template,beforeProcessing-'.$this->templateOut, $output);
 		if ($modifiedOutput) $output=$modifiedOutput;
-		
+
 		if (is_string($output)) $this->core->echoOut("template: Unexpected string=\"$output\"");
 		elseif(strpos($this->templateOut, ',')!==false)
 		{
@@ -309,19 +315,19 @@ class Template extends Module
 			$this->debug(2, "Template->out: Using a single template: {$this->templateOut}");
 			$result=array($this->processTemplateByName($this->templateOut, $output));
 		}
-		
+
 		$modifiedResult=$this->core->callFeatureWithDataset('triggerEvent', 'Template,beforeOutput-'.$this->templateOut, $result);
-		
+
 		if ($modifiedResult) return $modifiedResult[0];
 		else return $result[0];
 }
-	
+
 	function out($output)
 	{
 		$result=$this->doWork($output);
 		$this->core->echoOut($result);
 	}
-	
+
 	function put($output)
 	{
 		if (is_array($output))
@@ -335,5 +341,5 @@ class Template extends Module
 $core=core::assert();
 $template=new Template();
 $core->registerModule($template);
- 
+
 ?>
