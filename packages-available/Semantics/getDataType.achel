@@ -1,0 +1,7 @@
+# Get the current data type and put it into a variable. --getDataType=Category,variable ~ semantics
+
+parameters Category,variable
+
+set ~!Local,Category!~,~!Local,variable!~,~!SemanticsState,currentDataType,dataTypeName!~
+
+makeAvailable ~!Local,Category!~,~!Local,variable!~
