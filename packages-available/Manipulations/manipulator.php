@@ -75,6 +75,7 @@ class Manipulator extends Module
 				$this->core->registerFeature($this, array('createOneResult'), 'createOneResult', 'Replaces the resultSet with a single entry that can then be manipulated using features like --resultSet.', array('array', 'result', 'Manipulations'));
 
 				$this->core->registerFeature($this, array('getKeysNumericallyIndexed'), 'getKeysNumericallyIndexed', 'Replaces the resultSet numerically indexed set of keys from the previous resultSet. This is the faster cousin of --getKeys .', array('array', 'result', 'Manipulations'));
+				$this->core->registerFeature($this, array('getLength'), 'getLength', 'Get the length of the specified string. --getLength=Category,variable,string', array('string', 'Manipulations'));
 				break;
 			case 'followup':
 				break;
@@ -273,6 +274,10 @@ class Manipulator extends Module
 			case 'upper':
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3);
 				$this->core->set($parms[0], $parms[1], strtoupper($parms[2]));
+				break;
+			case 'getLength':
+				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3);
+				$this->core->set($parms[0], $parms[1], strlen($parms[2]));
 				break;
 
 			case 'getKeysNumericallyIndexed':
