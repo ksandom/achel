@@ -70,3 +70,15 @@ defineTest upper - Abc dEF,
 
 unset Tmp,createDataSet
 unset Tmp,destroyDataSet
+
+defineTest getLength - 0,
+	getLength Local,testValue,
+	expect 0,~!Local,testValue!~
+
+defineTest getLength - 1,
+	getLength Local,testValue,a
+	expect 1,~!Local,testValue!~
+
+defineTest getLength - 3,
+	getLength Local,testValue,abc
+	expect 3,~!Local,testValue!~
