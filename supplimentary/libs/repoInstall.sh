@@ -90,6 +90,9 @@ function installRepo_clean
 			if [ "$irs_repoName" != 'achel' ] ; then
 				disablePackage "$profileName" ".*" ".*"
 			fi
+
+			# Add the local and global packages to the profile.
+			addLocalToProfile "$profileRefName"
 		else
 			echo "installRepo_setup: profileRefName=\"$profileRefName\""
 		fi
@@ -148,10 +151,40 @@ function installRepo_setup
 
 			# Handel documentation
 			documentationAddProfile "$profileRefName"
+
+			# Add the local and global packages to the profile.
+			addLocalToProfile "$profileRefName"
 		else
 			echo "installRepo_setup: profileRefName=\"$profileRefName\""
 		fi
 	done < <(repoGetProfiles "$irs_repoName")
+}
+
+function addLocalToProfile
+{
+	# TODO This can be refactored into two functions to do better code reuse.
+	local altp_profileName="$1"
+	echo "Setting up local and global pacakges for $altp_profileName."
+
+	defaultDocument="# Local pacakge\nYour customisations go here.\n"
+	defaultDocumentFile="readme.md"
+
+	profilePackage="$configDir/local/$altp_profileName"
+	globalPacakge="$configDir/local/global"
+	mkdir -pv "$profilePackage/docs" "$globalPacakge/docs"
+
+	# Create documentation
+	profileFile="$profilePackage/docs/$defaultDocumentFile"
+	[ ! -e "$profileFile" ] && echo "defaultDocument" > "$profileFile"
+
+	globalFile="$globalPacakge/docs/$defaultDocumentFile"
+	[ ! -e "$globalFile" ] && echo "defaultDocument" > "$globalFile"
+
+	cd "$configDir/profiles/$altp_profileName/packages"
+	[ ! -e local ] && ln -sv "$profilePackage" local
+	[ ! -e global ] && ln -sv "$globalPacakge" global
+
+	cd ~-
 }
 
 function supplimentaryInstall
