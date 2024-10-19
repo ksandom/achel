@@ -1,0 +1,14 @@
+# List all events that have registrations. You can then use --refine to fine what you're looking for. ~ events
+#onLoaded setFeatureType listEvents,generateEvents
+
+getCategory Events
+loop
+    isolate
+        retrieveResults Result,50
+        templateToVar Tmp,entries,eventEntries
+
+    set Result,entries,~!Tmp,entries!~
+    unset Tmp,entries
+
+    replaceRegexInString Result,Category,-.*$,,~!Result,key!~
+    replaceRegexInString Result,eventName,^.*-,,~!Result,key!~
