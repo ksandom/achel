@@ -1,0 +1,5 @@
+# Install-time stuff for events. ~ hidden
+#onDefine registerForEvent Install,general,installEvents
+
+createDataType event,event,event,event,,All types of events.
+createFeatureType generateEvents,,event,Generates a list of events.
