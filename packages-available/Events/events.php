@@ -6,12 +6,12 @@
 class Events extends Module
 {
 	private $loadedPackages=array();
-	
+
 	function __construct()
 	{
 		parent::__construct('Events');
 	}
-	
+
 	function event($event)
 	{
 		switch ($event)
@@ -49,51 +49,51 @@ class Events extends Module
 				break;
 		}
 	}
-	
+
 	function registerForEvent($category, $eventName, $featureName, $featureValue='', $onlyOnce=false, $priority=50)
 	{
 		$priorityGroups=$this->core->get('Events', "$category-$eventName");
 		if (!isset($priorityGroups[$priority])) $priorityGroups[$priority]=array();
-		
+
 		$newValue=array('featureName'=>$featureName, 'featureValue'=>$featureValue);
 		if ($onlyOnce) $priorityGroups[$priority][md5("$featureName,$featureValue")]=$newValue;
 		else $priorityGroups[$priority][]=$newValue;
-		
+
 		$this->debug(3, "Registered \"$featureName $featureValue\" to event \"$category, $eventName\" at priority $priority.");
 		$this->core->set('Events', "$category-$eventName", $priorityGroups);
 	}
-	
-	
+
+
 	function unRegisterForEvent($category, $eventName, $featureName, $featureValue, $priority=50)
 	{
 		$priorityGroups=$this->core->get('Events', "$category-$eventName");
 		if (!isset($priorityGroups[$priority])) $priorityGroups[$priority]=array();
-		
+
 		$key=md5("$featureName,$featureValue");
 		if (isset($priorityGroups[$priority][$key]))
 		{
 			unset($priorityGroups[$priority][$key]);
 			$this->debug(3, "Unregistered \"$featureName $featureValue\" from event \"$category, $eventName\" at priority $priority.");
 		}
-		
+
 		$this->core->set('Events', "{$category}-{$eventName}", $priorityGroups);
 	}
-	
+
 	function setPriority($category, $eventName, $featureName, $priority=50)
 	{
 		# TODO Write this. If this becomes relied on a lot, check to see if tasks should actually be part of macros. I envisage priorities being used when something HAS to be done first or last. Eg preparing folders for downloads, or cleaning up afterwards.
 	}
-	
+
 	function triggerEvent($category, $eventName, $value='')
 	{
 		if (!$category and !$eventName) return false;
-		
+
 		$this->core->set('Event', 'details', array(
 			'category' => $category,
 			'eventName' => $eventName,
 			'value' => $value
 			));
-		
+
 		$this->debug(4, "triggerEvent: $category,$eventName");
 		$priorityGroups=$this->core->get('Events', "$category-$eventName");
 		if (is_array($priorityGroups) && count($priorityGroups)>0)
@@ -103,20 +103,20 @@ class Events extends Module
 				if (count($priorityGroup))
 				{
 					$nesting=$this->core->incrementNesting();
-					
+
 					foreach ($priorityGroup as $eventee)
 					{
 						$this->debug(3, "triggerEvent: $category,$eventName: --{$eventee['featureName']}={$eventee['featureValue']}");
-						
+
 						if ($value!='') $valueToSend=($eventee['featureValue'])?$eventee['featureValue'].','.$value:$value;
 						else $valueToSend=$eventee['featureValue'];
-						
+
 						$this->debug(4,"trigger $category, $eventName, v=$valueToSend");
-						
+
 						$result=$this->core->callFeature($eventee['featureName'], $valueToSend);
 						$this->core->setResultSet($result); // This is necessary because the feature being called may rely on it being there.
 					}
-					
+
 					$resultSet=$this->core->getResultSet();
 					$this->core->decrementNesting();
 					return $resultSet;
@@ -125,7 +125,7 @@ class Events extends Module
 				{
 					$this->debug(3, "Removing priority group $priority from event \"$category,$eventName\" as it has no eventees.");
 					unset($priorityGroups['priority']);
-					
+
 					# This is potentially inefficient. But there would have to be a LOT of priority groups for it to matter. If it becomes an issue, set a flag and do it at the end.
 					$this->core->doUnSet(array('Events', "$category-$eventName"));
 				}
@@ -142,10 +142,10 @@ class Events extends Module
 			$this->debug(4, "Event \"$category, $eventName\" triggered, but there were no eventee priority groups. This means there are no registered eventees.");
 			}
 		}
-		
+
 		$this->core->doUnset(array('Event', 'details'));
 	}
-	
+
 	function getKey($category, $eventName, $featureName)
 	{
 		return md5sum("$category, $eventName, $featureName");
@@ -155,5 +155,5 @@ class Events extends Module
 $core=core::assert();
 $events=new Events();
 $core->registerModule($events);
- 
+
 ?>
