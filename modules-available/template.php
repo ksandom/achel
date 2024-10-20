@@ -46,14 +46,14 @@ class Template extends Module
 			case 'templateOut':
 				$this->core->setRef('General', 'outputObject', $this);
 				$this->templateOut=$this->core->get('Global', $event);
-				$this->debug(4, "--templateOut: set \$this->templateOut to {$this->templateOut}.");
+				$this->debug($this->l4, "--templateOut: set \$this->templateOut to {$this->templateOut}.");
 				break;
 			case 'templateToFile':
 				if ($parms=$this->core->interpretParms($this->core->get('Global', $event), 2, 2, true))
 				{
 					$this->core->setRef('General', 'outputObject', $this);
 					$this->templateOut=$parms[0];
-					$this->debug(4, "--templateToFile: set \$this->templateOut to {$this->templateOut}.");
+					$this->debug($this->l4, "--templateToFile: set \$this->templateOut to {$this->templateOut}.");
 					$this->templateToFile($parms[1]);
 				}
 				break;
@@ -61,24 +61,24 @@ class Template extends Module
 				$this->core->setRef('General', 'outputObject', $this);
 				$this->core->setRef('General', 'echoObject', $this);
 				$this->templateOut=$this->core->get('Global', $event);
-				$this->debug(4, "--templateOut: set \$this->templateOut to {$this->templateOut}.");
+				$this->debug($this->l4, "--templateOut: set \$this->templateOut to {$this->templateOut}.");
 				break;
 			case 'noTemplateOut':
 				if (!$this->templateOut)
 				{
 					$this->templateOut=$this->core->get('Global', 'dontset');
-					$this->debug(4, "Disabled --templateOutIfNotSet");
+					$this->debug($this->l4, "Disabled --templateOutIfNotSet");
 				}
 				break;
 			case 'templateOutIfNotSet':
 				if (!$this->templateOut)
 				{
-					$this->debug(4, "--templateOutIfNotSet: \$this->templateOut is {$this->templateOut}.");
+					$this->debug($this->l4, "--templateOutIfNotSet: \$this->templateOut is {$this->templateOut}.");
 					$this->core->setRef('General', 'outputObject', $this);
 					$this->templateOut=$this->core->get('Global', 'templateOutIfNotSet');
-					$this->debug(4, "--templateOutIfNotSet: set \$this->templateOut to {$this->templateOut}.");
+					$this->debug($this->l4, "--templateOutIfNotSet: set \$this->templateOut to {$this->templateOut}.");
 				}
-				else $this->debug(4, "--templateOutIfNotSet: \$this->templateOut has already been set.");
+				else $this->debug($this->l4, "--templateOutIfNotSet: \$this->templateOut has already been set.");
 				break;
 			case 'unsetTemplateOut':
 				$this->templateOut=false;
@@ -139,7 +139,7 @@ class Template extends Module
 		}
 		else
 		{
-			$this->debug(1, "processTemplate: fileName was empty. This is probably intentinoal. If not, check that the variable has been resolved as expected.");
+			$this->debug($this->l1, "processTemplate: fileName was empty. This is probably intentinoal. If not, check that the variable has been resolved as expected.");
 		}
 	}
 
@@ -192,12 +192,12 @@ class Template extends Module
 	function insertResultIntoTemplate($input, $template)
 	{
 		$output='';
-		$this->debug(3, "insertResultIntoTemplate: Entered");
+		$this->debug($this->l3, "insertResultIntoTemplate: Entered");
 		if (is_array($input))
 		{
 			foreach ($input as $key=>$inputLine)
 			{
-				$this->debug(3, "insertResultIntoTemplate: processin key $key");
+				$this->debug($this->l3, "insertResultIntoTemplate: processin key $key");
 				$templateLine=$template;
 				if (is_array($inputLine))
 				{
@@ -205,10 +205,10 @@ class Template extends Module
 					{
 						if ($this->isInsertable($lineValue))
 						{
-							$this->debug(4, "Template: itemKey=$key, lineKey=$lineKey");
+							$this->debug($this->l4, "Template: itemKey=$key, lineKey=$lineKey");
 							$templateLine=implode(strval($lineValue), explode(resultVarBegin."$lineKey".resultVarEnd, $templateLine));
 						}
-						else $this->debug(4, "Template: itemKey=$key, lineKey=$lineKey, inputLine=OBJECT-skipped");
+						else $this->debug($this->l4, "Template: itemKey=$key, lineKey=$lineKey, inputLine=OBJECT-skipped");
 					}
 					$templateLine=implode(strval($key), explode(resultVarBegin."key".resultVarEnd, $templateLine));
 				}
@@ -218,7 +218,7 @@ class Template extends Module
 					{
 						$inputLine='Unstringable object.';
 					}
-					$this->debug(4, "Template: The line is not an array, inputLine=".strval($inputLine));
+					$this->debug($this->l4, "Template: The line is not an array, inputLine=".strval($inputLine));
 					$templateLine=implode(strval($inputLine), explode(resultVarBegin."line".resultVarEnd, $templateLine));
 					$templateLine=implode(strval($key), explode(resultVarBegin."key".resultVarEnd, $templateLine));
 				}
@@ -255,7 +255,7 @@ class Template extends Module
 		$dataOut=$dataIn;
 		if ($remainder)
 		{
-			$this->debug(2, "nestTemplates: Processing remainder $remainder");
+			$this->debug($this->l2, "nestTemplates: Processing remainder $remainder");
 			# TODO debug this. Check input and output.
 			foreach ($dataIn as $key=>$line)
 			{
@@ -264,17 +264,17 @@ class Template extends Module
 					if (isset($line[$input]))
 					{
 						$outputLine=$this->core->callFeatureWithDataset('nestTemplates', $remainder, $line[$input], $autoIndent);
-						$this->debug(2, "nestTemplates: Using input $input $remainder");
+						$this->debug($this->l2, "nestTemplates: Using input $input $remainder");
 					}
 					else
 					{
-						$this->debug(2, "nestTemplates: Input key $input did not exist when trying to process template the remaining part of nestTemplates sequence $remainder.");
+						$this->debug($this->l2, "nestTemplates: Input key $input did not exist when trying to process template the remaining part of nestTemplates sequence $remainder.");
 						$outputLine=false;
 					}
 				}
 				else
 				{
-					$this->debug(2, "nestTemplates: Taking the whole array for $remainder");
+					$this->debug($this->l2, "nestTemplates: Taking the whole array for $remainder");
 					$outputLine=$this->core->callFeatureWithDataset('nestTemplates', $remainder, $line);
 				}
 
@@ -285,7 +285,7 @@ class Template extends Module
 					else $dataOut[$key]=$outputLine[0];
 				}
 			}
-			$this->debug(2, "nestTemplates: Finished remainder $remainder");
+			$this->debug($this->l2, "nestTemplates: Finished remainder $remainder");
 		}
 
 		return $this->processTemplateByName($templateName, $dataOut);
@@ -307,12 +307,12 @@ class Template extends Module
 		if (is_string($output)) $this->core->echoOut("template: Unexpected string=\"$output\"");
 		elseif(strpos($this->templateOut, ',')!==false)
 		{
-			$this->debug(2, "Template->out: Using nestedTemplates: {$this->templateOut}");
+			$this->debug($this->l2, "Template->out: Using nestedTemplates: {$this->templateOut}");
 			$result=$this->core->callFeatureWithDataset('nestTemplates', $this->templateOut, $output);
 		}
 		else
 		{
-			$this->debug(2, "Template->out: Using a single template: {$this->templateOut}");
+			$this->debug($this->l2, "Template->out: Using a single template: {$this->templateOut}");
 			$result=array($this->processTemplateByName($this->templateOut, $output));
 		}
 

@@ -55,7 +55,7 @@ if (defined('achelVersion'))
 }
 else
 {
-  $core->debug(0, "'achelVersion' is not defined, yet it is expected. This miss-match is usually caused when running an old docker install with a new image. You can fix it non-destructively by re-running \`export IMAGE=kjsandom/achel; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash\`. If it's not installed via docker. Try re-installing achel and your application, and raise a bug to let me know here https://github.com/ksandom/achel/issues .");
+  $core->debug($this->l0, "'achelVersion' is not defined, yet it is expected. This miss-match is usually caused when running an old docker install with a new image. You can fix it non-destructively by re-running \`export IMAGE=kjsandom/achel; curl https://raw.githubusercontent.com/ksandom/achel/master/automation/dockerExternal/dumpBins | bash\`. If it's not installed via docker. Try re-installing achel and your application, and raise a bug to let me know here https://github.com/ksandom/achel/issues .");
   $core->set('General', 'achelVersion', 'Version miss-match. Try a re-install.');
   $core->set('General', 'achelHash', 'Version miss-match. Try a re-install.');
 }
@@ -69,7 +69,7 @@ if (file_exists($cacheDir) and $shouldCache)
 }
 elseif ($shouldCache===false)
 {
-	$core->debug(0, "Cache manually disabled. This should only be used for debugging purposes. If you need it for every-day usage, that is a bug. Please report it.");
+	$core->debug($this->l0, "Cache manually disabled. This should only be used for debugging purposes. If you need it for every-day usage, that is a bug. Please report it.");
 	$core->set('General', 'cache', 'false');
 	$core->set('General', 'noCacheReason', 'Manually disabled with '.$firstArg);
 }
@@ -77,7 +77,7 @@ else
 {
 	$core->set('General', 'cache', 'false');
 	$core->set('General', 'noCacheReason', 'Could not find '.$cacheDir.'.');
-	$core->debug(0, "No cache found. A re-install may be required.");
+	$core->debug($this->l0, "No cache found. A re-install may be required.");
 }
 
 include (configDir.'/interfaces/commandLine.php');

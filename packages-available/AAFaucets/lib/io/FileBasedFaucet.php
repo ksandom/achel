@@ -34,7 +34,7 @@ class FileBasedFaucet extends Faucet
 	{
 		if (!$this->inResource)
 		{
-			$this->debug(3, "getResource: No data for class {$this->objectType}. # TODO put some useful info about exactly what instance is generating this error.");
+			$this->debug($this->l3, "getResource: No data for class {$this->objectType}. # TODO put some useful info about exactly what instance is generating this error.");
 			return false;
 		}
 
@@ -49,7 +49,7 @@ class FileBasedFaucet extends Faucet
 		if ($processedInput=$this->processInputBuffer()) return $processedInput;
 		else
 		{
-			$this->debug(4, "processInputBuffer: we have data");
+			$this->debug($this->l4, "processInputBuffer: we have data");
 			if ($this->fileTailHack) fseek($this->inResource, -1);
 			return false;
 		}

@@ -44,7 +44,7 @@ class Exec extends Module
 	
 	function run($line)
 	{ // Run stuff via this function so that it can easily be abstracted out later on.
-		$this->debug(4, "EXEC  $line");
+		$this->debug($this->l4, "EXEC  $line");
 		return `$line`;
 	}
 	

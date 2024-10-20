@@ -19,11 +19,11 @@ class InlineCallFaucet extends ThroughBasedFaucet
 
 	function preGet()
 	{
-		# $this->debug(0, "got here 2");
+		# $this->debug($this->l0, "got here 2");
 		$gotSomething=false;
 		foreach ($this->input as $channel=>$data)
 		{
-			# $this->debug(0, "got here - $channel");
+			# $this->debug($this->l0, "got here - $channel");
 			if (is_array($data))
 			{
 				foreach ($data as $line)
@@ -36,13 +36,13 @@ class InlineCallFaucet extends ThroughBasedFaucet
 						#print_r($tmpReturnedResult);
 						if (is_array($returnedResult)) $this->core->setResultSetNoRef($tmpReturnedResult, __CLASS__." Command={$parts[0]} $parts[1]}");
 						# unset($tmpReturnedResult); // This is needed since setResultSet takes a reference. Therefore the next iteration within the current preGet call overwrites result set regardless of whether we want it to or not.
-						# $this->debug(0, "Result type=".gettype($returnedResult)." count=".count($returnedResult));
+						# $this->debug($this->l0, "Result type=".gettype($returnedResult)." count=".count($returnedResult));
 						$this->clearInput($channel);
 						$gotSomething=true;
 					}
 					else
 					{
-						$this->debug(0, "InlineCallFaucet($objectType)->preGet: Was expecting a string, but got ".gettype($line).". Will ignore this entry. This error is likely to repeat as the whole dataset is probably in thie format.");
+						$this->debug($this->l0, "InlineCallFaucet($objectType)->preGet: Was expecting a string, but got ".gettype($line).". Will ignore this entry. This error is likely to repeat as the whole dataset is probably in thie format.");
 					}
 				}
 			}

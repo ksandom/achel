@@ -87,8 +87,8 @@ class AchelRealityBridge:
 		outCenter = centerMS/divisor*100
 		outMax = maxMS/divisor*100
 		
-		self.debug(2, "frequency " + str(frequency))
-		self.debug(2, "Out range " + str(outMin) + " - " + str(outCenter) + " - " + str(outMax))
+		self.debug($this->l2, "frequency " + str(frequency))
+		self.debug($this->l2, "Out range " + str(outMin) + " - " + str(outCenter) + " - " + str(outMax))
 		
 		# Get a max value if we have it.
 		try:
@@ -111,7 +111,7 @@ class AchelRealityBridge:
 		self.servoOutCenter=outCenter
 		self.servoFrequency=frequency
 		
-		self.debug(2, "In range " + str(inMin) + " - " + str(inMax))
+		self.debug($this->l2, "In range " + str(inMin) + " - " + str(inMax))
 	
 	def registerAllPins(self):
 		try:
@@ -147,7 +147,7 @@ class AchelRealityBridge:
 				'outCenter':outCenter,
 				'outMax':outMax}
 			
-			self.debug(2, 'registering PWM pin ' + strPinID +' as '+str(inputBinding))
+			self.debug($this->l2, 'registering PWM pin ' + strPinID +' as '+str(inputBinding))
 			
 			# TODO Refactor so that it doesn't stamp on previously written values.
 			# TODO add the possibility for a default value.
@@ -174,7 +174,7 @@ class AchelRealityBridge:
 				'state':'active',
 				'defaultValue':defaultValue}
 			
-			self.debug(2, 'registering binary pin ' + strPinID +' as '+str(inputBinding))
+			self.debug($this->l2, 'registering binary pin ' + strPinID +' as '+str(inputBinding))
 			
 			self.inputData[inputBinding]=defaultValue
 			
@@ -200,10 +200,10 @@ class AchelRealityBridge:
 		# Check bounds
 		sanitisedValue=float(value)
 		if sanitisedValue < float(inMin):
-			self.debug(2, "OOB " + str(value) + " < " + str(inMin))
+			self.debug($this->l2, "OOB " + str(value) + " < " + str(inMin))
 			return outMin
 		if sanitisedValue > float(inMax):
-			self.debug(2, "OOB " + str(value) + " > " + str(inMax))
+			self.debug($this->l2, "OOB " + str(value) + " > " + str(inMax))
 			return outMax
 		
 		# Derive scales
@@ -214,7 +214,7 @@ class AchelRealityBridge:
 		finalValue=(sanitisedValue-inMin)/inScale*outScale+outMin
 		
 		debugging=str(finalValue) +"=("+str(value) +"-"+ str(inMin) +")/"+ str(inScale)+ "*" + str(outScale)+ "+" +str(outMin)
-		self.debug(2, debugging)
+		self.debug($this->l2, debugging)
 		
 		return finalValue
 	
@@ -245,7 +245,7 @@ class AchelRealityBridge:
 			return False
 
 	def quit(self, message):
-		self.debug(2, message)
+		self.debug($this->l2, message)
 		try:
 			for pin in self.pins:
 				self.pins[pin]['physicalPin'].stop()
@@ -273,13 +273,13 @@ class AchelRealityBridge:
 						else:
 							failCount=failCount+1
 				else:
-					self.debug(1, "would write pin "+pin+", but currently nutered.")
+					self.debug($this->l1, "would write pin "+pin+", but currently nutered.")
 					nuteredCount=nuteredCount+1
 			except Exception as e:
 				self.exception(e, "setPins. Pin="+pin+" Value="+data[pin])
 				failCount=failCount+1
 		
-		self.debug(3, "Set "+str(changeCount)+" pins. Nutered "+str(nuteredCount)+" pins. Failed to set "+str(failCount)+" pins.")
+		self.debug($this->l3, "Set "+str(changeCount)+" pins. Nutered "+str(nuteredCount)+" pins. Failed to set "+str(failCount)+" pins.")
 	
 	def setPWMPin(self, pin, value):
 		self.debug("3", "Got data")
@@ -323,7 +323,7 @@ class AchelRealityBridge:
 		else:
 			resultValue="false"
 		
-		self.debug(2, "Set nutered to "+resultValue+"("+value+").")
+		self.debug($this->l2, "Set nutered to "+resultValue+"("+value+").")
 	
 	def processLine(self, line):
 		# Get data from line
@@ -340,7 +340,7 @@ class AchelRealityBridge:
 				self.returnData('pong', "0", "", "Returned from requested ping.")
 			elif (data['command'] == "setAllGenericServos"):
 				self.registerAllPins()
-				self.debug(2, "Set all pins to generic PWM based servos.")
+				self.debug($this->l2, "Set all pins to generic PWM based servos.")
 			elif (data['command'] == "setPinGenericServo"):
 				try:
 					self.registerPWMPinDefaults(data['data']['pin'], data['data']['binding'])
@@ -358,7 +358,7 @@ class AchelRealityBridge:
 			elif (data['command'] == "nuter"):
 				self.nuter(data['message'])
 			else:
-				self.debug(0, "Unknown command/a \""+data['command']+"\" - beeeep")
+				self.debug($this->l0, "Unknown command/a \""+data['command']+"\" - beeeep")
 			
 		except ValueError:
 			self.error(1, "notJson", "Recieved data was not decodable as json.")

@@ -50,7 +50,7 @@ class BalancePID extends BalanceAlgorithm
 		// Sanity check data
 		if (!isset($rule['input']['live']['scaledInputGoal']))
 		{
-			$this->debug(1, __CLASS__.'->'.__FUNCTION__.": No input. If we've got here, this shouldn't ever happen.");
+			$this->debug($this->l1, __CLASS__.'->'.__FUNCTION__.": No input. If we've got here, this shouldn't ever happen.");
 			return false;
 		}
 		
@@ -85,7 +85,7 @@ class BalancePID extends BalanceAlgorithm
 		
 		if ($this->state[$rule['ruleName']]['debug'])
 		{
-			# $this->debug(1,"ruleName=$ruleName scaledValue=".$this->state[$ruleName]['value']."(".$rule['input']['live']['value'].") goal=".$this->state[$ruleName]['goal']."(".$rule['input']['live']['goal'].") P=($p*$kP) out=$out");
+			# $this->debug($this->l1,"ruleName=$ruleName scaledValue=".$this->state[$ruleName]['value']."(".$rule['input']['live']['value'].") goal=".$this->state[$ruleName]['goal']."(".$rule['input']['live']['goal'].") P=($p*$kP) out=$out");
 			$r=3;
 			$error=round($this->state[$ruleName]['error'], $r);
 			$errorDirection=$this->state[$ruleName]['errorDirection'];
@@ -101,7 +101,7 @@ class BalancePID extends BalanceAlgorithm
 			$iColour=$this->core->get('Color', 'cyan');
 			$dColour=$this->core->get('Color', 'brightBlue');
 			$default=$this->core->get('Color', 'default');
-			$this->debug(1,"ruleName=$ruleName {$errorColour}error=$error $errorDirection$default {$pColour}p=$rp{$default}*$kP*$iP {$wColour}w=$rw{$default}*$kW*$iW {$iColour}i=$ri{$default}*$kI*$iI {$dColour}d=$rd{$default}*$kD*$iD {$default}combinedValue=$rcv out=$ro");
+			$this->debug($this->l1,"ruleName=$ruleName {$errorColour}error=$error $errorDirection$default {$pColour}p=$rp{$default}*$kP*$iP {$wColour}w=$rw{$default}*$kW*$iW {$iColour}i=$ri{$default}*$kI*$iI {$dColour}d=$rd{$default}*$kD*$iD {$default}combinedValue=$rcv out=$ro");
 		}
 	}
 	

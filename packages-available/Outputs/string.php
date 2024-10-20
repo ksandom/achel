@@ -84,19 +84,19 @@ class AchelString extends Module
 		$readyValue=(is_array($output))?$this->safeImplode($separator, $output).$endChar:$output;
 		if ($filename)
 		{
-			$this->debug(3, "singleStringNow: Sending to $filename");
+			$this->debug($this->l3, "singleStringNow: Sending to $filename");
 			file_put_contents($filename, $readyValue);
 		}
 		else
 		{
-			$this->debug(3, "singleStringNow: Returning value of length ".strlen($readyValue));
+			$this->debug($this->l3, "singleStringNow: Returning value of length ".strlen($readyValue));
 			return array($readyValue);
 		}
 	}
 
 	function out($output)
 	{
-		$this->debug(4, "String: Writing output to {$this->outputFile}");
+		$this->debug($this->l4, "String: Writing output to {$this->outputFile}");
 		$result=$this->singleStringNow($this->outputFile, $output);
 		if (isset($result[0]))
 		{

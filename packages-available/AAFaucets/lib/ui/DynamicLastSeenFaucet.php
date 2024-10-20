@@ -190,8 +190,8 @@ class DynamicLastSeenFaucet extends ThroughBasedFaucet
 					break;
 			}
 		}
-		elseif(is_string($data)) $this->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings but got a string: \"$line\"");
-		else $this->debug(2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but got ".gettype($data));
+		elseif(is_string($data)) $this->debug($this->l2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings but got a string: \"$line\"");
+		else $this->debug($this->l2, __CLASS__.'->'.__FUNCTION__.": Expected an array of strings, but got ".gettype($data));
 	}
 
 	function forgetChannel($channel)
@@ -222,15 +222,15 @@ class DynamicLastSeenFaucet extends ThroughBasedFaucet
 		switch ($feature)
 		{
 			case 'forgetChannel':
-				$this->debug(2, __CLASS__.'->'.__FUNCTION__.": Issueing forget for channel $value.");
+				$this->debug($this->l2, __CLASS__.'->'.__FUNCTION__.": Issueing forget for channel $value.");
 				$this->forgetChannel($value);
 				break;
 			case 'forgetOlderThan':
-				$this->debug(2, __CLASS__.'->'.__FUNCTION__.": Issueing forget for channels older than $value seconds.");
+				$this->debug($this->l2, __CLASS__.'->'.__FUNCTION__.": Issueing forget for channels older than $value seconds.");
 				$this->forgetOlderThan($value);
 				break;
 			case 'forgetAll':
-				$this->debug(2, __CLASS__.'->'.__FUNCTION__.": Issueing forget for all channels.");
+				$this->debug($this->l2, __CLASS__.'->'.__FUNCTION__.": Issueing forget for all channels.");
 				$this->forgetAll();
 				break;
 

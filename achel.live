@@ -46,7 +46,7 @@ $core->set('General', 'exitCode', 0);
 
 
 # Process cache
-$core->debug(1, "Cache manually disabled. This should only be used for debugging purposes. If you need it for every-day usage, that is a bug. Please report it.");
+$core->debug($this->l1, "Cache manually disabled. This should only be used for debugging purposes. If you need it for every-day usage, that is a bug. Please report it.");
 $core->set('General', 'cache', 'false');
 $core->set('General', 'noCacheReason', 'Manually disabled with by using the uncached version of the application.');
 

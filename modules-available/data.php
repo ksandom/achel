@@ -102,7 +102,7 @@ class Data extends Module
 		elseif (file_exists($this->storageDir."/$source/$filename")) $filenameTouse=$this->storageDir."/$filename";
 		else
 		{
-			$this->debug(3, "loadStoreEntry: Could not find $filename.");
+			$this->debug($this->l3, "loadStoreEntry: Could not find $filename.");
 			return false;
 		}
 		
@@ -143,7 +143,7 @@ class Data extends Module
 		
 		if (!file_put_contents($fileName, json_encode($stuffToSave)))
 		{
-			$this->debug(0, "Was unable to save $fileName. Two common causes are permissions and the destination directory not existing. If you previously got a message \"No cache found. A re-install may be required.\" in this output, please re-install.");
+			$this->debug($this->l0, "Was unable to save $fileName. Two common causes are permissions and the destination directory not existing. If you previously got a message \"No cache found. A re-install may be required.\" in this output, please re-install.");
 		}
 	}
 	
@@ -184,12 +184,12 @@ class Data extends Module
 		{
 			if (noConfigIsFatal)
 			{
-				$this->debug(0, "Could not find config. If you don't have anything important in your Achel config, you could simply delete it and re-install. Otherwise a re-install by itself is also likely to work. For debugging purposes, we were looking for config in $configDir.");
+				$this->debug($this->l0, "Could not find config. If you don't have anything important in your Achel config, you could simply delete it and re-install. Otherwise a re-install by itself is also likely to work. For debugging purposes, we were looking for config in $configDir.");
 				die("Chose to gracefully stop.\n");
 			}
 			else
 			{
-				$this->debug(0, "Could not find config. This isn't necessarily fatal, but is unlikely to be good. If you don't have anything important in your Achel config, you could simply delete it and re-install. Otherwise a re-install by itself is also likely to work. For debugging purposes, we were looking for config in $configDir.");
+				$this->debug($this->l0, "Could not find config. This isn't necessarily fatal, but is unlikely to be good. If you don't have anything important in your Achel config, you could simply delete it and re-install. Otherwise a re-install by itself is also likely to work. For debugging purposes, we were looking for config in $configDir.");
 			}
 		}
 	}
@@ -215,7 +215,7 @@ class Data extends Module
 		{
 			if (!unlink($fullPath))
 			{
-				$this->debug(1, "deleteData: Failed to delete \"$fullPath\" with error \"$result\".");
+				$this->debug($this->l1, "deleteData: Failed to delete \"$fullPath\" with error \"$result\".");
 			}
 		}
 	}

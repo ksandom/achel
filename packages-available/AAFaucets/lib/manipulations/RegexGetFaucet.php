@@ -71,19 +71,19 @@ class RegexGetFaucet extends ThroughBasedFaucet
 						{
 							if (!isset($rule['regex']))
 							{
-								$this->debug(2, "RegexGetFaucet->preGet: Missing regex in rule \"$ruleName\".");
+								$this->debug($this->l2, "RegexGetFaucet->preGet: Missing regex in rule \"$ruleName\".");
 								break;
 							}
 							if (!isset($rule['destination']))
 							{
-								$this->debug(2, "RegexGetFaucet->preGet: Missing destination in rule \"$ruleName\".");
+								$this->debug($this->l2, "RegexGetFaucet->preGet: Missing destination in rule \"$ruleName\".");
 								break;
 							}
 
 							$matches=array();
 							if (preg_match('/'.$rule['regex'].'/', $line, $matches))
 							{
-								$this->debug(3, "RegexGetFaucet->preGet: Matched rule \"$ruleName\" on line \"$line\".");
+								$this->debug($this->l3, "RegexGetFaucet->preGet: Matched rule \"$ruleName\" on line \"$line\".");
 								$key=false;
 								$value=false;
 
@@ -91,7 +91,7 @@ class RegexGetFaucet extends ThroughBasedFaucet
 								{
 									if (!isset($rule[$matchKey]))
 									{
-										$this->debug(4, "RegexGetFaucet->preGet: Skipping match $matchKey since there is nothing defined for it in the rule \"$ruleName\".");
+										$this->debug($this->l4, "RegexGetFaucet->preGet: Skipping match $matchKey since there is nothing defined for it in the rule \"$ruleName\".");
 										continue;
 									}
 
@@ -115,18 +115,18 @@ class RegexGetFaucet extends ThroughBasedFaucet
 								{
 									$destination=$rule['destination'].",$channel,$key";
 									$this->core->setNestedViaPath($destination, $value);
-									$this->debug(3, "RegexGetFaucet->preGet: key=\"$key\" value=\"$value\" destination=\"$destination\"");
+									$this->debug($this->l3, "RegexGetFaucet->preGet: key=\"$key\" value=\"$value\" destination=\"$destination\"");
 								}
 							}
 							else
 							{
-								$this->debug(3, "Did not match rule \"$ruleName\" ({$rule['regex']}) on line \"$line\".");
+								$this->debug($this->l3, "Did not match rule \"$ruleName\" ({$rule['regex']}) on line \"$line\".");
 							}
 						}
 					}
 					else
 					{
-						$this->debug(2, "RegexGetFaucet->preGet: Expected line to be a string, but got ".gettype($line));
+						$this->debug($this->l2, "RegexGetFaucet->preGet: Expected line to be a string, but got ".gettype($line));
 					}
 				}
 
@@ -135,7 +135,7 @@ class RegexGetFaucet extends ThroughBasedFaucet
 			}
 			else
 			{
-				$this->debug(2, "RegexGetFaucet->preGet: Expected data to be an array, but got ".gettype($data));
+				$this->debug($this->l2, "RegexGetFaucet->preGet: Expected data to be an array, but got ".gettype($data));
 			}
 		}
 

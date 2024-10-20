@@ -60,7 +60,7 @@ class AtLeast extends ThroughBasedFaucet
 		
 		if ($channel)
 		{
-			$this->debug(2, "AtLeastAndAdd: n=$numberOfRequiredChannels c=$channel v=$value");
+			$this->debug($this->l2, "AtLeastAndAdd: n=$numberOfRequiredChannels c=$channel v=$value");
 			$this->channel=$channel;
 			$this->value=$value;
 		}
@@ -79,7 +79,7 @@ class AtLeast extends ThroughBasedFaucet
 			{
 				if (!is_array($data))
 				{
-					$this->debug(1, __CLASS__.": $channel has not been presented as an array.");
+					$this->debug($this->l1, __CLASS__.": $channel has not been presented as an array.");
 					continue;
 				}
 				
@@ -105,7 +105,7 @@ class AtLeast extends ThroughBasedFaucet
 		
 		if ($gotSomething and $this->channel)
 		{
-			$this->debug(4, "AtLeast: got data count=$channelCount c={$this->channel} v={$this->value}");
+			$this->debug($this->l4, "AtLeast: got data count=$channelCount c={$this->channel} v={$this->value}");
 			$this->outFill($this->value, $this->channel);
 			$gotSomething=true;
 		}

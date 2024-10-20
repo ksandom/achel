@@ -48,7 +48,7 @@ class BasicWeb extends Module
 		if (is_array($obj)) $this->core->setRef('Actions', $argument, $obj);
 		else
 		{
-			$this->debug(0,"Could not find a module to match '$argument'");
+			$this->debug($this->l0,"Could not find a module to match '$argument'");
 		}
 	}
 

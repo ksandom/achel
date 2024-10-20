@@ -316,7 +316,7 @@ class Manipulator extends Module
 		$output=array();
 		if (!is_array($resultSet))
 		{
-			$this->debug(3, __CLASS__.'.'.__FUNCTION__.": resultSet is not an array. I can not do anything with this.");
+			$this->debug($this->l3, __CLASS__.'.'.__FUNCTION__.": resultSet is not an array. I can not do anything with this.");
 			return $resultSet;
 		}
 
@@ -328,7 +328,7 @@ class Manipulator extends Module
 			}
 			else
 			{
-				$this->debug(3, __CLASS__.'.'.__FUNCTION__.": Key \"$key\" is not a string. Just add back in as is.");
+				$this->debug($this->l3, __CLASS__.'.'.__FUNCTION__.": Key \"$key\" is not a string. Just add back in as is.");
 				$output[$key]=$resultItem;
 			}
 		}
@@ -340,7 +340,7 @@ class Manipulator extends Module
 	{
 		if (is_object($search) or is_object($replace)) return $input;
 		$output=implode($replace, explode($search, $input));;
-		$this->debug(4, "replace: Search=$search Replace=$replace Input=\"$input\" Output=\"$output\"");
+		$this->debug($this->l4, "replace: Search=$search Replace=$replace Input=\"$input\" Output=\"$output\"");
 		return $output;
 	}
 
@@ -350,7 +350,7 @@ class Manipulator extends Module
 
 		if (!is_array($input))
 		{
-			$this->debug(3, "Manipulator->toString: Input was not an array. Quite possibly there was no input. Try using --nested to find out what data you are getting at this point.");
+			$this->debug($this->l3, "Manipulator->toString: Input was not an array. Quite possibly there was no input. Try using --nested to find out what data you are getting at this point.");
 			return $input;
 		}
 		foreach ($input as $line)
@@ -391,7 +391,7 @@ class Manipulator extends Module
 			foreach ($input as $key=>$value)
 			{
 				if (!is_array($value)) $outputLine=$this->replace($outputLine, resultVarBegin."$key".resultVarEnd, $value);
-				else $this->debug(4, "processResultVarsInString: value for key $key is an array, so the replace has not been attempted.");
+				else $this->debug($this->l4, "processResultVarsInString: value for key $key is an array, so the replace has not been attempted.");
 			}
 		}
 
@@ -576,7 +576,7 @@ class Manipulator extends Module
 			{
 				if (preg_match('/'.$search.'/', $line))
 				{
-					$this->debug(2, "requireEach: Matched \"$search\" in \"$line\"");
+					$this->debug($this->l2, "requireEach: Matched \"$search\" in \"$line\"");
 					$outputMatch[$key]=$line;
 				}
 				else $outputNoMatch[$key]=$line;
@@ -616,7 +616,7 @@ class Manipulator extends Module
 		{
 			if ($this->core->isVerboseEnough(3))
 			{
-				$this->debug(3, 'requireEach: Matched '.count($outputMatch).". Didn't match ".count($outputNoMatch.". For search $search"));
+				$this->debug($this->l3, 'requireEach: Matched '.count($outputMatch).". Didn't match ".count($outputNoMatch.". For search $search"));
 			}
 			return $this->mixResults($outputMatch, $outputNoMatch, $feature);
 		}
@@ -662,7 +662,7 @@ class Manipulator extends Module
 
 		if ($feature)
 		{
-			$this->debug(3, 'requireEntry: Matched '.count($outputMatch).". Didn't match ".count($outputNoMatch).". For search $neededKey=$neededRegex"); # TODO Optimise this so that the counts are not done if the debugging isn't going to be seen
+			$this->debug($this->l3, 'requireEntry: Matched '.count($outputMatch).". Didn't match ".count($outputNoMatch).". For search $neededKey=$neededRegex"); # TODO Optimise this so that the counts are not done if the debugging isn't going to be seen
 			return $this->mixResults($outputMatch, $outputNoMatch, $feature);
 		}
 		else
@@ -874,13 +874,13 @@ class Manipulator extends Module
 			}
 			else
 			{
-				$this->debug(3, "Manipulator->chooseBasedOn: $inputArrayName was not an array. It's ".gettype($inputArray));
+				$this->debug($this->l3, "Manipulator->chooseBasedOn: $inputArrayName was not an array. It's ".gettype($inputArray));
 				return false;
 			}
 		}
 		else
 		{
-			$this->debug(3, "Manipulator->chooseBasedOn: $inputArrayName did not exist.");
+			$this->debug($this->l3, "Manipulator->chooseBasedOn: $inputArrayName did not exist.");
 			return false;
 		}
 	}
@@ -937,7 +937,7 @@ class Manipulator extends Module
 
 		if (!is_array($resultSet))
 		{
-			$this->debug(1, "Expected an array, but got ".gettype($resultSet).". Here's a stacktrace:");
+			$this->debug($this->l1, "Expected an array, but got ".gettype($resultSet).". Here's a stacktrace:");
 			$this->core->stackTrace();
 			return false;
 		}
@@ -953,7 +953,7 @@ class Manipulator extends Module
 					$key.=(isset($item[$keyPart]))?$sep.$item[$keyPart]:$sep.$oldKey;
 				}
 
-				$this->debug(3, "keyOn: Derived key $key");
+				$this->debug($this->l3, "keyOn: Derived key $key");
 			}
 			else
 			{
@@ -1012,11 +1012,11 @@ class Manipulator extends Module
 		{
 			if (!isset($resultSet[$keys[$half]][$valueName]))
 			{
-				$this->debug(1, "findPoint: Result with key \"{$keys[$half]}\" does not have a value named $valueName. This could be a bug in the macro, or corrupted data.");
+				$this->debug($this->l1, "findPoint: Result with key \"{$keys[$half]}\" does not have a value named $valueName. This could be a bug in the macro, or corrupted data.");
 				$half++;
 				if ($half > $max)
 				{
-					$this->debug(3, "findPoint: half ($half) > max $max, method is $method and there is nowhere left to go.");
+					$this->debug($this->l3, "findPoint: half ($half) > max $max, method is $method and there is nowhere left to go.");
 					return null;
 				}
 				continue;
@@ -1025,7 +1025,7 @@ class Manipulator extends Module
 			$iterationValue=$resultSet[$keys[$half]][$valueName];
 			$maxValue=$resultSet[$keys[$max]][$valueName];
 			$minValue=$resultSet[$keys[$min]][$valueName];
-			$this->debug(3, "findPoint: Iteration $interations min=$min half=$half max=$max");
+			$this->debug($this->l3, "findPoint: Iteration $interations min=$min half=$half max=$max");
 
 			if ($iterationValue == $value and $method == '==') return $half;
 			elseif ($max==$min or $max==$half) # TODO potentially we don't need $max==$min
@@ -1040,18 +1040,18 @@ class Manipulator extends Module
 							$nextIndex=$half+1;
 							if (isset($keys[$nextIndex]))
 							{
-								$this->debug(3, "findPoint: $iterationValue<=$value and method is $method so returning previous value {$keys[$nextIndex]}($nextIndex).");
+								$this->debug($this->l3, "findPoint: $iterationValue<=$value and method is $method so returning previous value {$keys[$nextIndex]}($nextIndex).");
 								return $nextIndex;
 							}
 							else
 							{
-								$this->debug(3, "findPoint: $iterationValue<=$value, method is $method and we don't have anything less to return.");
+								$this->debug($this->l3, "findPoint: $iterationValue<=$value, method is $method and we don't have anything less to return.");
 								return null;
 							}
 						}
 						else
 						{
-							$this->debug(3, "findPoint: Normal exit with method $method and half $half and iterationValue $iterationValue.");
+							$this->debug($this->l3, "findPoint: Normal exit with method $method and half $half and iterationValue $iterationValue.");
 							return $half;
 						}
 					case '<':
@@ -1061,30 +1061,30 @@ class Manipulator extends Module
 							$previousIndex=$half-1;
 							if (isset($keys[$previousIndex]))
 							{
-								$this->debug(3, "findPoint: $iterationValue>=$value and method is $method so returning previous value {$keys[$previousIndex]}($previousIndex).");
+								$this->debug($this->l3, "findPoint: $iterationValue>=$value and method is $method so returning previous value {$keys[$previousIndex]}($previousIndex).");
 								return $previousIndex;
 							}
 							else
 							{
-								$this->debug(3, "findPoint: $iterationValue>=$value, method is $method and we don't have anything less to return.");
+								$this->debug($this->l3, "findPoint: $iterationValue>=$value, method is $method and we don't have anything less to return.");
 								return null;
 							}
 						}
 						else
 						{
-							$this->debug(3, "findPoint: Normal exit with method $method and half $half and iterationValue $iterationValue.");
+							$this->debug($this->l3, "findPoint: Normal exit with method $method and half $half and iterationValue $iterationValue.");
 							return $half;
 						}
 				}
 			}
 			elseif ($iterationValue>$value)
 			{
-				$this->debug(3, "findPoint: ($iterationValue>$value) Set max to $half");
+				$this->debug($this->l3, "findPoint: ($iterationValue>$value) Set max to $half");
 				$max=$half;
 			}
 			else
 			{
-				$this->debug(3, "findPoint: (else) Set min to $half");
+				$this->debug($this->l3, "findPoint: (else) Set min to $half");
 				$min=$half;
 			}
 
@@ -1093,7 +1093,7 @@ class Manipulator extends Module
 			else $half=$max;
 			$interations++;
 		}
-		$this->debug(2, "findPoint: Finished having done $interations iterations.");
+		$this->debug($this->l2, "findPoint: Finished having done $interations iterations.");
 		return $half;
 	}
 
@@ -1111,7 +1111,7 @@ class Manipulator extends Module
 				$end='stop';
 				$ending='stopping';
 			}
-			$this->debug(3, "getRange: $end is false. This suggests that a valid $ending point was not found. This is completely healthy if findPoint was unable to find a point that fullfilled the request (ie no results for the search).");
+			$this->debug($this->l3, "getRange: $end is false. This suggests that a valid $ending point was not found. This is completely healthy if findPoint was unable to find a point that fullfilled the request (ie no results for the search).");
 			return array();
 		}
 		if (!is_array($resultSet)) return $resultSet;
@@ -1119,12 +1119,12 @@ class Manipulator extends Module
 		if ($stop=='' and !is_numeric($stop))
 		{
 			$stop=count($resultSet)-1;
-			$this->debug(3, "getRange: Guessed absent stop value to be $stop.");
+			$this->debug($this->l3, "getRange: Guessed absent stop value to be $stop.");
 		}
 
 		$keys=array_keys($resultSet);
 		$output=array();
-		$this->debug(3, "getRange(---, $start, $stop)");
+		$this->debug($this->l3, "getRange(---, $start, $stop)");
 
 		if (count($resultSet))
 		{
@@ -1139,7 +1139,7 @@ class Manipulator extends Module
 
 	function lessThan($resultSet, $valueName, $value)
 	{
-		$this->debug(3, "lessThan(---, $valueName, $value)");
+		$this->debug($this->l3, "lessThan(---, $valueName, $value)");
 		$point=$this->findPoint($resultSet, '<', $valueName, $value);
 		$range=$this->getRange($resultSet, 0, $point);
 		return $range;
@@ -1147,7 +1147,7 @@ class Manipulator extends Module
 
 	function greaterThan($resultSet, $valueName, $value)
 	{
-		$this->debug(3, "greaterThan(---, $valueName, $value)");
+		$this->debug($this->l3, "greaterThan(---, $valueName, $value)");
 		$point=$this->findPoint($resultSet, '>', $valueName, $value);
 		$range=$this->getRange($resultSet, $point, false);
 		return $range;
@@ -1155,7 +1155,7 @@ class Manipulator extends Module
 
 	function between($resultSet, $valueName, $smallValue, $largeValue)
 	{
-		$this->debug(3, "between(---, $valueName, $smallValue, $largeValue)");
+		$this->debug($this->l3, "between(---, $valueName, $smallValue, $largeValue)");
 		$startPoint=$this->findPoint($resultSet, '>', $valueName, $smallValue);
 		$stopPoint=$this->findPoint($resultSet, '<', $valueName, $largeValue);
 		$range=$this->getRange($resultSet, $startPoint, $stopPoint);

@@ -2,7 +2,7 @@
 # Copyright (c) 2012-2023, Kevin Sandom under the GPL License. See LICENSE for full details.
 # Keeps track of our perspective on the setup.
 
-class FaucetEnvironment
+class FaucetEnvironment extends BasicFunctionality
 {
 	# The environment for containing everything.
 	private static $environment=null;
@@ -51,7 +51,7 @@ class FaucetEnvironment
 		$this->core->set("ScopedEvent", "topic", $faucetTopicPath);
 		$this->scopeNumber++;
 
-		$this->debug(3, "beginScopedEvent: ".$this->currentFaucet->getFullPath());
+		$this->debug($this->l3, "beginScopedEvent: ".$this->currentFaucet->getFullPath());
 	}
 
 	function endScopedEvent()
@@ -62,11 +62,11 @@ class FaucetEnvironment
 			$this->currentFaucet=&$this->scopeTracker[$this->scopeNumber]['faucet'];
 			$this->core->setRef('Achel','currentFaucet', $this->currentFaucet);
 			$this->core->set("ScopedEvent", "topic", $this->scopeTracker[$this->scopeNumber]['topic']);
-			$this->debug(3, "endScopedEvent: ".$this->currentFaucet->getFullPath());
+			$this->debug($this->l3, "endScopedEvent: ".$this->currentFaucet->getFullPath());
 		}
 		else
 		{
-			$this->debug(0, "Environment/endScopedEvent - No more scope nestings. This is a bug.");
+			$this->debug($this->l0, "Environment/endScopedEvent - No more scope nestings. This is a bug.");
 		}
 	}
 

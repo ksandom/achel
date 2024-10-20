@@ -72,7 +72,7 @@ class Timer extends Module
 	function createTimer($name, $delay=100000)
 	{
 		$timers=$this->core->get('Timer', 'timers');
-		$this->debug(2, "createTimer: Adding timer $name");
+		$this->debug($this->l2, "createTimer: Adding timer $name");
 		$timers[$name]=$delay/delayBase;
 		$this->timerState[$name]=microtime(true);
 		$this->core->set('Timer', 'timers', $timers);
@@ -82,7 +82,7 @@ class Timer extends Module
 	function deleteTimer($name)
 	{
 		$timers=$this->core->get('Timer', 'timers');
-		$this->debug(2, "deleteTimer: Deleting timer $name");
+		$this->debug($this->l2, "deleteTimer: Deleting timer $name");
 		unset($timers[$name]);
 		unset($this->timerState[$name]);
 		$this->core->set('Timer', 'timers', $timers);
@@ -91,21 +91,21 @@ class Timer extends Module
 	
 	function loadTimers()
 	{
-		$this->debug(3, "loadTimers: Loaded/reloaded timers");
+		$this->debug($this->l3, "loadTimers: Loaded/reloaded timers");
 		$this->timers=&$this->core->get('Timer', 'timers');
 		
 		foreach ($this->timers as $name=>$delay)
 		{
-			$this->debug(3, "loadTimers:   $name: $delay");
+			$this->debug($this->l3, "loadTimers:   $name: $delay");
 		}
 		
-		$this->debug(3, "loadTimers: Mainloop timer intervals");
+		$this->debug($this->l3, "loadTimers: Mainloop timer intervals");
 		$this->intervals=$this->core->get('Timer', 'intervals');
 		$this->intervalMax=count($this->intervals)-1;
 		
 		foreach ($this->intervals as $pos=>$interval)
 		{
-			$this->debug(3, "loadTimers:   $pos: $interval");
+			$this->debug($this->l3, "loadTimers:   $pos: $interval");
 		}
 	}
 	
@@ -115,20 +115,20 @@ class Timer extends Module
 		
 		if (!is_array($this->timers) or count($this->timers)<1)
 		{
-			$this->debug(1, "mainLoop: No timers created. If the mainLoop was allowed to start, it would be an uncontrollable infinite loop with no purpose.");
+			$this->debug($this->l1, "mainLoop: No timers created. If the mainLoop was allowed to start, it would be an uncontrollable infinite loop with no purpose.");
 			return false;
 		}
 		
 		if ($this->mainLoopRunning)
 		{
-			$this->debug(1, "mainLoop: The main loop has already been started. Allowing it to be started a second time could do baAaAaAad things!");
+			$this->debug($this->l1, "mainLoop: The main loop has already been started. Allowing it to be started a second time could do baAaAaAad things!");
 			return false;
 		}
 		
 		$intervalPos=0;
 		
 		$this->mainLoopRunning=true;
-		$this->debug(2, "mainLoop: Entering the loop.");
+		$this->debug($this->l2, "mainLoop: Entering the loop.");
 		while ($this->mainLoopRunning)
 		{
 			$numberOfTimers=count($this->timers);
@@ -163,7 +163,7 @@ class Timer extends Module
 	function stopMainLoop()
 	{
 		$this->mainLoopRunning=false;
-		$this->debug(2, "stopMainLoop: Issued stop.");
+		$this->debug($this->l2, "stopMainLoop: Issued stop.");
 	}
 }
 

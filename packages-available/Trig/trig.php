@@ -37,14 +37,14 @@ class Trig extends Module
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
 					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], sin($parms[2]));
-					else $this->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
+					else $this->debug($this->l0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 			case 'asin':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
 					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], asin($parms[2]));
-					else $this->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
+					else $this->debug($this->l0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 
@@ -52,14 +52,14 @@ class Trig extends Module
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
 					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], cos($parms[2]));
-					else $this->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
+					else $this->debug($this->l0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 			case 'acos':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
 					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], acos($parms[2]));
-					else $this->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
+					else $this->debug($this->l0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 
@@ -67,14 +67,14 @@ class Trig extends Module
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
 					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], tan($parms[2]));
-					else $this->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
+					else $this->debug($this->l0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 			case 'atan':
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
 					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], atan($parms[2]));
-					else $this->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
+					else $this->debug($this->l0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 
@@ -84,7 +84,7 @@ class Trig extends Module
 					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], rad2deg($parms[2]));
 					else
 					{
-						$this->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
+						$this->debug($this->l0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 						#$this->core->stackTrace();
 					}
 				}
@@ -93,7 +93,7 @@ class Trig extends Module
 				if ($parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3))
 				{
 					if (is_numeric($parms[2])) $this->core->set($parms[0], $parms[1], deg2rad($parms[2]));
-					else $this->debug(0, "$event: Expected a number but got this value \"{$parms[2]}\"");
+					else $this->debug($this->l0, "$event: Expected a number but got this value \"{$parms[2]}\"");
 				}
 				break;
 
