@@ -129,7 +129,7 @@ class core extends Module
 				$this->registerFeature($this, array('#'), '#', 'Comment.', array('systemInternal'));
 				$this->registerFeature($this, array('pass'), 'pass', "It's a place holder meaning that you will not get a message like \"Could not find macro 'default'. This can happen if you haven't asked me to do anything.\"", array('systemInternal'));
 				$this->registerFeature($this, array('	'), '	', 'Internally used for nesting.', array('systemInternal'));
-				$this->registerFeature($this, array('debugModule'), 'debugModule', 'Turn on all of the debugging for a specific module. --debugModule=ModuleName[,reset] eg --debugModule=Events would turn up the debugging, and --debugModule=Events,reset would set it back to normal.', array());
+				$this->registerFeature($this, array('debugModule'), 'debugModule', 'Turn on all of the debugging for a specific module. --debugModule=ModuleName[,reset] eg --debugModule=Events would turn up the debugging, and --debugModule=Events,reset would set it back to normal. You can see which modules are available with --getCategory=Modules .', array());
 				break;
 			case 'followup':
 				break;
