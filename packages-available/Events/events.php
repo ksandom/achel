@@ -59,7 +59,7 @@ class Events extends Module
 		if ($onlyOnce) $priorityGroups[$priority][md5("$featureName,$featureValue")]=$newValue;
 		else $priorityGroups[$priority][]=$newValue;
 
-		$this->debug($this->l3, "Registered \"$featureName $featureValue\" to event \"$category, $eventName\" at priority $priority.");
+		$this->debug($this->l3, "Registered \"$featureName $featureValue\" to event \"$category,$eventName\" at priority $priority.");
 		$this->core->set('Events', "$category-$eventName", $priorityGroups);
 	}
 
@@ -73,7 +73,7 @@ class Events extends Module
 		if (isset($priorityGroups[$priority][$key]))
 		{
 			unset($priorityGroups[$priority][$key]);
-			$this->debug($this->l3, "Unregistered \"$featureName $featureValue\" from event \"$category, $eventName\" at priority $priority.");
+			$this->debug($this->l3, "Unregistered \"$featureName $featureValue\" from event \"$category,$eventName\" at priority $priority.");
 		}
 
 		$this->core->set('Events', "{$category}-{$eventName}", $priorityGroups);
@@ -106,12 +106,12 @@ class Events extends Module
 
 					foreach ($priorityGroup as $eventee)
 					{
-						$this->debug($this->l3, "triggerEvent: $category,$eventName: --{$eventee['featureName']}={$eventee['featureValue']}");
+						# $this->debug($this->l3, "triggerEvent: $category,$eventName: --{$eventee['featureName']}={$eventee['featureValue']}");
 
 						if ($value!='') $valueToSend=($eventee['featureValue'])?$eventee['featureValue'].','.$value:$value;
 						else $valueToSend=$eventee['featureValue'];
 
-						$this->debug($this->l4,"trigger $category, $eventName, v=$valueToSend");
+						$this->debug($this->l4,"  $category,$eventName:  {$eventee['featureName']} $valueToSend");
 
 						$result=$this->core->callFeature($eventee['featureName'], $valueToSend);
 						$this->core->setResultSet($result); // This is necessary because the feature being called may rely on it being there.
@@ -135,11 +135,11 @@ class Events extends Module
 		{
 			if (is_array($priorityGroups))
 			{
-				$this->debug($this->l4, "Event \"$category, $eventName\" triggered, but there were no eventee priority groups. This means there are no registered eventees.");
+				$this->debug($this->l4, "  Event \"$category,$eventName\" triggered, but there were no eventee priority groups. This means there are no registered eventees.");
 			}
 			else
 			{
-			$this->debug($this->l4, "Event \"$category, $eventName\" triggered, but there were no eventee priority groups. This means there are no registered eventees.");
+				$this->debug($this->l4, "  Event \"$category,$eventName\" triggered, but there were no eventee priority groups. This means there are no registered eventees.");
 			}
 		}
 
