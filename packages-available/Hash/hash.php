@@ -55,7 +55,7 @@ class AchelHash extends Module
 			{
 				$item[$outputValueName]=abs(crc32($item[$inputValueName]));
 			}
-			else $this->debug(3, __CLASS__."->crc(<dataset>, $inputValueName, $outputValueName): Inputvalue $inputValueName did not exist in row with key $key.");
+			else $this->debug($this->l3, __CLASS__."->crc(<dataset>, $inputValueName, $outputValueName): Inputvalue $inputValueName did not exist in row with key $key.");
 		}
 		
 		return $resultSet;

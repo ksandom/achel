@@ -36,7 +36,7 @@ class ThroughFaucet extends ThroughBasedFaucet
 			{
 				if (count($this->input[$channel])>0)
 				{
-					$this->debug(1, "The 2WayThroughFaucet does not accept input for channels other than \"default\" and \"inside\". Data was recieved on channel \"$channel\". This will not cause a fatal error, but it certainly indicates a bug in the code you are running.");
+					$this->debug($this->l1, "The 2WayThroughFaucet does not accept input for channels other than \"default\" and \"inside\". Data was recieved on channel \"$channel\". This will not cause a fatal error, but it certainly indicates a bug in the code you are running.");
 					$this->clearInput('inside');
 				}
 			}

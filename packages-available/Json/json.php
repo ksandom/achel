@@ -64,7 +64,7 @@ class JsonGeneral extends Module
 			}
 			else
 			{
-				$this->debug(1, "unJsonify expected a string. Got $type. If it was represented in json, it would look like ".json_encode($value).". Note that this is just a representation of the data recieved.");
+				$this->debug($this->l1, "unJsonify expected a string. Got $type. If it was represented in json, it would look like ".json_encode($value).". Note that this is just a representation of the data recieved.");
 			}
 		}
 		
@@ -76,7 +76,7 @@ class JsonGeneral extends Module
 		$output=array();
 		if (!is_array($resultSet))
 		{
-			$this->debug(2, "toJson: resultSet is not an array. Returning nothing.");
+			$this->debug($this->l2, "toJson: resultSet is not an array. Returning nothing.");
 		}
 		else
 		{
@@ -93,7 +93,7 @@ class JsonGeneral extends Module
 		$output=array();
 		if (!is_array($resultSet))
 		{
-			$this->debug(2, "fromJson: resultSet is not an array. Returning nothing.");
+			$this->debug($this->l2, "fromJson: resultSet is not an array. Returning nothing.");
 		}
 		else
 		{
@@ -105,7 +105,7 @@ class JsonGeneral extends Module
 				}
 				else
 				{
-					$this->debug(2, "fromJson: Skipped line that was not a string.");
+					$this->debug($this->l2, "fromJson: Skipped line that was not a string.");
 				}
 			}
 		}

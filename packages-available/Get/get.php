@@ -53,13 +53,13 @@ class GetThing extends Module
 		{
 			if (!isset($line[$hostField]))
 			{ 
-				$this->debug(3, "Get->get: No IP set. Is this a really host record? Skipping this record.");
+				$this->debug($this->l3, "Get->get: No IP set. Is this a really host record? Skipping this record.");
 				continue;
 			}
 			
 			if (!isset($line[$indexField]))
 			{ 
-				$this->debug(3, "Get->get: No $indexField set, which was requested to be used as the indexField. Skipping this record.");
+				$this->debug($this->l3, "Get->get: No $indexField set, which was requested to be used as the indexField. Skipping this record.");
 				continue;
 			}
 			
@@ -89,21 +89,21 @@ class GetThing extends Module
 				if (is_string($input)) $output[$line[$indexField]][$resultField].=$input;
 				else
 				{
-					$this->debug(2, "getThing: Finished with {$line[$indexField]}. Closing now.");
+					$this->debug($this->l2, "getThing: Finished with {$line[$indexField]}. Closing now.");
 					$this->closeConnection($line[$indexField]);
 				}
 			}
 		}
-		$this->debug(1, "getThing: Exited from all downloads.");
+		$this->debug($this->l1, "getThing: Exited from all downloads.");
 		
 		// Close connections
 		foreach ($data as $line)
 		{
 			$this->closeConnection($line[$indexField]);
-			$this->debug(2, "getThing: Closing connection for {$line[$indexField]}");
+			$this->debug($this->l2, "getThing: Closing connection for {$line[$indexField]}");
 		}
 		
-		$this->debug(1, "getThing: Finished.");
+		$this->debug($this->l1, "getThing: Finished.");
 		
 		return $output;
 	}
@@ -117,7 +117,7 @@ class GetThing extends Module
 		else
 		{
 			unset($this->connections[$index]);
-			$this->debug(3, "openConnection: Could not connect to $host$uri.");
+			$this->debug($this->l3, "openConnection: Could not connect to $host$uri.");
 		}
 	}
 	
@@ -128,17 +128,17 @@ class GetThing extends Module
 			$input=fgets($this->connections[$index], 8192);
 			if (is_string($input))
 			{
-				$this->debug(3, "getFromConnection: Got something from $index.");
+				$this->debug($this->l3, "getFromConnection: Got something from $index.");
 				return $input;
 			}
 			else
 			{
-				$this->debug(3, "getFromConnection: Got something that wasn't a string (".gettype($input)."). Closing $index.");
+				$this->debug($this->l3, "getFromConnection: Got something that wasn't a string (".gettype($input)."). Closing $index.");
 				$this->closeConnection($index);
 				return false;
 			}
 		}
-		$this->debug(3, "getFromConnection: $index is not open.");
+		$this->debug($this->l3, "getFromConnection: $index is not open.");
 		return false;
 	}
 	

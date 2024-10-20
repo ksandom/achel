@@ -188,7 +188,7 @@ class BalanceVectorAlgorithm extends BalanceAlgorithm
 		$rule['output']['live']['lastAction']='calculateSeed';
 		if (!isset($rule['input']['live']['vector']['ABSDifference']))
 		{
-			$this->debug(1, __CLASS__.'->'.__FUNCTION__.": ABSDifference not ready. Can not calculate seed yet.");
+			$this->debug($this->l1, __CLASS__.'->'.__FUNCTION__.": ABSDifference not ready. Can not calculate seed yet.");
 			
 			# NOTE if the incrementor ever gets numerical actions taken on it, this line will need to be amended.
 			$rule['output']['live']['incrementor']='not ready';
@@ -198,13 +198,13 @@ class BalanceVectorAlgorithm extends BalanceAlgorithm
 		if ($rule['input']['live']['vector']['ABSDifference'])
 		{
 			$offCourseIndex=$rule['input']['live']['vector']['ABSDifference']/$rule['input']['range'];
-			$this->debug(3, __CLASS__.'->'.__FUNCTION__.": Set offCourseIndex to $offCourseIndex.");
+			$this->debug($this->l3, __CLASS__.'->'.__FUNCTION__.": Set offCourseIndex to $offCourseIndex.");
 		}
 		else
 		{
 			// This is a guestimated value
 			$offCourseIndex=0.01;
-			$this->debug(2, __CLASS__.'->'.__FUNCTION__.": Guesstimated offCourseIndex at $offCourseIndex.");
+			$this->debug($this->l2, __CLASS__.'->'.__FUNCTION__.": Guesstimated offCourseIndex at $offCourseIndex.");
 		}
 		
 		if ($rule['input']['live']['vector']['direction']==1)

@@ -36,7 +36,7 @@ class Maths extends Module
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 4, 4);
 				if (!is_numeric($parms[2]))
 				{
-					$this->debug(1, "round ({$parms[0]},{$parms[1]}): Was expecting a number. Got \"{$parms[2]}\"");
+					$this->debug($this->l1, "round ({$parms[0]},{$parms[1]}): Was expecting a number. Got \"{$parms[2]}\"");
 					break;
 				}
 				$this->core->set($parms[0], $parms[1], round($parms[2], $parms[3]));
@@ -45,7 +45,7 @@ class Maths extends Module
 				$parms=$this->core->interpretParms($originalParms=$this->core->get('Global', $event), 3, 3);
 				if (!is_numeric($parms[2]))
 				{
-					$this->debug(1, "absolute ({$parms[0]},{$parms[1]}): Was expecting a number. Got \"{$parms[2]}\"");
+					$this->debug($this->l1, "absolute ({$parms[0]},{$parms[1]}): Was expecting a number. Got \"{$parms[2]}\"");
 					break;
 				}
 				$this->core->set($parms[0], $parms[1], abs($parms[2]));
@@ -70,7 +70,7 @@ class Maths extends Module
 				if ( $this->sanitise($value2, $context)!=0) return $this->sanitise($value1, $context)/$this->sanitise($value2, $context);
 				else
 				{
-					$this->debug(1, "Divide by zero in $value1,$operator,$value2 . Returning false.");
+					$this->debug($this->l1, "Divide by zero in $value1,$operator,$value2 . Returning false.");
 					return false;
 				}
 				break;
@@ -78,7 +78,7 @@ class Maths extends Module
 				if ( $this->sanitise($value2, $context)!=0) return $this->sanitise($value1, $context)/$this->sanitise($value2, $context);
 				else
 				{
-					$this->debug(3, "Divide by zero in $value1,$operator,$value2 . Returning false since /! was specified.");
+					$this->debug($this->l3, "Divide by zero in $value1,$operator,$value2 . Returning false since /! was specified.");
 					return false;
 				}
 				break;
@@ -86,7 +86,7 @@ class Maths extends Module
 				if ( $this->sanitise($value2, $context)!=0) return $this->sanitise($value1, $context)/$this->sanitise($value2, $context);
 				else
 				{
-					$this->debug(3, "Divide by zero in $value1,$operator,$value2 . Assuming value2($value2) since the operator was />.");
+					$this->debug($this->l3, "Divide by zero in $value1,$operator,$value2 . Assuming value2($value2) since the operator was />.");
 					return $this->sanitise($value2, $context);
 				}
 				break;
@@ -94,7 +94,7 @@ class Maths extends Module
 				if ($value2!=0) return $this->sanitise($value1, $context)/$this->sanitise($value2, $context);
 				else
 				{
-					$this->debug(3, "Divide by zero in $value1,$operator,$value2 . Assuming value1($value1) since the operator was /<.");
+					$this->debug($this->l3, "Divide by zero in $value1,$operator,$value2 . Assuming value1($value1) since the operator was /<.");
 					return $this->sanitise($value1, $context);
 				}
 				break;

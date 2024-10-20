@@ -44,7 +44,7 @@ class GoogleProvisioningAPI extends Module
 					$this->email=$parms[1];
 					$this->password=$parms[2];
 				}
-				else $this->debug(1, "GPAPISetCred: Insufficient parameters?");
+				else $this->debug($this->l1, "GPAPISetCred: Insufficient parameters?");
 				break;
 			case 'GPAPIGetUserToResultSet':
 				return $this->getAllUsers($this->core->get('Global', $event));
@@ -81,7 +81,7 @@ class GoogleProvisioningAPI extends Module
 		if ($this->email and $this->password and $this->domain) return true;
 		else
 		{
-			$this->debug(1, "GoogleProvisioningAPI->assertCredentials: We don't have any credentials.");
+			$this->debug($this->l1, "GoogleProvisioningAPI->assertCredentials: We don't have any credentials.");
 		}
 	}
 	
@@ -101,7 +101,7 @@ class GoogleProvisioningAPI extends Module
 		}
 		else
 		{
-			$this->debug(1, "GoogleProvisioningAPI->assertLogin: Was unable to log in.");
+			$this->debug($this->l1, "GoogleProvisioningAPI->assertLogin: Was unable to log in.");
 			return false;
 		}
 	}
@@ -116,7 +116,7 @@ class GoogleProvisioningAPI extends Module
 		
 		foreach (array('Zend_Gdata_ClientLogin', 'Zend_Gdata_Gapps') as $className)
 		{
-			$this->debug(2, "GoogleProvisioningAPI->assertLibrary: Loading $className");
+			$this->debug($this->l2, "GoogleProvisioningAPI->assertLibrary: Loading $className");
 			//if (!class_exists($className)) Zend_Loader::loadClass($className);
 			
 			$parts=explode('_', $className);
@@ -125,7 +125,7 @@ class GoogleProvisioningAPI extends Module
 			if (!class_exists($className)) include_once "$prefix/$fileName";
 			if (!class_exists($className))
 			{
-				$this->debug(1, "GoogleProvisioningAPI->assertLibrary: Failed to load $className.");
+				$this->debug($this->l1, "GoogleProvisioningAPI->assertLibrary: Failed to load $className.");
 				$result=false;
 			}
 		}

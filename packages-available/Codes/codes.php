@@ -148,7 +148,7 @@ class Codes extends Module
 							{
 								$this->core->set('Color', "$withBGKey", $bgColorCode);
 							}
-							#$this->debug(0, "d=$deckKey bg=$bgColorKey fg=$colorKey");
+							#$this->debug($this->l0, "d=$deckKey bg=$bgColorKey fg=$colorKey");
 						}
 					}
 				}

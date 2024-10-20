@@ -247,12 +247,12 @@ class Faucets extends Module
 	{
 		if ($faucet=&$this->environment->currentFaucet->getFaucet($faucetName))
 		{
-			$this->debug(2, "setFaucetAs: Putting Faucet \"$faucetName\" into $category,$valueName");
+			$this->debug($this->l2, "setFaucetAs: Putting Faucet \"$faucetName\" into $category,$valueName");
 			$this->core->setRef($category, $valueName, $faucet['object']);
 		}
 		else
 		{
-			$this->debug(2, "setFaucetAs: Could not find a faucet named \"$faucetName\".");
+			$this->debug($this->l2, "setFaucetAs: Could not find a faucet named \"$faucetName\".");
 		}
 	}
 
@@ -268,7 +268,7 @@ class Faucets extends Module
 		}
 		else
 		{
-			$this->debug(0, __CLASS__.'->'.__FUNCTION__.': '.$this->environment->currentFaucet->getFullPath());
+			$this->debug($this->l0, __CLASS__.'->'.__FUNCTION__.': '.$this->environment->currentFaucet->getFullPath());
 		}
 	}
 
@@ -308,7 +308,7 @@ class Faucets extends Module
 					}
 					else
 					{
-						$this->debug(1, "Can not .. beyond root.");
+						$this->debug($this->l1, "Can not .. beyond root.");
 					}
 					break;
 				default:
@@ -335,7 +335,7 @@ class Faucets extends Module
 	{
 		if ($imposter=$this->core->get('FaucetCatalog', $faucetName))
 		{
-			$this->debug(1, __CLASS__.'->'.__FUNCTION__.": $faucetName already exists with description \"{$imposter['description']}\", source is \"$source\" and it's from package \"{$imposter['package']}\". This is certainly a bug between the package \"$package\" and \"{$imposter['package']}\"");
+			$this->debug($this->l1, __CLASS__.'->'.__FUNCTION__.": $faucetName already exists with description \"{$imposter['description']}\", source is \"$source\" and it's from package \"{$imposter['package']}\". This is certainly a bug between the package \"$package\" and \"{$imposter['package']}\"");
 			return false;
 		}
 

@@ -49,7 +49,7 @@ class ReplaceFaucet extends ThroughBasedFaucet
 					}
 					else
 					{
-						$this->debug(2, "ReplaceFaucet->preGet: Expected line to be a string, but got ".gettype($line));
+						$this->debug($this->l2, "ReplaceFaucet->preGet: Expected line to be a string, but got ".gettype($line));
 					}
 				}
 
@@ -59,7 +59,7 @@ class ReplaceFaucet extends ThroughBasedFaucet
 			}
 			else
 			{
-				$this->debug(2, "ReplaceFaucet->preGet: Expected data to be an array, but got ".gettype($data));
+				$this->debug($this->l2, "ReplaceFaucet->preGet: Expected data to be an array, but got ".gettype($data));
 			}
 		}
 

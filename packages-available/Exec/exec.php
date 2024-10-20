@@ -35,16 +35,16 @@ class ExExec extends Module
 		# Sanity checks
 		if (!$command)
 		{
-			$this->debug(1,"runAndReturn(\"$command\") got no command.");
+			$this->debug($this->l1,"runAndReturn(\"$command\") got no command.");
 			return false;
 		}
 		
-		$this->debug(3,"Running runAndReturn(\"$command\")");
+		$this->debug($this->l3,"Running runAndReturn(\"$command\")");
 		$output=`$command`;
 		
 		if (strlen($output)==0)
 		{
-			$this->debug(2,"runAndReturn(\"$command\") got no output.");
+			$this->debug($this->l2,"runAndReturn(\"$command\") got no output.");
 			return false;
 		}
 		

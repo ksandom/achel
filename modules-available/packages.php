@@ -67,7 +67,7 @@ class Packages extends Module
 			}
 			else
 			{
-				$this->debug(0, "Failed to load package $packageName . This is usually caused by a previously installed package that no longer exists. You can usually just remove the symlink, and everything will be fine.");
+				$this->debug($this->l0, "Failed to load package $packageName . This is usually caused by a previously installed package that no longer exists. You can usually just remove the symlink, and everything will be fine.");
 			}
 		}
 		else
@@ -88,21 +88,21 @@ class Packages extends Module
 			switch ($filenameParts[$lastPos])
 			{
 				case 'md':
-					#$this->debug(0, "loadPackage: $filename Documentation should be in it's packages /doc folder.");
+					#$this->debug($this->l0, "loadPackage: $filename Documentation should be in it's packages /doc folder.");
 					break;
 				case 'php':
 				case 'module':
-					#$this->debug(0, "loadPackage: $filename Module. ($fullPath)");
+					#$this->debug($this->l0, "loadPackage: $filename Module. ($fullPath)");
 					loadModules($this->core, $fullPath, false);
 					break;
 				case 'achel':
 				case 'macro':
-					#$this->debug(0, "loadPackage: $filename Macro.");
+					#$this->debug($this->l0, "loadPackage: $filename Macro.");
 					$this->core->addItemsToAnArray('Core', 'macrosToLoad', array($filename=>$fullPath));
 					$this->core->addItemsToAnArray('Core', 'macroPackages', array($filenameParts[0]=>$this->getProfileName($packageName)));
 					break;
 				case 'template':
-					#$this->debug(0, "loadPackage: $filename Template.");
+					#$this->debug($this->l0, "loadPackage: $filename Template.");
 					$this->core->addItemsToAnArray('Core', 'templatesToLoad', array($filename=>$fullPath));
 					break;
 			}
