@@ -129,6 +129,7 @@ class core extends Module
 				$this->registerFeature($this, array('#'), '#', 'Comment.', array('systemInternal'));
 				$this->registerFeature($this, array('pass'), 'pass', "It's a place holder meaning that you will not get a message like \"Could not find macro 'default'. This can happen if you haven't asked me to do anything.\"", array('systemInternal'));
 				$this->registerFeature($this, array('	'), '	', 'Internally used for nesting.', array('systemInternal'));
+				$this->registerFeature($this, array('debugModule'), 'debugModule', 'Turn on all of the debugging for a specific module. --debugModule=ModuleName[,reset] eg --debugModule=Events would turn up the debugging, and --debugModule=Events,reset would set it back to normal.', array());
 				break;
 			case 'followup':
 				break;
@@ -220,7 +221,7 @@ class core extends Module
 				$originalParms=$this->get('Global', $event);
 				$parms=$this->interpretParms($originalParms);
 				$value=$this->getNested(explode(',',$parms[0]));
-				$this->debug(3,"copy: get={$parms[0]} set={$parms[1]}");
+				$this->debug($this->l3,"copy: get={$parms[0]} set={$parms[1]}");
 				$this->setNestedViaPath($parms[1], $value);
 				break;
 			case 'stashResults':
@@ -291,6 +292,10 @@ class core extends Module
 				break;
 			case '#':
 				break;
+			case 'debugModule':
+				$parms=$this->interpretParms($this->get('Global', $event), 2, 1, true);
+				$this->debugModule($parms[0], $parms[1]);
+				break;
 			default:
 				$this->complain($this, 'Unknown event', $event);
 				break;
@@ -343,7 +348,7 @@ class core extends Module
 		if (strlen($parms)<1)
 		{ // No parms$require
 			# TODO Potentially some detection could happen here to allow atomic failure.
-			if ($require>0) $this->debug(0, "Expected $require parameters, but got nothing. Bad things could happen if execution had been allowed to continue. Parms=$parms");
+			if ($require>0) $this->debug($this->l0, "Expected $require parameters, but got nothing. Bad things could happen if execution had been allowed to continue. Parms=$parms");
 			$parts=array();
 		}
 		else
@@ -357,14 +362,14 @@ class core extends Module
 				$parts=json_decode($mixedParts['firstPart'], 1);
 				if (is_null($parts))
 				{
-					$this->debug(0, "interpretParms: Got null back from json \"${mixedParts['firstPart']}\" originalInput=$parms which usually means invalid json.");
+					$this->debug($this->l0, "interpretParms: Got null back from json \"${mixedParts['firstPart']}\" originalInput=$parms which usually means invalid json.");
 
 					# TODO Do we want to do some other clean up here.
 					$parts=array(); // Prevent stuff from breaking since they always expect an array.
 				}
 				if (!count($parts))
 				{
-					$this->debug(0, "interpretParms: Got 0 parts back from json \"${mixedParts['firstPart']}\" originalInput=$parms which usually means invalid json.");
+					$this->debug($this->l0, "interpretParms: Got 0 parts back from json \"${mixedParts['firstPart']}\" originalInput=$parms which usually means invalid json.");
 
 					# TODO Do we want to do some other clean up here.
 					$parts=array(); // Prevent stuff from breaking since they always expect an array.
@@ -384,7 +389,7 @@ class core extends Module
 
 		if ($partsCount<$limit)
 		{
-			if ($partsCount<$require) $this->debug(0, "Expected $require parameters, but got $partsCount. Bad things could happen if execution had been allowed to continue. Parms=$parms");
+			if ($partsCount<$require) $this->debug($this->l0, "Expected $require parameters, but got $partsCount. Bad things could happen if execution had been allowed to continue. Parms=$parms");
 
 			$output=$parts;
 			while (count($output)< $limit) $output[]='';
@@ -401,7 +406,7 @@ class core extends Module
 			{
 				if (isset($parts[$i]))
 				{
-					# $this->core->debug(2, "interpretParms: Added main part $i => {$parts[$i]}");
+					# $this->core->debug($this->l2, "interpretParms: Added main part $i => {$parts[$i]}");
 					$output[]=$parts[$i];
 				}
 				else break;
@@ -414,7 +419,7 @@ class core extends Module
 			{
 				if (is_array($parts[$j])) $outputParts[]=json_encode($parts[$j]);
 				else $outputParts[]=$parts[$j];
-				# $this->core->debug(2, "interpretParms: Added remaining part $j => {$parts[$j]}");
+				# $this->core->debug($this->l2, "interpretParms: Added remaining part $j => {$parts[$j]}");
 			}
 
 			# Reassemble=true sets a string. False sets an array.
@@ -423,7 +428,7 @@ class core extends Module
 
 			while (count($output)< $limit)
 			{
-				$this->debug(0, "add one");
+				$this->debug($this->l0, "add one");
 				$output[]='';
 			}
 
@@ -445,7 +450,7 @@ class core extends Module
 
 			$cacheSize=count($cacheContents);
 			$this->setRef('CacheStats', $categoryName, $cacheSize);
-			$this->debug(4,"Loaded cache \"$categoryName\" ($cacheSize)");
+			$this->debug($this->l4,"Loaded cache \"$categoryName\" ($cacheSize)");
 
 			if ("$fileName" == 'Features.cache.json')
 			{
@@ -586,7 +591,7 @@ class core extends Module
 	function setResultSet(&$value, $src='unknown')
 	{
 		$valueText=(is_string($value))?$value:'Type='.gettype($value);
-		$this->debug(5, "setResultSet(value=$valueText, src=$src)");
+		$this->debug($this->l5, "setResultSet(value=$valueText, src=$src)");
 		if (is_array($value)) # ($value!=null and $value!==false)
 		{
 			$numberOfEntries=count($value);
@@ -596,7 +601,7 @@ class core extends Module
 				$firstValue=$value[$keys[0]];
 				if (!$firstValue)
 				{
-					$this->core->debug(5, __CLASS__.'->'.__FUNCTION__.": resultSet is an array with a single empty value. Not setting.");
+					$this->core->debug($this->l5, __CLASS__.'->'.__FUNCTION__.": resultSet is an array with a single empty value. Not setting.");
 					# return false;
 				}
 			}
@@ -605,11 +610,11 @@ class core extends Module
 			if ($this->isVerboseEnough(5))
 			{
 				$arrayString=($numberOfEntries==1)?json_encode($value):'NA';
-				$this->debug(5, "setResultSet(value=$valueText($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET json=$arrayString");
+				$this->debug($this->l5, "setResultSet(value=$valueText($numberOfEntries), src=$src)/$nesting - is_array == true. VALUE WILL BE SET json=$arrayString");
 				if ($this->isVerboseEnough(6))
 				{
 					print_r($value);
-					$this->debug(6, "setResultSet(value=$value($numberOfEntries), src=$src)/$nesting - exiting from var dump.");
+					$this->debug($this->l6, "setResultSet(value=$value($numberOfEntries), src=$src)/$nesting - exiting from var dump.");
 				}
 				$serial=$this->get('Core', 'serial');
 			}
@@ -629,7 +634,7 @@ class core extends Module
 		if ($this->isVerboseEnough(5))
 		{
 			$serial=$this->get('Core', 'serial');
-			$this->debug(5, "getResultSet/$nesting count=$resultSetDiag serial=$serial");
+			$this->debug($this->l5, "getResultSet/$nesting count=$resultSetDiag serial=$serial");
 			#print_r($resultSet);
 		}*/
 		# return $resultSet;
@@ -648,14 +653,14 @@ class core extends Module
 		{
 			$serial=$this->get('Core', 'serial');
 			$resultSetDiag=count($resultSet);
-			$this->debug(5, "getParentResultSet $nestingSrc->$nesting/$resultSetDiag/$serial");
+			$this->debug($this->l5, "getParentResultSet $nestingSrc->$nesting/$resultSetDiag/$serial");
 		}
 		return $resultSet;
 	}
 
 	function makeParentShareMemoryCurrent()
 	{
-		$this->debug(5, "makeParentShareMemoryCurrent/");
+		$this->debug($this->l5, "makeParentShareMemoryCurrent/");
 		$this->setResultSet($this->getParentResultSet());
 	}
 
@@ -715,7 +720,7 @@ class core extends Module
 			$indentation=str_repeat('  ', $nesting);
 			$valueIn=$this->processValue($value);
 
-			$this->debug(4, "INVOKE-Enter {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn");
+			$this->debug($this->l4, "INVOKE-Enter {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn");
 
 			$this->setStackEntry($nesting, $argument, $valueIn);
 
@@ -729,21 +734,21 @@ class core extends Module
 
 			if (isset($obj['featureType']))
 			{
-				$this->core->debug(4, "callFeature: ".$obj['featureType']);
+				$this->core->debug($this->l4, "callFeature: ".$obj['featureType']);
 				if ($outDataType=$this->getNested(array('Semantics', 'featureTypes', $obj['featureType'], 'outDataType')))
 				{
 					if ($dataType=$this->getNested(array('Semantics', 'dataTypes', $outDataType)))
 					{
 						$semanticsTemplate=$this->get('Settings', 'semanticsTemplate');
-						$this->core->debug(4, "callFeature: Applying --{$dataType['action']}={$dataType[$semanticsTemplate]}");
+						$this->core->debug($this->l4, "callFeature: Applying --{$dataType['action']}={$dataType[$semanticsTemplate]}");
 						$this->callFeature($dataType['action'], $dataType[$semanticsTemplate]);
 						$dataType['chosenTemplate']=$dataType[$semanticsTemplate];
 						$this->set('SemanticsState', 'currentDataType', $dataType);
 						$this->set('SemanticsState', 'currentFeatureType', $obj['featureType']);
 					}
-					else $this->core->debug(4, "callFeature: Could not find dataType $outDataType");
+					else $this->core->debug($this->l4, "callFeature: Could not find dataType $outDataType");
 				}
-				else $this->core->debug(4, "callFeature: Could not find featureType ".$obj['featureType']);
+				else $this->core->debug($this->l4, "callFeature: Could not find featureType ".$obj['featureType']);
 			}
 
 			if (cleanupArgs)
@@ -766,12 +771,12 @@ class core extends Module
 
 				$nesting=$this->get('Core', 'nesting');
 				$isArray=is_array($result)?'True':'False';;
-				$this->debug(4, "INVOKE-Exit  {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn resultCount=$resultCount is_array=$isArray smCount=".$this->getResultSetCount());
+				$this->debug($this->l4, "INVOKE-Exit  {$indentation}{$obj['name']}/$nesting value={$value}, valueIn=$valueIn resultCount=$resultCount is_array=$isArray smCount=".$this->getResultSetCount());
 				# $this->debugResultSet($obj['name']);
 			}
 			return $result;
 		}
-		else $this->debug(3,"Core->callFeature: Non executable code \"$argument\" sent. We shouldn't have got this.");
+		else $this->debug($this->l3,"Core->callFeature: Non executable code \"$argument\" sent. We shouldn't have got this.");
 		return false;
 	}
 
@@ -779,7 +784,7 @@ class core extends Module
 	{
 		if ($this->isVerboseEnough(4))
 		{
-			$this->debug(4,"Parameters: ".json_encode($args));
+			$this->debug($this->l4,"Parameters: ".json_encode($args));
 		}
 		// localScopeVarName vs nestedPrivateVarsName
 		$categoryForParameters=localScopeVarName;
@@ -792,11 +797,11 @@ class core extends Module
 		if (isset($this->store[$categoryForKnowledge][$nesting-1]['featureName']))
 		{
 			$lastMacro=$this->store[$categoryForKnowledge][$nesting-1]['featureName'];
-			$this->debug(4, "parameters: lastMacro=$lastMacro nesting=$nesting");
+			$this->debug($this->l4, "parameters: lastMacro=$lastMacro nesting=$nesting");
 		}
 		else
 		{
-			$this->debug(1, "parameters: Could not find lastMacro. This likely happened because the parameters command was called nested in some code. It should be called just under the comments section of the macro.");
+			$this->debug($this->l1, "parameters: Could not find lastMacro. This likely happened because the parameters command was called nested in some code. It should be called just under the comments section of the macro.");
 			return false;
 		}
 
@@ -830,11 +835,11 @@ class core extends Module
 
 				if ($variableResult['pass'])
 				{
-					$this->core->debug(3, "parameters: Parameter \"$key\" set to \"{$variableResult['value']}\"");
+					$this->core->debug($this->l3, "parameters: Parameter \"$key\" set to \"{$variableResult['value']}\"");
 				}
 				else
 				{
-					$this->core->debug(1, "parameters: Parameter \"$key\" failed a test with message \"{$variableResult['message']}\"");
+					$this->core->debug($this->l1, "parameters: Parameter \"$key\" failed a test with message \"{$variableResult['message']}\"");
 				}
 			}
 			else
@@ -845,17 +850,17 @@ class core extends Module
 					$value=$this->core->get('Global',"$lastMacro-$details");
 					# TODO This was false. Double check this change hasn't broken any assumptions.
 					$default=$value;
-					$this->debug(4,"parameters: Simple numeric. [$categoryForParameters][$scopeKey][$key] value=$value    key=$key nesting=$nesting globalKey=$lastMacro-$details");
+					$this->debug($this->l4,"parameters: Simple numeric. [$categoryForParameters][$scopeKey][$key] value=$value    key=$key nesting=$nesting globalKey=$lastMacro-$details");
 				}
 				else
 				{ // Basic name assignment
 					$key=$details;
 					$value=$this->core->get('Global',"$lastMacro-$position");
 					$default=$args[$details];
-					$this->debug(4,"parameters: Simple name. [$categoryForParameters][$scopeKey]  [$key] value=$value nesting=$nesting default=$default");
+					$this->debug($this->l4,"parameters: Simple name. [$categoryForParameters][$scopeKey]  [$key] value=$value nesting=$nesting default=$default");
 				}
 				$this->store[$categoryForParameters][$scopeKey][$key]=($value!==false and $value!='')?$value:$default;
-				$this->debug(3, "   key=$key value=".$this->store[$categoryForParameters][$scopeKey][$key]);
+				$this->debug($this->l3, "   key=$key value=".$this->store[$categoryForParameters][$scopeKey][$key]);
 			}
 		}
 	}
@@ -937,7 +942,7 @@ class core extends Module
 				else $value=($value and $value!=='false')?achelTrue:achelFalse;
 				break;
 			default:
-				$this->debug(1,"processVariableDefinition: Unknown type \"{$args['type']}\" in definition for \"$key\".");
+				$this->debug($this->l1,"processVariableDefinition: Unknown type \"{$args['type']}\" in definition for \"$key\".");
 				break;
 		}
 
@@ -1027,7 +1032,7 @@ class core extends Module
 					$endPos=strpos($output, storeValueEnd, $startPos);
 					$this->core->debug($debugLevel, "findAndProcessVariables: start=$startPos next=$nextStartPos end=$endPos Exended endPos (B)");
 				}
-				# $this->core->debug(0, "Progressing $startPos $nextStartPos $endPos $output");
+				# $this->core->debug($this->l0, "Progressing $startPos $nextStartPos $endPos $output");
 				$this->core->debug($debugLevel, "findAndProcessVariables: start=$startPos next=$nextStartPos end=$endPos Progressing using $output");
 			}
 
@@ -1070,7 +1075,7 @@ class core extends Module
 			}
 			else
 			{
-				$this->core->debug(0, "findAndProcessVariables: Probable syntax error in ".storeValueBegin."$varDef".storeValueEnd." . It should have had an extra value. Perhaps like this: ".storeValueBegin."Thing,{$varParts[0]}".storeValueEnd."");
+				$this->core->debug($this->l0, "findAndProcessVariables: Probable syntax error in ".storeValueBegin."$varDef".storeValueEnd." . It should have had an extra value. Perhaps like this: ".storeValueBegin."Thing,{$varParts[0]}".storeValueEnd."");
 			}
 
 			$iterations++;
@@ -1078,7 +1083,7 @@ class core extends Module
 
 		if ($iterations==100)
 		{
-			$this->debug(1, "Still finding \"".storeValueBegin."\" in \"".$output."\"");
+			$this->debug($this->l1, "Still finding \"".storeValueBegin."\" in \"".$output."\"");
 		}
 
 		$this->core->debug($debugLevel, "findAndProcessVariables: Return \"$output\"");
@@ -1106,7 +1111,7 @@ class core extends Module
 
 		$output=$this->findAndProcessVariables($output, $iterations);
 
-		if ($iterations>20) $this->debug(0, "processValue: $iterations reached while processing variables in \"$value\". The result achieved is \"$output\". This is probably a big."); # NOTE 10 is very strict, yet unlikely to be reached in any legitimate situation I can think of at the moment. The warning limit may need to be reconsidered in the future.
+		if ($iterations>20) $this->debug($this->l0, "processValue: $iterations reached while processing variables in \"$value\". The result achieved is \"$output\". This is probably a big."); # NOTE 10 is very strict, yet unlikely to be reached in any legitimate situation I can think of at the moment. The warning limit may need to be reconsidered in the future.
 
 		return $output;
 	}
@@ -1140,7 +1145,7 @@ class core extends Module
 
 	function addAction($argument, $value=null, $macroName='default', $lineNumber=false)
 	{
-		$this->debug(4, "addAction: Adding $argument,$value to $macroName");
+		$this->debug($this->l4, "addAction: Adding $argument,$value to $macroName");
 
 		if (!$argument) return false;
 
@@ -1194,7 +1199,7 @@ class core extends Module
 			for ($i=$nesting;$i>-1;$i--)
 			{
 				$resultSet=$this->getNested(array('Core', 'resultSet', $i));
-				$this->debug(4, "debugResultSet $label/$i count=".count($resultSet)." serial=$serial");
+				$this->debug($this->l4, "debugResultSet $label/$i count=".count($resultSet)." serial=$serial");
 			}
 		}
 	}
@@ -1287,7 +1292,7 @@ class core extends Module
 		$this->set('Verbosity', 'level', $this->verbosity); // NOTE that changes to this variable will not affect the practicle verbosity. setRef coiuld be used, in which case changes would affect it. However we would then lack safety controls and events.
 
 		if ($this->get('Features', 'triggerEvent')) $this->callFeature('triggerEvent', 'Verbosity,changed');
-		else $this->debug(0, __CLASS__.'.'.__FUNCTION__.": triggerEvent is not defined. Perhaps an event handeler is not installed. It could be that it hasn't loaded yet.");
+		else $this->debug($this->l0, __CLASS__.'.'.__FUNCTION__.": triggerEvent is not defined. Perhaps an event handeler is not installed. It could be that it hasn't loaded yet.");
 	}
 
 
@@ -1297,7 +1302,7 @@ class core extends Module
 		$srcNesting=$this->get('Core', 'nesting');
 		$nesting=(is_numeric($srcNesting))?$srcNesting+1:1;
 		$this->set('Core', 'nesting', $nesting);
-		$this->debug(5, "Incremented nesting to $nesting");
+		$this->debug($this->l5, "Incremented nesting to $nesting");
 		$this->makeParentShareMemoryCurrent();
 		return $nesting;
 	}
@@ -1314,7 +1319,7 @@ class core extends Module
 		$this->delete(isolatedNestedPrivateVarsName, $srcNesting);
 		if ($nesting<1) $nesting=1;
 		$this->set('Core', 'nesting', $nesting);
-		$this->debug(5, "Decremented nesting to $nesting count=*disabled for performance*"); //.$this->getResultSetCount());
+		$this->debug($this->l5, "Decremented nesting to $nesting count=*disabled for performance*"); //.$this->getResultSetCount());
 		return $nesting;
 	}
 
@@ -1351,7 +1356,7 @@ class core extends Module
 						$scopeName="$macroName-$nesting";
 						$this->set('General', 'scopeName', $scopeName);
 						$this->set('General', 'previousScopeName', $oldScope);
-						$this->debug(3, "go: Scope enter $oldScope -> $scopeName,  $oldOldScope -> $oldScope");
+						$this->debug($this->l3, "go: Scope enter $oldScope -> $scopeName,  $oldOldScope -> $oldScope");
 					}
 				}
 				if (!isset($oldScope))
@@ -1370,7 +1375,7 @@ class core extends Module
 
 					$exitNesting=$this->get('Core', 'nesting');
 					$this->setResultSet($returnedValue);
-					if ($entryNesting!=$nesting) $this->debug(0, "go: WARNING entryNesting($entryNesting) != exitNesting($exitNesting) for macro $macroName/{$actionItem['name']}. This is certainly a bug! $macroName began with $nesting.");
+					if ($entryNesting!=$nesting) $this->debug($this->l0, "go: WARNING entryNesting($entryNesting) != exitNesting($exitNesting) for macro $macroName/{$actionItem['name']}. This is certainly a bug! $macroName began with $nesting.");
 				}
 				$resultSet=$this->getResultSet();
 
@@ -1386,7 +1391,7 @@ class core extends Module
 					unset ($this->store[localScopeVarName][$scopeName]);
 					$this->set('General', 'scopeName', $oldScope);
 					$this->set('General', 'previousScopeName', $oldOldScope);
-					$this->debug(4, "go: Scope exit $scopeName -> $oldScope,  $oldScope -> $oldOldScope");
+					$this->debug($this->l4, "go: Scope exit $scopeName -> $oldScope,  $oldScope -> $oldOldScope");
 				}
 
 				# If this is the default macro, we need to run the cleanup stuff
@@ -1494,13 +1499,13 @@ class core extends Module
 
 	function &get($category, $valueName, $debug=true, $nestingOffset=0)
 	{
-		if ($debug) $this->debug(5,"get($category, $valueName, false)");
+		if ($debug) $this->debug($this->l5,"get($category, $valueName, false)");
 		if (isset($this->store[$category]))
 		{
 			# TODO Can I use the key to refactor?
 			if ($key=$this->getScopeForCategory($category, $nestingOffset))
 			{
-				$this->core->debug(4, "get: ($category, $valueName) key=$key nestingOffset=$nestingOffset");
+				$this->core->debug($this->l4, "get: ($category, $valueName) key=$key nestingOffset=$nestingOffset");
 				if ($category==nestedPrivateVarsName)
 				{
 					# TODO Is this really still needed?
@@ -1518,11 +1523,11 @@ class core extends Module
 						}
 					}
 					else $result=null;
-					$this->core->debug(5,"get (public): [$category][$nesting][$valueName] ".json_encode($result, JSON_FORCE_OBJECT));
+					$this->core->debug($this->l5,"get (public): [$category][$nesting][$valueName] ".json_encode($result, JSON_FORCE_OBJECT));
 				}
 				else
 				{
-					$this->core->debug(4,"get ($key): [$category][$key][$valueName]");
+					$this->core->debug($this->l4,"get ($key): [$category][$key][$valueName]");
 					if (isset($this->store[$category][$key]))
 					{
 						if (isset($this->store[$category][$key][$valueName]))
@@ -1545,7 +1550,7 @@ class core extends Module
 
 			if ($this->isVerboseEnough(5))
 			{
-				$this->core->debug(5,"get: [$category][$key][$valueName] ".json_encode($result));
+				$this->core->debug($this->l5,"get: [$category][$key][$valueName] ".json_encode($result));
 			}
 		}
 		else
@@ -1659,7 +1664,7 @@ class core extends Module
 				$this->makeMeAvailable($variableName);
 				break;
 			default:
-				$this->core->debug(3, "makeAvailable: \"$category\" is not Local or Me, so not adjusting the scope of $category,$variableName. It is safe to disregard this message.");
+				$this->core->debug($this->l3, "makeAvailable: \"$category\" is not Local or Me, so not adjusting the scope of $category,$variableName. It is safe to disregard this message.");
 				break;
 		}
 	}
@@ -1683,7 +1688,7 @@ class core extends Module
 			$key=$this->getScopeForCategory(localScopeVarName);
 			$this->doUnSet(array(localScopeVarName, $key, $variableName));
 			$this->set(localScopeVarName, $variableName, $value, true);
-			$this->core->debug(4,"makeLocalAvailable: name=$variableName key/scope=$key");
+			$this->core->debug($this->l4,"makeLocalAvailable: name=$variableName key/scope=$key");
 		}
 	}
 
@@ -1706,14 +1711,14 @@ class core extends Module
 		if ($this->isVerboseEnough(5))
 		{
 			$argsDisplay=(is_numeric($args) or is_string($args))?$args:gettype($args);
-			$this->debug(5,"set($category, $valueName, $argsDisplay)");
+			$this->debug($this->l5,"set($category, $valueName, $argsDisplay)");
 		}
 
 		if (!isset($this->store[$category])) $this->store[$category]=array();
 
 		if ($key=$this->getScopeForCategory($category, $nestingOffset))
 		{
-			$this->core->debug(5,"set: [$category][$key][$valueName]");
+			$this->core->debug($this->l5,"set: [$category][$key][$valueName]");
 			if (!isset($this->store[$category][$key])) $this->store[$category][$key]=array();
 			$this->store[$category][$key][$valueName]=$args;
 		}
@@ -1728,14 +1733,14 @@ class core extends Module
 	function setRef($category, $valueName, &$args, $nestingOffset=0)
 	{ // set a variable for a module
 		$argString=(is_string($args))?$args:'[non-string]';
-		$this->debug(5,"setRef($category, $valueName, $argString)");
+		$this->debug($this->l5,"setRef($category, $valueName, $argString)");
 		if (!isset($this->store[$category])) $this->store[$category]=array();
 
 		if ($key=$this->getScopeForCategory($category, $nestingOffset))
 		{
 			if (!isset($this->store[$category][$key])) $this->store[$category][$key]=array();
 			$this->store[$category][$key][$valueName]=&$args;
-			$this->core->debug(5,"setRef: [$category][$key][$valueName]");
+			$this->core->debug($this->l5,"setRef: [$category][$key][$valueName]");
 		}
 		else
 		{
@@ -1765,7 +1770,7 @@ class core extends Module
 		// Handel everything else.
 		if (is_string($deleteList))
 		{
-			$this->debug(0, "doUnsetNested: WARNING! Converted string to array. The string was \"$deleteList\", which was expected to be an absolute path in the form of an array. You can do this in PHP like so: array('CategoryName', 'subCategory', 'variable'). Ideally execution should stop here, but it is being allowed incase there is still some old code relying on this behavior (PHP would have complained bitterly). This decision will be reversed very soon, so please fix the bug if it is yours. If you think the bug is in Achel, please get in contact via github.");
+			$this->debug($this->l0, "doUnsetNested: WARNING! Converted string to array. The string was \"$deleteList\", which was expected to be an absolute path in the form of an array. You can do this in PHP like so: array('CategoryName', 'subCategory', 'variable'). Ideally execution should stop here, but it is being allowed incase there is still some old code relying on this behavior (PHP would have complained bitterly). This decision will be reversed very soon, so please fix the bug if it is yours. If you think the bug is in Achel, please get in contact via github.");
 			$deleteList=explode(',', $deleteList);
 		}
 
@@ -1779,7 +1784,7 @@ class core extends Module
 				$failedChain=($failedChain)?"$failedChain,$item":$item;
 			}
 
-			$this->debug(3, "doUnsetNested: Could not find \"{$deleteList[$position]}\" in $fullChain. Successfully got to \"$failedChain\". This is unlikely to be a problem, but it worth considering when debugging.");
+			$this->debug($this->l3, "doUnsetNested: Could not find \"{$deleteList[$position]}\" in $fullChain. Successfully got to \"$failedChain\". This is unlikely to be a problem, but it worth considering when debugging.");
 			return false;
 		}
 
@@ -1791,7 +1796,7 @@ class core extends Module
 		}
 		else
 		{ // Time to delete
-			$this->debug(4, "doUnsetNested: Deleting {$deleteList[$position]} in $fullChain");
+			$this->debug($this->l4, "doUnsetNested: Deleting {$deleteList[$position]} in $fullChain");
 			unset($currentScope[$deleteList[$position]]);
 			return true;
 		}
@@ -1808,7 +1813,7 @@ class core extends Module
 		{
 			if ($this->isVerboseEnough(3))
 			{
-				$this->core->debug(3,"getNested: $category,$key,".implode(',', $values));
+				$this->core->debug($this->l3,"getNested: $category,$key,".implode(',', $values));
 			}
 			if (isset($output[$category][$key])) $output=$output[$category][$key];
 
@@ -1831,7 +1836,7 @@ class core extends Module
 			}
 			else
 			{
-				$this->core->debug(4, "getNested: Could not find \"$value\" using key ".implode(',', $values));
+				$this->core->debug($this->l4, "getNested: Could not find \"$value\" using key ".implode(',', $values));
 				$output=null;
 				return $output;
 			}
@@ -1874,7 +1879,7 @@ class core extends Module
 	function setNested($store, $category, $values)
 	{
 		# TODO This currently points to the old way of doing it, which is deprecated. Once the old way is removed it will point to setNestedViaPath.
-		$this->debug(0, "DEPRECATED: This code is using a deprecated version of setNested() which will soon be removed. Please update the code to point to setNestedViaPath() (which will point to setNested once the old version is removed.)");
+		$this->debug($this->l0, "DEPRECATED: This code is using a deprecated version of setNested() which will soon be removed. Please update the code to point to setNestedViaPath() (which will point to setNested once the old version is removed.)");
 		$this->setNestedOldWay($store, $category, $values);
 	}
 
@@ -1913,7 +1918,7 @@ class core extends Module
 			$lastPosition=count($path)-1;
 			if ($lastPosition==-1)
 			{
-				$this->debug(1, "setNestedFromInterpreter: Could not interpret the path provied (\"$allValues\") at all. This is likely a syntax error in the address.");
+				$this->debug($this->l1, "setNestedFromInterpreter: Could not interpret the path provied (\"$allValues\") at all. This is likely a syntax error in the address.");
 				return false;
 			}
 
@@ -1928,7 +1933,7 @@ class core extends Module
 			}
 			else
 			{
-				$this->debug(1, "setNestedFromInterpreter: Could not interpret the path provied (\"$allValues\"). This suggests that interpretParms was unable to interpret it.");
+				$this->debug($this->l1, "setNestedFromInterpreter: Could not interpret the path provied (\"$allValues\"). This suggests that interpretParms was unable to interpret it.");
 				return false;
 			}
 		}
@@ -1936,7 +1941,7 @@ class core extends Module
 
 	function setNestedOldWay($store, $category, $values) # DEPRECATED
 	{
-		$this->debug(1, "DEPRECATED: This code is using a deprecated version of setNested() which will soon be removed. Please update the code to point to setNestedViaPath() (which will point to setNested once the old version is removed.)");
+		$this->debug($this->l1, "DEPRECATED: This code is using a deprecated version of setNested() which will soon be removed. Please update the code to point to setNestedViaPath() (which will point to setNested once the old version is removed.)");
 
 		$traditionalAddress=array($store, $category);
 		$remainingStuff=(is_array($values))?$values:explode(',', $values);
@@ -1961,7 +1966,7 @@ class core extends Module
 
 		$pathParts=(is_array($path))?$path:explode(',', $path);
 
-		# $this->core->debug(0, implode(',', $pathParts));
+		# $this->core->debug($this->l0, implode(',', $pathParts));
 		# TODO Add shortcuts
 
 		// Handel variables with special scope.
@@ -1982,7 +1987,7 @@ class core extends Module
 
 			if ($this->isVerboseEnough(4))
 			{
-				$this->core->debug(4,"setNestedStart: Used $category,$key,".implode(',', $pathParts)).' '.json_encode($pathParts);
+				$this->core->debug($this->l4,"setNestedStart: Used $category,$key,".implode(',', $pathParts)).' '.json_encode($pathParts);
 			}
 			$output=&$this->store[$category][$key];
 		}
@@ -1997,7 +2002,7 @@ class core extends Module
 	{
 		if ($position<$count-1)
 		{
-			$this->debug(5, "setNestedWorker: processing $position/$count {$path[$position]}");
+			$this->debug($this->l5, "setNestedWorker: processing $position/$count {$path[$position]}");
 
 			# Make sure we have a sane place to continue
 			$lastkey=$path[$position];
@@ -2039,7 +2044,7 @@ class core extends Module
 			$destination=implode(',', $path);
 
 
-			$this->debug(4, "setNestedWorker: Setting value $position/$count {$path[$position]}. vcount=$vcount tcount=$tcount destination=$destination");
+			$this->debug($this->l4, "setNestedWorker: Setting value $position/$count {$path[$position]}. vcount=$vcount tcount=$tcount destination=$destination");
 			*/
 		}
 	}
@@ -2065,16 +2070,16 @@ class core extends Module
 			if (isset($this->store[$category][$valueName]))
 			{
 				unset($this->store[$category][$valueName]);
-				$this->debug(4,"delete($category, $valueName) - deleted");
+				$this->debug($this->l4,"delete($category, $valueName) - deleted");
 			}
-			else  $this->debug(5,"delete($category, $valueName) - valueName not found");
+			else  $this->debug($this->l5,"delete($category, $valueName) - valueName not found");
 		}
-		else $this->debug(5,"delete($category, $valueName) - category not found");
+		else $this->debug($this->l5,"delete($category, $valueName) - category not found");
 	}
 
 	function getStore()
 	{ # Note that this returns a COPY of the store. It is not intended as a way of modifying the store.
-		$this->debug(5,"getStore()");
+		$this->debug($this->l5,"getStore()");
 		return $this->store;
 	}
 
@@ -2104,7 +2109,7 @@ class core extends Module
 			'obj'=>&$obj,
 			);
 
-		$this->debug(4, "registerSubModule: name={$subModule['name']} category={$subModule['category']}");
+		$this->debug($this->l4, "registerSubModule: name={$subModule['name']} category={$subModule['category']}");
 		$this->setRef($subModule['category'], $subModule['name'], $subModule);
 	}
 
@@ -2116,7 +2121,7 @@ class core extends Module
 
 	function registerFeature(&$obj, $flags, $name, $description, $tags=false,$isMacro=false, $source='unknown')
 	{
-		$this->core->debug(4, "registerFeature name=$name");
+		$this->core->debug($this->l4, "registerFeature name=$name");
 		$arrayTags=(is_array($tags))?$tags:explode(',', $tags);
 		if (!count($arrayTags))
 		{
@@ -2162,7 +2167,7 @@ class core extends Module
 		{
 			if (!isset($this->store['Features'][$flag]))
 			{
-				$this->core->debug(4, "Aliasing $flag => $feature");
+				$this->core->debug($this->l4, "Aliasing $flag => $feature");
 				$this->setRef('Features', $flag, $entry);
 				$entry['flags'][]=$flag;
 				$this->setRef('FeatureAliases', $flag, $entry['name']);
@@ -2227,7 +2232,7 @@ class core extends Module
 		if ($obj) $output=$obj->getName().': '.$output;
 
 		if ($fatal) die("$output\n");
-		else $this->debug(0, "$output");
+		else $this->debug($this->l0, "$output");
 	}
 
 	function requireNumParms($obj, $numberRequried, $event, $originalParms, $interpretedParms=false)
@@ -2324,6 +2329,18 @@ class core extends Module
 		$result=preg_replace(array('/^\*_/'), array(''), $result);
 		return $result;
 	}
+
+	private function debugModule($moduleName, $reset) {
+		if (isset($this->module[$moduleName])) {
+			if ($reset != 'reset') {
+				$this->module[$moduleName]->setVerbosity(false);
+			} else {
+				$this->module[$moduleName]->setVerbosity(true);
+			}
+		} else {
+			$this->core->complain($this, "No module named \"$moduleName\".", "debugModule");
+		}
+	}
 }
 
 function loadModules(&$core, $sourcePath, $callInits=true)
@@ -2374,7 +2391,38 @@ function loadModules(&$core, $sourcePath, $callInits=true)
 
 
 
-class Module
+class BasicFunctionality
+{
+	public $l0 = 0;
+	public $l1 = 1;
+	public $l2 = 2;
+	public $l3 = 3;
+	public $l4 = 4;
+	public $l5 = 5;
+
+	function __construct() {
+	}
+
+	function setVerbosity($default = true) {
+		if ($default) {
+			$this->l0 = 0;
+			$this->l1 = 1;
+			$this->l2 = 2;
+			$this->l3 = 3;
+			$this->l4 = 4;
+			$this->l5 = 5;
+		} else {
+			$this->l0 = 0;
+			$this->l1 = 0;
+			$this->l2 = 0;
+			$this->l3 = 0;
+			$this->l4 = 0;
+			$this->l5 = 0;
+		}
+	}
+}
+
+class Module Extends BasicFunctionality
 {
 	private $category='';
 	protected $core=null;
@@ -2392,6 +2440,7 @@ class Module
 	function __construct($name)
 	{
 		$this->category=$name;
+		parent::__construct();
 	}
 
 	function getName()
@@ -2421,7 +2470,6 @@ class Module
 
 		$this->core->debug($level, $this->myPrefix.$text, true);
 	}
-
 }
 
 class SubModule extends Module
