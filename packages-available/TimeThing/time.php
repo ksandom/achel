@@ -173,8 +173,18 @@ class TimeThing extends Module
 		return $output;
 	}
 
-	function fullTimeStamp($inputTime, $format='Y-m-d--G:i:s')
+	function fullTimeStamp($inputTime, $format='')
 	{
+		if (!$format)
+		{
+			$format=$this->core->get('Settings','timestampFormat');
+			$this->core->debug(1, "format: $format");
+		}
+		else
+		{
+			$this->core->debug(1, "format: $format (default)");
+		}
+
 		$time=($inputTime)?$inputTime:$this->now();
 		if (!is_numeric($inputTime))
 		{
@@ -183,7 +193,7 @@ class TimeThing extends Module
 			return $error;
 		}
 
-		return date($this->core->get('Settings','timestampFormat'), $time);
+		return date($format, $time);
 	}
 
 	function throttle($milliseconds, $feature)
