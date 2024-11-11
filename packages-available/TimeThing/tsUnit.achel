@@ -19,8 +19,12 @@ if ~!Tmp,unit!~,==,day,
 	strToTime Tmp,base,0:00:00,~!Tmp,now!~
 
 if ~!Tmp,unit!~,==,week,
-	strToTime Tmp,base,last monday,~!Tmp,base!~
-
+	now Local,now
+	fullTimeStamp Local,day,~!Local,now!~,l
+	if ~!Local,day!~,==,Monday,
+		strToTime Tmp,base,monday,~!Tmp,base!~
+	else
+		strToTime Tmp,base,last monday,~!Tmp,base!~
 
 # Start the results
 strToTime Tmp,start,-~!Global,tsUnit-0!~ ~!Tmp,unit!~,~!Tmp,base!~
@@ -41,6 +45,14 @@ older ~!Tmp,timeField!~,~!Tmp,stop!~
 debug 2,tsUnit: Range ~!Tmp,tsStart!~  -  ~!Tmp,tsStop!~
 debug 3,tsUnit:   (absolute)   ~!Tmp,start!~  -  ~!Tmp,stop!~
 
+
+# Spit out some debugging.
+fullTimeStamp Local,timestamp,~!Tmp,base!~
+debug 1,base: 	~!Tmp,base!~ (~!Local,timestamp!~)
+fullTimeStamp Local,timestamp,~!Tmp,start!~
+debug 1,start: 	~!Tmp,start!~ (~!Local,timestamp!~)
+fullTimeStamp Local,timestamp,~!Tmp,stop!~
+debug 1,stop: 	~!Tmp,stop!~ (~!Local,timestamp!~)
 
 
 # Clean up
