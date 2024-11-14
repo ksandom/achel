@@ -105,55 +105,66 @@ class TimeThing extends Module
 	{
 		$accuracy=1;
 
-		if ($inputTime>fuzzyTimeThreshold)
+		if ($inputTime < 0)
 		{
-			return $this->fullTimeStamp($inputTime);
-		}
-
-		if ($inputTime<minutes or $maxUnit=='seconds')
-		{
-			$unit='second';
-			$value=$inputTime;
+			$sign="-";
+			$number=abs($inputTime);
 		}
 		else
 		{
-			if ($inputTime<hours or $maxUnit=='minutes')
+			$sign="";
+			$number=$inputTime;
+		}
+
+		if ($number>fuzzyTimeThreshold)
+		{
+			return $this->fullTimeStamp($number);
+		}
+
+		if ($number<minutes or $maxUnit=='seconds')
+		{
+			$unit='second';
+			$value=$number;
+		}
+		else
+		{
+			if ($number<hours or $maxUnit=='minutes')
 			{
 				$unit='minute';
-				$value=round($inputTime/minutes, $accuracy);
+				$value=round($number/minutes, $accuracy);
 			}
 			else
 			{
-				if ($inputTime<days or $maxUnit=='hours')
+				if ($number<days or $maxUnit=='hours')
 				{
 					$unit='hour';
-					$value=round($inputTime/hours, $accuracy);
+					$value=round($number/hours, $accuracy);
 				}
 				else
 				{
-					if ($inputTime<weeks or $maxUnit=='days')
+					if ($number<weeks or $maxUnit=='days')
 					{
 						$unit='day';
-						$value=round($inputTime/days, $accuracy);
+						$value=round($number/days, $accuracy);
 					}
 					else
 					{
-						if ($inputTime<months or $maxUnit=='weeks')
+						if ($number<months or $maxUnit=='weeks')
 						{
 							$unit='week';
-							$value=round($inputTime/weeks, $accuracy);
+							$value=round($number/weeks, $accuracy);
 						}
 						else
 						{
-							if ($inputTime<years or $maxUnit=='months')
+							if ($number<years or $maxUnit=='months')
 							{
 								$unit='month';
-								$value=round($inputTime/months, $accuracy);
+								$value=round($number/months, $accuracy);
 							}
 							else
 							{
 								$unit='year';
-								$value=round($inputTime/years, $accuracy);
+								$value=round($number/years, $accuracy);
 							}
 						}
 					}
@@ -162,7 +173,7 @@ class TimeThing extends Module
 		}
 
 		// Almost done.
-		$output="$value $unit";
+		$output="$sign$value $unit";
 
 		// Cater to plurals.
 		if (intval($value)!=1 or strpos($value, '.'))
