@@ -92,3 +92,6 @@ defineTest FuzzyTime - -300,
 	fuzzyTime Local,fTime,-300
 	expect -5 minutes,~!Local,fTime!~
 
+defineTest FuzzyTime - No time,
+	fuzzyTime Local,fTime,
+	expect No time,~!Local,fTime!~

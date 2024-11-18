@@ -105,6 +105,10 @@ class TimeThing extends Module
 	{
 		$accuracy=1;
 
+		if ($inputTime=='') {
+			return "No time";
+		}
+
 		if ($inputTime < 0)
 		{
 			$sign="-";
